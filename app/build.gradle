@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.protobuf'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "ddr.example.com.nddrandroidclient"
-        minSdkVersion 15
+        applicationId "ddr.example.com.ddrandroidclient"
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -16,6 +16,66 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+            proto {
+                srcDir 'src/main/proto'
+                include '**/*.proto'
+
+            }
+        }
+    }
+
+    defaultConfig {
+        // 仅保留两种架构的 so 库
+        ndk {
+            // armeabi：已经淘汰（0%）
+            // armeabi-v7a：曾经主流的架构平台（20%）
+            // arm64-v8a：目前主流架构平台（80%）
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
+        buildConfigField "String", "BUILD_TIME", "\""+getDate()+"\""
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // EventBus Apt 索引类生成位置
+                arguments = [ eventBusIndex : applicationId + '.MyEventBusIndex' ]
+            }
+        }
+
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+}
+String getDate() {
+    Date date = new Date()
+    return date.format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("GMT+8"))
+}
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
+
 }
 
 dependencies {
@@ -25,4 +85,34 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //谷歌的数据格式框架protobuf
+    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+    // ButterKnife 注解库：https://github.com/JakeWharton/butterknife
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    //图片下载
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    //oksocket的tcp连接库
+    api 'com.tonystark.android:socket:latest.release'
+    //If you want to use server functionality, you need to compile the following libraries
+    api 'com.tonystark.android:socket-server:latest.release'
+    // 吐司工具类：https://github.com/getActivity/ToastUtils
+    implementation 'com.hjq:toast:8.0'
+
+    // 状态栏沉浸：https://github.com/gyf-dev/ImmersionBar
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.hjq:xxpermissions:6.0'
+
+    // 标题栏：https://github.com/getActivity/TitleBar
+    implementation 'com.hjq:titlebar:6.0'
+
+    // 内存泄漏捕捉：https://github.com/square/leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+    // EventBus 事件总线：https://github.com/greenrobot/EventBus
+    implementation "org.greenrobot:eventbus:3.1.1"
+    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1'
 }

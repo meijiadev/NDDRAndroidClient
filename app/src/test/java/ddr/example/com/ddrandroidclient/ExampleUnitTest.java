@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient;
+package ddr.example.com.ddrandroidclient;
 
 import org.junit.Test;
 

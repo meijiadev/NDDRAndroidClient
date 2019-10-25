@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient;
+package ddr.example.com.ddrandroidclient;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
