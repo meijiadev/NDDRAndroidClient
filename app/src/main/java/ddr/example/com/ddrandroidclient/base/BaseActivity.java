@@ -8,14 +8,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.Random;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * time    ：2019/10/25
@@ -25,10 +26,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     // 不在主线程中实例化Handle, Looper.getMainLooper()表示放到主UI线程去处理。
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
     public final Object mHandlerToken = hashCode();
+    public Context context;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context=this;
         initActivity();
     }
 
@@ -139,11 +142,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(new Intent(this, cls));
     }
 
+    /**
+     * 跳转并销毁当前activity
+     * @param cls
+     */
     public void startActivityFinish(Class<? extends Activity> cls) {
         startActivityFinish(new Intent(this, cls));
     }
 
-    public void startActivityFinish(Intent intent) {
+    private void startActivityFinish(Intent intent) {
         startActivity(intent);
         finish();
     }

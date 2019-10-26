@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">NDDRAndroidClient</string>
+    <!-- 主页 -->
+    <string name="home_exit_hint">再按一次退出</string>
+
+    <!-- 异常捕捉 -->
+    <string name="crash_error_hint">发生意外错误\n抱歉，给您带来不便</string>
+    <string name="crash_error_restart">重新启动</string>
+    <string name="crash_error_log">错误日志</string>
+    <string name="crash_error_details">错误详情</string>
+    <string name="crash_error_info">错误信息</string>
+    <string name="crash_copy_log">复制日志</string>
+    <string name="crash_close">关闭</string>
 </resources>

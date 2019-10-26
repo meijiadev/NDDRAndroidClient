@@ -8,13 +8,17 @@ import com.hjq.toast.ToastInterceptor;
 import com.hjq.toast.ToastUtils;
 import com.squareup.leakcanary.LeakCanary;
 
+import cat.ereza.customactivityoncrash.config.CaocConfig;
 import ddr.example.com.ddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.ddrandroidclient.helper.EventBusManager;
+import ddr.example.com.ddrandroidclient.ui.activity.CrashActivity;
+import ddr.example.com.ddrandroidclient.ui.activity.HomeActivity;
 
 public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initSDK(this);
     }
 
     public static void initSDK(Application application){
@@ -44,6 +48,20 @@ public class BaseApplication extends Application {
         ToastUtils.init(application);
         // EventBus 事件总线
         EventBusManager.init();
+
+        // Crash 捕捉界面
+        CaocConfig.Builder.create()
+                .backgroundMode(CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM)
+                .enabled(true)
+                .trackActivities(true)
+                .minTimeBetweenCrashesMs(2000)
+                // 重启的 Activity
+                .restartActivity(HomeActivity.class)
+                // 错误的 Activity
+                .errorActivity(CrashActivity.class)
+                // 设置监听器
+                //.eventListener(new YourCustomEventListener())
+                .apply();
 
     }
 }

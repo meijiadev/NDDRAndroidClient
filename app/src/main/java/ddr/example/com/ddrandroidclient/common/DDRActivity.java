@@ -1,13 +1,19 @@
 package ddr.example.com.ddrandroidclient.common;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.bar.TitleBar;
+import com.hjq.toast.ToastUtils;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ddr.example.com.ddrandroidclient.R;
 import ddr.example.com.ddrandroidclient.base.BaseActivity;
 import ddr.example.com.ddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.ddrandroidclient.helper.EventBusManager;
@@ -17,8 +23,7 @@ import ddr.example.com.ddrandroidclient.helper.EventBusManager;
  *  describe: Activity 基类
  */
 public class DDRActivity extends BaseActivity {
-    /** 标题栏对象 */
-    private TitleBar mTitleBar;
+
     /**
      * 状态栏沉浸
      */
@@ -38,22 +43,12 @@ public class DDRActivity extends BaseActivity {
     @Override
     protected void initActivity() {
         super.initActivity();
+        ActivityStackManager.getInstance().onCreated(this);
     }
 
     @Override
     protected void initLayout() {
         super.initLayout();
-        // 初始化标题栏的监听
-        if (getTitleId() > 0) {
-            // 勤快模式
-            View view = findViewById(getTitleId());
-            if (view instanceof TitleBar) {
-                mTitleBar = (TitleBar) view;
-            }
-        } else if (getTitleId() == 0) {
-            // 懒人模式
-            mTitleBar = findTitleBar(getContentView());
-        }
         mButterKnife = ButterKnife.bind(this);
         EventBusManager.register(this);
         initImmersion();
@@ -74,15 +69,6 @@ public class DDRActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mButterKnife != null) {
-            mButterKnife.unbind();
-        }
-        EventBusManager.unregister(this);
-        ActivityStackManager.getInstance().onDestroyed(this);
-    }
 
     /**
      * 是否使用沉浸式状态栏
@@ -98,13 +84,6 @@ public class DDRActivity extends BaseActivity {
         // 初始化沉浸式状态栏
         if (isStatusBarEnabled()) {
             statusBarConfig().init();
-
-            // 设置标题栏沉浸
-            if (getTitleId() > 0) {
-                ImmersionBar.setTitleBar(this, findViewById(getTitleId()));
-            } else if (mTitleBar != null) {
-                ImmersionBar.setTitleBar(this, mTitleBar);
-            }
         }
     }
     /**
@@ -132,21 +111,40 @@ public class DDRActivity extends BaseActivity {
         return mImmersionBar;
     }
 
-    /**
-     * 递归获取 ViewGroup 中的 TitleBar 对象
-     */
-    static TitleBar findTitleBar(ViewGroup group) {
-        for (int i = 0; i < group.getChildCount(); i++) {
-            View view = group.getChildAt(i);
-            if ((view instanceof TitleBar)) {
-                return (TitleBar) view;
-            } else if (view instanceof ViewGroup) {
-                TitleBar titleBar = findTitleBar((ViewGroup) view);
-                if (titleBar != null) {
-                    return titleBar;
-                }
-            }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mButterKnife != null) {
+            mButterKnife.unbind();
         }
-        return null;
+        EventBusManager.unregister(this);
+        ActivityStackManager.getInstance().onDestroyed(this);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        super.startActivityForResult(intent, requestCode, options);
+        overridePendingTransition(R.anim.activity_right_in, R.anim.activity_right_out);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.activity_left_in, R.anim.activity_left_out);
+    }
+
+    /**
+     * 显示吐司
+     */
+    public void toast(CharSequence text) {
+        ToastUtils.show(text);
+    }
+
+    public void toast(@StringRes int id) {
+        ToastUtils.show(id);
+    }
+
+    public void toast(Object object) {
+        ToastUtils.show(object);
     }
 }

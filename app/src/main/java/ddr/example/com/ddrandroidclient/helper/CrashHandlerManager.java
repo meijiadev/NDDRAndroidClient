@@ -46,15 +46,6 @@ public class CrashHandlerManager implements Thread.UncaughtExceptionHandler {
         if (throwable==null){
             return false;
         }
-       /* new Thread(){
-            @Override
-            public void run() {
-                Looper.prepare();          //切到主线程
-                Toast.makeText(mContext,"很抱歉，程序出现异常，即将退出",Toast.LENGTH_LONG).show();
-                Looper.loop();
-
-            }
-        }.start();*/
         saveCrashInfo2File(throwable);
         return true;
     }

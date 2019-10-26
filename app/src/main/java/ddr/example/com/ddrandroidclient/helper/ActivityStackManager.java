@@ -77,8 +77,7 @@ public final class ActivityStackManager {
                 }
             }
         }
-        // 关闭虚拟机，彻底释放内存空间
-        System.exit(0);
+
     }
 
     /**
