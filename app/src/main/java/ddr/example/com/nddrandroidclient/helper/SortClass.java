@@ -5,7 +5,8 @@ import java.util.Comparator;
 import ddr.example.com.nddrandroidclient.entity.MapInfo;
 
 /**
- * 降序排列
+ * time:  2019/10/10
+ * desc:  降序排列
  */
 public class SortClass implements Comparator {
     @Override

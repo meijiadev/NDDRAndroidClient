@@ -14,6 +14,10 @@ import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 
+/**
+ * time :  2019/10/28
+ * desc :  项目中的 application 基类
+ */
 public class BaseApplication extends Application {
     @Override
     public void onCreate() {

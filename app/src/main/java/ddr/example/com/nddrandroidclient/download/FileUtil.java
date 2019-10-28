@@ -27,9 +27,6 @@ public class FileUtil {
         createSdDir(sdPath);
     }
 
-
-
-
     /**
      * 在Sd卡创建目录
      * @return
