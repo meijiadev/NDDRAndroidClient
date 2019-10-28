@@ -82,7 +82,7 @@
                 android:layout_marginLeft="43dp"
                 android:src="@mipmap/account" />
 
-            <ddr.example.com.ddrandroidclient.widget.RegexEditText
+            <ddr.example.com.nddrandroidclient.widget.RegexEditText
                 android:id="@+id/account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 android:layout_marginLeft="43dp"
                 android:src="@mipmap/password" />
 
-            <ddr.example.com.ddrandroidclient.widget.PasswordEditText
+            <ddr.example.com.nddrandroidclient.widget.PasswordEditText
                 android:id="@+id/password"
                 style="@style/EditTextStyle"
                 android:layout_width="match_parent"
