@@ -1,5 +1,6 @@
 package ddr.example.com.ddrandroidclient.ui.fragment;
 
+import ddr.example.com.ddrandroidclient.R;
 import ddr.example.com.ddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.ddrandroidclient.ui.activity.HomeActivity;
 
@@ -9,9 +10,13 @@ import ddr.example.com.ddrandroidclient.ui.activity.HomeActivity;
  */
 public final class StatusFragment extends DDRLazyFragment<HomeActivity> {
 
+    public static StatusFragment newInstance(){
+        return new StatusFragment();
+    }
+
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.fragment_status;
     }
 
     @Override

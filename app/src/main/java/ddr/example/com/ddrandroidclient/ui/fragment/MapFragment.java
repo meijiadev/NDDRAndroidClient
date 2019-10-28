@@ -1,5 +1,6 @@
 package ddr.example.com.ddrandroidclient.ui.fragment;
 
+import ddr.example.com.ddrandroidclient.R;
 import ddr.example.com.ddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.ddrandroidclient.ui.activity.HomeActivity;
 
@@ -8,9 +9,13 @@ import ddr.example.com.ddrandroidclient.ui.activity.HomeActivity;
  * desc: 地图管理界面
  */
 public class MapFragment extends DDRLazyFragment<HomeActivity> {
+
+    public static MapFragment newInstance(){
+        return new MapFragment();
+    }
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.fragment_map;
     }
 
     @Override

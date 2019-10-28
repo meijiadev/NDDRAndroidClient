@@ -1,16 +1,35 @@
 package ddr.example.com.ddrandroidclient.ui.activity;
 
 
+import android.view.KeyEvent;
+
+import androidx.viewpager.widget.ViewPager;
+import butterknife.BindView;
 import ddr.example.com.ddrandroidclient.R;
 import ddr.example.com.ddrandroidclient.common.DDRActivity;
+import ddr.example.com.ddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.ddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.ddrandroidclient.helper.DoubleClickHelper;
+import ddr.example.com.ddrandroidclient.ui.adapter.BaseFragmentAdapter;
+import ddr.example.com.ddrandroidclient.ui.fragment.MapFragment;
+import ddr.example.com.ddrandroidclient.ui.fragment.SetUpFragment;
+import ddr.example.com.ddrandroidclient.ui.fragment.StatusFragment;
+import ddr.example.com.ddrandroidclient.ui.fragment.TaskFragment;
+import ddr.example.com.ddrandroidclient.ui.fragment.VersionFragment;
 
 /**
  * time:2019/10/26
  * desc: 主页界面
  */
-public class HomeActivity extends DDRActivity {
+public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
+    @BindView(R.id.vp_home_pager)
+    ViewPager vpHomePager;
+
+    /**
+     * ViewPage 适配器
+     */
+    private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
+
 
     @Override
     protected int getLayoutId() {
@@ -19,13 +38,40 @@ public class HomeActivity extends DDRActivity {
 
     @Override
     protected void initView() {
-
+        vpHomePager.addOnPageChangeListener(this);
     }
 
     @Override
     protected void initData() {
+        mPagerAdapter=new BaseFragmentAdapter<DDRLazyFragment>(this);
+        mPagerAdapter.addFragment(StatusFragment.newInstance());
+        mPagerAdapter.addFragment(MapFragment.newInstance());
+        mPagerAdapter.addFragment(TaskFragment.newInstance());
+        mPagerAdapter.addFragment(SetUpFragment.newInstance());
+        mPagerAdapter.addFragment(VersionFragment.newInstance());
+
+        vpHomePager.setAdapter(mPagerAdapter);
+        //限制页面的数量
+        vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
+    }
+
+
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -45,5 +91,20 @@ public class HomeActivity extends DDRActivity {
         } else {
             toast("再按一次退出");
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mPagerAdapter.getCurrentFragment().onKeyDown(keyCode,event)){
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        vpHomePager.removeOnPageChangeListener(this);
+        vpHomePager.setAdapter(null);
+        super.onDestroy();
     }
 }

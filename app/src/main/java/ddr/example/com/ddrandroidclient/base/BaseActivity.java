@@ -50,8 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             initSoftKeyboard();
         }
     }
-
-
     /**
      * 获取布局Id
      * @return

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -209,5 +210,13 @@ public abstract class BaseLazyFragment<A extends BaseActivity> extends Fragment 
     public void finish() {
         mActivity.finish();
         mActivity = null;
+    }
+
+    /**
+     * Fragment 返回键被按下时回调
+     */
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // 默认不拦截按键事件，回传给 Activity
+        return false;
     }
 }

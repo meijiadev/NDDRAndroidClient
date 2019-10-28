@@ -16,6 +16,11 @@ import butterknife.Unbinder;
 import ddr.example.com.ddrandroidclient.base.BaseLazyFragment;
 import ddr.example.com.ddrandroidclient.helper.EventBusManager;
 
+/**
+ *  time   : 2019/10/28
+ *  desc   : 项目中 Fragment 懒加载基类
+ * @param <A>
+ */
 public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFragment<A> {
 
     /** 状态栏沉浸 */
@@ -36,8 +41,6 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
 
     @Override
     protected void initFragment() {
-
-
         initImmersion();
         super.initFragment();
         EventBusManager.register(this);
