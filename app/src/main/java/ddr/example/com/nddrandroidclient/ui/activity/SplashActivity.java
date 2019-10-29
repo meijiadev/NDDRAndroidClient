@@ -65,6 +65,11 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
                 .request(this);
     }
 
+    /**
+     * 权限通过
+     * @param granted
+     * @param isAll
+     */
     @Override
     public void hasPermission(List<String> granted, boolean isAll) {
         startActivityFinish(LoginActivity.class);

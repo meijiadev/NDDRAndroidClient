@@ -10,7 +10,7 @@ android {
     }
     defaultConfig {
         applicationId "ddr.example.com.nddrandroidclient"
-        minSdkVersion 16
+        minSdkVersion 19
         // targetSdkVersion 28
         targetSdkVersion rootProject.ext.targetVersion
         versionCode 1
@@ -138,4 +138,7 @@ dependencies {
 
     // 本地异常捕捉框架：https://github.com/Ereza/CustomActivityOnCrash
     implementation 'cat.ereza:customactivityoncrash:2.2.0'
+
+    //悬浮窗
+    implementation 'com.github.yhaolpz:FloatWindow:1.0.9'
 }
