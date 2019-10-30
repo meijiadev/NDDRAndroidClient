@@ -329,5 +329,5 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
         ToastUtils.show(object);
     }
 
-   
+
 }
