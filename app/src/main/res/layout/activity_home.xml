@@ -6,10 +6,124 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.HomeActivity">
 
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gray">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="大道智创客户端"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/status"
+            android:text="基础状态"
+            android:textSize="16dp"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/mapmanager"
+            android:layout_marginRight="10dp"
+            />
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="5dp"
+            android:background="@color/blue"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/mapmanager"
+            android:layout_marginRight="10dp"
+            android:id="@+id/xh1"
+            android:visibility="gone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mapmanager"
+            android:text="地图管理"
+            android:textSize="16dp"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/taskmanager"
+            android:layout_marginRight="10dp"
+            />
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="5dp"
+            android:background="@color/blue"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/taskmanager"
+            android:layout_marginRight="10dp"
+            android:id="@+id/xh2"
+            android:visibility="gone"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/taskmanager"
+            android:text="任务管理"
+            android:textSize="16dp"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="5dp"
+            android:background="@color/blue"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:id="@+id/xh3"
+            android:visibility="gone"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/highset"
+            android:text="高级设置"
+            android:textSize="16dp"
+            android:layout_toRightOf="@id/taskmanager"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            />
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="5dp"
+            android:background="@color/blue"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/taskmanager"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/xh4"
+            android:visibility="gone"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/typeversion"
+            android:text="版本管理"
+            android:textSize="16dp"
+            android:layout_toRightOf="@id/highset"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            />
+        <TextView
+            android:layout_width="64dp"
+            android:layout_height="5dp"
+            android:background="@color/blue"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/highset"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:id="@+id/xh5"
+            />
+
+
+    </RelativeLayout>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_home_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout">
     </androidx.viewpager.widget.ViewPager>
 
 </RelativeLayout>
