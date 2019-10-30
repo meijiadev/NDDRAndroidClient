@@ -141,7 +141,6 @@ public final class LoginActivity extends DDRActivity {
                 } else {
                     toast("服务器尚未连接，无法登录");
                 }
-
                 break;
             case R.id.layout_robot:
                 layoutRobotList.setVisibility(View.VISIBLE);

@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--悬浮窗-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <application
         android:name="ddr.example.com.nddrandroidclient.base.BaseApplication"
         android:allowBackup="true"
@@ -39,6 +41,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:process=":crash"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".ui.activity.CollectingActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.activity.MapEditActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
