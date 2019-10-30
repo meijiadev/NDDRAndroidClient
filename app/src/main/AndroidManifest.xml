@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.HomeActivity"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            >
         </activity>
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.SplashActivity"
             android:screenOrientation="portrait"

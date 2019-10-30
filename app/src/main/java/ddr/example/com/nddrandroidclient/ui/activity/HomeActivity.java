@@ -2,9 +2,13 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
+import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
@@ -24,11 +28,95 @@ import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
 public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.vp_home_pager)
     ViewPager vpHomePager;
+    @BindView(R.id.status)
+    TextView status;
+    @BindView(R.id.mapmanager)
+    TextView mapmanager;
+    @BindView(R.id.taskmanager)
+    TextView taskmanager;
+    @BindView(R.id.highset)
+    TextView highset;
+    @BindView(R.id.typeversion)
+    TextView typeversion;
+    @BindView(R.id.xh1)
+    TextView xh1;
+    @BindView(R.id.xh2)
+    TextView xh2;
+    @BindView(R.id.xh3)
+    TextView xh3;
+    @BindView(R.id.xh4)
+    TextView xh4;
+    @BindView(R.id.xh5)
+    TextView xh5;
 
     /**
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
+
+    @OnClick({R.id.status,R.id.mapmanager,R.id.taskmanager,R.id.highset,R.id.typeversion})
+    public void onViewClicked(View view){
+        mPagerAdapter=new BaseFragmentAdapter<DDRLazyFragment>(this);
+        switch (view.getId()){
+            case R.id.status:
+                vpHomePager.setCurrentItem(0);
+                break;
+            case R.id.mapmanager:
+                vpHomePager.setCurrentItem(1);
+                break;
+            case R.id.taskmanager:
+                vpHomePager.setCurrentItem(2);
+                break;
+            case R.id.highset:
+                vpHomePager.setCurrentItem(3);
+                break;
+            case R.id.typeversion:
+                vpHomePager.setCurrentItem(4);
+                break;
+        }
+        isChecked();
+    }
+
+    protected void isChecked(){
+        switch (vpHomePager.getCurrentItem()){
+            case 0:
+                xh1.setVisibility(View.VISIBLE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 1:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.VISIBLE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 2:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.VISIBLE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 3:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.VISIBLE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 4:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.VISIBLE);
+                break;
+
+        }
+    }
 
 
     @Override
@@ -40,6 +128,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void initView() {
         vpHomePager.addOnPageChangeListener(this);
     }
+
 
     @Override
     protected void initData() {
