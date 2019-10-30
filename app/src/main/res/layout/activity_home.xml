@@ -122,7 +122,8 @@
     <ddr.example.com.nddrandroidclient.widget.DDRViewPager
         android:id="@+id/vp_home_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout">
     </ddr.example.com.nddrandroidclient.widget.DDRViewPager>
 
 </RelativeLayout>
