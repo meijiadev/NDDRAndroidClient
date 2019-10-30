@@ -1,19 +1,21 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
+import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.adapter.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
@@ -28,7 +30,6 @@ import ddr.example.com.nddrandroidclient.widget.DDRViewPager;
  */
 public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.vp_home_pager)
-    DDRViewPager vpHomePager;
     @BindView(R.id.status)
     TextView tv_status;
     @BindView(R.id.mapmanager)
@@ -39,86 +40,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     TextView tv_highset;
     @BindView(R.id.typeversion)
     TextView tv_typeversion;
-    @BindView(R.id.xh1)
-    TextView tv_xh1;
-    @BindView(R.id.xh2)
-    TextView tv_xh2;
-    @BindView(R.id.xh3)
-    TextView tv_xh3;
-    @BindView(R.id.xh4)
-    TextView tv_xh4;
-    @BindView(R.id.xh5)
-    TextView tv_xh5;
 
     /**
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
-
-    @OnClick({R.id.status,R.id.mapmanager,R.id.taskmanager,R.id.highset,R.id.typeversion})
-    public void onViewClicked(View view){
-        mPagerAdapter=new BaseFragmentAdapter<DDRLazyFragment>(this);
-        switch (view.getId()){
-            case R.id.status:
-                vpHomePager.setCurrentItem(0);
-                break;
-            case R.id.mapmanager:
-                vpHomePager.setCurrentItem(1);
-                break;
-            case R.id.taskmanager:
-                vpHomePager.setCurrentItem(2);
-                break;
-            case R.id.highset:
-                vpHomePager.setCurrentItem(3);
-                break;
-            case R.id.typeversion:
-                vpHomePager.setCurrentItem(4);
-                break;
-        }
-        isChecked();
-    }
-
-    protected void isChecked(){
-        switch (vpHomePager.getCurrentItem()){
-            case 0:
-                tv_xh1.setVisibility(View.VISIBLE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.GONE);
-                break;
-            case 1:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.VISIBLE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.GONE);
-                break;
-            case 2:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.VISIBLE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.GONE);
-                break;
-            case 3:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.VISIBLE);
-                tv_xh5.setVisibility(View.GONE);
-                break;
-            case 4:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.VISIBLE);
-                break;
-
-        }
-    }
-
 
     @Override
     protected int getLayoutId() {
@@ -133,7 +59,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initData() {
-        mPagerAdapter=new BaseFragmentAdapter<DDRLazyFragment>(this);
+        mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());
         mPagerAdapter.addFragment(TaskFragment.newInstance());
@@ -146,7 +72,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -154,7 +79,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
-
+        Logger.e("-----当前页面：" + position);
     }
 
     @Override
@@ -185,7 +110,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mPagerAdapter.getCurrentFragment().onKeyDown(keyCode,event)){
+        if (mPagerAdapter.getCurrentFragment().onKeyDown(keyCode, event)) {
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -197,4 +122,72 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setAdapter(null);
         super.onDestroy();
     }
+
+   
+
+    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.status:
+                Logger.e("---------setCurrentItem");
+                vpHomePager.setCurrentItem(0);
+                break;
+            case R.id.mapmanager:
+                vpHomePager.setCurrentItem(1);
+                break;
+            case R.id.taskmanager:
+                vpHomePager.setCurrentItem(2);
+                break;
+            case R.id.highset:
+                vpHomePager.setCurrentItem(3);
+                break;
+            case R.id.typeversion:
+                vpHomePager.setCurrentItem(4);
+                Logger.e("---------setCurrentItem");
+                break;
+        }
+    }
+
+    protected void isChecked() {
+        switch (vpHomePager.getCurrentItem()) {
+            case 0:
+                xh1.setVisibility(View.VISIBLE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 1:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.VISIBLE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 2:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.VISIBLE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 3:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.VISIBLE);
+                xh5.setVisibility(View.GONE);
+                break;
+            case 4:
+                xh1.setVisibility(View.GONE);
+                xh2.setVisibility(View.GONE);
+                xh3.setVisibility(View.GONE);
+                xh4.setVisibility(View.GONE);
+                xh5.setVisibility(View.VISIBLE);
+                break;
+
+        }
+    }
+
+
 }

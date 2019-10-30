@@ -1,12 +1,14 @@
 package ddr.example.com.nddrandroidclient.widget;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * time  : 2019/10/30
@@ -41,6 +43,7 @@ public class DDRViewPager extends ViewPager {
             // 如果当前是中间页，只有相邻页才会有动画
             smoothScroll = Math.abs(currentItem - item) == 1;
         }
+        Logger.e("---------setCurrentItem");
         super.setCurrentItem(item, smoothScroll);
     }
 
