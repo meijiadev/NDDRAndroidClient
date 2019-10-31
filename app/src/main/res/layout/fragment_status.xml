@@ -9,5 +9,10 @@
         android:text="基础状态页面"
         android:layout_centerInParent="true"
         />
+    <ddr.example.com.nddrandroidclient.widget.StatusSwitchButton
+        android:id="@+id/status_switch_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
