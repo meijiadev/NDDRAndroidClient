@@ -4,11 +4,11 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.TextView;
+
 
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
@@ -42,8 +42,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     LineTextView tv_highset;
     @BindView(R.id.typeversion)
     LineTextView tv_typeversion;
-
-
 
     /**
      * ViewPage 适配器
@@ -192,5 +190,14 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_typeversion.isChecked(true);
                 break;
         }
+    }
+
+    /**
+     * 设置状态栏颜色为浅色
+     * @return 返回为true 为黑色
+     */
+    @Override
+    public boolean statusBarDarkFont() {
+        return false;
     }
 }
