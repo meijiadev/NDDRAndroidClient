@@ -23,6 +23,7 @@ import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
 import ddr.example.com.nddrandroidclient.widget.DDRViewPager;
+import ddr.example.com.nddrandroidclient.widget.LineTextView;
 
 /**
  * time:2019/10/26
@@ -32,25 +33,15 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @BindView(R.id.vp_home_pager)
     DDRViewPager vpHomePager;
     @BindView(R.id.status)
-    TextView tv_status;
+    LineTextView tv_status;
     @BindView(R.id.mapmanager)
-    TextView tv_mapmanager;
+    LineTextView tv_mapmanager;
     @BindView(R.id.taskmanager)
-    TextView tv_taskmanager;
+    LineTextView tv_taskmanager;
     @BindView(R.id.highset)
-    TextView tv_highset;
+    LineTextView tv_highset;
     @BindView(R.id.typeversion)
-    TextView tv_typeversion;
-    @BindView(R.id.xh1)
-    TextView tv_xh1;
-    @BindView(R.id.xh2)
-    TextView tv_xh2;
-    @BindView(R.id.xh3)
-    TextView tv_xh3;
-    @BindView(R.id.xh4)
-    TextView tv_xh4;
-    @BindView(R.id.xh5)
-    TextView tv_xh5;
+    LineTextView tv_typeversion;
 
 
 
@@ -82,6 +73,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setAdapter(mPagerAdapter);
         //限制页面的数量
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
+        isChecked();
     }
 
 
@@ -165,39 +157,39 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void isChecked() {
         switch (vpHomePager.getCurrentItem()) {
             case 0:
-                tv_xh1.setVisibility(View.VISIBLE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.GONE);
+                tv_status.isChecked(true);
+                tv_mapmanager.isChecked(false);
+                tv_highset.isChecked(false);
+                tv_taskmanager.isChecked(false);
+                tv_typeversion.isChecked(false);
                 break;
             case 1:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.VISIBLE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.GONE);
+                tv_status.isChecked(false);
+                tv_mapmanager.isChecked(true);
+                tv_highset.isChecked(false);
+                tv_taskmanager.isChecked(false);
+                tv_typeversion.isChecked(false);
                 break;
             case 2:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.VISIBLE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.GONE);
+                tv_status.isChecked(false);
+                tv_mapmanager.isChecked(false);
+                tv_highset.isChecked(false);
+                tv_taskmanager.isChecked(true);
+                tv_typeversion.isChecked(false);
                 break;
             case 3:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.VISIBLE);
-                tv_xh5.setVisibility(View.GONE);
+                tv_status.isChecked(false);
+                tv_mapmanager.isChecked(false);
+                tv_highset.isChecked(true);
+                tv_taskmanager.isChecked(false);
+                tv_typeversion.isChecked(false);
                 break;
             case 4:
-                tv_xh1.setVisibility(View.GONE);
-                tv_xh2.setVisibility(View.GONE);
-                tv_xh3.setVisibility(View.GONE);
-                tv_xh4.setVisibility(View.GONE);
-                tv_xh5.setVisibility(View.VISIBLE);
+                tv_status.isChecked(false);
+                tv_mapmanager.isChecked(false);
+                tv_highset.isChecked(false);
+                tv_taskmanager.isChecked(false);
+                tv_typeversion.isChecked(true);
                 break;
         }
     }

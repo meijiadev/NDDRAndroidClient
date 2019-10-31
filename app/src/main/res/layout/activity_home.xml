@@ -19,9 +19,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:textColor="#ffffff"/>
-        <TextView
+        <ddr.example.com.nddrandroidclient.widget.LineTextView
             android:layout_width="83dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:id="@+id/status"
             android:text="基础状态"
             android:textSize="12dp"
@@ -32,42 +32,21 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"
             />
-        <TextView
-            android:layout_width="78dp"
-            android:layout_height="2.5dp"
-            android:background="#0399ff"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/mapmanager"
-            android:layout_marginRight="34dp"
-            android:id="@+id/xh1"
-            android:visibility="visible"
-            />
-        <TextView
-            android:layout_width="83dp"
-            android:layout_height="24dp"
+        <ddr.example.com.nddrandroidclient.widget.LineTextView
             android:id="@+id/mapmanager"
-            android:text="地图管理"
-            android:textSize="12dp"
+            android:layout_width="82dp"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/taskmanager"
             android:layout_marginRight="34dp"
-            android:textColor="#ffffff"
-            android:gravity="center"
+            android:layout_toLeftOf="@id/taskmanager"
             android:drawableLeft="@mipmap/banbenxinxi"
-            />
-        <TextView
-            android:layout_width="78dp"
-            android:layout_height="2.5dp"
-            android:background="#0399ff"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/taskmanager"
-            android:layout_marginRight="34dp"
-            android:id="@+id/xh2"
-            android:visibility="gone"
-            />
-        <TextView
+            android:gravity="center"
+            android:text="地图管理"
+            android:textColor="#ffffff"
+            android:textSize="12dp" />
+        <ddr.example.com.nddrandroidclient.widget.LineTextView
             android:layout_width="83dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:id="@+id/taskmanager"
             android:text="任务管理"
             android:textSize="12dp"
@@ -75,18 +54,9 @@
             android:textColor="#ffffff"
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"/>
-        <TextView
-            android:layout_width="78dp"
-            android:layout_height="2.5dp"
-            android:background="#0399ff"
-            android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:id="@+id/xh3"
-            android:visibility="gone"
-            />
-        <TextView
+        <ddr.example.com.nddrandroidclient.widget.LineTextView
             android:layout_width="83dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:id="@+id/highset"
             android:text="高级设置"
             android:textSize="12dp"
@@ -97,20 +67,9 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"
             />
-        <TextView
-            android:layout_width="78dp"
-            android:layout_height="2.5dp"
-            android:background="#0399ff"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/taskmanager"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="34dp"
-            android:id="@+id/xh4"
-            android:visibility="gone"
-            />
-        <TextView
+        <ddr.example.com.nddrandroidclient.widget.LineTextView
             android:layout_width="83dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:id="@+id/typeversion"
             android:text="版本管理"
             android:textSize="12dp"
@@ -121,17 +80,6 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"
             />
-        <TextView
-            android:layout_width="78dp"
-            android:layout_height="2.5dp"
-            android:background="#0399ff"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/highset"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="34dp"
-            android:visibility="gone"
-            android:id="@+id/xh5"
-            />
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22.5dp"
@@ -139,6 +87,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="25dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#262728"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/line_view"
             />
     </RelativeLayout>
     <ddr.example.com.nddrandroidclient.widget.DDRViewPager
