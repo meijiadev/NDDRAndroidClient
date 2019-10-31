@@ -52,8 +52,8 @@ public class CircleBarView extends View {
     }
 
     private void init(Context context,AttributeSet attrs){
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleBarView);
-        Drawable imageBackground=typedArray.getDrawable(R.styleable.CircleBarView_centerBackground);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.CircleView);
+        Drawable imageBackground=typedArray.getDrawable(R.styleable.CircleView_centerBackground);
         if (null!=imageBackground){
             if (imageBackground instanceof BitmapDrawable){
                 centerBg=((BitmapDrawable) imageBackground).getBitmap();

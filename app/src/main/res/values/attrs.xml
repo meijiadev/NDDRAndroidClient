@@ -69,7 +69,7 @@
         <attr name="sizeRatio" format="float" />
     </declare-styleable>
 
-    <declare-styleable name="CircleBarView">
+    <declare-styleable name="CircleView">
         <attr name="centerBackground" format="color|reference"/>
     </declare-styleable>
 
