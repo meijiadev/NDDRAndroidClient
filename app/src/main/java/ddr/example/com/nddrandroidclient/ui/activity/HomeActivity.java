@@ -79,12 +79,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
         //Logger.e("-----当前页面：" + position);
+        isChecked();
     }
 
     @Override
