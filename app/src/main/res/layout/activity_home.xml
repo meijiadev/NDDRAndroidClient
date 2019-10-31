@@ -9,120 +9,146 @@
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/gray">
+        android:layout_height="60dp"
+        android:background="#101112">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="136dp"
+            android:layout_height="22.5dp"
             android:text="大道智创客户端"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"/>
+            android:layout_marginLeft="16dp"
+            android:textColor="#ffffff"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="24dp"
             android:id="@+id/status"
             android:text="基础状态"
-            android:textSize="16dp"
+            android:textSize="12dp"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/mapmanager"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="34dp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/banbenxinxi"
             />
         <TextView
-            android:layout_width="64dp"
-            android:layout_height="5dp"
-            android:background="@color/blue"
+            android:layout_width="78dp"
+            android:layout_height="2.5dp"
+            android:background="#0399ff"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/mapmanager"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="34dp"
             android:id="@+id/xh1"
-            android:visibility="gone"/>
+            android:visibility="visible"
+            />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="24dp"
             android:id="@+id/mapmanager"
             android:text="地图管理"
-            android:textSize="16dp"
+            android:textSize="12dp"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/taskmanager"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="34dp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/banbenxinxi"
             />
         <TextView
-            android:layout_width="64dp"
-            android:layout_height="5dp"
-            android:background="@color/blue"
+            android:layout_width="78dp"
+            android:layout_height="2.5dp"
+            android:background="#0399ff"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/taskmanager"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="34dp"
             android:id="@+id/xh2"
             android:visibility="gone"
             />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="24dp"
             android:id="@+id/taskmanager"
             android:text="任务管理"
-            android:textSize="16dp"
-            android:layout_centerInParent="true"/>
+            android:textSize="12dp"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/banbenxinxi"/>
         <TextView
-            android:layout_width="64dp"
-            android:layout_height="5dp"
-            android:background="@color/blue"
+            android:layout_width="78dp"
+            android:layout_height="2.5dp"
+            android:background="#0399ff"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:id="@+id/xh3"
             android:visibility="gone"
             />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="24dp"
             android:id="@+id/highset"
             android:text="高级设置"
-            android:textSize="16dp"
+            android:textSize="12dp"
             android:layout_toRightOf="@id/taskmanager"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="34dp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/banbenxinxi"
             />
         <TextView
-            android:layout_width="64dp"
-            android:layout_height="5dp"
-            android:background="@color/blue"
+            android:layout_width="78dp"
+            android:layout_height="2.5dp"
+            android:background="#0399ff"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/taskmanager"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="34dp"
             android:id="@+id/xh4"
             android:visibility="gone"
             />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="24dp"
             android:id="@+id/typeversion"
             android:text="版本管理"
-            android:textSize="16dp"
+            android:textSize="12dp"
             android:layout_toRightOf="@id/highset"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="34dp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/banbenxinxi"
             />
         <TextView
-            android:layout_width="64dp"
-            android:layout_height="5dp"
-            android:background="@color/blue"
+            android:layout_width="78dp"
+            android:layout_height="2.5dp"
+            android:background="#0399ff"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/highset"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="34dp"
             android:visibility="gone"
             android:id="@+id/xh5"
+            />
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22.5dp"
+            android:src="@mipmap/password"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="25dp"
             />
 
 
     </RelativeLayout>
-
     <ddr.example.com.nddrandroidclient.widget.DDRViewPager
         android:id="@+id/vp_home_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-		android:layout_below="@id/title_layout">    </ddr.example.com.nddrandroidclient.widget.DDRViewPager>
+		android:layout_below="@id/title_layout"
+        >
+    </ddr.example.com.nddrandroidclient.widget.DDRViewPager>
 
 </RelativeLayout>

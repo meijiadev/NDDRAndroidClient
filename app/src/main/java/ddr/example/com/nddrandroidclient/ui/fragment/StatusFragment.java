@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
+import android.graphics.Color;
 import android.view.animation.Animation;
 
 import butterknife.BindView;
@@ -7,6 +8,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.widget.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 
 /**
@@ -16,6 +18,8 @@ import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 public final class StatusFragment extends DDRLazyFragment<HomeActivity> implements Animation.AnimationListener ,StatusSwitchButton.OnStatusSwitchListener {
     @BindView(R.id.status_switch_bt)
     StatusSwitchButton statusSwitchButton;
+    @BindView(R.id.cicle)
+    CircleBarView circleBarView;
 
     public static StatusFragment newInstance(){
         return new StatusFragment();
@@ -33,6 +37,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity> implemen
 
     @Override
     protected void initData() {
+        circleBarView.setProgress(80,2000, Color.parseColor("#02B5F8"));
 
     }
 
