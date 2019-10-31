@@ -30,21 +30,4 @@ public class VersionFragment extends DDRLazyFragment<HomeActivity> {
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Logger.e("------onRestart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Logger.e("-----onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Logger.e("------onPause");
-    }
 }
