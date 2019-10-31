@@ -98,12 +98,13 @@ public class CircleBarView extends View {
         int cx = measuredWidth / 2;
         int cy = measuredHeight / 2;
         // 中心点
-        Rect src=new Rect(0,0,centerBg.getWidth(),centerBg.getHeight());
+      /*  Rect src=new Rect(0,0,centerBg.getWidth(),centerBg.getHeight());
         Rect dst=new Rect(cx-centerBg.getWidth()/2,cy-centerBg.getHeight()/2,cx+centerBg.getWidth()/2,cy+centerBg.getHeight()/2);
-        canvas.drawBitmap(centerBg,src,dst,centerPaint);
+        canvas.drawBitmap(centerBg,src,dst,centerPaint);*/
         progressPaint.setColor(progressColor);
         canvas.drawArc(mRectF,startAngle,sweepAngle,false,bgPaint);//这里角度0对应的是三点钟方向，顺时针方向递增   背景圆弧
         canvas.drawArc(mRectF,startAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
+
     }
 
     @Override
