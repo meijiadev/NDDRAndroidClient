@@ -140,8 +140,6 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="25dp"
             />
-
-
     </RelativeLayout>
     <ddr.example.com.nddrandroidclient.widget.DDRViewPager
         android:id="@+id/vp_home_pager"

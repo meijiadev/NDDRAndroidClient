@@ -33,13 +33,15 @@
             android:layout_height="134dp"
             android:layout_marginTop="100dp"
             android:layout_marginLeft="32dp"
-            android:id="@+id/cicle"
+            android:id="@+id/circle"
             />
         <ddr.example.com.nddrandroidclient.widget.StatusSwitchButton
             android:id="@+id/status_switch_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:layout_below="@id/circle"
+            android:layout_marginTop="110px"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -65,12 +67,5 @@
             android:textColor="#0399ff"
             />
     </RelativeLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="基础状态页面"
-        android:layout_centerInParent="true"
-        />
-
 
 </RelativeLayout>

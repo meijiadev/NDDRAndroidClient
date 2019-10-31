@@ -18,7 +18,7 @@ import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 public final class StatusFragment extends DDRLazyFragment<HomeActivity> implements Animation.AnimationListener ,StatusSwitchButton.OnStatusSwitchListener {
     @BindView(R.id.status_switch_bt)
     StatusSwitchButton statusSwitchButton;
-    @BindView(R.id.cicle)
+    @BindView(R.id.circle)
     CircleBarView circleBarView;
 
     public static StatusFragment newInstance(){
