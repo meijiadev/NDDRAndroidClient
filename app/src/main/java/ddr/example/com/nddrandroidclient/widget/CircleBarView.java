@@ -26,6 +26,7 @@ public class CircleBarView extends View {
     private RectF mRectF;//绘制圆弧的矩形区域
     private Paint bgPaint;//绘制背景圆弧的画笔
     private Paint progressPaint;//绘制圆弧的画笔
+    private Paint textPaint;
     private float progressNum;  //可以更新的进度条数值
     private float MaxNum;       //进度条最大值
 
@@ -72,6 +73,10 @@ public class CircleBarView extends View {
         progressPaint.setStrokeWidth(barWidth);      //设置一个画笔的宽度
         circleBarAnim=new CircleBarAnim();
 
+        textPaint=new Paint();
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(48);
+        textPaint.setColor(Color.WHITE);
         bgPaint=new Paint();
         bgPaint.setStyle(Paint.Style.STROKE);
         bgPaint.setColor(Color.GRAY);
@@ -104,6 +109,7 @@ public class CircleBarView extends View {
         progressPaint.setColor(progressColor);
         canvas.drawArc(mRectF,startAngle,sweepAngle,false,bgPaint);//这里角度0对应的是三点钟方向，顺时针方向递增   背景圆弧
         canvas.drawArc(mRectF,startAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
+        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight-71,textPaint);
 
     }
 

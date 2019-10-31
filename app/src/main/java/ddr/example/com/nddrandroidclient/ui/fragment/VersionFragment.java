@@ -38,7 +38,6 @@ public class VersionFragment extends DDRLazyFragment<HomeActivity> {
     protected void initData() {
 
     }
-
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -50,4 +49,5 @@ public class VersionFragment extends DDRLazyFragment<HomeActivity> {
         super.onDestroy();
 
     }
+
 }

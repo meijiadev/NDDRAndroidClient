@@ -129,7 +129,7 @@
             android:layout_height="134dp"
             android:layout_marginTop="100dp"
             android:layout_marginLeft="32dp"
-            android:id="@+id/cicle"
+            android:id="@+id/circle"
             />
         <ddr.example.com.nddrandroidclient.widget.StatusSwitchButton
             android:id="@+id/status_switch_bt"
@@ -138,9 +138,6 @@
             android:layout_marginTop="282dp"
             android:layout_marginLeft="32dp"
             />
-        <RelativeLayout
-            android:layout_width=""
-            android:layout_height=""
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
