@@ -6,4 +6,5 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="高级设置页面"/>
+
 </RelativeLayout>

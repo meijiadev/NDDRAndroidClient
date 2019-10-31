@@ -56,11 +56,11 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
 
     }
 
+
     /**
      * 请求权限
      */
-    private void
-    requestPermission(){
+    private void requestPermission(){
         XXPermissions.with(this)
                 .permission(Permission.Group.STORAGE)
                 .request(this);

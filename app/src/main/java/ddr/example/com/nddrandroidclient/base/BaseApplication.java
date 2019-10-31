@@ -2,15 +2,25 @@ package ddr.example.com.nddrandroidclient.base;
 
 import android.app.Application;
 import android.util.Log;
+import android.view.animation.BounceInterpolator;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.hjq.toast.ToastInterceptor;
 import com.hjq.toast.ToastUtils;
 import com.squareup.leakcanary.LeakCanary;
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.MoveType;
+import com.yhao.floatwindow.PermissionListener;
+import com.yhao.floatwindow.Screen;
+import com.yhao.floatwindow.ViewStateListener;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
+import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
+import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 
@@ -25,7 +35,7 @@ public class BaseApplication extends Application {
         initSDK(this);
     }
 
-    public static void initSDK(Application application){
+    public  void initSDK(Application application){
         // 这个过程专门用于堆分析的 leak 金丝雀
         // 你不应该在这个过程中初始化你的应用程序
         if (LeakCanary.isInAnalyzerProcess(application)) {
@@ -66,6 +76,40 @@ public class BaseApplication extends Application {
                 // 设置监听器
                 //.eventListener(new YourCustomEventListener())
                 .apply();
-
+        initFloatView();
     }
+
+    /**
+     * 显示悬浮窗
+     */
+    private void initFloatView(){
+        ImageView imageView=new ImageView(getApplicationContext());
+        imageView.setImageResource(R.mipmap.logo);
+        FloatWindow
+                .with(getApplicationContext())
+                .setView(imageView)
+                /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
+                .setHeight(Screen.width, 0.2f)*/
+                .setX(Screen.width,1.5f)
+                .setY(50)
+                .setMoveType(MoveType.inactive)
+                .setFilter(true, HomeActivity.class)
+                .setPermissionListener(mPermissionListener)
+                .setDesktopShow(false)
+                .build();
+    }
+
+    private PermissionListener mPermissionListener = new PermissionListener() {
+        @Override
+        public void onSuccess() {
+            Logger.e("onSuccess");
+
+        }
+
+        @Override
+        public void onFail() {
+            Logger.e("onFail");
+        }
+    };
+
 }

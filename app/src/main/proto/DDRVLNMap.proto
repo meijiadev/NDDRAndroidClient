@@ -3,6 +3,15 @@ package DDRVLNMapProto;
 import "BaseCmd.proto";
 
 // 基础元素描述 +++++++++++++++++++++++++++++++++++++++
+
+message timeItem
+{
+	int32 startHour = 1; // 开始时间，时
+	int32 startMin = 2; // 开始时间，分
+	int32 endHour = 3; // 结束时间，时
+	int32 endMin = 4; // 结束时间，分
+}
+
 // 基础点
 message space_point 
 {
@@ -10,6 +19,7 @@ message space_point
 	float x = 2;
 	float y = 3;
 	repeated int32 label_value = 4;
+	float theta = 5; // 朝向 单位度 [-180, 180]  
 }
 
 // 标签
@@ -85,7 +95,7 @@ enum eMarkingItemType
 	eMarkingTypeCharging = 5; // 充电点
 	eMarkingTypeQR = 6;  // QR模式
 	eMarkingTypeRotate = 7; // 旋转特定角度
-	
+	eMarkingTypeNormal = 8; // 路径上的普通点
 } 
 
 // 朝向方式
@@ -110,7 +120,8 @@ message path_action_point_item
 	eMarkingItemType type = 3; // action 类型。如果pointname是一个MarkingPoint的名字，那么这里的type应该跟该标记点的type一致。
 	path_action_point_config config = 4; // 配置文件
 	repeated int32 label_value = 5;
-} 
+}
+
 
 // 路径item模式
 enum ePathItemMode  
@@ -148,18 +159,46 @@ message path_arc_item
 	repeated int32 label_value = 7;
 } 
 
+// 目标点
+message path_target_point_item
+{
+	bytes name = 1;
+	space_point point = 2;
+}
+
+// 路径上的点。其实包含了动作点
+message path_line_point_item
+{
+	bytes name = 1;
+	space_point point = 2;
+	eMarkingItemType type = 3; // action 类型。如果pointname是一个MarkingPoint的名字，那么这里的type应该跟该标记点的type一致。
+	path_action_point_config config = 4; // 配置文件
+}
+
+// 路径
+message path_line_itemEx
+{
+	bytes name = 1;// 同一reqDDRVLNMap是唯一的
+	repeated path_line_point_item pointSet = 2;
+	float velocity = 3; // 速度
+	ePathItemMode mode = 4; // 路径模式
+	path_line_config config = 5; // 配置文件
+}
+
 enum path_element_type
 {
 	ePathElementTypeError = 0;
-	ePathElementTypeLine = 1;
-	ePathElementTypeActionPoint = 2;
+	ePathElementTypeLine = 1;  // 对应0.4版本的路径
+	ePathElementTypeActionPoint = 2; // 对应0.4版本的目标点
 	ePathElementTypeArc = 3;
 }
 
 message path_element
 {
 	bytes name = 1;
-	path_element_type type = 2;
+	path_element_type type = 2; // 根据这个类型，下面二选一
+	path_target_point_item actPoint = 3; // 就是0.4版定义的目标点。（也是动作点，只不过只有旋转到特定角度）
+	path_line_itemEx line = 4; // 就是0.4版定义的路径。（其实是包含了动作点）
 }
 
 // 每个task_item会保存成一个文件
@@ -168,6 +207,8 @@ message task_item
 	bytes name = 1; // 任务名字，同一reqDDRVLNMap是唯一的
 	repeated path_element pathSet = 2; // path的集合。这里只存名字。根据名字去找对应的path
 	repeated int32 label_value = 3;
+	timeItem timeSet = 4; // 时间段
+	int32 runCount = 5; // 运行次数
 }
 
 // 任务描述 -----------------------------------------
@@ -387,13 +428,6 @@ message FrequencyTaskELement
 
 message TimingSet
 {
-	message timeItem
-	{
-		int32 startHour = 1; // 开始时间，时
-		int32 startMin = 2; // 开始时间，分
-		int32 endHour = 3; // 结束时间，时
-		int32 endMin = 4; // 结束时间，分
-	}
 	repeated timeItem set = 1;
 }
 
@@ -408,6 +442,13 @@ message TimingTaskELement
 	repeated timingItem itemSet = 1;
 }
 
+message runControlItem
+{
+	bytes onerouteName = 1;
+	bytes taskName = 2;
+}
+
+
 /*
 	客户端配置时发送任务，可以是多个任务集合。上位机收到后保存成DDRTaskControl.ddr(这个文件类似于之前的CRUISING_SPEC.txt)
 	只能是三种任务模式中选一个。
@@ -420,6 +461,7 @@ message reqRunControl
 	TimingTaskELement timeingTask = 3;
 	FrequencyTaskELement frequencyTask = 4;
 	InfiniteTaskELement infiniteTask = 5;
+	repeated runControlItem taskSet = 6; // 0.4版本主要是用这个了。上面的只是保留而已。
 }
 
 message rspRunControl

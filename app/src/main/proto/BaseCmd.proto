@@ -92,6 +92,7 @@ enum eCltType {
 	eLocalServer = 0x10000;
 	eRemoteServer = 0x20000;
 	eAIServer = 0x30000;
+	eLocalAIClient = 0x30001;
 	eAllServer = 0xff0000;
 }
 // flowDirection = UNKNOWN2RS or UNKNOWN2LS
@@ -444,6 +445,36 @@ enum  eNavRobotSubMode
 	AUTO_FINISHED = 19; // 自动模式-成功到达终点
 }
 
+// 自动模式细节
+enum  eAUTOMOVINGSTATUS 
+{
+	RELOCATING = 0; // 正在初始定位
+	STATIC_NORMAL = 1; // 静态避障-正常行走
+	STATIC_SLOWDOWN = 2; // 静态避障-减速避障
+	STATIC_STOPPED = 3; // 静态避障-停止
+	DYNAMIC_NORMAL = 4; // 动态避障-正常行走
+	DYNAMIC_DETOUR = 5; // 动态避障-绕行
+	DYNAMIC_NOWAYOUT = 6; // 动态避障-Χ'
+	DYNAMIC_VIRTUAL_COLLISION = 7; // 动态避障-遭遇虚拟障碍
+	PP_TURNING = 8; // 原地旋转
+	PP_TEMP_SEGMENT = 9; // 执行临时路径(此过程静态避障)
+	PP_SIEGE = 10; // 被围困
+
+	QR_ArrivalElevatorAlignment = 50; // 到达电梯基础点
+	QR_ArrivalElevatorEnter = 51; // 完成基础点的对准
+	QR_ArrivalElevatorIn_A = 52; // 到了电梯A的里面
+	QR_ArrivalElevatorOut_A = 53; // 到了电梯B的外面
+	QR_ArrivalElevatorIn_B = 54; // 到了电梯B的里面
+	QR_ArrivalElevatorOut_B = 55; // 到了电梯A的外面
+	QR_ArrivalProjectionStart = 56; // 到达投影点起始点
+	QR_ArrivalProjectionEnd = 57; // 到达投影结束点1
+
+	RotAct_Working = 70;
+	RotAct_WorkOver = 71;
+
+	PPOAC_Running = 255;
+	PPOAC_Pause = 256;
+}
 
 enum eException {
 	eNO_EXCEPTION = 0;
@@ -486,6 +517,11 @@ message notifyBaseStatusEx{
 	float posangulauspeed = 12;
 	bytes robotid = 13;
 	bool chargingStatus = 14; // true - 充电中
+	int32 chargingSubStatus = 15; // 充电子状态
+	eAUTOMOVINGSTATUS automovingstatus = 16; // 自动模式细节
+	int32 taskCount = 17; // 任务次数
+	int32 taskDuration = 18; // 任务时长，单位秒
+	bool bLocated = 19; // 当前是否有定位
 }
 
 // Environmental sensor info
@@ -497,6 +533,8 @@ message notifyEnvInfo{
 	float co2 = 5;
 	float ch2o = 6;
 	int32 tray = 7; // 低8位表示上面那一对，8-15位表示下面一对传感器。 0-被遮挡。 1-没被遮挡
+	float nuclear = 8; // 核辐射
+	float dangerousgas = 9; // 危险气体
 }
 
 //ObsStatus
@@ -924,12 +962,23 @@ message reqClientGetMapInfo{
 message rspClientGetMapInfo{
 	message MapInfoItem
 	{
+		message TaskItem
+		{
+			bytes name = 1; 
+			int32 startHour = 2; // 开始时间，时
+			int32 startMin = 3; // 开始时间，分
+			int32 endHour = 4; // 结束时间，时
+			int32 endMin = 5; // 结束时间，分
+			int32 runCount = 6; // 运行次数
+		}
+		
 		bytes name = 1; // 地图名
 		int64 timeStamp = 2; // 时间戳
 		bytes bkPicAddr = 3; // 地图http地址
 		float width = 4; // 宽度
 		float hitght  = 5; // 高度
 		bytes author = 6;  // 采集人
+		repeated TaskItem taskSet = 7;
 	}
 	repeated MapInfoItem mapData = 1;
 }
@@ -984,6 +1033,4 @@ message notifyLidarPts{
 	float posy = 3;  // 机器人位置y
 	float posdirection = 4; // 机器人朝向
 }
-
-
 // +++++++++++++++++++ Common message bodies +++++++++++++++++++ //
