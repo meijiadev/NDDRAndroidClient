@@ -90,7 +90,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
-        Logger.e("-----当前页面：" + position);
+        //Logger.e("-----当前页面：" + position);
     }
 
     @Override
@@ -157,6 +157,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("---------setCurrentItem");
                 break;
         }
+        isChecked();
     }
 
     protected void isChecked() {
@@ -196,9 +197,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 xh4.setVisibility(View.GONE);
                 xh5.setVisibility(View.VISIBLE);
                 break;
-
         }
     }
-
-
 }
