@@ -63,7 +63,7 @@ public class CircleBarView extends View {
             //如何没有设置背景图片
         }
 
-        defaultSize = DpOrPxUtils.dip2px(context,100);
+        defaultSize = DpOrPxUtils.dip2px(context,134);
         barWidth = DpOrPxUtils.dip2px(context,2);
         mRectF = new RectF();
 
