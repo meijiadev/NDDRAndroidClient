@@ -31,26 +31,28 @@ import ddr.example.com.nddrandroidclient.widget.DDRViewPager;
 public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.vp_home_pager)
     DDRViewPager vpHomePager;
-    @BindView(R.id.xh1)
-    TextView xh1;
-    @BindView(R.id.xh2)
-    TextView xh2;
-    @BindView(R.id.xh3)
-    TextView xh3;
-    @BindView(R.id.xh4)
-    TextView xh4;
-    @BindView(R.id.xh5)
-    TextView xh5;
     @BindView(R.id.status)
-    TextView status;
+    TextView tv_status;
     @BindView(R.id.mapmanager)
-    TextView mapmanager;
+    TextView tv_mapmanager;
     @BindView(R.id.taskmanager)
-    TextView taskmanager;
+    TextView tv_taskmanager;
     @BindView(R.id.highset)
-    TextView highset;
+    TextView tv_highset;
     @BindView(R.id.typeversion)
-    TextView typeversion;
+    TextView tv_typeversion;
+    @BindView(R.id.xh1)
+    TextView tv_xh1;
+    @BindView(R.id.xh2)
+    TextView tv_xh2;
+    @BindView(R.id.xh3)
+    TextView tv_xh3;
+    @BindView(R.id.xh4)
+    TextView tv_xh4;
+    @BindView(R.id.xh5)
+    TextView tv_xh5;
+
+
 
     /**
      * ViewPage 适配器
@@ -163,39 +165,39 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void isChecked() {
         switch (vpHomePager.getCurrentItem()) {
             case 0:
-                xh1.setVisibility(View.VISIBLE);
-                xh2.setVisibility(View.GONE);
-                xh3.setVisibility(View.GONE);
-                xh4.setVisibility(View.GONE);
-                xh5.setVisibility(View.GONE);
+                tv_xh1.setVisibility(View.VISIBLE);
+                tv_xh2.setVisibility(View.GONE);
+                tv_xh3.setVisibility(View.GONE);
+                tv_xh4.setVisibility(View.GONE);
+                tv_xh5.setVisibility(View.GONE);
                 break;
             case 1:
-                xh1.setVisibility(View.GONE);
-                xh2.setVisibility(View.VISIBLE);
-                xh3.setVisibility(View.GONE);
-                xh4.setVisibility(View.GONE);
-                xh5.setVisibility(View.GONE);
+                tv_xh1.setVisibility(View.GONE);
+                tv_xh2.setVisibility(View.VISIBLE);
+                tv_xh3.setVisibility(View.GONE);
+                tv_xh4.setVisibility(View.GONE);
+                tv_xh5.setVisibility(View.GONE);
                 break;
             case 2:
-                xh1.setVisibility(View.GONE);
-                xh2.setVisibility(View.GONE);
-                xh3.setVisibility(View.VISIBLE);
-                xh4.setVisibility(View.GONE);
-                xh5.setVisibility(View.GONE);
+                tv_xh1.setVisibility(View.GONE);
+                tv_xh2.setVisibility(View.GONE);
+                tv_xh3.setVisibility(View.VISIBLE);
+                tv_xh4.setVisibility(View.GONE);
+                tv_xh5.setVisibility(View.GONE);
                 break;
             case 3:
-                xh1.setVisibility(View.GONE);
-                xh2.setVisibility(View.GONE);
-                xh3.setVisibility(View.GONE);
-                xh4.setVisibility(View.VISIBLE);
-                xh5.setVisibility(View.GONE);
+                tv_xh1.setVisibility(View.GONE);
+                tv_xh2.setVisibility(View.GONE);
+                tv_xh3.setVisibility(View.GONE);
+                tv_xh4.setVisibility(View.VISIBLE);
+                tv_xh5.setVisibility(View.GONE);
                 break;
             case 4:
-                xh1.setVisibility(View.GONE);
-                xh2.setVisibility(View.GONE);
-                xh3.setVisibility(View.GONE);
-                xh4.setVisibility(View.GONE);
-                xh5.setVisibility(View.VISIBLE);
+                tv_xh1.setVisibility(View.GONE);
+                tv_xh2.setVisibility(View.GONE);
+                tv_xh3.setVisibility(View.GONE);
+                tv_xh4.setVisibility(View.GONE);
+                tv_xh5.setVisibility(View.VISIBLE);
                 break;
         }
     }
