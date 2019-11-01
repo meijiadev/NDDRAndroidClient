@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="367dp"
+        android:layout_marginLeft="366dp"
         android:background="#101112">
         <TextView
             android:layout_width="120dp"
@@ -177,7 +177,7 @@
             android:text="建立任务步骤："
             android:textSize="12sp"
             android:textColor="#ffffff"
-            android:layout_marginTop="438dp"
+            android:layout_marginTop="380dp"
             android:layout_marginLeft="16dp"
             android:gravity="center"
             />
@@ -195,8 +195,70 @@
             android:layout_marginTop="282dp"
             android:layout_marginLeft="32dp"
             />
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="308dp"
+            android:layout_height="58dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="442dp">
 
+            <View
+                android:layout_width="257dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="15sp"
+                android:layout_marginLeft="21dp"
+                android:elevation="0dp"
+                android:background="#272829"
+                android:gravity="bottom"
+                />
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:drawableTop="@mipmap/banbenxinxi"
+                android:text="建立地图"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:gravity="center|bottom"
+                android:id="@+id/tv_jl_map"
+                />
+            <TextView
+                android:layout_width="52dp"
+                android:layout_height="match_parent"
+                android:drawableTop="@mipmap/banbenxinxi"
+                android:text="编辑目标点"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:gravity="center|bottom"
+                android:id="@+id/tv_bj_point"
+                android:layout_toRightOf="@+id/tv_jl_map"
+                android:layout_marginLeft="40dp"
+                />
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:drawableTop="@mipmap/banbenxinxi"
+                android:text="建立地图"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:gravity="center|bottom"
+                android:id="@+id/tv_jl_task"
+                android:layout_toRightOf="@+id/tv_bj_point"
+                android:layout_marginLeft="45dp"
+                />
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:drawableTop="@mipmap/banbenxinxi"
+                android:text="建立地图"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:gravity="center|bottom"
+                android:id="@+id/tv_yx_task"
+                android:layout_toRightOf="@+id/tv_jl_task"
+                android:layout_marginLeft="45dp"
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>
