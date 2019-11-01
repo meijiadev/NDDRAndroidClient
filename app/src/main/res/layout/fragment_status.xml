@@ -30,13 +30,13 @@
 
     <RelativeLayout
         android:id="@+id/shrink_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="380dp"
+        android:layout_height="44dp"
         android:layout_toRightOf="@id/left_layout"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="14dp"
         >
         <!--伸缩的内容-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/shrink_tail_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,8 +44,52 @@
             android:background="@mipmap/shrink_tail"
             android:visibility="gone"
             >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16.5dp"
+                android:text="当前设备:"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:layout_marginTop="14dp"
+                android:layout_marginLeft="14dp"
+                android:gravity="center"
+                android:id="@+id/tv_now_d"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16.5dp"
+                android:layout_toRightOf="@id/tv_now_d"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="14dp"
+                android:text="*****"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:id="@+id/tv_now_device"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16.5dp"
+                android:layout_toRightOf="@id/tv_now_device"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="14dp"
+                android:text="当前地图:"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:id="@+id/tv_now_m"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16.5dp"
+                android:layout_toRightOf="@id/tv_now_m"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="14dp"
+                android:text="*****"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:id="@+id/tv_now_map"/>
 
-        </LinearLayout>
+        </RelativeLayout>
         <!--点击是否伸缩-->
         <ImageView
             android:id="@+id/iv_shrink"
