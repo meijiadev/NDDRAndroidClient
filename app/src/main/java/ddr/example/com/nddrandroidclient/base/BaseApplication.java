@@ -23,12 +23,13 @@ import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.widget.FloatView;
 
 /**
  * time :  2019/10/28
  * desc :  项目中的 application 基类
  */
-public class BaseApplication extends Application {
+public class BaseApplication extends Application implements FloatView.OnFloatViewListener {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -76,22 +77,22 @@ public class BaseApplication extends Application {
                 // 设置监听器
                 //.eventListener(new YourCustomEventListener())
                 .apply();
-        initFloatView();
+        initFloatView(this);
     }
 
     /**
      * 显示悬浮窗
      */
-    private void initFloatView(){
-        ImageView imageView=new ImageView(getApplicationContext());
-        imageView.setImageResource(R.mipmap.logo);
+    private void initFloatView(BaseApplication baseApplication){
+        FloatView floatView=new FloatView(getApplicationContext());
+        floatView.setOnFloatViewListener(baseApplication);
         FloatWindow
                 .with(getApplicationContext())
-                .setView(imageView)
+                .setView(floatView)
                 /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
                 .setHeight(Screen.width, 0.2f)*/
-                .setX(Screen.width,1.5f)
-                .setY(50)
+                .setX(Screen.width,1.51f)
+                .setY(120)
                 .setMoveType(MoveType.inactive)
                 .setFilter(true, HomeActivity.class)
                 .setPermissionListener(mPermissionListener)
@@ -112,4 +113,8 @@ public class BaseApplication extends Application {
         }
     };
 
+    @Override
+    public void onClickBottom() {
+        Logger.e("点击底部");
+    }
 }

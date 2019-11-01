@@ -45,6 +45,7 @@
             android:visibility="gone"
             >
 
+
         </LinearLayout>
         <!--点击是否伸缩-->
         <ImageView
@@ -57,6 +58,7 @@
             android:layout_toRightOf="@id/shrink_tail_layout"
             />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/left_layout"
         android:layout_width="366.5dp"
@@ -73,7 +75,6 @@
             android:id="@+id/tv_now_task"
             />
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:text="未选择"
