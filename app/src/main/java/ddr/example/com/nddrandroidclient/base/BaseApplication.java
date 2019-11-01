@@ -115,6 +115,6 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
 
     @Override
     public void onClickBottom() {
-        Logger.e("点击底部");
+        ToastUtils.show("点击底部");
     }
 }
