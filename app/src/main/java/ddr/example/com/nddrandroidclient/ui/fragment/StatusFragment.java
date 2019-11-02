@@ -29,7 +29,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.iv_shrink)
     ImageView ivShrink;      //点击头部伸缩
     @BindView(R.id.shrink_tail_layout)
-    LinearLayout shrinkTailLayout; // 伸缩的尾部布局
+    RelativeLayout shrinkTailLayout; // 伸缩的尾部布局
     @BindView(R.id.shrink_layout)
     RelativeLayout shrinkLayout;
 
