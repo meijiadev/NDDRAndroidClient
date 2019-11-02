@@ -15,7 +15,7 @@
             android:layout_height="13dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             />
         <TextView
             android:id="@+id/tv_map_name"

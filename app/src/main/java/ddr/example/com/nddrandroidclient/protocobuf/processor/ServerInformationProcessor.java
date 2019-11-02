@@ -27,7 +27,6 @@ public class ServerInformationProcessor extends BaseProcessor {
            // DatabaseHelper.setRobotID(robotId,context);
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePort,serverInfo.getPort()));
 
-
         }
     }
 }

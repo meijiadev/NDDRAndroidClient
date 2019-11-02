@@ -35,6 +35,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
     FileUtil fileUtil;
     private List<String> urlList;
     private List<String> mapNames;
+
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
@@ -52,6 +53,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
                 mapInfo.setHeight((int)mapInfoItemList.get(i).getHitght());
                 mapInfo.setAuthor(mapInfoItemList.get(i).getAuthor().toStringUtf8());
                 mapInfo.setTime(longToDate(mapInfoItemList.get(i).getTimeStamp()));
+                mapInfo.setTaskItemList(mapInfoItemList.get(i).getTaskSetList());
                 mapInfoList.add(mapInfo);
                 ByteString bytes=mapInfoItemList.get(i).getBkPicAddr();
                 String url=bytes.toStringUtf8();

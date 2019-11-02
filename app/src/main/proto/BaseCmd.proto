@@ -70,6 +70,7 @@ message bcLSAddr
 		repeated string ips = 3;
 		int32 port = 4; 
 		string robotid = 5;
+		int32 audioport = 6;
 	}
 	repeated ServerInfo LSInfos = 1;
 }
@@ -1033,4 +1034,6 @@ message notifyLidarPts{
 	float posy = 3;  // 机器人位置y
 	float posdirection = 4; // 机器人朝向
 }
+
+
 // +++++++++++++++++++ Common message bodies +++++++++++++++++++ //

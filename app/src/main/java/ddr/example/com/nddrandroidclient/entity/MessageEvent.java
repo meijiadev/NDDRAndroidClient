@@ -9,10 +9,10 @@ public class MessageEvent {
     private List<MapInfo> mapInfoList;
     private Object data;
     public enum Type{
-        updateIPList,   //更新IP列表
-        updatePort,     // 更新端口号
-        LoginSuccess, //登陆成功
-        updateMapList,
+        updateIPList,          //更新IP列表
+        updatePort,           // 更新端口号
+        LoginSuccess,        //登陆成功
+        updateMapList,      //获取地图列
         updateBaseStatus,
         updateMap,
         updateDDRVLNMap,

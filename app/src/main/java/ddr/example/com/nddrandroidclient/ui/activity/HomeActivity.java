@@ -58,13 +58,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initView() {
-        vpHomePager.addOnPageChangeListener(this);
-    }
-
-
-    @Override
-    protected void initData() {
-        tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());
@@ -74,7 +67,16 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setAdapter(mPagerAdapter);
         //限制页面的数量
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
+        vpHomePager.addOnPageChangeListener(this);
         isChecked();
+    }
+
+
+    @Override
+    protected void initData() {
+        tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+
+
     }
 
 
@@ -93,45 +95,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-        if (DoubleClickHelper.isOnDoubleClick()) {
-            //移动到上一个任务栈，避免侧滑引起的不良反应
-            moveTaskToBack(false);
-            postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    // 进行内存优化，销毁掉所有的界面
-                    ActivityStackManager.getInstance().finishAllActivities();
-                    tcpClient.onDestroy();
-                    // 销毁进程（请注意：调用此 API 可能导致当前 Activity onDestroy 方法无法正常回调）
-                    // System.exit(0);
-                }
-            }, 300);
-        } else {
-            toast("再按一次退出");
-        }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mPagerAdapter.getCurrentFragment().onKeyDown(keyCode, event)) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onDestroy() {
-        vpHomePager.removeOnPageChangeListener(this);
-        vpHomePager.setAdapter(null);
-        tcpClient.disConnect();
-        super.onDestroy();
-    }
-
-   
 
     @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion})
     public void onViewClicked(View view) {
@@ -157,6 +120,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         isChecked();
     }
 
+
+    /**
+     * 判断哪个页面是否被选中
+     */
     protected void isChecked() {
         switch (vpHomePager.getCurrentItem()) {
             case 0:
@@ -204,5 +171,52 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     public boolean statusBarDarkFont() {
         return false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (DoubleClickHelper.isOnDoubleClick()) {
+            //移动到上一个任务栈，避免侧滑引起的不良反应
+            moveTaskToBack(false);
+            postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // 进行内存优化，销毁掉所有的界面
+                    ActivityStackManager.getInstance().finishAllActivities();
+                    tcpClient.onDestroy();
+                    // 销毁进程（请注意：调用此 API 可能导致当前 Activity onDestroy 方法无法正常回调）
+                    // System.exit(0);
+                }
+            }, 300);
+        } else {
+            toast("再按一次退出");
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mPagerAdapter.getCurrentFragment().onKeyDown(keyCode, event)) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        vpHomePager.removeOnPageChangeListener(this);
+        vpHomePager.setAdapter(null);
+        tcpClient.disConnect();
+        super.onDestroy();
     }
 }
