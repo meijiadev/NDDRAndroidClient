@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.ui.adapter;
+package ddr.example.com.nddrandroidclient.base;
 
 import android.view.ViewGroup;
 

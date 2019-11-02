@@ -1,7 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -18,7 +17,7 @@ import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-import ddr.example.com.nddrandroidclient.ui.adapter.BaseFragmentAdapter;
+import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;

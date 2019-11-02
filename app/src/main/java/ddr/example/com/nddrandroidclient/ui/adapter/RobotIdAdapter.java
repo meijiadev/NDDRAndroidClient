@@ -33,4 +33,6 @@ public class RobotIdAdapter extends BaseAdapter<String> {
         super.convert(helper, item);
         helper.setText(R.id.tv_robot_id,item);
     }
+
+
 }
