@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101112">
+    <TextView
+        android:id="@+id/bt_create_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bt_bg__map"
+        android:text="新建地图"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:textColor="#ccffffff"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bt_bg__map"
+        android:layout_toRightOf="@id/bt_create_map"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="23dp"
+        android:text="批量管理"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:textColor="#ccffffff"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未发现地图信息,请新建地图"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
         android:layout_centerInParent="true"
-        android:text="地图管理页面"/>
+        android:visibility="visible"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bt_create_map"
+        android:layout_marginLeft="16dp"
+        ></androidx.recyclerview.widget.RecyclerView>
+
+
 
 </RelativeLayout>

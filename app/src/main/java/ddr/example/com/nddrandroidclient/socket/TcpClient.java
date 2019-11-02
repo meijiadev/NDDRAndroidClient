@@ -29,6 +29,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispat
  * create by ezreal.mei 2019/10/16
  */
 public class TcpClient extends BaseSocketConnection {
+    public Context context;
     public static TcpClient tcpClient;
     private ConnectionInfo info;
     public IConnectionManager manager;
@@ -57,6 +58,7 @@ public class TcpClient extends BaseSocketConnection {
     }
 
     private TcpClient(Context context, BaseMessageDispatcher baseMessageDispatcher) {
+        this.context=context;
         m_MessageRoute=new MessageRoute(context,this,baseMessageDispatcher);
     }
 
@@ -267,6 +269,11 @@ public class TcpClient extends BaseSocketConnection {
             manager.disconnect();
             setConnected(false);
         }
+    }
+
+    public void onDestroy(){
+        tcpClient=null;
+        context=null;
     }
 
     /**

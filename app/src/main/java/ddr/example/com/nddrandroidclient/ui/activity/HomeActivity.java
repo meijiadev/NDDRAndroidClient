@@ -16,6 +16,8 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
@@ -43,6 +45,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @BindView(R.id.typeversion)
     LineTextView tv_typeversion;
 
+    private TcpClient tcpClient;
+
     /**
      * ViewPage 适配器
      */
@@ -61,13 +65,13 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initData() {
+        tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());
         mPagerAdapter.addFragment(TaskFragment.newInstance());
         mPagerAdapter.addFragment(SetUpFragment.newInstance());
         mPagerAdapter.addFragment(VersionFragment.newInstance());
-
         vpHomePager.setAdapter(mPagerAdapter);
         //限制页面的数量
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
@@ -102,6 +106,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 public void run() {
                     // 进行内存优化，销毁掉所有的界面
                     ActivityStackManager.getInstance().finishAllActivities();
+                    tcpClient.onDestroy();
                     // 销毁进程（请注意：调用此 API 可能导致当前 Activity onDestroy 方法无法正常回调）
                     // System.exit(0);
                 }
@@ -123,6 +128,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void onDestroy() {
         vpHomePager.removeOnPageChangeListener(this);
         vpHomePager.setAdapter(null);
+        tcpClient.disConnect();
         super.onDestroy();
     }
 

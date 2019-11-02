@@ -85,6 +85,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
      */
     private void initFloatView(BaseApplication baseApplication){
         FloatView floatView=new FloatView(getApplicationContext());
+
         floatView.setOnFloatViewListener(baseApplication);
         FloatWindow
                 .with(getApplicationContext())

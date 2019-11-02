@@ -144,12 +144,24 @@ public class StatusSwitchButton extends View {
             }
         }
         invalidate();
+
         return super.onTouchEvent(event);
     }
 
     public interface OnStatusSwitchListener{
+        /**
+         * 点击左边
+         */
         void onLeftClick();
+
+        /**
+         * 点击中间
+         */
         void onCentreClick();
+
+        /**
+         * 点击右边
+         */
         void onRightClick();
 
     }

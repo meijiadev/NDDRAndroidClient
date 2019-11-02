@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -32,7 +34,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
-import ddr.example.com.nddrandroidclient.ui.adapter.RobotIDRecyclerAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.RobotIdAdapter;
 
 /**
  *    time   : 2019/10/26
@@ -64,14 +66,14 @@ public final class LoginActivity extends DDRActivity {
     @BindView(R.id.tv_rb)
     TextView tv_rb;
 
-    private RobotIDRecyclerAdapter robotIDRecyclerAdapter;
+    private RobotIdAdapter robotIdAdapter;
     public  int tcpPort = 0;
     private String accountName = "", passwordName = "";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     public TcpClient tcpClient;
-    public  List<Object> robotList=new ArrayList<>();
+    public  List<String> robotList=new ArrayList<>();
 
     public UdpClient udpClient;
     private int port=28888;
@@ -83,7 +85,7 @@ public final class LoginActivity extends DDRActivity {
                 String ip= (String) messageEvent.getData();
                 if (!robotList.contains(ip)){
                     robotList.add(ip);
-                    robotIDRecyclerAdapter.setData(robotList);
+                    robotIdAdapter.setNewData(robotList);
                 }
                 break;
             case updatePort:
@@ -109,11 +111,9 @@ public final class LoginActivity extends DDRActivity {
     protected void initView() {
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        robotIDRecyclerAdapter=new RobotIDRecyclerAdapter(context);
-        robotIDRecyclerAdapter.setViewType(1);
-        robotIDRecyclerAdapter.setData(robotList);
-        recycleRobotId.setAdapter(robotIDRecyclerAdapter);
+        robotIdAdapter=new RobotIdAdapter(R.layout.item_recycle_robot_id,robotList);
         recycleRobotId.setLayoutManager(linearLayoutManager);
+        recycleRobotId.setAdapter(robotIdAdapter);
         onItemClick();
     }
 
@@ -171,11 +171,11 @@ public final class LoginActivity extends DDRActivity {
      * 子项点击事件
      */
     private void onItemClick(){
-        robotIDRecyclerAdapter.setOtemClickListener(new RobotIDRecyclerAdapter.OnItemClickListener() {
+        robotIdAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(RecyclerView.ViewHolder viewHolder, int position) {
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Logger.e("点击子项");
-                String ip=(String) robotList.get(position);
+                String ip=robotList.get(position);
                 tcpClient.disConnect();     //在切换服务器时，要先关闭当前服务器再连接新的服务器
                 Logger.e("----连接");
                 tcpClient.creatConnect(ip,tcpPort);
