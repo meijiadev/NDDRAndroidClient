@@ -114,8 +114,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     //oksocket的tcp连接库
     api 'com.tonystark.android:socket:latest.release'
-    //If you want to use server functionality, you need to compile the following libraries
-    api 'com.tonystark.android:socket-server:latest.release'
+
     // 吐司工具类：https://github.com/getActivity/ToastUtils
     implementation 'com.hjq:toast:8.0'
 

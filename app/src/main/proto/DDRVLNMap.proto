@@ -483,9 +483,9 @@ message path_line_itemEx
 {
 	message path_lint_pt_Item
 	{
-		space_pointEx pt = 1;
+		space_pointEx pt = 1; // 这里的角度没有意义，需要旋转什么的配置全部在 rotationangle 中。
 		eMarkingItemType type = 2;
-		float rotationangle = 3;
+		float rotationangle = 3; //
 		bytes config = 4; // 配置文件
 	}
 	bytes name = 1;
@@ -498,8 +498,8 @@ message path_line_itemEx
 message path_elementEx
 {
 	path_element_type type = 1;
-	path_line_item line = 2;
-	targetPtItem targetPt = 3;
+	bytes lineName = 2;
+	bytes targetPtName = 3;
 }
 
 message task_itemEx 
@@ -508,6 +508,11 @@ message task_itemEx
 	repeated path_elementEx pathSet = 2;
 	timeItem timeSet = 3; // 时间段
 	int32 runCount = 4; // 运行次数
+}
+
+message DDRMapPathDataEx
+{
+	repeated path_line_itemEx pathLineData = 1; // path中Line的数据
 }
 
 /*
@@ -520,6 +525,7 @@ message reqDDRVLNMapEx
 	DDRMapSpaceData spacedata = 2; // 存放所有空间的信息
 	DDRMapTargetPointData targetPtdata = 3; // 存放所有目标点的信息（x y name theta）。
 	repeated task_itemEx taskSet = 4; // 存放所有Task的信息，每个task_item对应一个文件。
+	DDRMapPathDataEx pathSet = 5;
 }
 
 message rspDDRVLNMapEx

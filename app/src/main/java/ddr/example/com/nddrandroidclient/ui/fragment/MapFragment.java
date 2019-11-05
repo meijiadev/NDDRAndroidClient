@@ -80,7 +80,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @Override
     protected void initData() {
         mapFileStatus=MapFileStatus.getInstance();
+        MapInfo mapInfo=new MapInfo();
+        mapInfo.setMapName("图一");
+        mapInfo.setUsing(false);
+        mapInfo.setWidth(200);
+        mapInfo.setHeight(300);
+        mapInfos.add(mapInfo);
+        mapAdapter.setNewData(mapInfos);
     }
+
     @OnClick({R.id.bt_create_map})
     public void onViewClicked(View view){
         switch (view.getId()){
@@ -95,15 +103,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 List<MapInfo> newMapInfos=new ArrayList<>();   //创建一个新的列表
-                Collections.copy(newMapInfos,mapInfos);        //将原始数据复制到新列表中 然后改变新列表数据
-                MapInfo mapInfo=newMapInfos.get(position);
+                //Collections.copy(newMapInfos,mapInfos);        //将原始数据复制到新列表中 然后改变新列表数据
+                MapInfo mapInfo=mapInfos.get(position);
                 mapInfo.setUsing(true);
-                newMapInfos.set(position,mapInfo);
-                mapAdapter.setNewData(newMapInfos);
+                mapInfos.set(position,mapInfo);
+                mapAdapter.setNewData(mapInfos);
             }
+
         });
     }
-
 
     /**
      * 对比本地文件和服务的文件是否有区别,将服务端不存在的本地文件删除，保持一致性

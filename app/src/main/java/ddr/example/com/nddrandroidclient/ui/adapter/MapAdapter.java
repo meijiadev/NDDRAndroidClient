@@ -34,7 +34,7 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MapInfo item) {
         super.convert(helper, item);
-        Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
+        //Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
         helper.setText(R.id.tv_map_name,item.getMapName())
                 .setText(R.id.tv_size,String.valueOf(item.getWidth())+"x"+String.valueOf(item.getHeight())+"m²")
                 .setText(R.id.tv_selected_centre,"使用中")

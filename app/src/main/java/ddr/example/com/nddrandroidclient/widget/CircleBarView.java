@@ -141,6 +141,7 @@ public class CircleBarView extends View {
     }
 
     public class CircleBarAnim extends Animation{
+
         public CircleBarAnim(){
 
         }
