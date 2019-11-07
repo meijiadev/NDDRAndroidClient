@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,12 +34,14 @@ import ddr.example.com.nddrandroidclient.entity.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.TargetPoint;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.RobotIdAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskCheckAdapter;
 import ddr.example.com.nddrandroidclient.widget.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.CustomPopuWindow;
@@ -76,6 +79,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     TextView tv_task_speed;
     @BindView(R.id.tv_work_time)
     TextView tv_work_time;
+    @BindView(R.id.rel_step_description)
+    RelativeLayout rel_step_description;
+    @BindView(R.id.recycle_gopoint)
+    RecyclerView recycle_gopoint;
 
 
     private Animation hideAnimation;  //布局隐藏时的动画
@@ -95,7 +102,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private int workTimes;
     private float taskSpeed;
     private List<String> groupList=new ArrayList<>();
-    private List<DDRVLNMap.task_item> task_itemList;
+    private List<TargetPoint> targetPoints= new ArrayList<>();
+    private List<DDRVLNMap.task_itemEx> task_itemList;
+    private List<DDRVLNMap.targetPtItem> targetPtItems;
+    private TargetPoint targetPoint;
+    private TargetPointAdapter targetPointAdapter;
     private MapFileStatus mapFileStatus;
     private TaskCheckAdapter taskCheckAdapter;
     private CustomPopuWindow customPopWindow;
@@ -112,13 +123,25 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
             case updateDDRVLNMap:
                 groupList = new ArrayList<>();
-                task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMap().getData().getTaskSetList());
+                targetPoints=new ArrayList<>();
+                task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTaskSetList());
+                targetPtItems = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTargetPtdata().getTargetPtList());
                 Logger.e("-----" + task_itemList.size());
                 for (int i = 0; i < task_itemList.size(); i++) {
                     groupList.add(task_itemList.get(i).getName().toStringUtf8());
                 }
                 Logger.e("-----" + groupList.size() + "--name" + groupList.get(0));
                 taskCheckAdapter.setNewData(groupList);
+
+                for (int i=0;i<targetPtItems.size();i++){
+                    targetPoint=new TargetPoint();
+                    targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+                    targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+                    targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+                    targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+                    targetPoints.add(targetPoint);
+                }
+                targetPointAdapter.setNewData(targetPoints);
                 if (robotIdAdapter!=null){
                     robotIdAdapter.setNewData(groupList);
                     robotIdAdapter.notifyDataSetChanged();
@@ -143,6 +166,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
         taskCheckAdapter=new TaskCheckAdapter(R.layout.item_recycle_task_check);
 
+        targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
+        recycle_gopoint.setLayoutManager(gridLayoutManager);
+        recycle_gopoint.setAdapter(targetPointAdapter);
     }
 
     @Override
@@ -152,6 +179,16 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
         Logger.e("task列表"+groupList.size());
+        targetPointAdapter.setNewData(targetPoints);
+
+        for (int i=0;i<10;i++){
+            targetPoint=new TargetPoint();
+            targetPoint.setName("呵呵");
+            targetPoint.setX(100);
+            targetPoint.setY(100);
+            targetPoint.setTheta(10);
+            targetPoints.add(targetPoint);
+        }
     }
 
     /**
@@ -173,7 +210,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
         tv_now_device.setText(robotID);
         tv_task_num.setText(String.valueOf(taskNum)+"次");
-        tv_work_time.setText(String.valueOf(workTimes)+"h");
+        tv_work_time.setText(String.valueOf(workTimes/3600)+"h");
         //Logger.e("模式"+notifyBaseStatusEx.getMode());
         //Logger.e("模式"+notifyBaseStatusEx.geteSelfCalibStatus());
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
@@ -185,9 +222,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
                         tv_work_statue.setText("待命中");
+                        rel_step_description.setVisibility(View.VISIBLE);
+                        recycle_gopoint.setVisibility(View.GONE);
                         break;
                     case 3:
                         tv_work_statue.setText("运动中");
+                        rel_step_description.setVisibility(View.GONE);
+                        recycle_gopoint.setVisibility(View.VISIBLE);
                         break;
                 }
                 break;
