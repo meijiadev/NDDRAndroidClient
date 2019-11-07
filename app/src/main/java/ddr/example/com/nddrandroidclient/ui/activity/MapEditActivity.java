@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
+import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 
 /**
@@ -10,8 +11,9 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 public class MapEditActivity extends DDRActivity {
     @Override
     protected int getLayoutId() {
-        return super.getLayoutId();
+        return R.layout.activity_map_edit;
     }
+
 
     @Override
     protected void initView() {

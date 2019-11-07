@@ -23,6 +23,6 @@ public class RspGetDDRVLNMapExProcessor extends BaseProcessor {
         DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx= (DDRVLNMap.rspGetDDRVLNMapEx) msg;
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         mapFileStatus.setRspGetDDRVLNMap(rspGetDDRVLNMapEx);
-        EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateDDRVLNMap));
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateDDRVLNMap));
     }
 }

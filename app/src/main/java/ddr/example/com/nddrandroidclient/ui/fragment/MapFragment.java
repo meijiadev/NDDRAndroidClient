@@ -132,7 +132,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     @Override
     protected void initData() {
-        Logger.e("--------initData");
         tcpClient=TcpClient.getInstance(getAttachActivity(),ClientMessageDispatcher.getInstance());
         mapFileStatus = MapFileStatus.getInstance();
         mapAdapter.setNewData(mapInfos);
@@ -169,17 +168,21 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(mapInfos.get(position).getBitmap());
+                Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                zoomMap.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }catch (NullPointerException e){
+                e.printStackTrace();
             }
-            Bitmap bitmap = BitmapFactory.decodeStream(fis);
-            zoomMap.setImageBitmap(bitmap);
             getAttachActivity().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (dialog.isShowing()){
                         dialog.dismiss();
                         toast("加载失败！");
+                        mapLayout.setVisibility(View.GONE);
+                        mapDetailLayout.setVisibility(View.VISIBLE);
                     }
                 }
             }, 5000);

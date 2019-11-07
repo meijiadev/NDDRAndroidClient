@@ -50,7 +50,6 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
         }else {
             helper.getView(R.id.iv_select).setVisibility(View.GONE);
         }
-
     }
 
     @Override

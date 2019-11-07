@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101112"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.hjq.bar.TitleBar
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#101112"
+        app:leftIcon="@mipmap/iv_back"
+        app:leftTitle="      新建目标点"
+        app:leftColor="@color/white" 
+        app:leftSize="16sp"
+        app:rightTitle="退出"
+        android:paddingRight="@dimen/dp_10"
+        app:rightColor="@color/white"
+        >
+    </com.hjq.bar.TitleBar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/title_layout"
+        android:background="#161718">
+        <TextView
+            android:id="@+id/tv_target_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="目标点 (0)"
+            android:textSize="11sp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:layout_marginLeft="54dp"
+            />
+        <TextView
+            android:id="@+id/tv_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="路径 (0)"
+            android:textSize="11sp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:layout_marginLeft="44dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="网格 :"
+            android:textSize="11sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="315dp"
+            />
+        <TextView
+            android:id="@+id/tv_0.25m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
