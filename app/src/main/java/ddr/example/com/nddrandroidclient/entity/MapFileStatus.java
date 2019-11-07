@@ -13,7 +13,7 @@ public class MapFileStatus {
     public static MapFileStatus mapFileStatus;
     private List<String> mapNames=new ArrayList<>();                    // 服务端返回的地图名字列表
     private List<String> pictureUrls;                 //激光地图的http连接列表
-    private DDRVLNMap.rspGetDDRVLNMap rspGetDDRVLNMap;     //获取指定某一地图的相关信息
+    private DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx;     //获取指定某一地图的相关信息
 
 
     /**
@@ -49,11 +49,11 @@ public class MapFileStatus {
        // Logger.e("连接数量："+pictureUrls.size());
     }
 
-    public void setRspGetDDRVLNMap(DDRVLNMap.rspGetDDRVLNMap rspGetDDRVLNMap) {
-        this.rspGetDDRVLNMap = rspGetDDRVLNMap;
+    public void setRspGetDDRVLNMap(DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx) {
+        this.rspGetDDRVLNMapEx = rspGetDDRVLNMapEx;
     }
 
-    public DDRVLNMap.rspGetDDRVLNMap getRspGetDDRVLNMap() {
-        return rspGetDDRVLNMap;
+    public DDRVLNMap.rspGetDDRVLNMapEx getRspGetDDRVLNMapEx() {
+        return rspGetDDRVLNMapEx;
     }
 }

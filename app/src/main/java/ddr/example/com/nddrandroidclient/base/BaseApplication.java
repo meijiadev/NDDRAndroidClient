@@ -92,7 +92,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 .setView(floatView)
                 /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
                 .setHeight(Screen.width, 0.2f)*/
-                .setX(Screen.width,1.51f)
+                .setX(Screen.width,1.52f)
                 .setY(120)
                 .setMoveType(MoveType.inactive)
                 .setFilter(true, HomeActivity.class)

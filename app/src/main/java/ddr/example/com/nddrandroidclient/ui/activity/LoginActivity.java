@@ -96,7 +96,7 @@ public final class LoginActivity extends DDRActivity {
                 editor.putString("account", accountName);
                 editor.putString("password", passwordName);
                 editor.commit();
-               // startActivity(HomeActivity.class);
+                startActivity(HomeActivity.class);
                 break;
         }
     }
@@ -134,7 +134,6 @@ public final class LoginActivity extends DDRActivity {
             case R.id.login_in:
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
-                startActivity(HomeActivity.class);
                 if (tcpClient.isConnected()){
                     doLogin(accountName,passwordName);
                     Logger.e("登录");
@@ -150,7 +149,6 @@ public final class LoginActivity extends DDRActivity {
                 layoutRobotList.setVisibility(View.GONE);
                 loginIn.setVisibility(View.VISIBLE);
                 break;
-
         }
     }
 

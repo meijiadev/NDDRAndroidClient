@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import ddr.example.com.nddrandroidclient.entity.MapInfo;
  */
 public class MapAdapter extends BaseAdapter<MapInfo>{
     private Context mContext;
+    private boolean allSelected;
 
     public MapAdapter(int layoutResId, Context context) {
         super(layoutResId);
@@ -34,15 +36,19 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MapInfo item) {
         super.convert(helper, item);
-        //Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
+        Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
         helper.setText(R.id.tv_map_name,item.getMapName())
                 .setText(R.id.tv_size,String.valueOf(item.getWidth())+"x"+String.valueOf(item.getHeight())+"m²")
                 .setText(R.id.tv_selected_centre,"使用中")
                 .setGone(R.id.tv_selected_centre,item.isUsing())
-                .setBackgroundRes(R.id.item_head_layout,R.drawable.item_map_head_dark)
-                .setGone(R.id.iv_select,item.isShowSelect());
+                .setBackgroundRes(R.id.item_head_layout,R.drawable.item_map_head_dark);
         if (item.isUsing()){
             helper.getView(R.id.item_head_layout).setBackgroundResource(R.drawable.item_map_head_blue);
+        }
+        if (allSelected){
+            helper.getView(R.id.iv_select).setVisibility(View.VISIBLE);
+        }else {
+            helper.getView(R.id.iv_select).setVisibility(View.GONE);
         }
 
     }
@@ -68,4 +74,17 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     }
 
 
+    @Nullable
+    @Override
+    public MapInfo getItem(int position) {
+        return super.getItem(position);
+    }
+
+    /**
+     * 是否显示批量选择的按钮
+     * @param isSelected true 为显示 false 为隐藏
+     */
+    public void showSelected(boolean isSelected){
+        allSelected=isSelected;
+    }
 }
