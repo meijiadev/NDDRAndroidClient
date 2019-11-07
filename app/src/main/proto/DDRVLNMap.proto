@@ -468,6 +468,7 @@ message space_pointEx
 	float theta = 3; // 朝向 单位度 [-180, 180]  
 }
 
+//目标点 只保存手动建造的
 message targetPtItem
 {
 	bytes ptName = 1;
@@ -495,6 +496,7 @@ message path_line_itemEx
 	path_line_config config = 5; // 配置文件
 }
 
+//   ????
 message path_elementEx
 {
 	path_element_type type = 1;

@@ -56,5 +56,11 @@ public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder>
 
     }
 
+    @Nullable
+    @Override
+    public T getItem(int position) {
+        return super.getItem(position);
+    }
+
 
 }

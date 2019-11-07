@@ -1,15 +1,15 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 
-import android.app.Instrumentation;
 import android.content.Intent;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
+import com.google.protobuf.ByteString;
+
+import DDRCommProto.BaseCmd;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 
@@ -86,6 +86,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initData() {
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+        requestFile();
     }
 
 
@@ -241,5 +242,26 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setAdapter(null);
         tcpClient.disConnect();
         super.onDestroy();
+    }
+
+    /**
+     * 请求文件（txt、png) 刷新文件
+     */
+    private void requestFile() {
+        final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
+        getMapInfo(currentFile);
+        Logger.e("请求文件中....");
+    }
+
+    public void getMapInfo(final ByteString path){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
+                        .setParam(path)
+                        .build();
+                tcpClient.sendData(null,reqClientGetMapInfo);
+            }
+        }).start();
     }
 }

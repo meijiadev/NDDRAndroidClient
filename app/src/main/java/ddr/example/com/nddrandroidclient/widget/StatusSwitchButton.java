@@ -37,8 +37,6 @@ public class StatusSwitchButton extends View {
     private static final int CENTRE=2;
     private static final int RIGHT=3;
 
-
-
     private Paint defaultPaint;
 
     public StatusSwitchButton(Context context) {

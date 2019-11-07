@@ -3,47 +3,213 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#101112">
-    <TextView
-        android:id="@+id/bt_create_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bt_bg__map"
-        android:text="新建地图"
-        android:textSize="10sp"
-        android:gravity="center"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        android:textColor="#ccffffff"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bt_bg__map"
-        android:layout_toRightOf="@id/bt_create_map"
-        android:layout_marginTop="24dp"
-        android:layout_marginLeft="23dp"
-        android:text="批量管理"
-        android:textSize="10sp"
-        android:gravity="center"
-        android:textColor="#ccffffff"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="未发现地图信息,请新建地图"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_map"
+    <RelativeLayout
+        android:id="@+id/map_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/bt_create_map"
-        android:layout_marginLeft="16dp"
-        ></androidx.recyclerview.widget.RecyclerView>
+        android:visibility="visible"
+        >
+        <TextView
+            android:id="@+id/bt_create_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bt_bg__map"
+            android:text="新建地图"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="24dp"
+            android:textColor="#ccffffff"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bt_bg__map"
+            android:layout_toRightOf="@id/bt_create_map"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="23dp"
+            android:text="批量管理"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:textColor="#ccffffff"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未发现地图信息,请新建地图"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/bt_create_map"
+            android:layout_marginLeft="16dp"
+            ></androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/map_detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            android:background="#161718">
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/iv_back"
+                />
+            <TextView
+                android:id="@+id/tv_target_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目标点 (0)"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginLeft="44dp"
+                />
+            <TextView
+                android:id="@+id/tv_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="路径 (0)"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginLeft="44dp"/>
+            <TextView
+                android:id="@+id/tv_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="任务 (0)"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:layout_marginLeft="44dp"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/left_detail_layout"
+            android:layout_width="366.5dp"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title_layout"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="-2dp"
+            android:background="#161718">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_detail"
+                android:layout_width="115dp"
+                android:layout_height="330dp">
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/tv_add_new"
+                android:layout_width="94dp"
+                android:layout_height="32dp"
+                android:layout_above="@id/tv_delete"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bt_bg__map"
+                android:gravity="center"
+                android:text="新建目标点"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_delete"
+                android:layout_width="94dp"
+                android:layout_height="32dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="18dp"
+                android:background="@drawable/bt_bg__map"
+                android:gravity="center"
+                android:text="新建目标点"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:layout_toRightOf="@id/recycler_detail"
+                android:background="#979797" />
+
+            <RelativeLayout
+                android:id="@+id/point_detail_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_toRightOf="@id/recycler_detail">
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/right_map_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title_layout"
+            android:layout_toRightOf="@id/left_detail_layout">
+
+            <ddr.example.com.nddrandroidclient.widget.ZoomImageView
+                android:id="@+id/zoom_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_map_name"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:text="20191161140"
+                android:layout_above="@id/tv_map_size"
+                android:layout_marginBottom="6dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="35dp"
+
+                />
+            <TextView
+                android:id="@+id/tv_map_size"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="地图面积：32x65m"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_above="@id/tv_create_time"
+                android:layout_marginRight="35dp"
+                android:layout_marginBottom="6dp"
+                android:layout_alignParentRight="true"
+                />
+            <TextView
+                android:id="@+id/tv_create_time"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="建立日期：2019-11-11"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+               android:layout_alignParentRight="true"
+                android:layout_marginRight="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="23dp"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+
 
 
 

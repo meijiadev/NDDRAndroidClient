@@ -256,7 +256,7 @@ public class TcpClient extends BaseSocketConnection {
     public void feedDog(){
         if (manager!=null){
             manager.getPulseManager().feed();
-           // Logger.e("---喂狗");
+          // Logger.e("---喂狗");
         }
     }
 

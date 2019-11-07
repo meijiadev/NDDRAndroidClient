@@ -15,14 +15,14 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 /**
  * 获取某一地图下的信息
  */
-public class RspGetDDRVLNMapProcessor extends BaseProcessor {
+public class RspGetDDRVLNMapExProcessor extends BaseProcessor {
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         Logger.e("-----接收地图信息");
-        DDRVLNMap.rspGetDDRVLNMap rspGetDDRVLNMap= (DDRVLNMap.rspGetDDRVLNMap) msg;
+        DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx= (DDRVLNMap.rspGetDDRVLNMapEx) msg;
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-        mapFileStatus.setRspGetDDRVLNMap(rspGetDDRVLNMap);
-        EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateDDRVLNMap));
+        mapFileStatus.setRspGetDDRVLNMap(rspGetDDRVLNMapEx);
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateDDRVLNMap));
     }
 }
