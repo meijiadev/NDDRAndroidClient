@@ -25,6 +25,7 @@
             android:layout_toRightOf="@id/tv_ti_map"
             android:layout_centerInParent="true"
             android:textColor="#0399ff"
+            android:id="@+id/tv_new_map"
             />
     </RelativeLayout>
 
@@ -115,18 +116,20 @@
             android:textSize="12sp"
             android:layout_marginTop="32.5dp"
             android:layout_marginLeft="16dp"
-            android:id="@+id/tv_now_task"
+            android:id="@+id/tv_now_task_t"
             />
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="18dp"
             android:text="未选择"
             android:textColor="#ffffff"
-            android:textSize="12sp"
-            android:layout_toRightOf="@id/tv_now_task"
+            android:textSize="10sp"
+            android:layout_toRightOf="@id/tv_now_task_t"
             android:layout_marginTop="32.5dp"
             android:layout_marginLeft="9dp"
-            android:id="@+id/tv_new_map"
+            android:id="@+id/tv_now_task"
+            android:paddingLeft="20dp"
+            android:background="@drawable/task_check_bg"
             />
         <TextView
             android:layout_width="56dp"
@@ -181,7 +184,8 @@
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="100dp"
             android:gravity="center"
-            android:text="待命中"
+            android:textColor="#ccffffff"
+            android:hint="待命中"
             android:id="@+id/tv_work_statue"
             android:textSize="12sp"/>
         <TextView
@@ -190,7 +194,8 @@
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="待命中"
+            android:textColor="#ccffffff"
+            android:hint="待命中"
             android:textSize="12sp"
             android:layout_below="@id/tv_work_statue"
             android:id="@+id/tv_task_num"/>
@@ -200,19 +205,21 @@
             android:layout_toRightOf="@id/tv_work3"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="待命中"
+            android:textColor="#ccffffff"
+            android:hint="待命中"
             android:textSize="12sp"
             android:layout_below="@id/tv_task_num"
-            android:id="@+id/tv_task_time"/>
+            android:id="@+id/tv_work_time"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:layout_toRightOf="@id/tv_work3"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="待命中"
+            android:textColor="#ccffffff"
+            android:hint="待命中"
             android:textSize="12sp"
-            android:layout_below="@id/tv_task_time"
+            android:layout_below="@id/tv_work_time"
             android:id="@+id/tv_task_speed"/>
         <TextView
             android:layout_width="90dp"
@@ -223,6 +230,7 @@
             android:layout_marginTop="380dp"
             android:layout_marginLeft="16dp"
             android:gravity="center"
+            android:id="@+id/tv_set_go"
             />
         <ddr.example.com.nddrandroidclient.widget.CircleBarView
             android:layout_width="130dp"
@@ -242,7 +250,8 @@
             android:layout_width="308dp"
             android:layout_height="58dp"
             android:layout_marginLeft="32dp"
-            android:layout_marginTop="442dp">
+            android:layout_marginTop="442dp"
+            android:id="@+id/tv_step_description">
 
             <View
                 android:layout_width="257dp"
@@ -301,6 +310,12 @@
                 />
 
         </RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="308dp"
+            android:layout_height="58dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="442dp"
+            />
     </RelativeLayout>
 
 

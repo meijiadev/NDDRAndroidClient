@@ -6,7 +6,7 @@ import org.greenrobot.eventbus.EventBus;
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.other.Logger;
-
+import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 
 
 /**
@@ -23,6 +23,7 @@ public class ServerInformationProcessor extends BaseProcessor {
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateIPList,ip));
             }
             robotId = serverInfo.getRobotid();
+            StatusFragment.setRobotID(robotId,context);
             //TaskPerformActivity.setRobotID(robotId,context);
            // DatabaseHelper.setRobotID(robotId,context);
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePort,serverInfo.getPort()));

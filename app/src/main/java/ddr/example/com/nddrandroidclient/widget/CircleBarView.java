@@ -17,6 +17,7 @@ import android.view.animation.Transformation;
 
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 
 /**
@@ -62,7 +63,6 @@ public class CircleBarView extends View {
         }else {
             //如何没有设置背景图片
         }
-
         defaultSize = DpOrPxUtils.dip2px(context,134);
         barWidth = DpOrPxUtils.dip2px(context,2);
         mRectF = new RectF();
@@ -159,6 +159,12 @@ public class CircleBarView extends View {
         this.startAnimation(circleBarAnim);
         this.progressNum=progressNum;
         this.progressColor=progressColor;
+    }
+
+    public void setProgress(float progressNum,int progressColor){
+        this.progressNum=progressNum;
+        this.progressColor=progressColor;
+        postInvalidate();
     }
 
 

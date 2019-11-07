@@ -1,8 +1,13 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 
+import android.app.Instrumentation;
+import android.content.Intent;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import androidx.viewpager.widget.ViewPager;
@@ -12,6 +17,8 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
+import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -43,8 +50,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     LineTextView tv_highset;
     @BindView(R.id.typeversion)
     LineTextView tv_typeversion;
+    @BindView(R.id.tv_quit)
+    ImageView tv_quit;
 
     private TcpClient tcpClient;
+    private NotifyBaseStatusEx notifyBaseStatusEx;
+    private NotifyEnvInfo notifyEnvInfo;
 
     /**
      * ViewPage 适配器
@@ -75,8 +86,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initData() {
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
-
-
     }
 
 
@@ -96,7 +105,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion})
+    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion,R.id.tv_quit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.status:
@@ -115,6 +124,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             case R.id.typeversion:
                 vpHomePager.setCurrentItem(4);
                 Logger.e("---------setCurrentItem");
+                break;
+            case R.id.tv_quit:
+                onBack();
                 break;
         }
         isChecked();
@@ -202,6 +214,17 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         } else {
             toast("再按一次退出");
         }
+    }
+    /**
+     * 返回登陆界面
+     */
+    public void onBack(){
+        Intent intent_login = new Intent();
+        intent_login.setClass(HomeActivity.this,LoginActivity.class);
+        intent_login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //关键的一句，将新的activity置为栈顶
+        startActivity(intent_login);
+        finish();
+
     }
 
     @Override

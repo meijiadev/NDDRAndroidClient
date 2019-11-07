@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
@@ -82,7 +83,7 @@ public class StatusSwitchButton extends View {
             canvas.drawBitmap(bgBitmap,0,0,defaultPaint);
             switch (bt_position){
                 case DEFAULT:
-                    canvas.drawBitmap(btBitmap,0,(measureHeight-bt_height)/2,defaultPaint);
+                    canvas.drawBitmap(btBitmap,measureWidth-bt_width,(measureHeight-bt_height)/2,defaultPaint);
                     break;
                 case LEFT:
                     canvas.drawBitmap(btBitmap,0,(measureHeight-bt_height)/2,defaultPaint);
@@ -96,7 +97,7 @@ public class StatusSwitchButton extends View {
             }
             canvas.drawText("执行",bt_width/2,baseline,defaultPaint);
             canvas.drawText("暂停",measureWidth/2,baseline,defaultPaint);
-            canvas.drawText("终止",measureWidth-100,baseline,defaultPaint);
+            canvas.drawText("待命",measureWidth-100,baseline,defaultPaint);
         }
 
     }
@@ -132,15 +133,30 @@ public class StatusSwitchButton extends View {
         float x=event.getX();
         Logger.e("--------"+x);
         if (mListener!=null){
+            Logger.e("状态师"+mListener.isAutoMode());
             if (x>2*measureWidth/3){
-                mListener.onRightClick();
-                bt_position=RIGHT;
+                if (mListener.isAutoMode()){
+                    Logger.e("执行中");
+                    mListener.onRightClick();
+                    bt_position=RIGHT;
+                }else {
+                    Logger.e("待命中");
+                }
             }else if (x>measureWidth/3){
-                mListener.onCentreClick();
-                bt_position=CENTRE;
+                if (mListener.isAutoMode()){
+                    mListener.onCentreClick();
+                    bt_position=CENTRE;
+                }else {
+                    Logger.e("先进入执行");
+                }
             }else {
-                mListener.onLeftClick();
-                bt_position=LEFT;
+                if (mListener.isAutoMode()){
+                    Logger.e("执行中");
+                }else {
+                    mListener.onLeftClick();
+                    bt_position=LEFT;
+                    Logger.e("准备进入执行");
+                }
             }
         }
         invalidate();
@@ -163,6 +179,11 @@ public class StatusSwitchButton extends View {
          * 点击右边
          */
         void onRightClick();
+
+        /**
+         * 判断
+         */
+        boolean isAutoMode();
 
     }
 }
