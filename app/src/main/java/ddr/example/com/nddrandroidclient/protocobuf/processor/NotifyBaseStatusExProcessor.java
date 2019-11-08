@@ -8,7 +8,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 
 
 public class NotifyBaseStatusExProcessor extends BaseProcessor {

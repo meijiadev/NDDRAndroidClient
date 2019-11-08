@@ -20,8 +20,8 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.Logger;

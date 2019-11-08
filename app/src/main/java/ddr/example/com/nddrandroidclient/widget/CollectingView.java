@@ -12,7 +12,6 @@ import android.view.View;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glview.GLContinuousView;
-import com.chillingvan.canvasgl.glview.texture.GLContinuousTextureView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,8 +23,8 @@ import java.util.List;
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyLidarPtsEntity;
-import ddr.example.com.nddrandroidclient.entity.XyEntity;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 

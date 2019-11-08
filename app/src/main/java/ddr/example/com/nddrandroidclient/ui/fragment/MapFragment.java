@@ -14,15 +14,12 @@ import com.google.protobuf.ByteString;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import DDRCommProto.BaseCmd;
-import DDRVLNMapProto.DDRVLNMap;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,8 +29,8 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.download.FileUtil;
-import ddr.example.com.nddrandroidclient.entity.MapFileStatus;
-import ddr.example.com.nddrandroidclient.entity.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;

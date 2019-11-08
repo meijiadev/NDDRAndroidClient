@@ -4,13 +4,12 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
-import DDRVLNMapProto.DDRVLNMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
-import ddr.example.com.nddrandroidclient.entity.TargetPoint;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 
 /**
  * time: 2019/11/7

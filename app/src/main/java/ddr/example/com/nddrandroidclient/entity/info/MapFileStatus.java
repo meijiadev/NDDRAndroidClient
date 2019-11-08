@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.entity;
+package ddr.example.com.nddrandroidclient.entity.info;
 
 import java.util.ArrayList;
 import java.util.List;

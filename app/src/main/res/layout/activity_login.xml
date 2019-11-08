@@ -97,7 +97,7 @@
                 android:textSize="13sp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                app:regexType="english"
+                app:regexType="name"
                 />
 
             <View

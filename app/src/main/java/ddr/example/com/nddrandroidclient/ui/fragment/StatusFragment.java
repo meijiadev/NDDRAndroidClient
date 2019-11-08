@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -13,8 +14,6 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -30,11 +29,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
-import ddr.example.com.nddrandroidclient.entity.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
-import ddr.example.com.nddrandroidclient.entity.TargetPoint;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -45,8 +44,8 @@ import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskCheckAdapter;
 import ddr.example.com.nddrandroidclient.widget.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.MapImageView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
-import ddr.example.com.nddrandroidclient.widget.ZoomImageView;
 
 /**
  * time: 2019/10/26
@@ -64,8 +63,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RelativeLayout shrinkTailLayout; // 伸缩的尾部布局
     @BindView(R.id.shrink_layout)
     RelativeLayout shrinkLayout;
-    @BindView(R.id.zmap)
-    ZoomImageView zmap;
+    @BindView(R.id.iv_map)
+    MapImageView mapImageView;
     @BindView(R.id.tv_now_task)
     TextView tv_now_task;
     @BindView(R.id.tv_now_device)
@@ -97,8 +96,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private static String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";//特殊字符
     private TcpClient tcpClient;
     private int batteryNum;
-    private String rname;//地图名
-    private String tname;//任务名
+    private String mapName;//地图名
+    private String taskName;//任务名
     public static String robotID;//机器人ID
     private String workStatus;
     private int taskNum;
@@ -135,7 +134,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 Logger.e("-----" + groupList.size() + "--name" + groupList.get(0));
                 taskCheckAdapter.setNewData(groupList);
-
                 for (int i=0;i<targetPtItems.size();i++){
                     targetPoint=new TargetPoint();
                     targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
@@ -149,6 +147,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     robotIdAdapter.setNewData(groupList);
                     robotIdAdapter.notifyDataSetChanged();
                 }
+                break;
+            case updateMapList:
+                //设置右侧图片内容
+                mapImageView.setMapBitmap(mapName,taskName);
                 break;
         }
     }
@@ -170,6 +172,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         taskCheckAdapter=new TaskCheckAdapter(R.layout.item_recycle_task_check);
 
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
+        @SuppressLint("WrongConstant")
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
         recycle_gopoint.setLayoutManager(gridLayoutManager);
         recycle_gopoint.setAdapter(targetPointAdapter);
@@ -202,20 +205,18 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 //        Logger.e("电量"+batteryNum+"---"+df.format(notifyEnvInfo.getBatt()) + "%");
         batteryNum=Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
         circleBarView.setProgress(batteryNum,0,Color.parseColor("#02B5F8"));
-        rname = notifyBaseStatusEx.getCurroute();
-        tname = notifyBaseStatusEx.getCurrpath();
+        mapName = notifyBaseStatusEx.getCurroute();
+        taskName = notifyBaseStatusEx.getCurrpath();
         taskNum=notifyBaseStatusEx.getTaskCount();
         workTimes=notifyBaseStatusEx.getTaskDuration();
 
-        if (rname!=null && tname!=null){
-            tv_now_task.setText(tname);
-            tv_now_map.setText(rname);
+        if (mapName!=null && taskName!=null){
+            tv_now_task.setText(mapName);
+            tv_now_map.setText(taskName);
         }
         tv_now_device.setText(robotID);
         tv_task_num.setText(String.valueOf(taskNum)+"次");
         tv_work_time.setText(String.valueOf(workTimes/3600)+"h");
-        //Logger.e("模式"+notifyBaseStatusEx.getMode());
-        //Logger.e("模式"+notifyBaseStatusEx.geteSelfCalibStatus());
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
                 //自标定
@@ -250,15 +251,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             Toast.makeText(context,"机器目前为默认ID，请修改机器ID",Toast.LENGTH_SHORT).show();
             robotID=stringd+"00";
         }
-//        Logger.e("机器获取ID"+robotID);
     }
     /**
      * 点路径编辑的弹窗
-     *
      * @param view
      */
-    private void showTaskPopupwindow(View view) {
-        Logger.e("---------showTaskPopupwindow");
+    private void showTaskPopupWindow(View view) {
+        Logger.e("---------showTaskPopupWindow");
         View contentView = null;
         contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.recycle_task, null);
         customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
@@ -284,7 +283,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
             case R.id.tv_now_task:
-                showTaskPopupwindow(tv_now_task);
+                showTaskPopupWindow(tv_now_task);
                 break;
         }
     }
@@ -321,12 +320,17 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 
     public void onItemClick(){
         Logger.e("task列表"+groupList.size());
-        taskCheckAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        // Java 8 新特性 Lambda表达式，原来写法即下方注释
+        taskCheckAdapter.setOnItemClickListener((adapter,view,position)->{
+            tv_now_task.setText(groupList.get(position));
+        });
+
+        /*taskCheckAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                tv_now_task.setText(groupList.get(position));
+
             }
-        });
+        });*/
     }
     @Override
     public void onLeftClick() {

@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
-import ddr.example.com.nddrandroidclient.entity.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 
 /**
  * time : 2019/11/2

@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.entity;
+package ddr.example.com.nddrandroidclient.entity.point;
 
 /**
  * 基础点

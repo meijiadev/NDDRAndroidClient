@@ -27,8 +27,8 @@
             android:textColor="#0399ff"
             android:id="@+id/tv_new_map"
             />
-        <ddr.example.com.nddrandroidclient.widget.ZoomImageView
-            android:id="@+id/zmap"
+        <ddr.example.com.nddrandroidclient.widget.MapImageView
+            android:id="@+id/iv_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>

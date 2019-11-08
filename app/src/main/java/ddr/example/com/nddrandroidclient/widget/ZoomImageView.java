@@ -15,10 +15,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.DecimalFormat;
 
 import DDRVLNMapProto.DDRVLNMap;
-import ddr.example.com.nddrandroidclient.entity.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.XyEntity;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 

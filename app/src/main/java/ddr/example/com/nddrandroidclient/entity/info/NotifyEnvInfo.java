@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.entity;
+package ddr.example.com.nddrandroidclient.entity.info;
 
 public class NotifyEnvInfo {
     public static NotifyEnvInfo notifyEnvInfo;

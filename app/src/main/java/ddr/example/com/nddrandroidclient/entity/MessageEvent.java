@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.entity;
 
 import java.util.List;
 
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
+
 public class MessageEvent {
     private int index;
     private boolean isWhat;
