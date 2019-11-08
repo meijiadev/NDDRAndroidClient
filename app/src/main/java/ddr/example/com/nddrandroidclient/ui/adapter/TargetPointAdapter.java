@@ -7,6 +7,8 @@ import java.util.List;
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.entity.TargetPoint;
 
@@ -27,6 +29,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper,TargetPoint item) {
         super.convert(helper, item);
+        helper.setText(R.id.item_recycle_gopoint,item.getName());
     }
 
     @Override

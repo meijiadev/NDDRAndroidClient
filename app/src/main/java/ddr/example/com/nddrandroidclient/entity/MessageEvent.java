@@ -13,14 +13,14 @@ public class MessageEvent {
         updatePort,           // 更新端口号
         LoginSuccess,        //登陆成功
         updateMapList,      //获取地图列
-        updateBaseStatus,
+        updateBaseStatus,  //获取基础信息
         updateMap,
         updateDDRVLNMap,
         updatePng,
         readFile,
         realTimeDraw,
         addPoiPoint,
-        updateVersion,
+        updateVersion, //获取版本信息
         receivePointCloud,
 
     }

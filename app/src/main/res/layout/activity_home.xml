@@ -83,10 +83,11 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22.5dp"
-            android:src="@mipmap/password"
+            android:src="@mipmap/tuichu"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="25dp"
+            android:id="@+id/tv_quit"
             />
         <View
             android:layout_width="match_parent"

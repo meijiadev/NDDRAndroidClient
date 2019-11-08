@@ -28,6 +28,8 @@ public class NotifyBaseStatusEx {
     private float currspeed;
     private int eSelfCalibStatus;
     private boolean chargingStatus;
+    private int taskCount;
+    private int taskDuration;
 
     public boolean isChargingStatus() {
         return chargingStatus;
@@ -48,7 +50,21 @@ public class NotifyBaseStatusEx {
         this.eSelfCalibStatus = eSelfCalibStatus;
     }
 
+    public int getTaskCount() {
+        return taskCount;
+    }
 
+    public void setTaskCount(int taskCount) {
+        this.taskCount = taskCount;
+    }
+
+    public int getTaskDuration() {
+        return taskDuration;
+    }
+
+    public void setTaskDuration(int taskDuration) {
+        this.taskDuration = taskDuration;
+    }
 
     private float posAngulauspeed;
 
