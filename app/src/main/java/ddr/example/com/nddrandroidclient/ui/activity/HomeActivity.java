@@ -9,7 +9,8 @@ import android.widget.ImageView;
 
 import com.google.protobuf.ByteString;
 
-import DDRCommProto.BaseCmd;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 
@@ -17,8 +18,10 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
+
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -55,12 +58,37 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
+    private String currentMap;     //当前运行的地图名
+    private String currentTask;   //当前运行的任务
+
+
     private NotifyEnvInfo notifyEnvInfo;
+
 
     /**
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void update(MessageEvent messageEvent) {
+        switch (messageEvent.getType()) {
+            case updateBaseStatus:
+                if (notifyBaseStatusEx!=null){
+                    currentMap=notifyBaseStatusEx.getCurroute();
+                    currentTask=notifyBaseStatusEx.getCurrpath();
+                }
+                break;
+            case updateMapList:
+                if (currentMap!=null){
+                    tcpClient.getMapInfo(ByteString.copyFromUtf8(currentMap));  //获取某个地图信息
+                }
+                break;
+            case updateDDRVLNMap:
+
+                break;
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -86,7 +114,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initData() {
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
-        requestFile();
+        notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
+        tcpClient.requestFile();     //请求所有地图
+
     }
 
 
@@ -244,24 +274,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         super.onDestroy();
     }
 
-    /**
-     * 请求文件（txt、png) 刷新文件
-     */
-    private void requestFile() {
-        final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
-        getMapInfo(currentFile);
-        Logger.e("请求文件中....");
-    }
 
-    public void getMapInfo(final ByteString path){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
-                        .setParam(path)
-                        .build();
-                tcpClient.sendData(null,reqClientGetMapInfo);
-            }
-        }).start();
-    }
+
 }

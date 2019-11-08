@@ -11,7 +11,7 @@ import java.util.List;
 
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
-import ddr.example.com.nddrandroidclient.entity.ComputerEdition;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 public class VersionAdapter extends BaseAdapter<ComputerEdition> {

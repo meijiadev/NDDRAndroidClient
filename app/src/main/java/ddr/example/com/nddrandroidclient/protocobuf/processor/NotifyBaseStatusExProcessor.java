@@ -8,7 +8,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 
 
 public class NotifyBaseStatusExProcessor extends BaseProcessor {
@@ -33,7 +33,6 @@ public class NotifyBaseStatusExProcessor extends BaseProcessor {
         notifyBaseStatusEx1.setTaskCount(notifyBaseStatusEx.getTaskCount());
         notifyBaseStatusEx1.setTaskDuration(notifyBaseStatusEx.getTaskDuration());
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateBaseStatus));
-
-
+        EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateBaseStatus));
     }
 }

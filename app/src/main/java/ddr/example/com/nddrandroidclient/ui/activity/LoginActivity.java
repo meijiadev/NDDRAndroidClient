@@ -28,7 +28,6 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.RobotIDEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -177,8 +176,6 @@ public final class LoginActivity extends DDRActivity {
                 tcpClient.disConnect();     //在切换服务器时，要先关闭当前服务器再连接新的服务器
                 Logger.e("----连接");
                 tcpClient.creatConnect(ip,tcpPort);
-                RobotIDEntity.getInstance().setIp(ip);
-                RobotIDEntity.getInstance().setPort(tcpPort);
                 robot_id.setText(ip);
                 layoutRobotList.setVisibility(View.GONE);
                 loginIn.setVisibility(View.VISIBLE);

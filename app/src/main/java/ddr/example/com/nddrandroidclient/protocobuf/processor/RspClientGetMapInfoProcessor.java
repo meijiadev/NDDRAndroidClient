@@ -20,8 +20,8 @@ import ddr.example.com.nddrandroidclient.download.DownLoadCallBack;
 import ddr.example.com.nddrandroidclient.download.DownLoadImageService;
 import ddr.example.com.nddrandroidclient.download.FileUtil;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.MapFileStatus;
-import ddr.example.com.nddrandroidclient.entity.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.helper.SortClass;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -88,7 +88,8 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
             MapFileStatus mapFileStatus=MapFileStatus.getInstance();
             mapFileStatus.setMapNames(mapNames);
             mapFileStatus.setPictureUrls(urlList);
-            EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateMapList,mapInfoList));
+            mapFileStatus.setMapInfos(mapInfoList);
+            EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateMapList));
         }
     }
 

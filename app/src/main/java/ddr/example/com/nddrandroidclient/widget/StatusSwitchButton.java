@@ -20,8 +20,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**

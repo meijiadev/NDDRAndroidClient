@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
-import ddr.example.com.nddrandroidclient.entity.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 
 /**
  * time : 2019/11/2
@@ -36,6 +36,11 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MapInfo item) {
         super.convert(helper, item);
+        if (allSelected){
+            helper.getView(R.id.iv_select).setVisibility(View.VISIBLE);
+        }else {
+            helper.getView(R.id.iv_select).setVisibility(View.GONE);
+        }
         Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
         helper.setText(R.id.tv_map_name,item.getMapName())
                 .setText(R.id.tv_size,String.valueOf(item.getWidth())+"x"+String.valueOf(item.getHeight())+"m²")
@@ -45,11 +50,12 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
         if (item.isUsing()){
             helper.getView(R.id.item_head_layout).setBackgroundResource(R.drawable.item_map_head_blue);
         }
-        if (allSelected){
-            helper.getView(R.id.iv_select).setVisibility(View.VISIBLE);
-        }else {
-            helper.getView(R.id.iv_select).setVisibility(View.GONE);
+        if (item.isSelected()){
+            helper.getView(R.id.iv_select).setBackgroundResource(R.mipmap.checkedwg);
+        }else{
+            helper.getView(R.id.iv_select).setBackgroundResource(R.mipmap.nocheckedwg);
         }
+
     }
 
     @Override
@@ -85,5 +91,7 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
      */
     public void showSelected(boolean isSelected){
         allSelected=isSelected;
+        notifyDataSetChanged();
     }
+
 }

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
-import ddr.example.com.nddrandroidclient.entity.ComputerEdition;
-import ddr.example.com.nddrandroidclient.entity.ComputerEditions;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.other.Logger;
 

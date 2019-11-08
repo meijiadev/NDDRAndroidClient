@@ -1,10 +1,10 @@
-package ddr.example.com.nddrandroidclient.entity;
+package ddr.example.com.nddrandroidclient.entity.point;
 
 /**
  * time : 2019/11/7
  * desc : 目标点结构
  */
-public class TargetPoint {
+public class TargetPoint extends BaseMode {
     private String name;
     private float x;
     private float y;

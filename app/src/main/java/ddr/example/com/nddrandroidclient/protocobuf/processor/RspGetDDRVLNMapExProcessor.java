@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**

@@ -2,6 +2,11 @@ package ddr.example.com.nddrandroidclient.entity;
 
 import java.util.List;
 
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
+
+/**
+ * desc: EvenBus的信息传递类
+ */
 public class MessageEvent {
     private int index;
     private boolean isWhat;
@@ -12,7 +17,7 @@ public class MessageEvent {
         updateIPList,          //更新IP列表
         updatePort,           // 更新端口号
         LoginSuccess,        //登陆成功
-        updateMapList,      //获取地图列
+        updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息
         updateMap,
         updateDDRVLNMap,

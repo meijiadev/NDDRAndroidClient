@@ -2,7 +2,7 @@ package ddr.example.com.nddrandroidclient.helper;
 
 import java.util.Comparator;
 
-import ddr.example.com.nddrandroidclient.entity.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 
 /**
  * time:  2019/10/10

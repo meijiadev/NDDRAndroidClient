@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.protobuf.GeneratedMessageLite;
 
 import DDRCommProto.BaseCmd;
-import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 
 
 public class NotifyEnvInfoProcessor extends BaseProcessor {
