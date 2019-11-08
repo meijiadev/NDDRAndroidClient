@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.util.AttributeSet;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glview.GLContinuousView;
+import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,6 +31,7 @@ import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -50,14 +53,14 @@ public class MapImageView extends GLContinuousView {
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExesS;  // 路径列表  选中的任务中包含的路径
     private List<DDRVLNMap.targetPtItem> targetPtItemsS;          // 目标点列表 选中的任务中包含的目标点
 
-    private List<DDRVLNMap.path_line_itemEx> paths;  // 路径列表  选中的任务中包含的路径 经过
-
+    private List<PathLine> pathLines=new ArrayList<>();   //经过转换坐标的路径
 
     private MapFileStatus mapFileStatus;
     private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
 
     private Bitmap mapBitmap;
+    private Bitmap targetBitmap; //目标点
     private Bitmap directionBitmap,directionBitmap1;
     private GLPaint glPaint,radarPaint;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -74,6 +77,7 @@ public class MapImageView extends GLContinuousView {
     private boolean waitData=false;           //是否需要等待数据
     private String taskName;
     private boolean isStartRadar=false;       //是否雷达开始绘制
+    private String mapName;
 
 
     /**
@@ -90,6 +94,9 @@ public class MapImageView extends GLContinuousView {
 
 
     public void setMapBitmap(String mapName,String taskName){
+        this.mapName=mapName;
+        pathLineItemExesS=new ArrayList<>();
+        targetPtItemsS=new ArrayList<>();
         Logger.e("设置图片");
         String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
         FileInputStream fis = null;
@@ -107,6 +114,23 @@ public class MapImageView extends GLContinuousView {
                 pathElementExes=taskItemExes.get(i).getPathSetList();
             }
         }
+        for (int i=0;i<pathElementExes.size();i++){
+            if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
+                ByteString lineName=pathElementExes.get(i).getName();
+                for (int j=0;j<pathLineItemExes.size();j++){
+                    if (lineName.equals(pathLineItemExes.get(j).getName())){
+                        pathLineItemExesS.add(pathLineItemExes.get(j));
+                    }
+                }
+            }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
+                ByteString pointName=pathElementExes.get(i).getName();
+                for (int j=0;j<targetPtItems.size();j++){
+                    if (pointName.equals(targetPtItems.get(j).getPtName())){
+                        targetPtItemsS.add(targetPtItems.get(j));
+                    }
+                }
+            }
+        }
     }
 
 
@@ -116,6 +140,8 @@ public class MapImageView extends GLContinuousView {
 
     public MapImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Activity activity= (Activity) context;
+        Logger.e("--------");
 
     }
 
@@ -127,6 +153,7 @@ public class MapImageView extends GLContinuousView {
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         mapFileStatus=MapFileStatus.getInstance();
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
+        targetBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.action_default);
         matrix=new Matrix();
         glPaint=new GLPaint();
         glPaint.setColor(Color.GRAY);
@@ -191,6 +218,40 @@ public class MapImageView extends GLContinuousView {
      * 绘制路径和点
      */
     private void drawLine(ICanvasGL canvasGL){
+        //绘制目标点
+        if (targetPtItemsS!=null)
+        for (int i=0;i<targetPtItemsS.size();i++){
+            XyEntity xyEntity=toXorY(targetPtItemsS.get(i).getPtData().getX(),targetPtItemsS.get(i).getPtData().getY());   //转成像素坐标
+            canvasGL.drawBitmap(targetBitmap,mRectDst.left+(int)xyEntity.getX()-10,mRectDst.top+(int)xyEntity.getY()-10);
+        }
+       if (pathLineItemExesS!=null){
+            for (int i=0;i<pathLineItemExesS.size();i++){
+                List<PathLine.PathPoint> pathPoints=new ArrayList<>();
+                List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExesS.get(i).getPointSetList();
+                for (int j=0;j<path_lint_pt_items.size();j++){
+                    XyEntity xyEntity=toXorY(path_lint_pt_items.get(j).getPt().getX(),path_lint_pt_items.get(j).getPt().getY());
+                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                    pathPoint.setX(xyEntity.getX());
+                    pathPoint.setY(xyEntity.getY());
+                    pathPoints.add(pathPoint);
+                }
+                PathLine pathLine=new PathLine();
+                pathLine.setPathPoints(pathPoints);
+                pathLines.add(pathLine);
+            }
+
+            for (int i=0;i<pathLines.size();i++){
+                List<PathLine.PathPoint>pathPoints=pathLines.get(i).getPathPoints();
+                for (int j=0;j<pathPoints.size();j++){
+                    int x=mRectDst.left+(int)pathPoints.get(j).getX();
+                    int y=mRectDst.top+(int) pathPoints.get(j).getY();
+                    if (j<pathPoints.size()-1){
+                        canvasGL.drawLine(x,y,(int)pathPoints.get(j+1).getX()+mRectDst.left,pathPoints.get(j+1).getY()+mRectDst.top,glPaint);
+                    }
+                }
+            }
+       }
+
 
 
     }
@@ -230,6 +291,10 @@ public class MapImageView extends GLContinuousView {
         return new XyEntity(x1,y1);
     }
 
+    public void transformXy(){
+
+    }
+
     /**
      * 实时绘制（将世界坐标经过矩阵变换成图片上的像素坐标)
      */
@@ -257,25 +322,38 @@ public class MapImageView extends GLContinuousView {
         onPause();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void upDate(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
             case updateDDRVLNMap:
                 rspGetDDRVLNMapEx=mapFileStatus.getRspGetDDRVLNMapEx();
+                data=rspGetDDRVLNMapEx.getData();
                 baseData=rspGetDDRVLNMapEx.getData().getBasedata();
-                affine_mat=baseData.getAffinedata();
-                targetPtItems=data.getTargetPtdata().getTargetPtList();
-                pathLineItemExes=data.getPathSet().getPathLineDataList();
-                taskItemExes=data.getTaskSetList();
-                r00=affine_mat.getR11();
-                r01=affine_mat.getR12();
-                t0=affine_mat.getTx();
-                r10=affine_mat.getR21();
-                r11=affine_mat.getR22();
-                t1=affine_mat.getTy();
+                Logger.e("--------"+baseData.getName().toStringUtf8());
+                //验证返回的地图信息是否是当前运行的地图
+                if (baseData.getName().toStringUtf8().equals(mapName)){
+                    Logger.e("---------验证通过");
+                    affine_mat=baseData.getAffinedata();
+                    targetPtItems=data.getTargetPtdata().getTargetPtList();
+                    pathLineItemExes=data.getPathSet().getPathLineDataList();
+                    taskItemExes=data.getTaskSetList();
+                    r00=affine_mat.getR11();
+                    r01=affine_mat.getR12();
+                    t0=affine_mat.getTx();
+                    r10=affine_mat.getR21();
+                    r11=affine_mat.getR22();
+                    t1=affine_mat.getTy();
+                }
                 break;
             case updateBaseStatus:
                 realTimeDraw();
+                mapName=NotifyBaseStatusEx.getInstance().getCurroute();
                 break;
             case receivePointCloud:
                 isStartRadar=true;

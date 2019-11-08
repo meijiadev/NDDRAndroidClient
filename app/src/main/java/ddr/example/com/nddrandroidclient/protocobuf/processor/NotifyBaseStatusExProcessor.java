@@ -30,8 +30,7 @@ public class NotifyBaseStatusExProcessor extends BaseProcessor {
         notifyBaseStatusEx1.setPosY(notifyBaseStatusEx.getPosy());
         notifyBaseStatusEx1.seteSelfCalibStatus(notifyBaseStatusEx.getSelfcalibstatusValue());
         notifyBaseStatusEx1.setChargingStatus(notifyBaseStatusEx.getChargingStatus());
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateBaseStatus));
-
+        EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateBaseStatus));
 
     }
 }

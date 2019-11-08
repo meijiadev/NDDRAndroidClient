@@ -70,7 +70,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateBaseStatus:

@@ -116,7 +116,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private RobotIdAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
 
-
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
@@ -124,34 +123,34 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 initStatusBar();
                 break;
             case updateDDRVLNMap:
-                groupList = new ArrayList<>();
-                targetPoints=new ArrayList<>();
-                task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTaskSetList());
-                targetPtItems = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTargetPtdata().getTargetPtList());
-                Logger.e("-----" + task_itemList.size());
-                for (int i = 0; i < task_itemList.size(); i++) {
-                    groupList.add(task_itemList.get(i).getName().toStringUtf8());
-                }
-                Logger.e("-----" + groupList.size() + "--name" + groupList.get(0));
-                taskCheckAdapter.setNewData(groupList);
-                for (int i=0;i<targetPtItems.size();i++){
-                    targetPoint=new TargetPoint();
-                    targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
-                    targetPoint.setX(targetPtItems.get(i).getPtData().getX());
-                    targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-                    targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
-                    targetPoints.add(targetPoint);
-                }
-                targetPointAdapter.setNewData(targetPoints);
-                if (robotIdAdapter!=null){
-                    robotIdAdapter.setNewData(groupList);
-                    robotIdAdapter.notifyDataSetChanged();
+                Logger.e("------地图名："+mapFileStatus.getRspGetDDRVLNMapEx().getData().getBasedata().getName().toStringUtf8());
+                if (mapFileStatus.getRspGetDDRVLNMapEx().getData().getBasedata().getName().toStringUtf8().equals(mapName)){
+                    mapImageView.setMapBitmap(mapName,taskName);
+                    groupList = new ArrayList<>();
+                    targetPoints=new ArrayList<>();
+                    task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTaskSetList());
+                    targetPtItems = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTargetPtdata().getTargetPtList());
+                    Logger.e("-----" + task_itemList.size());
+                    for (int i = 0; i < task_itemList.size(); i++) {
+                        groupList.add(task_itemList.get(i).getName().toStringUtf8());
+                    }
+                    taskCheckAdapter.setNewData(groupList);
+                    for (int i=0;i<targetPtItems.size();i++){
+                        targetPoint=new TargetPoint();
+                        targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+                        targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+                        targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+                        targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+                        targetPoints.add(targetPoint);
+                    }
+                    targetPointAdapter.setNewData(targetPoints);
+                    if (robotIdAdapter!=null){
+                        robotIdAdapter.setNewData(groupList);
+                        robotIdAdapter.notifyDataSetChanged();
+                    }
                 }
                 break;
-            case updateMapList:
-                //设置右侧图片内容
-                mapImageView.setMapBitmap(mapName,taskName);
-                break;
+
         }
     }
 
@@ -384,5 +383,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     public void onAnimationRepeat(Animation animation) {
 
     }
+
+
+
 
 }

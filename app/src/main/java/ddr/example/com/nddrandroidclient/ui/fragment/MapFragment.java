@@ -94,18 +94,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
-            case updateMapList:
-                downloadMapNames = mapFileStatus.getMapNames();
-                checkFilesAllName(downloadMapNames);
-                transformMapInfo(messageEvent.getMapInfoList());
-                mapAdapter.setNewData(mapInfos);
-
-                break;
             case updateDDRVLNMap:
                 if (dialog.isShowing()){
-                    dialog.dismiss();
-                    mapLayout.setVisibility(View.GONE);
-                    mapDetailLayout.setVisibility(View.VISIBLE);
+                    getAttachActivity().postDelayed(()->{
+                        dialog.dismiss();
+                        mapLayout.setVisibility(View.GONE);
+                        mapDetailLayout.setVisibility(View.VISIBLE);
+                    },500);
                 }
                 break;
         }
@@ -136,6 +131,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     protected void initData() {
         tcpClient=TcpClient.getInstance(getAttachActivity(),ClientMessageDispatcher.getInstance());
         mapFileStatus = MapFileStatus.getInstance();
+        downloadMapNames = mapFileStatus.getMapNames();
+        checkFilesAllName(downloadMapNames);
+        transformMapInfo(mapFileStatus.getMapInfos());
+        mapAdapter.setNewData(mapInfos);
         mapAdapter.setNewData(mapInfos);
     }
 
@@ -198,17 +197,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }catch (NullPointerException e){
                     e.printStackTrace();
                 }
-                getAttachActivity().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (dialog.isShowing()){
-                            dialog.dismiss();
-                            toast("加载失败！");
-                            mapLayout.setVisibility(View.GONE);
-                            mapDetailLayout.setVisibility(View.VISIBLE);
-                        }
+                getAttachActivity().postDelayed(()->{
+                    if (dialog.isShowing()){
+                        dialog.dismiss();
+                        toast("加载失败！");
+                        mapLayout.setVisibility(View.GONE);
+                        mapDetailLayout.setVisibility(View.VISIBLE);
                     }
-                }, 5000);
+
+                },5000);
             }
         }));
     }

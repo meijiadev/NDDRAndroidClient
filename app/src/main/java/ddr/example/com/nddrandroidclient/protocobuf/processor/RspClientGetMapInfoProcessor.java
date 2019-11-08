@@ -88,7 +88,8 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
             MapFileStatus mapFileStatus=MapFileStatus.getInstance();
             mapFileStatus.setMapNames(mapNames);
             mapFileStatus.setPictureUrls(urlList);
-            EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateMapList,mapInfoList));
+            mapFileStatus.setMapInfos(mapInfoList);
+            EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateMapList));
         }
     }
 
