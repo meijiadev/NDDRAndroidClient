@@ -146,7 +146,7 @@ public class MessageRoute {
     }
 
     /**
-     *解析包体
+     * 直接解析包体
      */
     public void parseBody(byte[] bodys,int headLength) throws InvalidProtocolBufferException {
         byte[] bheadData=new byte[headLength];

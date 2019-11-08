@@ -40,6 +40,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.ZoomImageView;
@@ -51,6 +52,8 @@ import ddr.example.com.nddrandroidclient.widget.ZoomImageView;
 public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @BindView(R.id.bt_create_map)
     TextView btCreatMap;
+    @BindView(R.id.bt_batch_delete)
+    TextView btBatch;   //批量管理
     @BindView(R.id.recycler_map)
     RecyclerView mapRecycler;
     @BindView(R.id.map_layout)
@@ -89,6 +92,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private List<MapInfo> mapInfos = new ArrayList<>();
     private List<String> downloadMapNames = new ArrayList<>();
     private TcpClient tcpClient;
+    private boolean isShowSelected;   //显示批量管理的按钮
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
@@ -98,6 +102,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 checkFilesAllName(downloadMapNames);
                 transformMapInfo(messageEvent.getMapInfoList());
                 mapAdapter.setNewData(mapInfos);
+
                 break;
             case updateDDRVLNMap:
                 if (dialog.isShowing()){
@@ -137,11 +142,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapAdapter.setNewData(mapInfos);
     }
 
-    @OnClick({R.id.bt_create_map,R.id.iv_back,R.id.tv_target_point})
+    @OnClick({R.id.bt_create_map,R.id.iv_back,R.id.tv_target_point,R.id.tv_add_new,R.id.bt_batch_delete})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_create_map:
                 startActivity(CollectingActivity.class);
+                break;
+            case R.id.bt_batch_delete:
+                if (isShowSelected){
+                    isShowSelected=false;
+                    mapAdapter.showSelected(false);
+                }else {
+                    isShowSelected=true;
+                    mapAdapter.showSelected(true);
+                }
                 break;
             case R.id.iv_back:
                 mapDetailLayout.setVisibility(View.GONE);
@@ -154,6 +168,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     leftDetailLayout.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.tv_add_new:
+                startActivity(MapEditActivity.class);
+                break;
         }
     }
 
@@ -161,48 +178,42 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     public void onItemClick() {
         mapAdapter.setOnItemClickListener(((adapter, view, position) -> {
             Logger.e("--------:"+mapInfos.get(position).getMapName());
-            getMapInfo(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()));
-            dialog=new WaitDialog.Builder(getAttachActivity())
-                     .setMessage("加载地图信息中")
-                     .show();
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(mapInfos.get(position).getBitmap());
-                Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                zoomMap.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
-            getAttachActivity().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (dialog.isShowing()){
-                        dialog.dismiss();
-                        toast("加载失败！");
-                        mapLayout.setVisibility(View.GONE);
-                        mapDetailLayout.setVisibility(View.VISIBLE);
-                    }
+            if (isShowSelected){
+                MapInfo mapInfo=mapInfos.get(position);
+                if (mapInfo.isSelected()){
+                    mapInfo.setSelected(false);
+                }else {
+                    mapInfo.setSelected(true);
                 }
-            }, 5000);
+                mapAdapter.setData(position,mapInfo);
+            }else {
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()));
+                dialog=new WaitDialog.Builder(getAttachActivity())
+                        .setMessage("加载地图信息中")
+                        .show();
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(mapInfos.get(position).getBitmap());
+                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                    zoomMap.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+                getAttachActivity().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog.isShowing()){
+                            dialog.dismiss();
+                            toast("加载失败！");
+                            mapLayout.setVisibility(View.GONE);
+                            mapDetailLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }, 5000);
+            }
         }));
-    }
-
-    /**
-     * 获得当前地图下的信息
-     */
-    private void getMapInfo(ByteString routeName){
-        DDRVLNMap.reqGetDDRVLNMapEx reqGetDDRVLNMapEx=DDRVLNMap.reqGetDDRVLNMapEx.newBuilder()
-                .setOnerouteName(routeName)
-                .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader,reqGetDDRVLNMapEx);
-        Logger.e("请求地图信息");
     }
 
     /**

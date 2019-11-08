@@ -16,31 +16,36 @@
         app:rightTitle="退出"
         android:paddingRight="@dimen/dp_10"
         app:rightColor="@color/white"
+        app:lineColor="#262728"
+        app:lineSize="1dp"
         >
     </com.hjq.bar.TitleBar>
     <LinearLayout
+        android:id="@+id/second_title"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_below="@id/title_layout"
         android:background="#161718">
         <TextView
             android:id="@+id/tv_target_point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
             android:text="目标点 (0)"
             android:textSize="11sp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
-            android:layout_marginLeft="54dp"
+            android:layout_marginLeft="80dp"
+            android:gravity="center"
             />
         <TextView
             android:id="@+id/tv_path"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
             android:text="路径 (0)"
             android:textSize="11sp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
+            android:gravity="center"
             android:layout_marginLeft="44dp"/>
 
         <TextView
@@ -56,10 +61,188 @@
             android:id="@+id/tv_0.25m"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:text="0.25m"
+            android:textColor="#ccffffff"
+            android:textSize="11sp"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@mipmap/checkedwg"
+            android:drawablePadding="6dp"
+            android:layout_marginLeft="8.5dp"
+            />
+        <TextView
+            android:id="@+id/tv_0.5m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.5m"
+            android:textColor="#ccffffff"
+            android:textSize="11sp"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@mipmap/nocheckedwg"
+            android:drawablePadding="6dp"
+            android:layout_marginLeft="28dp"
+            />
+        <TextView
+            android:id="@+id/tv_1m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1m"
+            android:textColor="#ccffffff"
+            android:textSize="11sp"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@mipmap/nocheckedwg"
+            android:drawablePadding="6dp"
+            android:layout_marginLeft="28dp"
             />
 
-
+        <TextView
+            android:id="@+id/tv_2m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2m"
+            android:textColor="#ccffffff"
+            android:textSize="11sp"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@mipmap/nocheckedwg"
+            android:drawablePadding="6dp"
+            android:layout_marginLeft="28dp"
+            />
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#101112"
+        android:layout_below="@id/second_title"
+        >
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+        <ddr.example.com.nddrandroidclient.widget.ZoomImageView
+            android:id="@+id/zmap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+        <ImageView
+            android:id="@+id/iv_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/sign"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/image"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_mark_current"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="标记机器人当前位置"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/second_title"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableRight="@mipmap/checkedwg"
+        android:paddingRight="@dimen/dp_10"
+        android:drawablePadding="@dimen/dp_10"
+        />
+
+    <LinearLayout
+        android:layout_width="30dp"
+        android:layout_height="283dp"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp"
+        android:layout_below="@id/second_title"
+        android:background="@drawable/layout_bg"
+        >
+        <TextView
+            android:id="@+id/tv_speed"
+            android:layout_width="21dp"
+            android:layout_height="14dp"
+            android:text="0.65"
+            android:textSize="10sp"
+            android:textColor="#eeeeee"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="2dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="m/s"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            android:layout_gravity="center_horizontal"
+            />
+        <com.jaygoo.widget.VerticalRangeSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="22dp"
+            android:layout_height="225dp"
+            app:rsb_indicator_width="22dp"
+            app:rsb_indicator_height="225dp"
+            app:rsb_progress_drawable_default="@drawable/seekbar_indicator_bg"
+            app:rsb_progress_drawable="@drawable/seekbar_indicator_bg"
+            app:rsb_indicator_drawable="@drawable/seekbar_indicator_bg"
+            app:rsb_thumb_width="13dp"
+            app:rsb_thumb_height="21dp"
+            android:background="#232434"
+            app:rsb_mode="single"
+            app:rsb_min="0"
+            app:rsb_max="1"
+            app:rsb_thumb_drawable="@drawable/seekbar_thumb_bg"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <CheckBox
+            android:id="@+id/fixed_speed"
+            android:layout_width="28dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="6dp"
+            android:button="@drawable/checkbox"
+            />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/add_poi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/add_poi"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_above="@id/my_rocker_zy"
+        />
+
+    <ddr.example.com.nddrandroidclient.widget.RockerView
+        android:id="@+id/my_rocker"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:areaBackground="@mipmap/rocker_base_default"
+        android:layout_alignParentBottom="true"
+        app:rockerBackground="@mipmap/rocker"
+        app:rockerCallBackMode="CALL_BACK_MODE_MOVE"
+        app:rockerScale="0.3"
+        app:rockerSpeedLevel="11"
+        android:layout_marginLeft="57dp"
+        />
+    <ddr.example.com.nddrandroidclient.widget.RockerView
+        android:id="@+id/my_rocker_zy"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:areaBackground="@mipmap/rocker_default_zy"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:rockerBackground="@mipmap/rocker"
+        app:rockerCallBackMode="CALL_BACK_MODE_MOVE"
+        app:rockerScale="0.3"
+        app:rockerSpeedLevel="11"
+        android:layout_marginRight="50dp"
+        />
+
+
 
 </RelativeLayout>

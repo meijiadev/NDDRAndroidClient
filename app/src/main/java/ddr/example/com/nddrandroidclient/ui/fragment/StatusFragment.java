@@ -16,6 +16,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.widget.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
+import ddr.example.com.nddrandroidclient.widget.ZoomImageView;
 
 /**
  * time: 2019/10/26
@@ -32,6 +33,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RelativeLayout shrinkTailLayout; // 伸缩的尾部布局
     @BindView(R.id.shrink_layout)
     RelativeLayout shrinkLayout;
+    @BindView(R.id.zmap)
+    ZoomImageView zmap;
 
     private Animation hideAnimation;  //布局隐藏时的动画
     private Animation showAnimation;  // 布局显示时的动画效果

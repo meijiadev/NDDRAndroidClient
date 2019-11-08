@@ -26,6 +26,10 @@
             android:layout_centerInParent="true"
             android:textColor="#0399ff"
             />
+        <ddr.example.com.nddrandroidclient.widget.ZoomImageView
+            android:id="@+id/zmap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -24,4 +24,12 @@ public class MapEditActivity extends DDRActivity {
     protected void initData() {
         super.initData();
     }
+
+
+    @Override
+    public boolean statusBarDarkFont() {
+        return false;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.xuhao.didi.core.iocore.interfaces.ISendable;
@@ -18,6 +19,7 @@ import com.xuhao.didi.socket.client.sdk.client.connection.IConnectionManager;
 import java.nio.ByteOrder;
 
 import DDRCommProto.BaseCmd;
+import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
@@ -323,9 +325,32 @@ public class TcpClient extends BaseSocketConnection {
     }
 
 
+    /**
+     * 获得某个地图下的信息
+     */
+    public void getMapInfo(ByteString routeName){
+        DDRVLNMap.reqGetDDRVLNMapEx reqGetDDRVLNMapEx=DDRVLNMap.reqGetDDRVLNMapEx.newBuilder()
+                .setOnerouteName(routeName)
+                .build();
+        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
+                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
+                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
+                .build();
+        tcpClient.sendData(commonHeader,reqGetDDRVLNMapEx);
+        Logger.e("请求地图信息");
+    }
 
-
-
-
+    /**
+     * 请求文件（txt、png) 刷新文件列表
+     */
+    public void requestFile() {
+        final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
+        BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
+                .setParam(currentFile)
+                .build();
+        tcpClient.sendData(null,reqClientGetMapInfo);
+        Logger.e("请求文件中....");
+    }
 
 }

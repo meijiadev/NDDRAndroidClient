@@ -22,6 +22,7 @@
             android:textColor="#ccffffff"
             />
         <TextView
+            android:id="@+id/bt_batch_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bt_bg__map"

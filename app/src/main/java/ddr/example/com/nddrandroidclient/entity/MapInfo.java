@@ -16,6 +16,7 @@ public class MapInfo {
     private String author;
     private List<BaseCmd.rspClientGetMapInfo.MapInfoItem.TaskItem> taskItemList;
     private boolean isUsing=false;         //是否在使用中，同时只有一张图能被使用
+    private boolean isSelected=false;      //是否被选中删除
 
 
 
@@ -81,5 +82,13 @@ public class MapInfo {
 
     public boolean isUsing() {
         return isUsing;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 }
