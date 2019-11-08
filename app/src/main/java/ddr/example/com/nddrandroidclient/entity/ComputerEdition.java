@@ -8,6 +8,7 @@ public class ComputerEdition {
     private String data;
     private int type;
 
+
     public ComputerEdition() {
     }
 

@@ -13,7 +13,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
@@ -37,6 +45,8 @@ public class StatusSwitchButton extends View {
     private static final int CENTRE=2;
     private static final int RIGHT=3;
     private Paint defaultPaint;
+    private NotifyEnvInfo notifyEnvInfo;
+    private NotifyBaseStatusEx notifyBaseStatusEx;
 
     public StatusSwitchButton(Context context) {
         super(context);
@@ -56,11 +66,51 @@ public class StatusSwitchButton extends View {
         bt_height=btBitmap.getHeight();
         rectSrcbg=new Rect(0,0,bgBitmap.getWidth(),bgBitmap.getHeight());
         rectdstbg=new Rect(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT);
-
+        notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
+        EventBus.getDefault().register(this);      // 注册监听器
         Paint.FontMetrics fontMetrics=defaultPaint.getFontMetrics();
         float distance=(fontMetrics.bottom - fontMetrics.top)/2 - fontMetrics.bottom;
         baseline=DEFAULT_HEIGHT/2+distance;
         Logger.e("------:"+baseline+";"+distance);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void update(MessageEvent messageEvent) {
+        switch (messageEvent.getType()) {
+            case updateBaseStatus:
+                isAutoMode();
+                break;
+        }
+    }
+    public void isAutoMode() {
+//        Logger.e("模式"+notifyBaseStatusEx.getMode());
+//        Logger.e("模式"+notifyBaseStatusEx.geteSelfCalibStatus()+"子模式"+notifyBaseStatusEx.getSonMode());
+        switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
+            case 0:
+                //自标定
+
+                break;
+            case 1:
+                switch (notifyBaseStatusEx.getMode()) {
+                    case 1:
+                        //待命模式
+                        bt_position = RIGHT;
+                       break;
+                    case 3:
+                        //自动模式
+                        bt_position = LEFT;
+                        switch (notifyBaseStatusEx.getSonMode()){
+                            case 16:
+                                bt_position = LEFT;
+                                break;
+                            case 17:
+                                bt_position = CENTRE;
+                                break;
+                        }
+                       break;
+                }
+                break;
+        }
+        invalidate();
     }
 
     /**
@@ -127,38 +177,22 @@ public class StatusSwitchButton extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x=event.getX();
-        Logger.e("--------"+x);
-        if (mListener!=null){
-            Logger.e("状态师"+mListener.isAutoMode());
-            if (x>2*measureWidth/3){
-                if (mListener.isAutoMode()){
-                    Logger.e("执行中");
-                    mListener.onRightClick();
-                    bt_position=RIGHT;
-                }else {
-                    Logger.e("待命中");
-                }
-            }else if (x>measureWidth/3){
-                if (mListener.isAutoMode()){
-                    mListener.onCentreClick();
-                    bt_position=CENTRE;
-                }else {
-                    Logger.e("先进入执行");
-                }
-            }else {
-                if (mListener.isAutoMode()){
-                    Logger.e("执行中");
-                }else {
-                    mListener.onLeftClick();
-                    bt_position=LEFT;
-                    Logger.e("准备进入执行");
-                }
+        float x = event.getX();
+        Logger.e("--------" + x);
+        if (mListener != null) {
+            if (x > 2 * measureWidth / 3) {
+                mListener.onRightClick();
+            } else if (x > measureWidth / 3) {
+                mListener.onCentreClick();
+            } else {
+                mListener.onLeftClick();
             }
         }
-        invalidate();
-
         return super.onTouchEvent(event);
+    }
+
+    public void onDestroy(){
+        EventBus.getDefault().unregister(this);
     }
 
     public interface OnStatusSwitchListener{
@@ -176,11 +210,5 @@ public class StatusSwitchButton extends View {
          * 点击右边
          */
         void onRightClick();
-
-        /**
-         * 判断
-         */
-        boolean isAutoMode();
-
     }
 }

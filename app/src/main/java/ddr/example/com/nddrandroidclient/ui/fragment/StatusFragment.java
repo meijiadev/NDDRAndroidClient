@@ -99,8 +99,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     public static String robotID;//机器人ID
     private String workStatus;
     private int taskNum;
-    private int workTimes;
-    private float taskSpeed;
+    private double workTimes;
+    private double taskSpeed;
     private List<String> groupList=new ArrayList<>();
     private List<TargetPoint> targetPoints= new ArrayList<>();
     private List<DDRVLNMap.task_itemEx> task_itemList;
@@ -183,7 +183,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 
         for (int i=0;i<10;i++){
             targetPoint=new TargetPoint();
-            targetPoint.setName("呵呵");
+            targetPoint.setName("呵呵"+i);
             targetPoint.setX(100);
             targetPoint.setY(100);
             targetPoint.setTheta(10);
@@ -196,21 +196,26 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
      */
     private void initStatusBar() {
         DecimalFormat df = new DecimalFormat("0");
+        DecimalFormat format = new DecimalFormat("0.00");
+        int h=60;
+        int times=notifyBaseStatusEx.getTaskDuration();
 //        Logger.e("电量"+batteryNum+"---"+df.format(notifyEnvInfo.getBatt()) + "%");
         batteryNum=Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
         circleBarView.setProgress(batteryNum,0,Color.parseColor("#02B5F8"));
         rname = notifyBaseStatusEx.getCurroute();
         tname = notifyBaseStatusEx.getCurrpath();
         taskNum=notifyBaseStatusEx.getTaskCount();
-        workTimes=notifyBaseStatusEx.getTaskDuration();
-
+        workTimes=Double.parseDouble(df.format((float) times/h));
+        taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
+//        Logger.e("次数"+taskNum+"时间"+workTimes+"速度"+taskSpeed);
         if (rname!=null && tname!=null){
             tv_now_task.setText(tname);
             tv_now_map.setText(rname);
         }
         tv_now_device.setText(robotID);
-        tv_task_num.setText(String.valueOf(taskNum)+"次");
-        tv_work_time.setText(String.valueOf(workTimes/3600)+"h");
+        tv_task_num.setText(String.valueOf(taskNum)+" 次");
+        tv_work_time.setText(String.valueOf(workTimes)+" 分");
+        tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
         //Logger.e("模式"+notifyBaseStatusEx.getMode());
         //Logger.e("模式"+notifyBaseStatusEx.geteSelfCalibStatus());
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
@@ -250,7 +255,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 //        Logger.e("机器获取ID"+robotID);
     }
     /**
-     * 点路径编辑的弹窗
+     * 点路径选择的弹窗
      *
      * @param view
      */
@@ -266,7 +271,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
         recycler_task_check.setLayoutManager(layoutManager);
         recycler_task_check.setAdapter(taskCheckAdapter);
-        onItemClick();
+        onItemClick(1);
     }
     @OnClick({R.id.iv_shrink,R.id.tv_now_task})
     public void onViewClicked(View view) {
@@ -316,17 +321,33 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
     }
 
-    public void onItemClick(){
-        Logger.e("task列表"+groupList.size());
-        taskCheckAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                tv_now_task.setText(groupList.get(position));
-            }
-        });
+    public void onItemClick(int type){
+        switch (type){
+            case 1:
+                //任务列表选择事件
+                Logger.e("task列表"+groupList.size());
+                taskCheckAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        tv_now_task.setText(groupList.get(position));
+                    }
+                });
+                break;
+            case 2:
+                //目标点的点击事件
+                targetPointAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                    @Override
+                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
+                    }
+                });
+                break;
+        }
+
     }
     @Override
     public void onLeftClick() {
+        toast("请稍等，正在进入");
         sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
 
     }
@@ -338,28 +359,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 
     @Override
     public void onRightClick() {
+        toast("请稍等，正在退出");
         Logger.e("-----退出中");
         exitModel();
-    }
-
-    @Override
-    public boolean isAutoMode() {
-        switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
-            case 0:
-                //自标定
-                return true;
-            case 1:
-                switch (notifyBaseStatusEx.getMode()) {
-                    case 1:
-                        //Logger.e("待命模式" + modeView.getText());
-                       return false;
-                    case 3:
-                        //自动模式
-                       return true;
-                }
-                break;
-        }
-        return true;
     }
 
     @Override
@@ -378,4 +380,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        statusSwitchButton.onDestroy();
+    }
 }
