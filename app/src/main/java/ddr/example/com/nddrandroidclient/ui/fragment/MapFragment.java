@@ -149,7 +149,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
         mapRecycler.setLayoutManager(gridLayoutManager);
         mapRecycler.setAdapter(mapAdapter);
-
+        //目标点(路径或任务)的列表初始化
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getAttachActivity());
+        recyclerDetail.setLayoutManager(linearLayoutManager);
+        targetPointAdapter=new TargetPointAdapter(R.layout.item_target_point);
+        recyclerDetail.setAdapter(targetPointAdapter);
     }
 
     @Override
@@ -161,6 +165,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         transformMapInfo(mapFileStatus.getMapInfos());
         mapAdapter.setNewData(mapInfos);
         onItemClick();
+        onTargetItemClick();
+
 
     }
 
@@ -204,6 +210,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     private BaseDialog dialog;
 
+    /**
+     * 地图Recycler的点击事件
+     */
     public void onItemClick() {
         mapAdapter.setOnItemClickListener(((adapter, view, position) -> {
             Logger.e("--------:" + mapInfos.get(position).getMapName());
@@ -241,6 +250,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }, 5000);
             }
         }));
+    }
+
+    /**
+     * 目标点Recycler的点击事件
+     */
+    public void onTargetItemClick(){
+        targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
+
+        });
     }
 
     /**
@@ -345,7 +363,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
                     taskMode.setTimeItem(taskItemExes.get(i).getTimeSet());
                 }
-
+                targetPointAdapter.setNewData(targetPoints);
                 if (dialog.isShowing()) {
                     getAttachActivity().postDelayed(() -> {
                         dialog.dismiss();
