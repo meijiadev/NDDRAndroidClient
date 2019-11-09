@@ -255,7 +255,7 @@
             android:layout_width="308dp"
             android:layout_height="58dp"
             android:layout_marginLeft="32dp"
-            android:layout_marginTop="442dp"
+            android:layout_marginTop="426dp"
             android:id="@+id/rel_step_description">
             <View
                 android:layout_width="257dp"
@@ -316,10 +316,11 @@
         </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="308dp"
-            android:layout_height="58dp"
+            android:layout_height="75dp"
             android:layout_marginLeft="32dp"
-            android:layout_marginTop="442dp"
+            android:layout_marginTop="426dp"
             android:id="@+id/recycle_gopoint"
+            android:visibility="gone"
             />
     </RelativeLayout>
 
