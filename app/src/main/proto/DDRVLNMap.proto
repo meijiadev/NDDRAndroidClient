@@ -3,7 +3,7 @@ package DDRVLNMapProto;
 import "BaseCmd.proto";
 
 // 基础元素描述 +++++++++++++++++++++++++++++++++++++++
-message timeItem
+message  timeItem
 {
 	int32 startHour = 1; // 开始时间，时
 	int32 startMin = 2; // 开始时间，分

@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import DDRVLNMapProto.DDRVLNMap;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,11 @@ import ddr.example.com.nddrandroidclient.download.FileUtil;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -39,6 +45,7 @@ import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
@@ -105,28 +112,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     DDREditText etToward;
 
 
-
+    private DDRVLNMap.reqDDRVLNMapEx data;
+    private DDRVLNMap.DDRMapBaseData baseData;       // 存放基础信息，采集模式结束时就有的东西。
+    private DDRVLNMap.affine_mat affine_mat;
+    private DDRVLNMap.DDRMapTargetPointData targetPointData;
+    private List<DDRVLNMap.targetPtItem> targetPtItems;          // 目标点列表
+    private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 路径列表
+    private List<DDRVLNMap.task_itemEx> taskItemExes;          //  任务列表
+    private List<TargetPoint> targetPoints;  //目标点列表
+    private List<PathLine> pathLines;         //路径列表
     private MapFileStatus mapFileStatus;
-    private MapAdapter mapAdapter;
-    private List<MapInfo> mapInfos = new ArrayList<>();
+    private MapAdapter mapAdapter;        //地图列表适配器
+    private List<MapInfo> mapInfos = new ArrayList<>(); //地图列表
     private List<String> downloadMapNames = new ArrayList<>();
     private TcpClient tcpClient;
     private boolean isShowSelected;   //显示批量管理的按钮
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void update(MessageEvent messageEvent) {
-        switch (messageEvent.getType()) {
-            case updateDDRVLNMap:
-                if (dialog.isShowing()) {
-                    getAttachActivity().postDelayed(() -> {
-                        dialog.dismiss();
-                        mapLayout.setVisibility(View.GONE);
-                        mapDetailLayout.setVisibility(View.VISIBLE);
-                    }, 500);
-                }
-                break;
-        }
-    }
+    private TargetPointAdapter targetPointAdapter;
+
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -146,7 +149,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
         mapRecycler.setLayoutManager(gridLayoutManager);
         mapRecycler.setAdapter(mapAdapter);
-        onItemClick();
+
     }
 
     @Override
@@ -157,7 +160,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         checkFilesAllName(downloadMapNames);
         transformMapInfo(mapFileStatus.getMapInfos());
         mapAdapter.setNewData(mapInfos);
-        mapAdapter.setNewData(mapInfos);
+        onItemClick();
+
     }
 
     @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.bt_batch_delete})
@@ -283,6 +287,74 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             Logger.e("------" + infoList.get(i).getTime());
         }
         mapInfos = infoList;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void update(MessageEvent messageEvent) {
+        switch (messageEvent.getType()) {
+            case updateDDRVLNMap:
+                data=mapFileStatus.getRspGetDDRVLNMapEx().getData();
+                targetPtItems=data.getTargetPtdata().getTargetPtList();
+                pathLineItemExes=data.getPathSet().getPathLineDataList();
+                taskItemExes=data.getTaskSetList();
+                targetPoints=new ArrayList<>();
+                for (int i=0;i<targetPtItems.size();i++){
+                    TargetPoint targetPoint=new TargetPoint();
+                    targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+                    targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+                    targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+                    targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+                    targetPoints.add(targetPoint);
+                }
+                for (int i=0;i<pathLineItemExes.size();i++){
+                    List<PathLine.PathPoint> pathPoints=new ArrayList<>();
+                    List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExes.get(i).getPointSetList();
+                    for (int j=0;j<path_lint_pt_items.size();j++){
+                        PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                        pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
+                        pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
+                        pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
+                        pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
+                        pathPoints.add(pathPoint);
+                    }
+                    PathLine pathLine=new PathLine();
+                    pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
+                    pathLine.setPathPoints(pathPoints);
+                    pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
+                    pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+                    pathLines.add(pathLine);
+                }
+
+                for (int i=0;i<taskItemExes.size();i++){
+                    List<DDRVLNMap.path_elementEx> path_elementExes=taskItemExes.get(i).getPathSetList();
+                    List<BaseMode> baseModes=new ArrayList<>();
+                    for (int j=0;j<path_elementExes.size();j++){
+                        if (path_elementExes.get(j).getTypeValue()==1){
+                            PathLine pathLine=new PathLine(1);
+                            pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
+                            baseModes.add(pathLine);
+                        }else if (path_elementExes.get(j).getTypeValue()==2){
+                            TargetPoint targetPoint=new TargetPoint(2);
+                            targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
+                            baseModes.add(targetPoint);
+                        }
+                    }
+                    TaskMode taskMode=new TaskMode();
+                    taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
+                    taskMode.setBaseModes(baseModes);
+                    taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
+                    taskMode.setTimeItem(taskItemExes.get(i).getTimeSet());
+                }
+
+                if (dialog.isShowing()) {
+                    getAttachActivity().postDelayed(() -> {
+                        dialog.dismiss();
+                        mapLayout.setVisibility(View.GONE);
+                        mapDetailLayout.setVisibility(View.VISIBLE);
+                    }, 800);
+                }
+                break;
+        }
     }
 
 }
