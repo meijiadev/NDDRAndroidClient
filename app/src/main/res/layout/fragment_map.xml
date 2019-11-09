@@ -52,12 +52,12 @@
             android:layout_marginLeft="16dp"
             ></androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
-
+   <!--点击地图查看地图详情布局-->
     <RelativeLayout
         android:id="@+id/map_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
         <LinearLayout
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
@@ -101,18 +101,76 @@
                 android:textColor="@color/white"
                 android:layout_marginLeft="44dp"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="网格 :"
+                android:textSize="11sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="315dp"
+                />
+            <TextView
+                android:id="@+id/tv_25m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.25m"
+                android:textColor="#ccffffff"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@mipmap/checkedwg"
+                android:drawablePadding="6dp"
+                android:layout_marginLeft="8.5dp"
+                />
+            <TextView
+                android:id="@+id/tv_5m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.5m"
+                android:textColor="#ccffffff"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@mipmap/nocheckedwg"
+                android:drawablePadding="6dp"
+                android:layout_marginLeft="28dp"
+                />
+            <TextView
+                android:id="@+id/tv_1m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1m"
+                android:textColor="#ccffffff"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@mipmap/nocheckedwg"
+                android:drawablePadding="6dp"
+                android:layout_marginLeft="28dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_2m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2m"
+                android:textColor="#ccffffff"
+                android:textSize="11sp"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@mipmap/nocheckedwg"
+                android:drawablePadding="6dp"
+                android:layout_marginLeft="28dp"
+                />
 
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/left_detail_layout"
-            android:layout_width="366.5dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_below="@id/title_layout"
             android:layout_alignParentStart="true"
             android:layout_marginTop="-2dp"
             android:background="#161718">
-
+            <!--列表布局，包括目标点列表、路径、任务列表-->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_detail"
                 android:layout_width="115dp"
@@ -149,13 +207,104 @@
                 android:layout_marginTop="6dp"
                 android:layout_toRightOf="@id/recycler_detail"
                 android:background="#979797" />
-
+            <!--列表右侧的延伸布局，里面包括目标点、路径、任务的布局-->
             <RelativeLayout
-                android:id="@+id/point_detail_layout"
-                android:layout_width="match_parent"
+                android:id="@+id/detail_layout"
+                android:layout_width="251dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:layout_toRightOf="@id/recycler_detail">
+                <!--目标点查看详情布局-->
+                <RelativeLayout
+                    android:id="@+id/point_detail_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_point_name"
+                        android:layout_width="54.5dp"
+                        android:layout_height="18.5dp"
+                        android:text="点名称:"
+                        android:textSize="13sp"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginTop="27dp"
+                        />
+                    <ddr.example.com.nddrandroidclient.widget.edit.RegexEditText
+                        android:id="@+id/et_point_name"
+                        android:layout_width="130dp"
+                        android:layout_height="24dp"
+                        android:text="目标点-1"
+                        android:layout_toRightOf="@id/tv_point_name"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/et_target_bg"
+                        android:paddingLeft="13dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:layout_marginLeft="8dp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_x"
+                        android:layout_width="23dp"
+                        android:layout_height="18.5dp"
+                        android:text="X :"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="17dp"
+                        android:layout_below="@id/tv_point_name"
+                        android:layout_marginTop="22dp"
+                        />
+                    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+                        android:id="@+id/et_x"
+                        android:layout_width="105.5dp"
+                        android:layout_height="24dp"
+                        android:layout_toRightOf="@id/tv_x"
+                        android:layout_below="@id/et_point_name"
+                       android:layout_alignLeft="@id/et_point_name"
+                        android:layout_marginTop="16.5dp">
+                    </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                    <TextView
+                        android:id="@+id/tv_y"
+                        android:layout_width="23dp"
+                        android:layout_height="18.5dp"
+                        android:text="Y :"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="17dp"
+                        android:layout_below="@id/tv_x"
+                        android:layout_marginTop="22dp"
+                        />
+                    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+                        android:id="@+id/et_y"
+                        android:layout_width="105.5dp"
+                        android:layout_height="24dp"
+                        android:layout_toRightOf="@id/tv_x"
+                        android:layout_below="@id/et_x"
+                        android:layout_alignLeft="@id/et_x"
+                        android:layout_marginTop="16.5dp">
+                    </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                    <TextView
+                        android:id="@+id/tv_point_toward"
+                        android:layout_width="54.5dp"
+                        android:layout_height="18.5dp"
+                        android:text="点朝向："
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="17dp"
+                        android:layout_below="@id/tv_y"
+                        android:layout_marginTop="22dp"
+                        />
+                    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+                        android:id="@+id/et_toward"
+                        android:layout_width="105.5dp"
+                        android:layout_height="24dp"
+                        android:layout_toRightOf="@id/tv_point_toward"
+                        android:layout_below="@id/et_y"
+                        android:layout_alignLeft="@id/et_y"
+                        android:layout_marginTop="16.5dp">
+                    </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -167,7 +316,7 @@
             android:layout_below="@id/title_layout"
             android:layout_toRightOf="@id/left_detail_layout">
 
-            <ddr.example.com.nddrandroidclient.widget.ZoomImageView
+            <ddr.example.com.nddrandroidclient.widget.view.ZoomImageView
                 android:id="@+id/zoom_map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

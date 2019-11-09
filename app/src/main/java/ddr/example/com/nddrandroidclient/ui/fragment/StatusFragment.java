@@ -42,9 +42,9 @@ import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.RobotIdAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskCheckAdapter;
-import ddr.example.com.nddrandroidclient.widget.CircleBarView;
-import ddr.example.com.nddrandroidclient.widget.CustomPopuWindow;
-import ddr.example.com.nddrandroidclient.widget.MapImageView;
+import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
+import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 
 /**
@@ -236,7 +236,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
-
     }
 
     /**

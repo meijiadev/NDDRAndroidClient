@@ -29,9 +29,9 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.download.FileUtil;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
-import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -40,7 +40,9 @@ import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
-import ddr.example.com.nddrandroidclient.widget.ZoomImageView;
+import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
+import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
+import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
 
 /**
  * time: 2019/10/26
@@ -56,10 +58,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @BindView(R.id.map_layout)
     RelativeLayout mapLayout;
     @BindView(R.id.map_detail_layout)
-    RelativeLayout mapDetailLayout;
-
+    RelativeLayout mapDetailLayout;       //展示单个地图详情页面
     @BindView(R.id.left_detail_layout)
-    RelativeLayout leftDetailLayout;
+    RelativeLayout leftDetailLayout;       // 左侧布局 包括列表和列表展开项
+    @BindView(R.id.detail_layout)
+    RelativeLayout detailLayout;
+    @BindView(R.id.point_detail_layout)
+    RelativeLayout pointDetailLayout;
     @BindView(R.id.iv_back)
     ImageView iv_back;
     @BindView(R.id.tv_target_point)
@@ -82,6 +87,23 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     TextView tvMapSize;
     @BindView(R.id.tv_create_time)
     TextView tvCreateTime;
+    @BindView(R.id.tv_25m)
+    TextView tv25m;
+    @BindView(R.id.tv_5m)
+    TextView tv5m;
+    @BindView(R.id.tv_1m)
+    TextView tv1m;
+    @BindView(R.id.tv_2m)
+    TextView tv2m;
+    @BindView(R.id.et_point_name)
+    RegexEditText etPointName;
+    @BindView(R.id.et_x)
+    DDREditText etX;
+    @BindView(R.id.et_y)
+    DDREditText etY;
+    @BindView(R.id.et_toward)
+    DDREditText etToward;
+
 
 
     private MapFileStatus mapFileStatus;
@@ -95,12 +117,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-                if (dialog.isShowing()){
-                    getAttachActivity().postDelayed(()->{
+                if (dialog.isShowing()) {
+                    getAttachActivity().postDelayed(() -> {
                         dialog.dismiss();
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
-                    },500);
+                    }, 500);
                 }
                 break;
         }
@@ -129,7 +151,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     @Override
     protected void initData() {
-        tcpClient=TcpClient.getInstance(getAttachActivity(),ClientMessageDispatcher.getInstance());
+        tcpClient = TcpClient.getInstance(getAttachActivity(), ClientMessageDispatcher.getInstance());
         mapFileStatus = MapFileStatus.getInstance();
         downloadMapNames = mapFileStatus.getMapNames();
         checkFilesAllName(downloadMapNames);
@@ -138,18 +160,18 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapAdapter.setNewData(mapInfos);
     }
 
-    @OnClick({R.id.bt_create_map,R.id.iv_back,R.id.tv_target_point,R.id.tv_add_new,R.id.bt_batch_delete})
+    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.bt_batch_delete})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_create_map:
                 startActivity(CollectingActivity.class);
                 break;
             case R.id.bt_batch_delete:
-                if (isShowSelected){
-                    isShowSelected=false;
+                if (isShowSelected) {
+                    isShowSelected = false;
                     mapAdapter.showSelected(false);
-                }else {
-                    isShowSelected=true;
+                } else {
+                    isShowSelected = true;
                     mapAdapter.showSelected(true);
                 }
                 break;
@@ -158,11 +180,17 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 mapLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.tv_target_point:
-                if (leftDetailLayout.getVisibility()==View.GONE){
+                if (leftDetailLayout.getVisibility() == View.GONE) {
                     leftDetailLayout.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     leftDetailLayout.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.tv_path:
+
+                break;
+            case R.id.tv_task:
+
                 break;
             case R.id.tv_add_new:
                 startActivity(MapEditActivity.class);
@@ -171,20 +199,21 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     private BaseDialog dialog;
+
     public void onItemClick() {
         mapAdapter.setOnItemClickListener(((adapter, view, position) -> {
-            Logger.e("--------:"+mapInfos.get(position).getMapName());
-            if (isShowSelected){
-                MapInfo mapInfo=mapInfos.get(position);
-                if (mapInfo.isSelected()){
+            Logger.e("--------:" + mapInfos.get(position).getMapName());
+            if (isShowSelected) {
+                MapInfo mapInfo = mapInfos.get(position);
+                if (mapInfo.isSelected()) {
                     mapInfo.setSelected(false);
-                }else {
+                } else {
                     mapInfo.setSelected(true);
                 }
-                mapAdapter.setData(position,mapInfo);
-            }else {
+                mapAdapter.setData(position, mapInfo);
+            } else {
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()));
-                dialog=new WaitDialog.Builder(getAttachActivity())
+                dialog = new WaitDialog.Builder(getAttachActivity())
                         .setMessage("加载地图信息中")
                         .show();
                 FileInputStream fis = null;
@@ -194,18 +223,18 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     zoomMap.setImageBitmap(bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                getAttachActivity().postDelayed(()->{
-                    if (dialog.isShowing()){
+                getAttachActivity().postDelayed(() -> {
+                    if (dialog.isShowing()) {
                         dialog.dismiss();
                         toast("加载失败！");
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
                     }
 
-                },5000);
+                }, 5000);
             }
         }));
     }

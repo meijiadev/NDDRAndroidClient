@@ -30,11 +30,11 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-import ddr.example.com.nddrandroidclient.widget.CollectingView;
-import ddr.example.com.nddrandroidclient.widget.RockerView;
+import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
+import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
-import static ddr.example.com.nddrandroidclient.widget.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
-import static ddr.example.com.nddrandroidclient.widget.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
+import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
+import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
 
 /**
  * time:  2019/11/5

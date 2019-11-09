@@ -16,7 +16,7 @@
         >
     </com.hjq.bar.TitleBar>
 
-    <ddr.example.com.nddrandroidclient.widget.CollectingView
+    <ddr.example.com.nddrandroidclient.widget.view.CollectingView
         android:id="@+id/collecting"
         android:layout_width="800px"
         android:layout_height="800px"
@@ -104,7 +104,7 @@
         app:layout_constraintVertical_bias="1"
         />
 
-    <ddr.example.com.nddrandroidclient.widget.RockerView
+    <ddr.example.com.nddrandroidclient.widget.view.RockerView
         android:id="@+id/my_rocker"
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -121,7 +121,7 @@
         app:rockerSpeedLevel="11"
         android:layout_marginLeft="57dp"
         />
-    <ddr.example.com.nddrandroidclient.widget.RockerView
+    <ddr.example.com.nddrandroidclient.widget.view.RockerView
         android:id="@+id/my_rocker_zy"
         android:layout_width="200dp"
         android:layout_height="200dp"

@@ -33,8 +33,8 @@ import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
-import ddr.example.com.nddrandroidclient.widget.DDRViewPager;
-import ddr.example.com.nddrandroidclient.widget.LineTextView;
+import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
+import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 
 /**
  * time:2019/10/26
