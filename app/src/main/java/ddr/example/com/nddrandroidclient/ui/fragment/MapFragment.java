@@ -365,7 +365,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     taskMode.setTimeItem(taskItemExes.get(i).getTimeSet());
 
                 }
-                Logger.e("----------:"+taskItemExes.size());
+                Logger.e("----------:"+targetPoints.size());
                 targetPointAdapter.setNewData(targetPoints);
                 if (dialog.isShowing()) {
                     getAttachActivity().postDelayed(() -> {

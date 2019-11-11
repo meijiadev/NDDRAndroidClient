@@ -181,7 +181,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
         Logger.e("task列表"+groupList.size());
-        targetPointAdapter.setNewData(targetPoints);
 
         for (int i=0;i<10;i++){
             targetPoint=new TargetPoint();
@@ -191,6 +190,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             targetPoint.setTheta(10);
             targetPoints.add(targetPoint);
         }
+        targetPointAdapter.setNewData(targetPoints);
     }
 
     /**
