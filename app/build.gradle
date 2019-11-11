@@ -148,4 +148,6 @@ dependencies {
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     //滑块控制
     implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
+    // 下拉框
+    implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 }

@@ -31,7 +31,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
         // 状态页面的 前往目标点布局
         helper.setText(R.id.item_recycle_gopoint,item.getName());
         //地图管理页面的布局
-        helper.setText(R.id.tv_target_name,item.getName());
+      //  helper.setText(R.id.tv_target_name,item.getName());
 
 
     }

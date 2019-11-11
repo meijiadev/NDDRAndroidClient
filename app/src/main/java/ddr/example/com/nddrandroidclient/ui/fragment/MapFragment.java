@@ -324,6 +324,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
                     targetPoints.add(targetPoint);
                 }
+                pathLines=new ArrayList<>();
                 for (int i=0;i<pathLineItemExes.size();i++){
                     List<PathLine.PathPoint> pathPoints=new ArrayList<>();
                     List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExes.get(i).getPointSetList();
@@ -362,7 +363,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     taskMode.setBaseModes(baseModes);
                     taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
                     taskMode.setTimeItem(taskItemExes.get(i).getTimeSet());
+
                 }
+                Logger.e("----------:"+taskItemExes.size());
                 targetPointAdapter.setNewData(targetPoints);
                 if (dialog.isShowing()) {
                     getAttachActivity().postDelayed(() -> {

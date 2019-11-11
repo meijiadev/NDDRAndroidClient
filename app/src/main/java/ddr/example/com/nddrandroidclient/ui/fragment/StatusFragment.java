@@ -69,8 +69,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     TextView tv_now_task;
     @BindView(R.id.tv_now_device)
     TextView tv_now_device;
-    @BindView(R.id.tv_new_map)
-    TextView tv_new_map;
     @BindView(R.id.tv_now_map)
     TextView tv_now_map;
     @BindView(R.id.tv_work_statue)
@@ -169,7 +167,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         hideAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_hide);
         showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
         taskCheckAdapter=new TaskCheckAdapter(R.layout.item_recycle_task_check);
-
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
         @SuppressLint("WrongConstant")
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);

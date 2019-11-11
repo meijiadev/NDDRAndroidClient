@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#101112">
     <RelativeLayout
         android:id="@+id/map_layout"
@@ -218,7 +219,9 @@
                 <RelativeLayout
                     android:id="@+id/point_detail_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    >
                     <TextView
                         android:id="@+id/tv_point_name"
                         android:layout_width="54.5dp"
@@ -304,6 +307,56 @@
                         android:layout_marginTop="16.5dp">
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
 
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/path_detail_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_path_name"
+                        android:layout_width="62.5dp"
+                        android:layout_height="18.5dp"
+                        android:text="路径名称:"
+                        android:textSize="13sp"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginTop="27dp"
+                        />
+                    <ddr.example.com.nddrandroidclient.widget.edit.RegexEditText
+                        android:id="@+id/et_path_name"
+                        android:layout_width="140dp"
+                        android:layout_height="24dp"
+                        android:text="路径-1"
+                        android:layout_toRightOf="@id/tv_path_name"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/et_target_bg"
+                        android:paddingLeft="13dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:layout_marginLeft="8dp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_mode"
+                        android:layout_width="62.5dp"
+                        android:layout_height="18.5dp"
+                        android:text="路线模式:"
+                        android:textSize="13sp"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_below="@id/tv_path_name"
+                        />
+                    <org.angmarch.views.NiceSpinner
+                        android:id="@+id/spinner_mode"
+                        android:layout_width="140dp"
+                        android:layout_height="24dp"
+                        android:layout_alignLeft="@id/et_path_name"
+                        android:layout_below="@id/et_path_name"
+                        android:layout_marginTop="23dp"
+
+
+                        />
                 </RelativeLayout>
 
             </RelativeLayout>
