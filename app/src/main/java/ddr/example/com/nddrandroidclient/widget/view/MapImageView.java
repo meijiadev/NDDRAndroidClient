@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.widget;
+package ddr.example.com.nddrandroidclient.widget.view;
 
 import android.app.Activity;
 import android.content.Context;

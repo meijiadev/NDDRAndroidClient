@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.widget;
+package ddr.example.com.nddrandroidclient.widget.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -11,6 +11,14 @@ public class TargetPoint extends BaseMode {
     private float theta;  //朝向 单位：度 【-180,180】
     private boolean isSelected;     //是否被选中
 
+    public TargetPoint(int type) {
+        super(type);
+    }
+
+    public TargetPoint() {
+        super();
+    }
+
     public String getName() {
         return name;
     }

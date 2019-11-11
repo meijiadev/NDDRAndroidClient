@@ -13,9 +13,14 @@ public class PathLine extends BaseMode {
     private String config;    // 配置文件
     private List<PathPoint>pathPoints;
 
+    public PathLine(int type) {
+        super(type);
+    }
     public PathLine(){
+        super();
 
     }
+
 
     public String getName() {
         return name;

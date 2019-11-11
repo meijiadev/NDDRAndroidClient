@@ -2,9 +2,6 @@ package ddr.example.com.nddrandroidclient.base;
 
 import android.app.Application;
 import android.util.Log;
-import android.view.animation.BounceInterpolator;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.hjq.toast.ToastInterceptor;
@@ -14,16 +11,14 @@ import com.yhao.floatwindow.FloatWindow;
 import com.yhao.floatwindow.MoveType;
 import com.yhao.floatwindow.PermissionListener;
 import com.yhao.floatwindow.Screen;
-import com.yhao.floatwindow.ViewStateListener;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
-import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
-import ddr.example.com.nddrandroidclient.widget.FloatView;
+import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  * time :  2019/10/28

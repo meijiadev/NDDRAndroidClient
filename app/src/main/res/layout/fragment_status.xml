@@ -11,23 +11,14 @@
         <TextView
             android:layout_width="120dp"
             android:layout_height="24dp"
-            android:text="暂无地图信息，"
+            android:text="暂无地图正在运行"
             android:textSize="16sp"
             android:id="@+id/tv_ti_map"
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
             />
-        <TextView
-            android:layout_width="70dp"
-            android:layout_height="24dp"
-            android:text="新建地图"
-            android:textSize="16sp"
-            android:layout_toRightOf="@id/tv_ti_map"
-            android:layout_centerInParent="true"
-            android:textColor="#0399ff"
-            android:id="@+id/tv_new_map"
-            />
-        <ddr.example.com.nddrandroidclient.widget.MapImageView
+
+        <ddr.example.com.nddrandroidclient.widget.view.MapImageView
             android:id="@+id/iv_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -237,7 +228,7 @@
             android:gravity="center"
             android:id="@+id/tv_set_go"
             />
-        <ddr.example.com.nddrandroidclient.widget.CircleBarView
+        <ddr.example.com.nddrandroidclient.widget.view.CircleBarView
             android:layout_width="130dp"
             android:layout_height="134dp"
             android:layout_marginTop="100dp"

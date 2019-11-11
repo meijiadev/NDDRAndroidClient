@@ -44,9 +44,9 @@ import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.RobotIdAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskCheckAdapter;
-import ddr.example.com.nddrandroidclient.widget.CircleBarView;
-import ddr.example.com.nddrandroidclient.widget.CustomPopuWindow;
-import ddr.example.com.nddrandroidclient.widget.MapImageView;
+import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
+import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 
 /**
@@ -71,8 +71,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     TextView tv_now_task;
     @BindView(R.id.tv_now_device)
     TextView tv_now_device;
-    @BindView(R.id.tv_new_map)
-    TextView tv_new_map;
     @BindView(R.id.tv_now_map)
     TextView tv_now_map;
     @BindView(R.id.tv_work_statue)
@@ -171,7 +169,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         hideAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_hide);
         showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
         taskCheckAdapter=new TaskCheckAdapter(R.layout.item_recycle_task_check);
-
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
         @SuppressLint("WrongConstant")
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
@@ -247,7 +244,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
-
     }
 
     /**

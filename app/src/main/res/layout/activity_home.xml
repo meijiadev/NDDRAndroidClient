@@ -19,7 +19,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:textColor="#ffffff"/>
-        <ddr.example.com.nddrandroidclient.widget.LineTextView
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
             android:layout_height="match_parent"
             android:id="@+id/status"
@@ -32,7 +32,7 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"
             />
-        <ddr.example.com.nddrandroidclient.widget.LineTextView
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/mapmanager"
             android:layout_width="82dp"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
             android:text="地图管理"
             android:textColor="#ffffff"
             android:textSize="12dp" />
-        <ddr.example.com.nddrandroidclient.widget.LineTextView
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
             android:layout_height="match_parent"
             android:id="@+id/taskmanager"
@@ -54,7 +54,7 @@
             android:textColor="#ffffff"
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"/>
-        <ddr.example.com.nddrandroidclient.widget.LineTextView
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
             android:layout_height="match_parent"
             android:id="@+id/highset"
@@ -67,7 +67,7 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/banbenxinxi"
             />
-        <ddr.example.com.nddrandroidclient.widget.LineTextView
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
             android:layout_height="match_parent"
             android:id="@+id/typeversion"
@@ -97,12 +97,12 @@
             android:id="@+id/line_view"
             />
     </RelativeLayout>
-    <ddr.example.com.nddrandroidclient.widget.DDRViewPager
+    <ddr.example.com.nddrandroidclient.widget.view.DDRViewPager
         android:id="@+id/vp_home_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 		android:layout_below="@id/title_layout"
         >
-    </ddr.example.com.nddrandroidclient.widget.DDRViewPager>
+    </ddr.example.com.nddrandroidclient.widget.view.DDRViewPager>
 
 </RelativeLayout>

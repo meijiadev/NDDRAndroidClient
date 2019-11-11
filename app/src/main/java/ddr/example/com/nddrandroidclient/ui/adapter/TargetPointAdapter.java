@@ -28,11 +28,18 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper,TargetPoint item) {
         super.convert(helper, item);
+        // 状态页面的 前往目标点布局
         helper.setText(R.id.item_recycle_gopoint,item.getName());
+        //地图管理页面的布局
+      //  helper.setText(R.id.tv_target_name,item.getName());
+
+
     }
 
     @Override
     public void setNewData(@Nullable List<TargetPoint> data) {
         super.setNewData(data);
     }
+
+
 }

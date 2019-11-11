@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.widget;
+package ddr.example.com.nddrandroidclient.widget.textview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
