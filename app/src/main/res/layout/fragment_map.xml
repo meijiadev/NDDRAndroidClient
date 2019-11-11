@@ -58,7 +58,7 @@
         android:id="@+id/map_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone ">
+        android:visibility="gone">
         <LinearLayout
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
@@ -186,7 +186,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center"
-                android:text="新建目标点"
+                android:text="新建"
                 android:textColor="@color/white"
                 android:textSize="10sp" />
 
@@ -198,7 +198,7 @@
                 android:layout_marginBottom="18dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center"
-                android:text="新建目标点"
+                android:text="删除"
                 android:textColor="@color/white"
                 android:textSize="10sp" />
 
@@ -347,15 +347,15 @@
                         android:layout_marginTop="30dp"
                         android:layout_below="@id/tv_path_name"
                         />
-                    <org.angmarch.views.NiceSpinner
+                    <TextView
                         android:id="@+id/spinner_mode"
                         android:layout_width="140dp"
                         android:layout_height="24dp"
                         android:layout_alignLeft="@id/et_path_name"
                         android:layout_below="@id/et_path_name"
                         android:layout_marginTop="23dp"
-                        app:textTint="@color/white"
-                        app:arrowDrawable="@mipmap/iv_add"
+                        android:background="@drawable/spinner_bg"
+
                         />
                     <TextView
                         android:id="@+id/tv_cs"
@@ -425,6 +425,39 @@
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:gravity="center_vertical"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/action_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_action_recycler"
+                        android:layout_marginTop="12dp"
+                        ></androidx.recyclerview.widget.RecyclerView>
+                    <TextView
+                        android:id="@+id/tv_cf"
+                        android:layout_width="67dp"
+                        android:layout_height="24dp"
+                        android:text="文件配置："
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:layout_below="@id/action_recycler"
+                        android:layout_marginTop="18dp"
+                        android:layout_alignLeft="@id/tv_action_recycler"
+                        android:gravity="center_vertical"
+                        />
+                    <TextView
+                        android:id="@+id/tv_config"
+                        android:layout_width="117dp"
+                        android:layout_height="56dp"
+                        android:layout_below="@id/action_recycler"
+                        android:layout_toRightOf="@id/tv_cf"
+                        android:layout_marginTop="18dp"
+                        android:hint="点击添加文本字符"
+                        android:textColorHint="#666666"
+                        android:textSize="12sp"
+                        android:background="@mipmap/file_edit_bg"
+                        android:textColor="@color/white"
+                        android:paddingLeft="5dp"
+                        />
 
                     
                 </RelativeLayout>

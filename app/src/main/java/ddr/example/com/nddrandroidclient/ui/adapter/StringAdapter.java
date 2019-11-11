@@ -11,15 +11,15 @@ import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 
 /**
  * time : 2019/11/2
- * desc : 机器人ID列表适配器
+ * desc : String类型的列表适配器
  */
-public class RobotIdAdapter extends BaseAdapter<String> {
+public class StringAdapter extends BaseAdapter<String> {
 
-    public RobotIdAdapter(int layoutResId) {
+    public StringAdapter(int layoutResId) {
         super(layoutResId);
     }
 
-    public RobotIdAdapter(int layoutResId, @Nullable List<String> data) {
+    public StringAdapter(int layoutResId, @Nullable List<String> data) {
         super(layoutResId, data);
     }
 
@@ -31,7 +31,15 @@ public class RobotIdAdapter extends BaseAdapter<String> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, String item) {
         super.convert(helper, item);
-        helper.setText(R.id.tv_robot_id,item);
+        switch (viewType){
+            case R.layout.item_recycle_task_check:
+                helper.setText(R.id.item_recycle_t_chenck,item);
+                break;
+            case R.layout.item_recycle_robot_id:
+                helper.setText(R.id.tv_robot_id,item);
+                break;
+        }
+
     }
 
 
