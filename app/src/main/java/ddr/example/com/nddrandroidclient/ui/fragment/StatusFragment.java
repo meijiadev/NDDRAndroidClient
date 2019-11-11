@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.protobuf.ByteString;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -172,6 +174,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
         recycle_gopoint.setLayoutManager(gridLayoutManager);
         recycle_gopoint.setAdapter(targetPointAdapter);
+        onItemClick(2);
     }
 
     @Override
@@ -181,7 +184,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
         Logger.e("task列表"+groupList.size());
-
+        taskCheckAdapter.setNewData(groupList);
+        targetPointAdapter.setNewData(targetPoints);
         for (int i=0;i<10;i++){
             targetPoint=new TargetPoint();
             targetPoint.setName("呵呵"+i);
@@ -190,7 +194,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             targetPoint.setTheta(10);
             targetPoints.add(targetPoint);
         }
-        targetPointAdapter.setNewData(targetPoints);
     }
 
     /**
@@ -220,15 +223,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
         //Logger.e("模式"+notifyBaseStatusEx.getMode());
         //Logger.e("模式"+notifyBaseStatusEx.geteSelfCalibStatus());
-        workTimes=notifyBaseStatusEx.getTaskDuration();
-
-        if (mapName!=null && taskName!=null){
-            tv_now_task.setText(mapName);
-            tv_now_map.setText(taskName);
-        }
-        tv_now_device.setText(robotID);
-        tv_task_num.setText(String.valueOf(taskNum)+"次");
-        tv_work_time.setText(String.valueOf(workTimes/3600)+"h");
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
                 //自标定
@@ -328,11 +322,28 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 .build();
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
     }
+    /**
+     * 机器人暂停/重新运动
+     * @param value
+     */
+    private void pauseOrResume(String value){
+        BaseCmd.reqCmdPauseResume reqCmdPauseResume=BaseCmd.reqCmdPauseResume.newBuilder()
+                .setError(value)
+                .build();
+        BaseCmd.CommonHeader commonHeader=BaseCmd.CommonHeader.newBuilder()
+                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
+                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
+                .build();
+        tcpClient.sendData(commonHeader,reqCmdPauseResume);
+        Logger.e("机器人暂停/重新运动");
+    }
 
 
     public void onItemClick(int type){
         switch (type){
             case 1:
+                //任务列表点击事件
                 Logger.e("task列表"+groupList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskCheckAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -340,6 +351,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 });
                 break;
             case 2:
+                //标记点列表点击事件
                 targetPointAdapter.setOnItemChildClickListener((adapter, view, position) -> {
                 });
                 break;
@@ -348,21 +360,87 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
     @Override
     public void onLeftClick() {
-        toast("请稍等，正在进入");
-        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
+        switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
+            case 0:
+                toast("请稍等，正在自标定");
+                //自标定
+                break;
+            case 1:
+                switch (notifyBaseStatusEx.getMode()) {
+                    case 1:
+                        //Logger.e("待命模式" + modeView.getText());
+                        toast("请稍等，正在进入");
+                        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
+                        break;
+                    case 3:
+                        switch (notifyBaseStatusEx.getSonMode()){
+                            case 16:
+                                toast("正在执行中");
+                                break;
+                            case 17:
+                                toast("开始");
+                                pauseOrResume("start");
+                                break;
+                        }
+                        break;
+                }
+                break;
+        }
+
 
     }
 
     @Override
     public void onCentreClick() {
+        switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
+            case 0:
+                toast("请稍等，正在自标定");
+                //自标定
+                break;
+            case 1:
+                switch (notifyBaseStatusEx.getMode()) {
+                    case 1:
+                        //Logger.e("待命模式" + modeView.getText());
+                        toast("正在待命，请先进入执行状态");
+                        break;
+                    case 3:
+                        switch (notifyBaseStatusEx.getSonMode()){
+                            case 16:
+                                toast("暂停");
+                                pauseOrResume("stop");
+                                break;
+                            case 17:
+                                toast("暂停状态中");
+                                break;
+                        }
+                        break;
+                }
+                break;
+        }
 
     }
 
     @Override
     public void onRightClick() {
-        toast("请稍等，正在退出");
-        Logger.e("-----退出中");
-        exitModel();
+        switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
+            case 0:
+                toast("请稍等，正在自标定");
+                //自标定
+                break;
+            case 1:
+                switch (notifyBaseStatusEx.getMode()) {
+                    case 1:
+                        //Logger.e("待命模式" + modeView.getText());
+                        toast("正在待命中");
+                        break;
+                    case 3:
+                        toast("请稍等，正在退出");
+                        exitModel();
+                        break;
+                }
+                break;
+        }
+
     }
 
     @Override
@@ -384,7 +462,12 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @Override
     public void onDestroy() {
         super.onDestroy();
-        statusSwitchButton.onDestroy();
+        try {
+            statusSwitchButton.onDestroy();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
     }
 
 

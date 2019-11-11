@@ -70,7 +70,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateBaseStatus:
@@ -80,12 +80,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
                 break;
             case updateMapList:
-                if (currentMap!=null){
-                    tcpClient.getMapInfo(ByteString.copyFromUtf8(currentMap));  //获取某个地图信息
-                }
+                Logger.e("-------------updateMapList");
+                getMapInfo();
                 break;
             case updateDDRVLNMap:
-
                 break;
         }
     }
@@ -272,6 +270,20 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setAdapter(null);
         tcpClient.disConnect();
         super.onDestroy();
+    }
+
+    public void getMapInfo(){
+        new Thread(()->{
+            while (true){
+                if (currentMap!=null){
+                    Logger.e("-----------"+currentMap);
+                    tcpClient.getMapInfo(ByteString.copyFromUtf8(currentMap));  //获取某个地图信息
+                    return;
+                }
+            }
+
+        }).start();
+
     }
 
 
