@@ -12,6 +12,8 @@ import DDRVLNMapProto.DDRVLNMap;
 public class TaskMode implements Serializable {
     private String name;
     private List<BaseMode>baseModes;          //这里面可能是路径也可能是目标点
+    private List<TargetPoint> targetPoints;   // 分离出 目标点列表
+    private List<PathLine> pathLines;         // 分离出 路径列表
     private int runCounts;                    //运行次数
     /*** 任务的执行时间*/
     private long startHour;            //开始的时间，时
@@ -41,6 +43,15 @@ public class TaskMode implements Serializable {
 
     public void setBaseModes(List<BaseMode> baseModes) {
         this.baseModes = baseModes;
+        for (int i=0;i<baseModes.size();i++){
+            if (baseModes.get(i).getType()==1){
+                PathLine pathLine= (PathLine) baseModes.get(i);
+                pathLines.add(pathLine);
+            }else if (baseModes.get(i).getType()==2){
+                TargetPoint targetPoint= (TargetPoint) baseModes.get(i);
+                targetPoints.add(targetPoint);
+            }
+        }
     }
 
 
@@ -99,5 +110,21 @@ public class TaskMode implements Serializable {
 
     public long getStartMin() {
         return startMin;
+    }
+
+    /**
+     * 获取任务中的路径列表（只包含路径名）
+     * @return
+     */
+    public List<PathLine> getPathLines() {
+        return pathLines;
+    }
+
+    /**
+     * 获取任务中的目标点列表 （只包含目标点名）
+     * @return
+     */
+    public List<TargetPoint> getTargetPoints() {
+        return targetPoints;
     }
 }

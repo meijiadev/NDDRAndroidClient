@@ -6,6 +6,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 
@@ -30,6 +31,7 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, TaskMode item) {
         super.convert(helper, item);
+        helper.setText(R.id.tv_target_name,item.getName());
     }
 
 }

@@ -224,6 +224,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onTargetItemClick();
         onPathItemClick();
         onActionItemClick();
+        onTaskItemClick();
 
     }
 
@@ -362,6 +363,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         toast("加载失败！");
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
+                        leftDetailLayout.setVisibility(View.VISIBLE);
+                        pointDetailLayout.setVisibility(View.VISIBLE);
+                        pathDetailLayout.setVisibility(View.GONE);
+                        taskDetailLayout.setVisibility(View.GONE);
                     }
 
                 }, 5000);
@@ -418,7 +423,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
      */
     public void onTaskItemClick(){
         taskAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            mPosition=position;
+            etTaskName.setText(taskModes.get(position).getName());
         });
     }
 
@@ -494,6 +500,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         dialog.dismiss();
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
+                        leftDetailLayout.setVisibility(View.VISIBLE);
+                        pointDetailLayout.setVisibility(View.VISIBLE);
+                        pathDetailLayout.setVisibility(View.GONE);
+                        taskDetailLayout.setVisibility(View.GONE);
                     }, 800);
                 }
                 break;
