@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.entity.point;
 
+import java.io.Serializable;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
@@ -8,7 +9,7 @@ import DDRVLNMapProto.DDRVLNMap;
  * time : 2019/11/9
  * desc : 任务的数据结构
  */
-public class TaskMode  {
+public class TaskMode implements Serializable {
     private String name;
     private List<BaseMode>baseModes;          //这里面可能是路径也可能是目标点
     private DDRVLNMap.timeItem timeItem;       //运行时间段

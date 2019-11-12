@@ -1,10 +1,12 @@
 package ddr.example.com.nddrandroidclient.entity.point;
 
+import java.io.Serializable;
+
 /**
  * time : 2019/11/7
  * desc : 目标点结构
  */
-public class TargetPoint extends BaseMode {
+public class TargetPoint extends BaseMode implements Serializable {
     private String name;
     private float x;
     private float y;

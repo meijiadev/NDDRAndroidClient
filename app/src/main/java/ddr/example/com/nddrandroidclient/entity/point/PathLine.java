@@ -1,12 +1,13 @@
 package ddr.example.com.nddrandroidclient.entity.point;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * time：2019/11/8
  * desc: 路径的数据类型
  */
-public class PathLine extends BaseMode {
+public class PathLine extends BaseMode implements Serializable {
     private String name;
     private float velocity;    //速度
     private int pathModel;     // 路径模式  64 动态避障； 65 静态避障 ；66 贴边行驶路径（牛棚）
@@ -65,7 +66,7 @@ public class PathLine extends BaseMode {
     /**
      * 路径的组成点
      */
-    public class PathPoint{
+    public class PathPoint implements Serializable{
         private String name;          //自动生成的路径点名字
         private float x;
         private float y;

@@ -435,12 +435,18 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void update(MessageEvent messageEvent) throws IOException, ClassNotFoundException {
+    public void update(MessageEvent messageEvent)  {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-               targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
-               pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
-               taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
+                try {
+                    targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                    pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
+                    taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Logger.e("----------:" + targetPoints.size());
                 targetPointAdapter.setNewData(targetPoints);
                 if (targetPoints.size() > 0) {
