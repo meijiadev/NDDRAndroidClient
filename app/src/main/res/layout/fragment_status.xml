@@ -9,7 +9,7 @@
         android:layout_marginLeft="366dp"
         android:background="#101112">
         <TextView
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="24dp"
             android:text="暂无地图正在运行"
             android:textSize="16sp"
@@ -260,7 +260,7 @@
             <TextView
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
-                android:drawableTop="@mipmap/banbenxinxi"
+                android:drawableTop="@mipmap/newmap"
                 android:text="建立地图"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
@@ -270,7 +270,7 @@
             <TextView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
-                android:drawableTop="@mipmap/banbenxinxi"
+                android:drawableTop="@mipmap/newpoint"
                 android:text="编辑目标点"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
@@ -282,8 +282,8 @@
             <TextView
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
-                android:drawableTop="@mipmap/banbenxinxi"
-                android:text="建立地图"
+                android:drawableTop="@mipmap/newtask"
+                android:text="建立任务"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
@@ -294,8 +294,8 @@
             <TextView
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
-                android:drawableTop="@mipmap/banbenxinxi"
-                android:text="建立地图"
+                android:drawableTop="@mipmap/run_task"
+                android:text="运行任务"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
@@ -314,6 +314,7 @@
             android:visibility="gone"
             android:background="@color/blue"
             />
+
     </RelativeLayout>
 
 

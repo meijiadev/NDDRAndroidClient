@@ -173,6 +173,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(false);
                 tv_typeversion.isChecked(false);
+                tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_check),null,null,null);
+                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def),null,null,null);
+                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def),null,null,null);
+                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def),null,null,null);
+                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def),null,null,null);
                 break;
             case 1:
                 tv_status.isChecked(false);
@@ -180,6 +185,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(false);
                 tv_typeversion.isChecked(false);
+                tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def),null,null,null);
+                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_check),null,null,null);
+                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def),null,null,null);
+                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def),null,null,null);
+                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def),null,null,null);
                 break;
             case 2:
                 tv_status.isChecked(false);
@@ -187,6 +197,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(true);
                 tv_typeversion.isChecked(false);
+                tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def),null,null,null);
+                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def),null,null,null);
+                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def),null,null,null);
+                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check),null,null,null);
+                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def),null,null,null);
                 break;
             case 3:
                 tv_status.isChecked(false);
@@ -194,6 +209,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_highset.isChecked(true);
                 tv_taskmanager.isChecked(false);
                 tv_typeversion.isChecked(false);
+                tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def),null,null,null);
+                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def),null,null,null);
+                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check),null,null,null);
+                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def),null,null,null);
+                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def),null,null,null);
                 break;
             case 4:
                 tv_status.isChecked(false);
@@ -201,6 +221,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(false);
                 tv_typeversion.isChecked(true);
+                tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def),null,null,null);
+                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def),null,null,null);
+                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def),null,null,null);
+                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check),null,null,null);
+                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def),null,null,null);
                 break;
         }
     }

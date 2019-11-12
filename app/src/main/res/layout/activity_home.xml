@@ -30,7 +30,7 @@
             android:layout_marginRight="34dp"
             android:textColor="#ffffff"
             android:gravity="center"
-            android:drawableLeft="@mipmap/banbenxinxi"
+            android:drawableLeft="@mipmap/status_def"
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/mapmanager"
@@ -39,7 +39,7 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="34dp"
             android:layout_toLeftOf="@id/taskmanager"
-            android:drawableLeft="@mipmap/banbenxinxi"
+            android:drawableLeft="@mipmap/map_def"
             android:gravity="center"
             android:text="地图管理"
             android:textColor="#ffffff"
@@ -53,7 +53,7 @@
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
             android:gravity="center"
-            android:drawableLeft="@mipmap/banbenxinxi"/>
+            android:drawableLeft="@mipmap/task_def"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
             android:layout_height="match_parent"
@@ -65,7 +65,7 @@
             android:layout_marginLeft="34dp"
             android:textColor="#ffffff"
             android:gravity="center"
-            android:drawableLeft="@mipmap/banbenxinxi"
+            android:drawableLeft="@mipmap/hightset_def"
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
@@ -78,12 +78,12 @@
             android:layout_marginLeft="34dp"
             android:textColor="#ffffff"
             android:gravity="center"
-            android:drawableLeft="@mipmap/banbenxinxi"
+            android:drawableLeft="@mipmap/version_def"
             />
         <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22.5dp"
-            android:src="@mipmap/tuichu"
+            android:layout_width="25dp"
+            android:layout_height="25.5dp"
+            android:src="@mipmap/quit"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="25dp"

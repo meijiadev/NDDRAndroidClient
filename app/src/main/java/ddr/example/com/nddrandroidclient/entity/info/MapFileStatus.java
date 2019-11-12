@@ -14,7 +14,7 @@ public class MapFileStatus {
     private List<String> mapNames=new ArrayList<>();                    // 服务端返回的地图名字列表
     private List<String> pictureUrls;                 //激光地图的http连接列表
     private DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx;     //获取指定某一地图的相关信息
-    private List<MapInfo> mapInfos;
+    private List<MapInfo> mapInfos=new ArrayList<>();
     /**
      * 单例模式，用于保存地图相关信息
      * @return
