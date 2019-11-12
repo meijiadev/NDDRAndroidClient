@@ -1,15 +1,19 @@
 package ddr.example.com.nddrandroidclient.entity.point;
 
+import java.io.Serializable;
+
 /**
  * time : 2019/11/7
  * desc : 目标点结构
  */
-public class TargetPoint extends BaseMode {
+public class TargetPoint extends BaseMode implements Serializable {
     private String name;
     private float x;
     private float y;
     private float theta;  //朝向 单位：度 【-180,180】
     private boolean isSelected;     //是否被选中
+    private boolean inTask;         //判断该点是否属于某一个路径
+
 
     public TargetPoint(int type) {
         super(type);

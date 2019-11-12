@@ -16,7 +16,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * time: 2019/11/1
- * desc: 自定义浮窗内容
+ * desc: 自定义浮窗内容(状态信息和遥控弹窗的触发按钮）
  */
 public class FloatView extends View  {
     private Bitmap bgBitmap;   //背景图片

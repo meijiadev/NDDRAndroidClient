@@ -43,6 +43,9 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 Logger.e("-----------地图管理页面的布局");
                 helper.setText(R.id.tv_target_name,item.getName());
                 break;
+            case R.layout.item_task_select:
+                helper.setText(R.id.tv_name,item.getName());
+                break;
         }
 
 
@@ -52,6 +55,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
     @Override
     public void setNewData(@Nullable List<TargetPoint> data) {
         super.setNewData(data);
+        Logger.e("设置列表");
 
     }
 

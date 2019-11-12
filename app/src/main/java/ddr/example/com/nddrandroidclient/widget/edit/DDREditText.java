@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.hjq.toast.ToastUtils;
 
 import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
@@ -19,6 +22,7 @@ public class DDREditText extends LinearLayout {
     private EditText et_content;
     private ImageView iv_add;
     private ImageView iv_reduce;
+    private Context context;
 
 
     public DDREditText(Context context) {
@@ -27,6 +31,7 @@ public class DDREditText extends LinearLayout {
 
     public DDREditText(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context=context;
     }
 
 
@@ -81,12 +86,33 @@ public class DDREditText extends LinearLayout {
      * 返回float格式的内容
      * @return
      */
-    public float getTextFloat(){
+    public float getFloatText(){
         try {
             return Float.valueOf(et_content.getText().toString());
         }catch (Exception e){
             e.printStackTrace();
+            ToastUtils.show("数据格式不对，请重输！");
             return 0;
         }
+    }
+
+    /**
+     * 设置EditText float类型的值
+     * @param text
+     */
+    public void setText(float text){
+        try {
+            et_content.setText(String.valueOf(text));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置EditText String类型的值
+     * @param text
+     */
+    public void setText(String text){
+        et_content.setText(text);
     }
 }
