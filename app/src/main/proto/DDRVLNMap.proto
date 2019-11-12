@@ -3,7 +3,7 @@ package DDRVLNMapProto;
 import "BaseCmd.proto";
 
 // 基础元素描述 +++++++++++++++++++++++++++++++++++++++
-message  timeItem
+message timeItem
 {
 	int32 startHour = 1; // 开始时间，时
 	int32 startMin = 2; // 开始时间，分
@@ -447,9 +447,13 @@ enum eMapOperationalType
 
 message reqMapOperational
 {
-	eMapOperationalType type = 1; // 操作类型
-	bytes source_name = 2; // 要操作的地图名称
-	bytes target_name = 3; // 目标名称，只有当type是eMapOperationalRename会用到。
+	message OptItem
+	{
+		eMapOperationalType type = 1; // 操作类型
+		bytes source_name = 2; // 要操作的地图名称
+		bytes target_name = 3; // 目标名称，只有当type是eMapOperationalRename会用到。
+	}
+	repeated OptItem optSet = 1; 
 }
 
 message rspMapOperational
@@ -501,12 +505,25 @@ message path_elementEx
 	bytes name = 2;
 }
 
+enum TaskState
+{
+	eTaskError = 0;
+	eTaskWaitingRun = 1; // 等待运行
+	eTaskRuning = 2; // 运行中
+	eTaskPause = 3;// 暂停
+	eTaskRunEnd = 4; // 运行完了
+	eTaskStop = 5; // 终止
+}
+
+// 
 message task_itemEx 
 {	
 	bytes name = 1;
 	repeated path_elementEx pathSet = 2;
 	timeItem timeSet = 3; // 时间段
 	int32 runCount = 4; // 运行次数
+	TaskState state = 5; // 状态
+	int32 type = 6; // 0-不在执行队列中  1-临时任务  2-在队列中  3-临时任务+执行队列中
 }
 
 message DDRMapPathDataEx
@@ -547,12 +564,7 @@ message rspGetDDRVLNMapEx
 // 0.4版任务调度协议
 message reqRunControlEx
 {
-	message runControlExItem
-	{
-		bytes onerouteName = 1;
-		bytes taskName = 2;
-	}
-	repeated runControlExItem taskSet = 1;
+	bytes onerouteName = 1;
 }
 
 message rspRunControlEx
@@ -569,6 +581,46 @@ message reqGetRunControlEx
 message rspGetRunControlEx
 {
 	reqRunControlEx data = 1;
+}
+
+// 运行特定目标点
+message reqRunSpecificPoint
+{
+	repeated targetPtItem targetPt = 1; 
+	bytes onerouteName = 2;
+}
+
+message rspRunSpecificPoint
+{
+	DDRCommProto.eCmdRspType type = 1;
+}
+
+// 任务操作.
+enum eTaskOperationalType
+{
+	eTaskOperationalError = 0;
+	eTaskOperationalAdd = 1; // 添加到任务队列中去
+	eTaskOperationalDelete = 2; // 从队列中删除
+	eTaskOperationalStop = 3; // 终止任务
+	eTaskOperationalResume = 4; // 恢复任务
+	eTaskOperationalPause = 5; // 暂停任务
+	eTaskOperationalAddTemporary = 6; // 以临时任务身份添加到任务队列中去
+}
+
+message reqTaskOperational
+{
+	message OptItem
+	{
+		bytes taskName = 1;
+		bytes onerouteName = 2;
+		eTaskOperationalType type = 3;
+	}
+	repeated OptItem optSet = 1; 
+}
+
+message rspTaskOperational
+{
+	DDRCommProto.eCmdRspType type = 1;
 }
 
 

@@ -85,6 +85,7 @@
     <color name="gray">#808080</color>
     <!-- 红色 -->
     <color name="red">#FF0000</color>
+    <color name="red01">#f65d5d</color>
     <!-- 金色 -->
     <color name="gold">#FFD700</color>
     <!-- 黄色 -->
