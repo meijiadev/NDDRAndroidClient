@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.entity.point;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
@@ -12,8 +13,8 @@ import DDRVLNMapProto.DDRVLNMap;
 public class TaskMode implements Serializable {
     private String name;
     private List<BaseMode>baseModes;          //这里面可能是路径也可能是目标点
-    private List<TargetPoint> targetPoints;   // 分离出 目标点列表
-    private List<PathLine> pathLines;         // 分离出 路径列表
+    private List<TargetPoint> targetPoints=new ArrayList<>();   // 分离出 目标点列表
+    private List<PathLine> pathLines=new ArrayList<>();         // 分离出 路径列表
     private int runCounts;                    //运行次数
     /*** 任务的执行时间*/
     private long startHour;            //开始的时间，时

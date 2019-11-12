@@ -489,6 +489,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 Logger.e("----------:" + targetPoints.size());
                 targetPointAdapter.setNewData(targetPoints);
+                recyclerDetail.setAdapter(taskAdapter);
                 if (targetPoints.size() > 0) {
                     etPointName.setText(targetPoints.get(0).getName());
                     etX.setText(targetPoints.get(0).getX());
