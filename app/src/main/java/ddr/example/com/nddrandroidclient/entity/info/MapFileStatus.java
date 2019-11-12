@@ -120,7 +120,10 @@ public class MapFileStatus {
             taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
             taskMode.setBaseModes(baseModes);
             taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
-            taskMode.setTimeItem(taskItemExes.get(i).getTimeSet());
+            taskMode.setStartHour(taskItemExes.get(i).getTimeSet().getStartHour());
+            taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
+            taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
+            taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
             taskMode.setType(taskItemExes.get(i).getType());
             taskMode.setTaskState(taskItemExes.get(i).getStateValue());
             taskModes.add(taskMode);

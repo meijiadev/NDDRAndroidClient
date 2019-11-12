@@ -227,7 +227,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     }
 
-    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.bt_batch_delete, R.id.save_point, R.id.tv_path, R.id.save_path, R.id.tv_task})
+    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.bt_batch_delete, R.id.save_point, R.id.tv_path,
+            R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_create_map:
@@ -251,6 +252,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.VISIBLE);
                     pathDetailLayout.setVisibility(View.GONE);
+                    taskDetailLayout.setVisibility(View.GONE);
                     recyclerDetail.setAdapter(targetPointAdapter);
                     targetPointAdapter.setNewData(targetPoints);
                     if (targetPoints.size() > 0) {
@@ -274,6 +276,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 if (pathDetailLayout.getVisibility() == View.GONE) {        //如果路径编辑部分不可见
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.GONE);
+                    taskDetailLayout.setVisibility(View.GONE);
                     pathDetailLayout.setVisibility(View.VISIBLE);
                     recyclerDetail.setAdapter(pathAdapter);
                     pathAdapter.setNewData(pathLines);
@@ -286,13 +289,35 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     }
                 } else {
                     leftDetailLayout.setVisibility(View.GONE);
+                    pathDetailLayout.setVisibility(View.GONE);
                 }
                 break;
             case R.id.save_path:
 
                 break;
             case R.id.tv_task:
-
+                if (taskDetailLayout.getVisibility()==View.GONE){
+                    leftDetailLayout.setVisibility(View.VISIBLE);
+                    pointDetailLayout.setVisibility(View.GONE);
+                    taskDetailLayout.setVisibility(View.VISIBLE);
+                    pathDetailLayout.setVisibility(View.GONE);
+                    recyclerDetail.setAdapter(taskAdapter);
+                    taskAdapter.setNewData(taskModes);
+                    if (taskModes.size()>0){
+                        etTaskName.setText(taskModes.get(0).getName());
+                    }
+                }else {
+                    leftDetailLayout.setVisibility(View.GONE);
+                    taskDetailLayout.setVisibility(View.GONE);
+                }
+               break;
+            case R.id.bt_select:
+                btSelect.setBackgroundResource(R.drawable.button_shape_blue);
+                btSort.setBackgroundResource(R.drawable.bt_bg__map);
+                break;
+            case R.id.bt_sort:
+                btSelect.setBackgroundResource(R.drawable.bt_bg__map);
+                btSort.setBackgroundResource(R.drawable.button_shape_blue);
                 break;
             case R.id.tv_add_new:
                 startActivity(MapEditActivity.class);
@@ -385,6 +410,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
                     break;
             }
+        });
+    }
+
+    /**
+     * 任务Recycler的点击事件
+     */
+    public void onTaskItemClick(){
+        taskAdapter.setOnItemClickListener((adapter, view, position) -> {
+
         });
     }
 

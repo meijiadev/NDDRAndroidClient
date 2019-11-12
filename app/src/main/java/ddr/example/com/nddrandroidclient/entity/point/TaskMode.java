@@ -12,11 +12,16 @@ import DDRVLNMapProto.DDRVLNMap;
 public class TaskMode implements Serializable {
     private String name;
     private List<BaseMode>baseModes;          //这里面可能是路径也可能是目标点
-    private DDRVLNMap.timeItem timeItem;       //运行时间段
     private int runCounts;                    //运行次数
+    /*** 任务的执行时间*/
+    private long startHour;            //开始的时间，时
+    private long startMin;             //开始的时间，分
+    private long endHour;             // ...
+    private long endMin;              // ...
 
     private int taskState;                    //新增 任务状态  1-等待运行； 2-运行中； 3-暂停； 4-运行完了； 5-终止
     private int type;                        //新增 任务类型  0-不在执行队列中  1-临时任务  2-在队列中  3-临时任务+执行队列中
+
 
     public TaskMode() {
 
@@ -38,13 +43,7 @@ public class TaskMode implements Serializable {
         this.baseModes = baseModes;
     }
 
-    public DDRVLNMap.timeItem getTimeItem() {
-        return timeItem;
-    }
 
-    public void setTimeItem(DDRVLNMap.timeItem timeItem) {
-        this.timeItem = timeItem;
-    }
 
     public int getRunCounts() {
         return runCounts;
@@ -68,5 +67,37 @@ public class TaskMode implements Serializable {
 
     public int getTaskState() {
         return taskState;
+    }
+
+    public void setEndHour(long endHour) {
+        this.endHour = endHour;
+    }
+
+    public void setEndMin(long endMin) {
+        this.endMin = endMin;
+    }
+
+    public void setStartHour(long startHour) {
+        this.startHour = startHour;
+    }
+
+    public void setStartMin(long startMin) {
+        this.startMin = startMin;
+    }
+
+    public long getEndHour() {
+        return endHour;
+    }
+
+    public long getEndMin() {
+        return endMin;
+    }
+
+    public long getStartHour() {
+        return startHour;
+    }
+
+    public long getStartMin() {
+        return startMin;
     }
 }
