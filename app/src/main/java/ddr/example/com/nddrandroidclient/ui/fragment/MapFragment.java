@@ -264,6 +264,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     }
                 } else {
                     leftDetailLayout.setVisibility(View.GONE);
+                    pointDetailLayout.setVisibility(View.GONE);
                 }
                 break;
             case R.id.save_point:          // 保存已修改的目标点，并发送到服务端
@@ -489,7 +490,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 Logger.e("----------:" + targetPoints.size());
                 targetPointAdapter.setNewData(targetPoints);
-                recyclerDetail.setAdapter(taskAdapter);
+                recyclerDetail.setAdapter(targetPointAdapter);
                 if (targetPoints.size() > 0) {
                     etPointName.setText(targetPoints.get(0).getName());
                     etX.setText(targetPoints.get(0).getX());

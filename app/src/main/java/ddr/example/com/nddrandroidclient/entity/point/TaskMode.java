@@ -44,6 +44,8 @@ public class TaskMode implements Serializable {
 
     public void setBaseModes(List<BaseMode> baseModes) {
         this.baseModes = baseModes;
+        pathLines.clear();
+        targetPoints.clear();
         for (int i=0;i<baseModes.size();i++){
             if (baseModes.get(i).getType()==1){
                 PathLine pathLine= (PathLine) baseModes.get(i);
