@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.other.Logger;
+
 
 /**
  * time: 2019/11/7
@@ -17,9 +19,11 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
  */
 public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
 
+
     public TargetPointAdapter(int layoutResId) {
         super(layoutResId);
     }
+
 
     public TargetPointAdapter(int layoutResId, @Nullable List<TargetPoint> data) {
         super(layoutResId, data);
@@ -28,17 +32,27 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper,TargetPoint item) {
         super.convert(helper, item);
-        // 状态页面的 前往目标点布局
-        helper.setText(R.id.item_recycle_gopoint,item.getName());
-        //地图管理页面的布局
-      //  helper.setText(R.id.tv_target_name,item.getName());
+        switch (viewType){
+            case R.layout.item_recycle_gopoint:
+                // 状态页面的 前往目标点布局
+                Logger.e("-----------状态页面的 前往目标点布局");
+                helper.setText(R.id.item_recycle_gopoint,item.getName());
+                break;
+            case R.layout.item_target_point:
+                //地图管理页面的布局
+                Logger.e("-----------地图管理页面的布局");
+                helper.setText(R.id.tv_target_name,item.getName());
+                break;
+        }
 
 
     }
 
+
     @Override
     public void setNewData(@Nullable List<TargetPoint> data) {
         super.setNewData(data);
+
     }
 
 

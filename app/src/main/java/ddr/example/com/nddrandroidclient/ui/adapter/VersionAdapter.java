@@ -1,6 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
-import android.view.View;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,4 +52,6 @@ public class VersionAdapter extends BaseAdapter<ComputerEdition> {
         Logger.e("------:");
         return super.getItem(position);
     }
+
+
 }

@@ -15,12 +15,19 @@ import androidx.annotation.Nullable;
  */
 public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder> {
 
+    public  int viewType;
+
+
     public BaseAdapter(int layoutResId) {
         super(layoutResId);
+        this.viewType=layoutResId;
     }
+
+
 
     public BaseAdapter(int layoutResId, @Nullable List<T> data) {
         super(layoutResId, data);
+        this.viewType=layoutResId;
     }
 
 
@@ -61,6 +68,10 @@ public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder>
     public T getItem(int position) {
         return super.getItem(position);
     }
+
+
+
+
 
 
 }

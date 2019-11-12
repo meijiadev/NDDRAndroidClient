@@ -24,6 +24,7 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     private Context mContext;
     private boolean allSelected;
 
+
     public MapAdapter(int layoutResId, Context context) {
         super(layoutResId);
         this.mContext=context;
@@ -84,6 +85,8 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     public MapInfo getItem(int position) {
         return super.getItem(position);
     }
+
+
 
     /**
      * 是否显示批量选择的按钮

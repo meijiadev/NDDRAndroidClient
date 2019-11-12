@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 
+import org.angmarch.views.NiceSpinner;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -18,6 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
@@ -37,7 +40,6 @@ import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
-import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -70,8 +72,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     RelativeLayout leftDetailLayout;       // 左侧布局 包括列表和列表展开项
     @BindView(R.id.detail_layout)
     RelativeLayout detailLayout;
-    @BindView(R.id.point_detail_layout)
-    RelativeLayout pointDetailLayout;
     @BindView(R.id.iv_back)
     ImageView iv_back;
     @BindView(R.id.tv_target_point)
@@ -102,6 +102,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     TextView tv1m;
     @BindView(R.id.tv_2m)
     TextView tv2m;
+    /*目标点编辑*/
+    @BindView(R.id.point_detail_layout)
+    RelativeLayout pointDetailLayout;
     @BindView(R.id.et_point_name)
     RegexEditText etPointName;
     @BindView(R.id.et_x)
@@ -110,6 +113,23 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     DDREditText etY;
     @BindView(R.id.et_toward)
     DDREditText etToward;
+    /*路径的编辑*/
+    @BindView(R.id.path_detail_layout)
+    RelativeLayout pathDetailLayout;
+    @BindView(R.id.et_path_name)
+    RegexEditText etPathName;
+
+    @BindView(R.id.et_parameter)
+    DDREditText etParameter;
+    @BindView(R.id.et_speed)
+    DDREditText etSpeed;
+    @BindView(R.id.action_recycler)
+    RecyclerView actionRecycler;
+    @BindView(R.id.tv_config)
+    TextView tvConfig;
+
+    @BindView(R.id.right_map_layout)
+    RelativeLayout rightMapLayout;
 
 
     private DDRVLNMap.reqDDRVLNMapEx data;
@@ -150,10 +170,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapRecycler.setLayoutManager(gridLayoutManager);
         mapRecycler.setAdapter(mapAdapter);
         //目标点(路径或任务)的列表初始化
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getAttachActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getAttachActivity());
         recyclerDetail.setLayoutManager(linearLayoutManager);
-        targetPointAdapter=new TargetPointAdapter(R.layout.item_target_point);
+        targetPointAdapter = new TargetPointAdapter(R.layout.item_target_point);
         recyclerDetail.setAdapter(targetPointAdapter);
+
+
+
     }
 
     @Override
@@ -255,7 +278,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 目标点Recycler的点击事件
      */
-    public void onTargetItemClick(){
+    public void onTargetItemClick() {
         targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
 
         });
@@ -311,32 +334,32 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-                data=mapFileStatus.getRspGetDDRVLNMapEx().getData();
-                targetPtItems=data.getTargetPtdata().getTargetPtList();
-                pathLineItemExes=data.getPathSet().getPathLineDataList();
-                taskItemExes=data.getTaskSetList();
-                targetPoints=new ArrayList<>();
-                for (int i=0;i<targetPtItems.size();i++){
-                    TargetPoint targetPoint=new TargetPoint();
+                data = mapFileStatus.getRspGetDDRVLNMapEx().getData();
+                targetPtItems = data.getTargetPtdata().getTargetPtList();
+                pathLineItemExes = data.getPathSet().getPathLineDataList();
+                taskItemExes = data.getTaskSetList();
+                targetPoints = new ArrayList<>();
+                for (int i = 0; i < targetPtItems.size(); i++) {
+                    TargetPoint targetPoint = new TargetPoint();
                     targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
                     targetPoint.setX(targetPtItems.get(i).getPtData().getX());
                     targetPoint.setY(targetPtItems.get(i).getPtData().getY());
                     targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
                     targetPoints.add(targetPoint);
                 }
-                pathLines=new ArrayList<>();
-                for (int i=0;i<pathLineItemExes.size();i++){
-                    List<PathLine.PathPoint> pathPoints=new ArrayList<>();
-                    List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExes.get(i).getPointSetList();
-                    for (int j=0;j<path_lint_pt_items.size();j++){
-                        PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                pathLines = new ArrayList<>();
+                for (int i = 0; i < pathLineItemExes.size(); i++) {
+                    List<PathLine.PathPoint> pathPoints = new ArrayList<>();
+                    List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
+                    for (int j = 0; j < path_lint_pt_items.size(); j++) {
+                        PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
                         pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                         pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
                         pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
                         pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
                         pathPoints.add(pathPoint);
                     }
-                    PathLine pathLine=new PathLine();
+                    PathLine pathLine = new PathLine();
                     pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
                     pathLine.setPathPoints(pathPoints);
                     pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
@@ -344,28 +367,28 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     pathLines.add(pathLine);
                 }
 
-                for (int i=0;i<taskItemExes.size();i++){
-                    List<DDRVLNMap.path_elementEx> path_elementExes=taskItemExes.get(i).getPathSetList();
-                    List<BaseMode> baseModes=new ArrayList<>();
-                    for (int j=0;j<path_elementExes.size();j++){
-                        if (path_elementExes.get(j).getTypeValue()==1){
-                            PathLine pathLine=new PathLine(1);
+                for (int i = 0; i < taskItemExes.size(); i++) {
+                    List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
+                    List<BaseMode> baseModes = new ArrayList<>();
+                    for (int j = 0; j < path_elementExes.size(); j++) {
+                        if (path_elementExes.get(j).getTypeValue() == 1) {
+                            PathLine pathLine = new PathLine(1);
                             pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
                             baseModes.add(pathLine);
-                        }else if (path_elementExes.get(j).getTypeValue()==2){
-                            TargetPoint targetPoint=new TargetPoint(2);
+                        } else if (path_elementExes.get(j).getTypeValue() == 2) {
+                            TargetPoint targetPoint = new TargetPoint(2);
                             targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
                             baseModes.add(targetPoint);
                         }
                     }
-                    TaskMode taskMode=new TaskMode();
+                    TaskMode taskMode = new TaskMode();
                     taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
                     taskMode.setBaseModes(baseModes);
                     taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
                     taskMode.setTimeItem(taskItemExes.get(i).getTimeSet());
 
                 }
-                Logger.e("----------:"+taskItemExes.size());
+                Logger.e("----------:" + targetPoints.size());
                 targetPointAdapter.setNewData(targetPoints);
                 if (dialog.isShowing()) {
                     getAttachActivity().postDelayed(() -> {

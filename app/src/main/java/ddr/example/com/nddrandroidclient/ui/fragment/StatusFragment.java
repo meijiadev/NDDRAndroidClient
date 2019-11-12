@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.protobuf.ByteString;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -41,9 +39,8 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
-import ddr.example.com.nddrandroidclient.ui.adapter.RobotIdAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
-import ddr.example.com.nddrandroidclient.ui.adapter.TaskCheckAdapter;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
@@ -110,10 +107,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private TargetPoint targetPoint;
     private TargetPointAdapter targetPointAdapter;
     private MapFileStatus mapFileStatus;
-    private TaskCheckAdapter taskCheckAdapter;
+    private StringAdapter taskCheckAdapter;
     private CustomPopuWindow customPopWindow;
     private DpOrPxUtils DpOrPxUtils;
-    private RobotIdAdapter robotIdAdapter;
+    private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -168,7 +165,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         statusSwitchButton.setOnStatusListener(this);
         hideAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_hide);
         showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
-        taskCheckAdapter=new TaskCheckAdapter(R.layout.item_recycle_task_check);
+        taskCheckAdapter=new StringAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
         @SuppressLint("WrongConstant")
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
@@ -186,7 +183,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         Logger.e("task列表"+groupList.size());
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
-
         for (int i=0;i<10;i++){
             targetPoint=new TargetPoint();
             targetPoint.setName("呵呵"+i);

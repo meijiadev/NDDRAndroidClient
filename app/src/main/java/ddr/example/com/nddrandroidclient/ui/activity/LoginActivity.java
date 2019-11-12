@@ -33,7 +33,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
-import ddr.example.com.nddrandroidclient.ui.adapter.RobotIdAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 
 /**
  *    time   : 2019/10/26
@@ -65,7 +65,7 @@ public final class LoginActivity extends DDRActivity {
     @BindView(R.id.tv_rb)
     TextView tv_rb;
 
-    private RobotIdAdapter robotIdAdapter;
+    private StringAdapter robotIdAdapter;
     public  int tcpPort = 0;
     private String accountName = "", passwordName = "";
     private SharedPreferences sharedPreferences;
@@ -110,7 +110,7 @@ public final class LoginActivity extends DDRActivity {
     protected void initView() {
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        robotIdAdapter=new RobotIdAdapter(R.layout.item_recycle_robot_id,robotList);
+        robotIdAdapter=new StringAdapter(R.layout.item_recycle_robot_id,robotList);
         recycleRobotId.setLayoutManager(linearLayoutManager);
         recycleRobotId.setAdapter(robotIdAdapter);
         onItemClick();
