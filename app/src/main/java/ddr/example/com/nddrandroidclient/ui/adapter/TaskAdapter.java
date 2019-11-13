@@ -31,7 +31,18 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, TaskMode item) {
         super.convert(helper, item);
-        helper.setText(R.id.tv_target_name,item.getName());
+        switch (viewType){
+            case R.layout.item_target_point:
+                helper.setText(R.id.tv_target_name,item.getName());
+                break;
+            case R.layout.item_recycle_tasklist:
+                helper.setText(R.id.tv_map_list,item.getName())
+                        .setText(R.id.tv_task_time,item.getStartHour()+":"+item.getStartMin()+"-"+item.getEndHour()+":"+item.getEndMin())
+                        .setText(R.id.task_num_check,item.getRunCounts());
+
+                break;
+        }
+
     }
 
 }

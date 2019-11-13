@@ -4,20 +4,30 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
 
@@ -26,12 +36,14 @@ import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
  * desc：任务管理界面
  */
 public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickValueView.onSelectedChangeListener{
-    @BindView(R.id.tv_time)
-    TextView tv_time;
-    @BindView(R.id.tv_num)
-    TextView tv_num;
+//    @BindView(R.id.tv_time)
+//    TextView tv_time;
+//    @BindView(R.id.tv_num)
+//    TextView tv_num;
     @BindView(R.id.tv_new_task_list)
     TextView tv_new_task_list;
+    @BindView(R.id.recycle_task_list)
+    RecyclerView recycle_task_list;
 
     private CustomPopuWindow customPopuWindow;
     private DpOrPxUtils dpOrPxUtils;
@@ -41,10 +53,23 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private NotifyEnvInfo notifyEnvInfo;
     private MapFileStatus mapFileStatus;
+    private TaskAdapter taskAdapter;
+    private List<TaskMode> taskModeList =new ArrayList<>();
+    private TaskMode taskMode;
+
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void update(MessageEvent messageEvent) {
+        switch (messageEvent.getType()) {
+            case updateVersion:
+
+                break;
+        }
+    }
 
     public static TaskFragment newInstance(){
         return new TaskFragment();
     }
+
 
     @Override
     protected int getLayoutId() {
@@ -53,6 +78,10 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
 
     @Override
     protected void initView() {
+        taskAdapter=new TaskAdapter(R.layout.item_recycle_tasklist);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        recycle_task_list.setLayoutManager(layoutManager);
+        recycle_task_list.setAdapter(taskAdapter);
 
     }
 
@@ -66,18 +95,18 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     }
 
 
-    @OnClick({R.id.tv_num,R.id.tv_time})
-    public void onViewClicked(View view) {
-        switch (view.getId()){
-            case R.id.tv_time:
-                showTimePopupWindow(tv_time,1);
-                break;
-            case R.id.tv_num:
-                showTimePopupWindow(tv_num,2);
-                break;
-
-        }
-    }
+//    @OnClick({R.id.tv_num,R.id.tv_time})
+//    public void onViewClicked(View view) {
+//        switch (view.getId()){
+//            case R.id.tv_time:
+//                showTimePopupWindow(tv_time,1);
+//                break;
+//            case R.id.tv_num:
+//                showTimePopupWindow(tv_num,2);
+//                break;
+//
+//        }
+//    }
 
     /**
      * 时间，次数弹窗
