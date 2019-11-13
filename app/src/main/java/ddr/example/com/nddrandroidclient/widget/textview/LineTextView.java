@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import ddr.example.com.nddrandroidclient.R;
+
 /**
  * time: 2019/10/31
  * desc: 能改变状态字体颜色并带下划线的TextView
@@ -37,10 +39,16 @@ public class LineTextView extends TextView {
         super.onDraw(canvas);
         if (isSelected){
             canvas.drawLine(0,measureHeight-5,measureWidth,measureHeight-5,linePaint);
+            setTextColor(Color.parseColor("#0399ff"));
+        }else {
+            setTextColor(Color.WHITE);
         }
     }
 
-
+    @Override
+    public void setTextColor(int color) {
+        super.setTextColor(color);
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

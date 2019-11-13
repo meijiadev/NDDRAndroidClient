@@ -31,7 +31,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  */
 public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownLoadCallBack {
     List<BaseCmd.rspClientGetMapInfo.MapInfoItem> mapInfoItemList;
-    List<MapInfo> mapInfoList;
+    List<MapInfo> mapInfoList=new ArrayList<>();
     FileUtil fileUtil;
     private List<String> urlList;
     private List<String> mapNames;

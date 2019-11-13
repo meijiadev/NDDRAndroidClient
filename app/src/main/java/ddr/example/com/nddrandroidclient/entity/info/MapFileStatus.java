@@ -19,8 +19,7 @@ public class MapFileStatus {
     private List<String> mapNames=new ArrayList<>();                    // 服务端返回的地图名字列表
     private List<String> pictureUrls;                 //激光地图的http连接列表
     private DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx;     //获取指定某一地图的相关信息
-    private List<MapInfo> mapInfos=new ArrayList<>();                             //所有地图列表
-
+    private List<MapInfo> mapInfos=new ArrayList<>();          //所有地图列表
     private List<DDRVLNMap.targetPtItem> targetPtItems;          // 接收到的目标点列表
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 接收到路径列表
     private List<DDRVLNMap.task_itemEx> taskItemExes;          //  接收到任务列表
@@ -33,6 +32,7 @@ public class MapFileStatus {
     private List<TargetPoint> cTargetPoints=new ArrayList<>();         // 解析后的目标点数据
     private List<PathLine> cPathLines=new ArrayList<>();               //解析后的路径数据
     private List<TaskMode> cTaskModes=new ArrayList<>();               //解析后的任务数据
+
 
 
 

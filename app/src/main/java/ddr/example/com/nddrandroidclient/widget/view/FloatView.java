@@ -21,6 +21,9 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public class FloatView extends View  {
     private Bitmap bgBitmap;   //背景图片
     private Bitmap JTBitmap;   //急停
+    private Bitmap YKBitmap;   //遥控
+    private Bitmap SBBitmap;   //手柄
+    private Bitmap CDBitmap;   //充电
     private Paint mPaint;
     private  int DEFAULT_WIDTH=74;         //单位都是像素
     private  int DEFAULT_HEIGHT=373;
@@ -42,7 +45,10 @@ public class FloatView extends View  {
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.parseColor("#979797"));
         bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.float_bg);
-        JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.float_jt);
+        JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
+        YKBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.yk_def);
+        SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
+        CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
 
     }
 
@@ -59,10 +65,10 @@ public class FloatView extends View  {
         super.onDraw(canvas);
         canvas.drawBitmap(bgBitmap,0,0,mPaint);
         canvas.drawBitmap(JTBitmap,13,18,mPaint);
-        canvas.drawBitmap(JTBitmap,13,100,mPaint);
-        canvas.drawBitmap(JTBitmap,13,178,mPaint);
+        canvas.drawBitmap(CDBitmap,13,100,mPaint);
+        canvas.drawBitmap(SBBitmap,13,178,mPaint);
         canvas.drawLine(16,256,59,256,mPaint);
-        canvas.drawBitmap(JTBitmap,13,291,mPaint);
+        canvas.drawBitmap(YKBitmap,13,291,mPaint);
     }
 
 
