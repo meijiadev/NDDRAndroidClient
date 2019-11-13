@@ -33,7 +33,9 @@ import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -126,21 +128,25 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             setMapBitmap(mapName,taskName);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
-                    task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTaskSetList());
-                    targetPtItems = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTargetPtdata().getTargetPtList());
-                    Logger.e("-----" + task_itemList.size());
-                    for (int i = 0; i < task_itemList.size(); i++) {
-                        groupList.add(task_itemList.get(i).getName().toStringUtf8());
+                    for (int i=0;i<mapFileStatus.getTaskModes().size();i++){
+                        groupList.add(mapFileStatus.getTaskModes().get(i).getName());
                     }
+//                    task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTaskSetList());
+//                    targetPtItems = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTargetPtdata().getTargetPtList());
+//                    Logger.e("-----" + task_itemList.size());
+//                    for (int i = 0; i < task_itemList.size(); i++) {
+//                        groupList.add(task_itemList.get(i).getName().toStringUtf8());
+//                    }
                     taskCheckAdapter.setNewData(groupList);
-                    for (int i=0;i<targetPtItems.size();i++){
-                        targetPoint=new TargetPoint();
-                        targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
-                        targetPoint.setX(targetPtItems.get(i).getPtData().getX());
-                        targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-                        targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
-                        targetPoints.add(targetPoint);
-                    }
+//                    for (int i=0;i<targetPtItems.size();i++){
+//                        targetPoint=new TargetPoint();
+//                        targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+//                        targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+//                        targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+//                        targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+//                        targetPoints.add(targetPoint);
+//                    }
+                    targetPoints=mapFileStatus.getTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
                     if (robotIdAdapter!=null){
                         robotIdAdapter.setNewData(groupList);
