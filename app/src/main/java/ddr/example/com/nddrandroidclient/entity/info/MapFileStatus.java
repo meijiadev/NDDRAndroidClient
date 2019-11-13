@@ -33,6 +33,8 @@ public class MapFileStatus {
     private List<PathLine> cPathLines=new ArrayList<>();               //解析后的路径数据
     private List<TaskMode> cTaskModes=new ArrayList<>();               //解析后的任务数据
 
+    private DDRVLNMap.affine_mat affine_mat;                          //地图的矩阵
+
 
 
 
@@ -76,6 +78,7 @@ public class MapFileStatus {
      */
     public void setRspGetDDRVLNMap(DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx) {
         this.rspGetDDRVLNMapEx = rspGetDDRVLNMapEx;
+        affine_mat=rspGetDDRVLNMapEx.getData().getBasedata().getAffinedata();
         mapName=rspGetDDRVLNMapEx.getData().getBasedata().getName().toStringUtf8();
         targetPtItems = rspGetDDRVLNMapEx.getData().getTargetPtdata().getTargetPtList();
         pathLineItemExes = rspGetDDRVLNMapEx.getData().getPathSet().getPathLineDataList();
@@ -264,5 +267,13 @@ public class MapFileStatus {
 
     public String getMapName() {
         return mapName;
+    }
+
+    /**
+     * 获取图片信息的变换矩阵
+     * @return
+     */
+    public DDRVLNMap.affine_mat getAffine_mat() {
+        return affine_mat;
     }
 }

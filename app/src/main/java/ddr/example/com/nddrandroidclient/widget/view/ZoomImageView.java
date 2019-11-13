@@ -68,15 +68,7 @@ public class ZoomImageView extends View {
             case updatePng:
                 break;
             case updateDDRVLNMap:
-                Logger.e("--------updateDDRVLNMap");
-                MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-                DDRVLNMap.affine_mat affine_mat=mapFileStatus.getRspGetDDRVLNMapEx().getData().getBasedata().getAffinedata();
-                r00=affine_mat.getR11();
-                r01=affine_mat.getR12();
-                t0=affine_mat.getTx();
-                r10=affine_mat.getR21();
-                r11=affine_mat.getR22();
-                t1=affine_mat.getTy();
+
                 break;
         }
     }
@@ -102,6 +94,14 @@ public class ZoomImageView extends View {
     public void setImageBitmap(Bitmap bitmap) {
         sourceBitmap = bitmap;
         Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+        MapFileStatus mapFileStatus=MapFileStatus.getInstance();
+        DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
+        r00=affine_mat.getR11();
+        r01=affine_mat.getR12();
+        t0=affine_mat.getTx();
+        r10=affine_mat.getR21();
+        r11=affine_mat.getR22();
+        t1=affine_mat.getTy();
         invalidate();
     }
 
@@ -303,9 +303,9 @@ public class ZoomImageView extends View {
     private void zoom(Canvas canvas) {
         matrix.reset();
         // 将图片按总缩放比例进行缩放
-       // GridLayerView.getInstance(this).setScalePrecision(totalRatio);
+        // GridLayerView.getInstance(this).setScalePrecision(totalRatio);
         matrix.postScale(totalRatio, totalRatio);
-        Logger.e("-----缩放比例："+totalRatio+";");
+        //Logger.e("-----缩放比例："+totalRatio+";");
         float scaledWidth = sourceBitmap.getWidth() * totalRatio;
         float scaledHeight = sourceBitmap.getHeight() * totalRatio;
         float translateX = 0f;

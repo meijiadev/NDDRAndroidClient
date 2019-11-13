@@ -8,11 +8,10 @@ import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
  * desc: EvenBus的信息传递类
  */
 public class MessageEvent {
-    private int index;
-    private boolean isWhat;
     private Type type;
     private List<MapInfo> mapInfoList;
     private Object data;
+    private String bitmapPath;
     public enum Type{
         updateIPList,          //更新IP列表
         updatePort,           // 更新端口号
@@ -27,6 +26,10 @@ public class MessageEvent {
         addPoiPoint,
         updateVersion, //获取版本信息
         receivePointCloud,
+        addNewPoint,    //添加目标点
+        addNewPath,     //添加路径
+        updatePoints,   //添加完，更新目标点列表
+        updatePaths,    //添加完，更新路径列表
 
     }
 
@@ -42,20 +45,6 @@ public class MessageEvent {
     public MessageEvent(Type type, Object object){
         this.type=type;
         this.data=object;
-    }
-
-    public MessageEvent(int index, boolean isWhat){
-        this.index=index;
-        this.isWhat=isWhat;
-    }
-
-    public int getIndex()
-    {
-        return index;
-    }
-
-    public boolean getIsWhat() {
-        return isWhat;
     }
 
     public Type getType() {
