@@ -33,6 +33,14 @@ public class PathAdapter extends BaseAdapter<PathLine> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, PathLine item) {
         super.convert(helper, item);
-        helper.setText(R.id.tv_target_name,item.getName());
+        switch (viewType){
+            case R.layout.item_target_point:
+                helper.setText(R.id.tv_target_name,item.getName());
+                break;
+            case R.layout.item_task_select:
+                helper.setText(R.id.tv_name,item.getName());
+                break;
+        }
+
     }
 }

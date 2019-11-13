@@ -12,7 +12,7 @@ public class TargetPoint extends BaseMode implements Serializable {
     private float y;
     private float theta;  //朝向 单位：度 【-180,180】
     private boolean isSelected;     //是否被选中
-    private boolean inTask;         //判断该点是否属于某一个路径
+
 
 
     public TargetPoint(int type) {
@@ -62,4 +62,6 @@ public class TargetPoint extends BaseMode implements Serializable {
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
+
+
 }

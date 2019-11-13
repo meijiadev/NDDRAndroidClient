@@ -46,6 +46,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
             case R.layout.item_task_select:
                 helper.setText(R.id.tv_name,item.getName());
                 break;
+
         }
 
 

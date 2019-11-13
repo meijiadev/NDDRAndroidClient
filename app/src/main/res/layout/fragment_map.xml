@@ -236,7 +236,7 @@
                         android:id="@+id/et_point_name"
                         android:layout_width="130dp"
                         android:layout_height="24dp"
-                        android:text="目标点-1"
+                        android:text="目标点-无"
                         android:layout_toRightOf="@id/tv_point_name"
                         android:layout_marginTop="24dp"
                         android:background="@drawable/et_target_bg"
@@ -264,7 +264,8 @@
                         android:layout_toRightOf="@id/tv_x"
                         android:layout_below="@id/et_point_name"
                        android:layout_alignLeft="@id/et_point_name"
-                        android:layout_marginTop="16.5dp">
+                        android:layout_marginTop="16.5dp"
+                        >
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
                     <TextView
                         android:id="@+id/tv_y"

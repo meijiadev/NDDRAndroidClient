@@ -14,6 +14,7 @@ public class PathLine extends BaseMode implements Serializable {
     private String config="";    // 配置文件
     private List<PathPoint>pathPoints;
 
+
     public PathLine(int type) {
         super(type);
     }

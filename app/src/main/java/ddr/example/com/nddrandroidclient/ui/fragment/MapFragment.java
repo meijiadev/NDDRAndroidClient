@@ -48,6 +48,7 @@ import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.ActionAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.BaseModeAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
@@ -170,10 +171,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private TcpClient tcpClient;
     private boolean isShowSelected;   //显示批量管理的按钮
 
-    private TargetPointAdapter targetPointAdapter;            //目标点列表适配器
-    private PathAdapter pathAdapter;                         //路径列表适配器
+    private TargetPointAdapter targetPointAdapter,selectPointAdapter;            //目标点列表适配器 ;用于选择的目标点列表
+    private PathAdapter pathAdapter,selectPathAdapter;                         //路径列表适配器 ;用于选择的路径列表
     private ActionAdapter actionAdapter;                     // 动作点列表
     private TaskAdapter taskAdapter;                         //任务Recycler的适配器
+    private BaseModeAdapter sortAdapter;                     //排序的列表适配器
+
 
 
     private int mPosition = 0;                                   //当前显示的是哪个子项数据 （目标点列表、路径列表、任务列表）
@@ -208,8 +211,18 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getAttachActivity());
         actionRecycler.setLayoutManager(linearLayoutManager1);
         actionRecycler.setAdapter(actionAdapter);     //给动作Recycler设置适配器
-
-
+        selectPointAdapter=new TargetPointAdapter(R.layout.item_task_select);
+        selectPathAdapter=new PathAdapter(R.layout.item_task_select);
+        LinearLayoutManager linearLayoutManager2=new LinearLayoutManager(getAttachActivity());
+        selectPointRecycler.setLayoutManager(linearLayoutManager2);
+        selectPointRecycler.setAdapter(selectPointAdapter);
+        LinearLayoutManager linearLayoutManager3=new LinearLayoutManager(getAttachActivity());
+        selectPathRecycler.setLayoutManager(linearLayoutManager3);
+        selectPathRecycler.setAdapter(selectPathAdapter);
+        LinearLayoutManager linearLayoutManager4=new LinearLayoutManager(getAttachActivity());
+        sortRecycler.setLayoutManager(linearLayoutManager4);
+        sortAdapter=new BaseModeAdapter(R.layout.item_task_sort);
+        sortRecycler.setAdapter(sortAdapter);       //给排序的列表设置适配器
     }
 
     @Override
@@ -225,12 +238,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onPathItemClick();
         onActionItemClick();
         onTaskItemClick();
+        onSelectedItemClick();
 
     }
 
     @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.bt_batch_delete, R.id.save_point, R.id.tv_path,
             R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort})
-    public void onViewClicked(View view) {
+    public void onViewClicked(View view)  {
         switch (view.getId()) {
             case R.id.bt_create_map:
                 startActivity(CollectingActivity.class);
@@ -247,8 +261,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.iv_back:
                 mapDetailLayout.setVisibility(View.GONE);
                 mapLayout.setVisibility(View.VISIBLE);
+                mPosition=0;
                 break;
             case R.id.tv_target_point:
+                mPosition=0;
                 if (pointDetailLayout.getVisibility() == View.GONE) {
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.VISIBLE);
@@ -275,6 +291,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 targetPointAdapter.setNewData(targetPoints);
                 break;
             case R.id.tv_path:
+                mPosition=0;
                 if (pathDetailLayout.getVisibility() == View.GONE) {        //如果路径编辑部分不可见
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.GONE);
@@ -295,18 +312,34 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case R.id.save_path:
-
+                pathLines.get(mPosition).setName(etPathName.getText().toString());
+                pathLines.get(mPosition).setVelocity(etSpeed.getFloatText());
+                pathLines.get(mPosition).setPathModel(tv_Spinner.getTextVaule());
                 break;
             case R.id.tv_task:
+                mPosition=0;
                 if (taskDetailLayout.getVisibility()==View.GONE){
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.GONE);
                     taskDetailLayout.setVisibility(View.VISIBLE);
                     pathDetailLayout.setVisibility(View.GONE);
+                    //选择按键
+                    btSelect.setBackgroundResource(R.drawable.button_shape_blue);
+                    //排序按键
+                    btSort.setBackgroundResource(R.drawable.bt_bg__map);
+                    selectLayout.setVisibility(View.VISIBLE);
+                    sortRecycler.setVisibility(View.GONE);
                     recyclerDetail.setAdapter(taskAdapter);
                     taskAdapter.setNewData(taskModes);
                     if (taskModes.size()>0){
                         etTaskName.setText(taskModes.get(0).getName());
+                        try {
+                            initSelectRecycler(0);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }else {
                     leftDetailLayout.setVisibility(View.GONE);
@@ -316,10 +349,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.bt_select:
                 btSelect.setBackgroundResource(R.drawable.button_shape_blue);
                 btSort.setBackgroundResource(R.drawable.bt_bg__map);
+                selectLayout.setVisibility(View.VISIBLE);
+                sortRecycler.setVisibility(View.GONE);
                 break;
             case R.id.bt_sort:
                 btSelect.setBackgroundResource(R.drawable.bt_bg__map);
                 btSort.setBackgroundResource(R.drawable.button_shape_blue);
+                selectLayout.setVisibility(View.GONE);
+                sortRecycler.setVisibility(View.VISIBLE);
+                sortAdapter.setNewData(taskModes.get(mPosition).getBaseModes());
                 break;
             case R.id.tv_add_new:
                 startActivity(MapEditActivity.class);
@@ -370,7 +408,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         taskDetailLayout.setVisibility(View.GONE);
                     }
 
-                }, 5000);
+                }, 3000);
             }
         }));
     }
@@ -410,10 +448,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         actionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()) {
                 case R.id.tv_delete:
-
+                    Logger.e("------点击删除该点动作");
                     break;
                 case R.id.tv_action_type:
-
+                    Logger.e("-----点击修改动作");
                     break;
             }
         });
@@ -426,6 +464,55 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         taskAdapter.setOnItemClickListener((adapter, view, position) -> {
             mPosition=position;
             etTaskName.setText(taskModes.get(position).getName());
+            try {
+                initSelectRecycler(position);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private List<TargetPoint> selectPoints;
+    private List<PathLine> selectPaths;
+    /**
+     * 设置每个task子项中被选择的目标点和路径列表
+     */
+    private void initSelectRecycler(int position) throws IOException, ClassNotFoundException {
+        selectPoints=ListTool.deepCopy(targetPoints);      //对列表深拷贝，后续的操作不影响数据源
+        selectPaths=ListTool.deepCopy(pathLines);
+        for (int i=0;i<selectPoints.size();i++){
+            if (taskModes.get(position).getTargetPoints().contains(selectPoints.get(i).getName())){
+                selectPoints.get(i).setInTask(true);
+            }else {
+                selectPoints.get(i).setInTask(false);
+            }
+        }
+        selectPointAdapter.setNewData(selectPoints);
+
+        for (int i=0;i<selectPaths.size();i++){
+            if (taskModes.get(position).getPathLines().contains(selectPaths.get(i).getName())){
+                selectPaths.get(i).setInTask(true);
+            }else {
+                selectPaths.get(i).setInTask(false);
+            }
+        }
+        selectPathAdapter.setNewData(selectPaths);
+
+    }
+
+    /**
+     * 选择Recycler点击事件（目标点、路径）
+     */
+    public void onSelectedItemClick(){
+        //目标点选择
+        selectPointAdapter.setOnItemClickListener((adapter, view, position) -> {
+
+        });
+        //路径选择
+        selectPathAdapter.setOnItemClickListener((adapter, view, position) -> {
+
         });
     }
 
@@ -506,10 +593,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         pointDetailLayout.setVisibility(View.VISIBLE);
                         pathDetailLayout.setVisibility(View.GONE);
                         taskDetailLayout.setVisibility(View.GONE);
+                        tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
+                        tvPath.setText("路径"+"("+pathLines.size()+")");
+                        tvTask.setText("任务"+"("+taskModes.size()+")");
                     }, 800);
                 }
                 break;
         }
     }
+
+
 
 }
