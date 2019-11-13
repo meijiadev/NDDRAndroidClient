@@ -122,8 +122,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 initStatusBar();
                 break;
             case updateDDRVLNMap:
-                Logger.e("------地图名："+mapFileStatus.getRspGetDDRVLNMapEx().getData().getBasedata().getName().toStringUtf8());
-                if (mapFileStatus.getRspGetDDRVLNMapEx().getData().getBasedata().getName().toStringUtf8().equals(mapName)){
+                Logger.e("------地图名："+mapFileStatus.getMapName());
+                if (mapFileStatus.getMapName().equals(mapName)){
                     mapImageView.setMapBitmap(mapName,taskName);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();

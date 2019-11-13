@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
  */
 @SuppressLint("AppCompatCustomView")
 public class DDRTextView extends TextView {
+    private int value;
     public DDRTextView(Context context) {
         super(context);
     }
@@ -21,7 +22,12 @@ public class DDRTextView extends TextView {
         super(context, attrs);
     }
 
+    /**
+     * 通过判断设置type值，自动设置文本
+     * @param value
+     */
     public void setValueText(int value){
+        this.value=value;
         switch (value){
             case 1:
                 this.setText("必到点");
@@ -58,4 +64,21 @@ public class DDRTextView extends TextView {
                 break;
         }
     }
+
+    @Override
+    public void setTextColor(int color) {
+        super.setTextColor(color);
+    }
+
+    /**
+     * 返回设置type值
+     * @return
+     */
+    public int getTextVaule(){
+       return value;
+    }
+
+
+
+
 }

@@ -23,10 +23,18 @@ public class MapFileStatus {
     private List<DDRVLNMap.targetPtItem> targetPtItems;          // 接收到的目标点列表
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 接收到路径列表
     private List<DDRVLNMap.task_itemEx> taskItemExes;          //  接收到任务列表
+    /*** 查看的地图详情信息*/
     private List<TargetPoint> targetPoints=new ArrayList<>();         // 解析后的目标点数据
     private List<PathLine> pathLines=new ArrayList<>();               //解析后的路径数据
     private List<TaskMode> taskModes=new ArrayList<>();               //解析后的任务数据
     private String mapName;                                    //解析出获取到的地图信息的名字
+    /**获取当前运行地图的详情信息*/
+    private List<TargetPoint> cTargetPoints=new ArrayList<>();         // 解析后的目标点数据
+    private List<PathLine> cPathLines=new ArrayList<>();               //解析后的路径数据
+    private List<TaskMode> cTaskModes=new ArrayList<>();               //解析后的任务数据
+
+
+
 
 
     /**
@@ -68,68 +76,128 @@ public class MapFileStatus {
      */
     public void setRspGetDDRVLNMap(DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx) {
         this.rspGetDDRVLNMapEx = rspGetDDRVLNMapEx;
-        targetPoints.clear();
-        pathLines.clear();
-        taskModes.clear();
         mapName=rspGetDDRVLNMapEx.getData().getBasedata().getName().toStringUtf8();
         targetPtItems = rspGetDDRVLNMapEx.getData().getTargetPtdata().getTargetPtList();
         pathLineItemExes = rspGetDDRVLNMapEx.getData().getPathSet().getPathLineDataList();
         taskItemExes = rspGetDDRVLNMapEx.getData().getTaskSetList();
-        for (int i = 0; i < targetPtItems.size(); i++) {
-            TargetPoint targetPoint = new TargetPoint();
-            targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
-            targetPoint.setX(targetPtItems.get(i).getPtData().getX());
-            targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-            targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
-            targetPoints.add(targetPoint);
-        }
-        for (int i = 0; i < pathLineItemExes.size(); i++) {
-            List<PathLine.PathPoint> pathPoints = new ArrayList<>();
-            List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
-            for (int j = 0; j < path_lint_pt_items.size(); j++) {
-                PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
-                pathPoint.setName("路径点-" + j);
-                pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
-                pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
-                pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
-                pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
-                pathPoints.add(pathPoint);
+        if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
+            Logger.e("返回信息为当前地图");
+            cTargetPoints.clear();
+            cPathLines.clear();
+            cTaskModes.clear();
+            for (int i = 0; i < targetPtItems.size(); i++) {
+                TargetPoint targetPoint = new TargetPoint();
+                targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+                targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+                targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+                targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+                cTargetPoints.add(targetPoint);
             }
-            PathLine pathLine = new PathLine();
-            pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
-            pathLine.setPathPoints(pathPoints);
-            pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
-            pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
-            pathLines.add(pathLine);
-        }
-        for (int i = 0; i < taskItemExes.size(); i++) {
-            List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
-            List<BaseMode> baseModes = new ArrayList<>();
-            for (int j = 0; j < path_elementExes.size(); j++) {
-                if (path_elementExes.get(j).getTypeValue() == 1) {
-                    PathLine pathLine = new PathLine(1);
-                    pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
-                    baseModes.add(pathLine);
-                } else if (path_elementExes.get(j).getTypeValue() == 2) {
-                    TargetPoint targetPoint = new TargetPoint(2);
-                    targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
-                    baseModes.add(targetPoint);
+            for (int i = 0; i < pathLineItemExes.size(); i++) {
+                List<PathLine.PathPoint> pathPoints = new ArrayList<>();
+                List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
+                for (int j = 0; j < path_lint_pt_items.size(); j++) {
+                    PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                    pathPoint.setName("路径点-" + j);
+                    pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
+                    pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
+                    pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
+                    pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
+                    pathPoints.add(pathPoint);
                 }
+                PathLine pathLine = new PathLine();
+                pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
+                pathLine.setPathPoints(pathPoints);
+                pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
+                pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+                cPathLines.add(pathLine);
             }
-            TaskMode taskMode = new TaskMode();
-            taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
-            taskMode.setBaseModes(baseModes);
-            taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
-            taskMode.setStartHour(taskItemExes.get(i).getTimeSet().getStartHour());
-            taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
-            taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
-            taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
-            taskMode.setType(taskItemExes.get(i).getType());
-            taskMode.setTaskState(taskItemExes.get(i).getStateValue());
-            taskModes.add(taskMode);
-
+            for (int i = 0; i < taskItemExes.size(); i++) {
+                List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
+                List<BaseMode> baseModes = new ArrayList<>();
+                for (int j = 0; j < path_elementExes.size(); j++) {
+                    if (path_elementExes.get(j).getTypeValue() == 1) {
+                        PathLine pathLine = new PathLine(1);
+                        pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
+                        baseModes.add(pathLine);
+                    } else if (path_elementExes.get(j).getTypeValue() == 2) {
+                        TargetPoint targetPoint = new TargetPoint(2);
+                        targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
+                        baseModes.add(targetPoint);
+                    }
+                }
+                TaskMode taskMode = new TaskMode();
+                taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
+                taskMode.setBaseModes(baseModes);
+                taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
+                taskMode.setStartHour(taskItemExes.get(i).getTimeSet().getStartHour());
+                taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
+                taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
+                taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
+                taskMode.setType(taskItemExes.get(i).getType());
+                taskMode.setTaskState(taskItemExes.get(i).getStateValue());
+                cTaskModes.add(taskMode);
+            }
+        }else {
+            Logger.e("返回地图为查看信息");
+            targetPoints.clear();
+            pathLines.clear();
+            taskModes.clear();
+            for (int i = 0; i < targetPtItems.size(); i++) {
+                TargetPoint targetPoint = new TargetPoint();
+                targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+                targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+                targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+                targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+                targetPoints.add(targetPoint);
+            }
+            for (int i = 0; i < pathLineItemExes.size(); i++) {
+                List<PathLine.PathPoint> pathPoints = new ArrayList<>();
+                List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
+                for (int j = 0; j < path_lint_pt_items.size(); j++) {
+                    PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                    pathPoint.setName("路径点-" + j);
+                    pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
+                    pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
+                    pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
+                    pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
+                    pathPoints.add(pathPoint);
+                }
+                PathLine pathLine = new PathLine();
+                pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
+                pathLine.setPathPoints(pathPoints);
+                pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
+                pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+                pathLines.add(pathLine);
+            }
+            for (int i = 0; i < taskItemExes.size(); i++) {
+                List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
+                List<BaseMode> baseModes = new ArrayList<>();
+                for (int j = 0; j < path_elementExes.size(); j++) {
+                    if (path_elementExes.get(j).getTypeValue() == 1) {
+                        PathLine pathLine = new PathLine(1);
+                        pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
+                        baseModes.add(pathLine);
+                    } else if (path_elementExes.get(j).getTypeValue() == 2) {
+                        TargetPoint targetPoint = new TargetPoint(2);
+                        targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
+                        baseModes.add(targetPoint);
+                    }
+                }
+                TaskMode taskMode = new TaskMode();
+                taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
+                taskMode.setBaseModes(baseModes);
+                taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
+                taskMode.setStartHour(taskItemExes.get(i).getTimeSet().getStartHour());
+                taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
+                taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
+                taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
+                taskMode.setType(taskItemExes.get(i).getType());
+                taskMode.setTaskState(taskItemExes.get(i).getStateValue());
+                taskModes.add(taskMode);
+            }
         }
-        Logger.e("----------:" + targetPoints.size());
+
 
     }
 
@@ -167,5 +235,34 @@ public class MapFileStatus {
      */
     public List<TaskMode> getTaskModes() {
         return taskModes;
+    }
+
+
+    /**
+     * 获取当前地图的目标点
+     * @return
+     */
+    public List<TargetPoint> getcTargetPoints() {
+        return cTargetPoints;
+    }
+
+    /**
+     * 获取当前地图的路径
+     * @return
+     */
+    public List<PathLine> getcPathLines() {
+        return cPathLines;
+    }
+
+    /**
+     * 获取当前地图的任务
+     * @return
+     */
+    public List<TaskMode> getcTaskModes() {
+        return cTaskModes;
+    }
+
+    public String getMapName() {
+        return mapName;
     }
 }
