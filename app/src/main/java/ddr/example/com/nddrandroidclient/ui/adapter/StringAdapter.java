@@ -38,6 +38,9 @@ public class StringAdapter extends BaseAdapter<String> {
             case R.layout.item_recycle_robot_id:
                 helper.setText(R.id.tv_robot_id,item);
                 break;
+            case R.layout.item_path_mode:
+                helper.setText(R.id.mode_name,item);
+                break;
         }
 
     }

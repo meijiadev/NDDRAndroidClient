@@ -23,16 +23,18 @@
         />
     <ImageView
         android:id="@+id/iv_up"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginLeft="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:layout_gravity="center_vertical"
+        android:src="@mipmap/iv_up"
         />
     <ImageView
         android:id="@+id/iv_down"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_gravity="center_vertical"
+        android:src="@mipmap/iv_down"
         />
 </LinearLayout>

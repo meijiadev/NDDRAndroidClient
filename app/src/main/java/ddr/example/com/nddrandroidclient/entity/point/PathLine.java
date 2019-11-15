@@ -14,6 +14,7 @@ public class PathLine extends BaseMode implements Serializable {
     private String config="";    // 配置文件
     private List<PathPoint>pathPoints;
 
+    private boolean isSelected;   //是否被选中 多选
 
     public PathLine(int type) {
         super(type);
@@ -23,6 +24,13 @@ public class PathLine extends BaseMode implements Serializable {
 
     }
 
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
 
     public String getName() {
         return name;

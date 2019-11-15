@@ -10,7 +10,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProc
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdSetWorkPathProcessor;
-import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapProcess;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapExProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
@@ -55,8 +55,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
         DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx=DDRVLNMap.rspGetDDRVLNMapEx.newBuilder().build();
         m_ProcessorMap.put(rspGetDDRVLNMapEx.getClass().toString(),new RspGetDDRVLNMapExProcessor());
 
-        DDRVLNMap.rspDDRVLNMap rspDDRVLNMap=DDRVLNMap.rspDDRVLNMap.newBuilder().build();
-        m_ProcessorMap.put(rspDDRVLNMap.getClass().toString(),new RspDDRVLNMapProcess());
+        DDRVLNMap.rspDDRVLNMapEx rspDDRVLNMapEx=DDRVLNMap.rspDDRVLNMapEx.newBuilder().build();
+        m_ProcessorMap.put(rspDDRVLNMapEx.getClass().toString(),new RspDDRVLNMapExProcess());
 
         BaseCmd.rspGetSysVersion rspGetSysVersion=BaseCmd.rspGetSysVersion.newBuilder().build();
         m_ProcessorMap.put(rspGetSysVersion.getClass().toString(),new RspGetSysVersionProcessor());

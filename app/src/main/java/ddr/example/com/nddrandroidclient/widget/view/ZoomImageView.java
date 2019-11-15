@@ -92,8 +92,10 @@ public class ZoomImageView extends View {
      * 待展示的Bitmap对象
      */
     public void setImageBitmap(Bitmap bitmap) {
-        sourceBitmap = bitmap;
-        Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+        if (bitmap!=null){
+            sourceBitmap = bitmap;
+            Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+        }
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
         r00=affine_mat.getR11();

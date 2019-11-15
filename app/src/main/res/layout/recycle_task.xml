@@ -8,7 +8,7 @@
         android:id="@+id/recycler_task_check"
         android:layout_width="160dp"
         android:layout_height="191dp"
-        android:background="#101112"
+        android:background="@drawable/customwindow_bg"
     />
 
 </LinearLayout>
