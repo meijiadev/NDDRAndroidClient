@@ -10,12 +10,10 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProc
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdSetWorkPathProcessor;
-<<<<<<< HEAD
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapExProcess;
-=======
+
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdStartActionModelProcessor;
-import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapProcess;
->>>>>>> b2b90bd6716fb37e77aaca776f03a77829255d1d
+
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
