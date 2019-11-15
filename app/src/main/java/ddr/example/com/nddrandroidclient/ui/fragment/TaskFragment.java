@@ -3,7 +3,6 @@ package ddr.example.com.nddrandroidclient.ui.fragment;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +27,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
-import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
+import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
 
@@ -109,19 +108,22 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                     mPosition=position;
                             TextView tv_task_time=view.findViewById(R.id.tv_task_time);
                             TextView tv_task_pause=view.findViewById(R.id.tv_task_pause);
-                            GridTextView gridTextView=view.findViewById(R.id.iv_check);
+                            GridImageView gridImageView=view.findViewById(R.id.iv_check);
                             switch (view.getId()){
                                 case R.id.tv_task_time:
                                     Logger.e("点击----");
                                     showTimePopupWindow(tv_task_time,1);
                                     break;
                                 case R.id.iv_check:
-                                    if (!gridTextView.getSelected()){
-                                        gridTextView.setSelected(true);
-                                        gridTextView.setBackground(R.mipmap.checkedwg);
+                                    Logger.e("gggg"+gridImageView.getSelected());
+                                    if (!gridImageView.getSelected()){
+                                        Logger.e("未在列表中");
+                                        gridImageView.setSelected(true);
+                                        gridImageView.setBackgroundResource(R.mipmap.checkedwg);
                                     }else {
-                                        gridTextView.setSelected(false);
-                                        gridTextView.setBackground(R.mipmap.nocheckedwg);
+                                        Logger.e("在列表中");
+                                        gridImageView.setSelected(false);
+                                        gridImageView.setBackgroundResource(R.mipmap.nocheckedwg);
                                     }
                                     break;
                                 case R.id.tv_task_pause:
@@ -254,8 +256,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
             }else {
                 toast("结束时间必须大于开始时间");
             }
-
-
             taskAdapter.setData(mPosition,taskMode1);
         } else {
             String selectedStr = (String) leftValue;

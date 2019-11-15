@@ -146,10 +146,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     }
                 }
                 break;
-            case switchTaskSuccess:
-                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
-                break;
-
         }
     }
 
@@ -189,14 +185,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         Logger.e("task列表"+groupList.size());
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
-        for (int i=0;i<10;i++){
-            targetPoint=new TargetPoint();
-            targetPoint.setName("呵呵"+i);
-            targetPoint.setX(100);
-            targetPoint.setY(100);
-            targetPoint.setTheta(10);
-            targetPoints.add(targetPoint);
-        }
     }
 
     /**

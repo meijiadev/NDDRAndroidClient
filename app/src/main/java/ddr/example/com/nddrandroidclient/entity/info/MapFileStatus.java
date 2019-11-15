@@ -35,10 +35,6 @@ public class MapFileStatus {
 
     private DDRVLNMap.affine_mat affine_mat;                          //地图的矩阵
 
-
-
-
-
     /**
      * 单例模式，用于保存地图相关信息
      * @return
