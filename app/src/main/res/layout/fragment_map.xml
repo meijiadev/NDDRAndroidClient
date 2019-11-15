@@ -17,10 +17,12 @@
             android:background="@drawable/bt_bg__map"
             android:text="新建地图"
             android:textSize="10sp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="24dp"
             android:textColor="#ccffffff"
+            android:drawableLeft="@mipmap/add_map"
+            android:paddingLeft="@dimen/dp_10"
             />
         <TextView
             android:id="@+id/bt_batch_delete"
@@ -32,8 +34,10 @@
             android:layout_marginLeft="23dp"
             android:text="批量管理"
             android:textSize="10sp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:textColor="#ccffffff"
+            android:drawableLeft="@mipmap/iv_batch"
+            android:paddingLeft="10dp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -82,6 +86,7 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
                 android:layout_marginLeft="44dp"
+                android:drawableLeft="@mipmap/iv_target_gray"
                 />
             <TextView
                 android:id="@+id/tv_path"
@@ -91,7 +96,9 @@
                 android:textSize="11sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
-                android:layout_marginLeft="44dp"/>
+                android:layout_marginLeft="44dp"
+                android:drawableLeft="@mipmap/iv_path_gray"
+                />
             <TextView
                 android:id="@+id/tv_task"
                 android:layout_width="wrap_content"
@@ -100,6 +107,7 @@
                 android:textSize="11sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
+                android:drawableLeft="@mipmap/iv_task_gray"
                 android:layout_marginLeft="44dp"
                 />
             <TextView
@@ -185,9 +193,11 @@
                 android:layout_above="@id/tv_delete"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bt_bg__map"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="新建"
                 android:textColor="@color/white"
+                android:drawableLeft="@mipmap/add_map"
+                android:paddingLeft="10dp"
                 android:textSize="10sp" />
 
             <TextView
@@ -197,10 +207,13 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="18dp"
                 android:background="@drawable/bt_bg__map"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="删除"
                 android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:drawableLeft="@mipmap/iv_delete"
+                android:paddingLeft="10dp"
+                />
 
             <View
                 android:layout_width="1dp"

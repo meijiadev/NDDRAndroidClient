@@ -472,6 +472,9 @@ public class MapEditActivity extends DDRActivity {
                 Logger.e("新建路径");
                 titleLayout.setLeftTitle("新建路径");
                 ivCenter.setVisibility(View.VISIBLE);
+                tvAddPath.setVisibility(View.VISIBLE);
+                tvDeletePoint.setVisibility(View.VISIBLE);
+                tvSavePath.setVisibility(View.VISIBLE);
                 bitmap = (Bitmap) messageEvent.getData();
                 zmap.setImageBitmap(bitmap);
                 break;

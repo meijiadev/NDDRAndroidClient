@@ -77,7 +77,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 if (notifyBaseStatusEx!=null){
                     currentMap=notifyBaseStatusEx.getCurroute();
                     currentTask=notifyBaseStatusEx.getCurrpath();
-                    Logger.e("--------:"+currentMap);
                 }
                 break;
             case updateMapList:

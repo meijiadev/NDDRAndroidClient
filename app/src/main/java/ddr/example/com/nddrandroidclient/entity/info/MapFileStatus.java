@@ -217,6 +217,10 @@ public class MapFileStatus {
         return reqDDRVLNMapEx;
     }
 
+    /**
+     * 获取当前地图信息的对象
+     * @return
+     */
     public DDRVLNMap.reqDDRVLNMapEx getCurrentMapEx() {
         return currentMapEx;
     }
