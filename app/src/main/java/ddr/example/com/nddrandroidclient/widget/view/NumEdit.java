@@ -1,8 +1,10 @@
 package ddr.example.com.nddrandroidclient.widget.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -118,6 +120,10 @@ public class NumEdit extends LinearLayout
         //设置输入类型为数字
         editText.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
         editText.setText(String.valueOf(num));
+        editText.setTextColor(Color.WHITE);
+        editText.setTextSize(12);
+        editText.setWidth(102);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
     }
 
     /**

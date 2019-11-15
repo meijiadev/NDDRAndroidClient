@@ -510,9 +510,20 @@ enum TaskState
 	eTaskError = 0;
 	eTaskWaitingRun = 1; // 等待运行
 	eTaskRuning = 2; // 运行中
-	eTaskPause = 3;// 暂停
-	eTaskRunEnd = 4; // 运行完了
-	eTaskStop = 5; // 终止
+	eTaskRunEnd = 3; // 运行完了或者已终止
+}
+
+/*
+	分两种情况：
+	定时队列：需要定时切换的队列，客户端编辑时控制不能有时间重叠。
+	临时队列：任何时候只存在一个临时任务
+*/
+enum TaskType
+{
+	eTaskTypeNotInList = 0; // 不在队列中
+	eTaskTypeInTemporary = 1; // 在临时队列中
+	eTaskTypeInTimeList = 2; // 在定时队列中
+	eTaskTypeTemporaryAndTime = 3; // 既在临时队列中又在定时队列中
 }
 
 // 
@@ -523,7 +534,7 @@ message task_itemEx
 	timeItem timeSet = 3; // 时间段
 	int32 runCount = 4; // 运行次数
 	TaskState state = 5; // 状态
-	int32 type = 6; // 0-不在执行队列中  1-临时任务  2-在队列中  3-临时任务+执行队列中
+	TaskType type = 6;
 }
 
 message DDRMapPathDataEx
@@ -601,10 +612,9 @@ enum eTaskOperationalType
 	eTaskOperationalError = 0;
 	eTaskOperationalAdd = 1; // 添加到任务队列中去
 	eTaskOperationalDelete = 2; // 从队列中删除
-	eTaskOperationalStop = 3; // 终止任务
-	eTaskOperationalResume = 4; // 恢复任务
-	eTaskOperationalPause = 5; // 暂停任务
-	eTaskOperationalAddTemporary = 6; // 以临时任务身份添加到任务队列中去
+	eTaskOperationalStop = 3;  // 终止在队列中的任务
+	eTaskOperationalStopTemporary = 4; // 终止临时任务
+	eTaskOperationalAddTemporary = 5; // 以临时任务身份添加到任务队列中去
 }
 
 message reqTaskOperational
@@ -614,6 +624,7 @@ message reqTaskOperational
 		bytes taskName = 1;
 		bytes onerouteName = 2;
 		eTaskOperationalType type = 3;
+		int32 runCount = 4; // 只有添加临时任务时这个字段才有用
 	}
 	repeated OptItem optSet = 1; 
 }

@@ -53,7 +53,7 @@ public class PickValueView extends LinearLayout implements NumberPicker.OnValueC
     /**
      * 步长
      */
-    private int mLeftStep = 5;
+    private int mLeftStep = 1;
     private int mMiddleStep = 1;
     private int mRightStep = 1;
     private int mFourStep =1;
@@ -100,7 +100,7 @@ public class PickValueView extends LinearLayout implements NumberPicker.OnValueC
         for (int i = 0; i < titles.length; i++) {
             titles[i].setLayoutParams(params);
             titles[i].setGravity(Gravity.CENTER);
-            titles[i].setTextColor(Color.parseColor("#3434EE"));
+            titles[i].setTextColor(Color.parseColor("#e2e2ee"));
         }
         titleLayout.addView(mTitleLeft);
         titleLayout.addView(mTitleMiddle);

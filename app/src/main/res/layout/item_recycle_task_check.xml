@@ -8,6 +8,7 @@
         android:textSize="10sp"
         android:textColor="#ffffff"
         android:text="****"
-        android:id="@+id/item_recycle_t_chenck"/>
+        android:id="@+id/item_recycle_t_chenck"
+        android:paddingLeft="20dp"/>
 
 </RelativeLayout>

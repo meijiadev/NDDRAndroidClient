@@ -28,11 +28,14 @@ public class MessageEvent {
         addPoiPoint,
         updateVersion, //获取版本信息
         receivePointCloud,
+        switchTaskSuccess,
+
         addNewPoint,    //添加目标点
         addNewPath,     //添加路径
         updatePoints,   //添加完，更新目标点列表
         updatePaths,    //添加完，更新路径列表
         updateRevamp,   //更新修改之后的地图信息，提醒UI层重新拉地图信息
+
 
     }
 

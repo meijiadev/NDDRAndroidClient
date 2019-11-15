@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.protobuf.ByteString;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -84,6 +86,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RelativeLayout rel_step_description;
     @BindView(R.id.recycle_gopoint)
     RecyclerView recycle_gopoint;
+    @BindView(R.id.iv_cd_xs)
+    ImageView iv_cd_xs;
 
 
     private Animation hideAnimation;  //布局隐藏时的动画
@@ -122,29 +126,19 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 initStatusBar();
                 break;
             case updateDDRVLNMap:
-                Logger.e("------地图名："+mapFileStatus.getMapName());
+                Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
+                    Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
+                    mapImageView.setMapBitmap(mapName,taskName);
+
                     mapImageView.setMapBitmap(mapName,taskName);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
-                    for (int i=0;i<mapFileStatus.getTaskModes().size();i++){
-                        groupList.add(mapFileStatus.getTaskModes().get(i).getName());
+                    for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
+                        groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
+                        Logger.e("group列数"+groupList.size());
                     }
-//                    task_itemList = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTaskSetList());
-//                    targetPtItems = new ArrayList<>(mapFileStatus.getRspGetDDRVLNMapEx().getData().getTargetPtdata().getTargetPtList());
-//                    Logger.e("-----" + task_itemList.size());
-//                    for (int i = 0; i < task_itemList.size(); i++) {
-//                        groupList.add(task_itemList.get(i).getName().toStringUtf8());
-//                    }
                     taskCheckAdapter.setNewData(groupList);
-//                    for (int i=0;i<targetPtItems.size();i++){
-//                        targetPoint=new TargetPoint();
-//                        targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
-//                        targetPoint.setX(targetPtItems.get(i).getPtData().getX());
-//                        targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-//                        targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
-//                        targetPoints.add(targetPoint);
-//                    }
                     targetPoints=mapFileStatus.getTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
                     if (robotIdAdapter!=null){
@@ -152,6 +146,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         robotIdAdapter.notifyDataSetChanged();
                     }
                 }
+                break;
+            case switchTaskSuccess:
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 break;
 
         }
@@ -186,6 +183,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
+        for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
+            groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
+            Logger.e("group列数"+groupList.size());
+        }
         Logger.e("task列表"+groupList.size());
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
@@ -245,6 +246,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         break;
                 }
                 break;
+        }
+        if(notifyBaseStatusEx.isChargingStatus()) {
+            iv_cd_xs.setImageResource(R.mipmap.sd_check);
+        }else {
+            iv_cd_xs.setImageResource(R.mipmap.sd_def);
         }
     }
 
@@ -349,13 +355,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 //任务列表点击事件
                 Logger.e("task列表"+groupList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
-                taskCheckAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+                taskCheckAdapter.setOnItemClickListener((adapter, view, position) ->  {
                     tv_now_task.setText(groupList.get(position));
                 });
                 break;
             case 2:
                 //标记点列表点击事件
-                targetPointAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+                targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
                 });
                 break;
         }
@@ -382,7 +388,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 break;
                             case 17:
                                 toast("开始");
-                                pauseOrResume("start");
+                                pauseOrResume("Resume");
                                 break;
                         }
                         break;

@@ -103,6 +103,13 @@
         android:layout_width="366.5dp"
         android:layout_height="match_parent"
         android:background="#161718">
+        <ImageView
+            android:layout_width="11dp"
+            android:layout_height="18dp"
+            android:src="@mipmap/sd_def"
+            android:layout_marginTop="134dp"
+            android:layout_marginLeft="90dp"
+            android:id="@+id/iv_cd_xs"/>
         <TextView
             android:layout_width="66dp"
             android:layout_height="18dp"
