@@ -134,7 +134,7 @@ public class MapFileStatus {
                 taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
                 taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
                 taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
-                taskMode.setType(taskItemExes.get(i).getType());
+                taskMode.setType(taskItemExes.get(i).getType().getNumber());
                 taskMode.setTaskState(taskItemExes.get(i).getStateValue());
                 cTaskModes.add(taskMode);
             }
@@ -192,7 +192,7 @@ public class MapFileStatus {
                 taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
                 taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
                 taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
-                taskMode.setType(taskItemExes.get(i).getType());
+                taskMode.setType(taskItemExes.get(i).getType().getNumber());
                 taskMode.setTaskState(taskItemExes.get(i).getStateValue());
                 taskModes.add(taskMode);
             }

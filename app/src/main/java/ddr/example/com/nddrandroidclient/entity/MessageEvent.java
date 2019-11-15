@@ -27,6 +27,7 @@ public class MessageEvent {
         addPoiPoint,
         updateVersion, //获取版本信息
         receivePointCloud,
+        switchTaskSuccess,
 
     }
 

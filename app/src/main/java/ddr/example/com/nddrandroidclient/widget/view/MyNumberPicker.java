@@ -64,7 +64,7 @@ public class MyNumberPicker extends NumberPicker {
     private void updateView(View view) {
         if (view instanceof EditText) {
             ((EditText) view).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-            ((EditText) view).setTextColor(Color.parseColor("#6495ED"));
+            ((EditText) view).setTextColor(Color.parseColor("#dbe0ea"));
         }
     }
 
@@ -262,7 +262,7 @@ public class MyNumberPicker extends NumberPicker {
     protected void onDraw(Canvas canvas) {
 //        super.onDraw(canvas);
         getMyValue();
-        mSelectorWheelPaint.setColor(Color.BLUE);
+        mSelectorWheelPaint.setColor(Color.WHITE);
 
         if (!mHasSelectorWheel) {
             super.onDraw(canvas);
@@ -295,7 +295,7 @@ public class MyNumberPicker extends NumberPicker {
                 mSelectorWheelPaint.setColor(Color.BLACK);
                 mSelectorWheelPaint.setTextSize(sp2px(16));
             } else {
-                mSelectorWheelPaint.setColor(Color.parseColor("#6495ED"));
+                mSelectorWheelPaint.setColor(Color.parseColor("#e3e9f3"));
                 mSelectorWheelPaint.setTextSize(sp2px(20));
             }
 

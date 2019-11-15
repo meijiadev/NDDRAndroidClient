@@ -88,7 +88,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 .setHeight(Screen.width, 0.2f)*/
                 .setX(Screen.width,1.52f)
                 .setY(120)
-                .setMoveType(MoveType.inactive)
+                .setMoveType(MoveType.slide)
                 .setFilter(true, HomeActivity.class)
                 .setPermissionListener(mPermissionListener)
                 .setDesktopShow(false)

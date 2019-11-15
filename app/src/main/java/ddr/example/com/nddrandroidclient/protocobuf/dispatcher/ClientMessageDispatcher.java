@@ -10,6 +10,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProc
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdSetWorkPathProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdStartActionModelProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionProcessor;
@@ -40,7 +41,6 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
         m_ProcessorMap.put(bcLSAddr.getClass().toString(),new ServerInformationProcessor());
 
 
-
         BaseCmd.rspCmdMove rspCmdMove=BaseCmd.rspCmdMove.newBuilder().build();
         m_ProcessorMap.put(rspCmdMove.getClass().toString(),new RspCmdMoveProcessor());
         BaseCmd.rspCmdSetWorkPath rspCmdSetWorkPath=BaseCmd.rspCmdSetWorkPath.newBuilder().build();
@@ -66,6 +66,9 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.notifyLidarPts notifyLidarPts=BaseCmd.notifyLidarPts.newBuilder().build();
         m_ProcessorMap.put(notifyLidarPts.getClass().toString(),new NotifyLidarPtsProcessor());
+
+        BaseCmd.rspCmdStartActionMode rspCmdStartActionMode=BaseCmd.rspCmdStartActionMode.newBuilder().build();
+        m_ProcessorMap.put(rspCmdStartActionMode.getClass().toString(),new RspCmdStartActionModelProcessor());
 
 
     }
