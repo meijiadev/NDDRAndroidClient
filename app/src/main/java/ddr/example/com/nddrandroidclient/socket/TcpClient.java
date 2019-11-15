@@ -492,7 +492,7 @@ public class TcpClient extends BaseSocketConnection {
                     .setName(ByteString.copyFromUtf8(taskMode.getName()))
                     .setRunCount(taskMode.getRunCounts())
                     .setStateValue(taskMode.getTaskState())
-                    .setType(taskMode.getType())
+                    .setTypeValue(taskMode.getType())
                     .setTimeSet(timeItem)
                     .addAllPathSet(path_elementExes)
                     .build();
@@ -592,7 +592,7 @@ public class TcpClient extends BaseSocketConnection {
                     .setName(ByteString.copyFromUtf8(taskMode.getName()))
                     .setRunCount(taskMode.getRunCounts())
                     .setStateValue(taskMode.getTaskState())
-                    .setType(taskMode.getType())
+                    .setTypeValue(taskMode.getType())
                     .setTimeSet(timeItem)
                     .addAllPathSet(path_elementExes)
                     .build();
