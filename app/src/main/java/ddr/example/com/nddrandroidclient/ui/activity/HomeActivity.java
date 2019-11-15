@@ -3,19 +3,28 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.content.Intent;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
 
 import com.google.protobuf.ByteString;
+import com.hjq.toast.ToastUtils;
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.MoveType;
+import com.yhao.floatwindow.PermissionListener;
+import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 
@@ -24,6 +33,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
+import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -33,6 +43,7 @@ import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
+import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
@@ -61,7 +72,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private String currentMap;     //当前运行的地图名
     private String currentTask;   //当前运行的任务
-
+    private CustomPopuWindow customPopuWindow;
+    private DpOrPxUtils dpOrPxUtils;
 
     private NotifyEnvInfo notifyEnvInfo;
 
@@ -78,7 +90,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 if (notifyBaseStatusEx!=null){
                     currentMap=notifyBaseStatusEx.getCurroute();
                     currentTask=notifyBaseStatusEx.getCurrpath();
-                    Logger.e("--------:"+currentMap);
                 }
                 break;
             case updateMapList:
@@ -102,6 +113,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initView() {
+        initFloatView();
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());
@@ -121,6 +133,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
         tcpClient.requestFile();     //请求所有地图
+
 
     }
 
@@ -316,10 +329,56 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         }).start();
 
     }
+    /**
+     * 显示悬浮窗
+     * @param
+     */
+    private void initFloatView(){
+        FloatView floatView=new FloatView(this);
+        floatView.setOnFloatViewListener(this);
+        FloatWindow
+                .with(getApplicationContext())
+                .setView(floatView)
+                /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
+                .setHeight(Screen.width, 0.2f)*/
+                .setX(Screen.width,1.52f)
+                .setY(120)
+                .setMoveType(MoveType.slide)
+                .setFilter(true, HomeActivity.class)
+                .setPermissionListener(mPermissionListener)
+                .setDesktopShow(false)
+                .build();
+    }
+
+    private PermissionListener mPermissionListener = new PermissionListener() {
+        @Override
+        public void onSuccess() {
+            Logger.e("onSuccess");
+
+        }
+
+        @Override
+        public void onFail() {
+            Logger.e("onFail");
+        }
+    };
 
 
     @Override
     public void onClickBottom() {
+        showTaskPopupWindow();
+        ToastUtils.show("点击底部");
+    }
 
+    private void showTaskPopupWindow() {
+        Logger.e("---------showTaskPopupWindow");
+        View contentView = null;
+        contentView = LayoutInflater.from(this).inflate(R.layout.dialog_yk_check, null);
+        customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(this)
+                .setView(contentView)
+                .enableOutsideTouchableDissmiss(true)// 设置点击PopupWindow之外的地方，popWindow不关闭，如果不设置这个属性或者为true，则关闭
+                .setOutsideTouchable(false)//是否PopupWindow 以外触摸dissmiss
+                .create();
+//                .showAsDropDown(view, DpOrPxUtils.dip2px(this, 0), 5);
     }
 }

@@ -24,14 +24,14 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  * time :  2019/10/28
  * desc :  项目中的 application 基类
  */
-public class BaseApplication extends Application implements FloatView.OnFloatViewListener {
+public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
         initSDK(this);
     }
 
-    public  void initSDK(Application application){
+    public  void initSDK(Application application) {
         // 这个过程专门用于堆分析的 leak 金丝雀
         // 你不应该在这个过程中初始化你的应用程序
         if (LeakCanary.isInAnalyzerProcess(application)) {
@@ -72,44 +72,9 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 // 设置监听器
                 //.eventListener(new YourCustomEventListener())
                 .apply();
-        initFloatView(this);
+    }
     }
 
-    /**
-     * 显示悬浮窗
-     */
-    private void initFloatView(BaseApplication baseApplication){
-        FloatView floatView=new FloatView(getApplicationContext());
-        floatView.setOnFloatViewListener(baseApplication);
-        FloatWindow
-                .with(getApplicationContext())
-                .setView(floatView)
-                /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
-                .setHeight(Screen.width, 0.2f)*/
-                .setX(Screen.width,1.52f)
-                .setY(120)
-                .setMoveType(MoveType.slide)
-                .setFilter(true, HomeActivity.class)
-                .setPermissionListener(mPermissionListener)
-                .setDesktopShow(false)
-                .build();
-    }
 
-    private PermissionListener mPermissionListener = new PermissionListener() {
-        @Override
-        public void onSuccess() {
-            Logger.e("onSuccess");
 
-        }
 
-        @Override
-        public void onFail() {
-            Logger.e("onFail");
-        }
-    };
-
-    @Override
-    public void onClickBottom() {
-        ToastUtils.show("点击底部");
-    }
-}
