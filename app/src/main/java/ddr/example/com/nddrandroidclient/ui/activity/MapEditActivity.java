@@ -216,7 +216,6 @@ public class MapEditActivity extends DDRActivity {
                                     newPoints.add(targetPoint);
                                     targetPoints.add(targetPoint);
                                 }
-
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
                                     toast("取消添加");

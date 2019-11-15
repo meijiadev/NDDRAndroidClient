@@ -19,6 +19,7 @@ public class MapFileStatus {
     private List<String> mapNames=new ArrayList<>();                    // 服务端返回的地图名字列表
     private List<String> pictureUrls;                 //激光地图的http连接列表
     private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
+    private DDRVLNMap.reqDDRVLNMapEx currentMapEx;      //当前地图信息对象
     private List<MapInfo> mapInfos=new ArrayList<>();          //所有地图列表
     private List<DDRVLNMap.targetPtItem> targetPtItems;          // 接收到的目标点列表
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 接收到路径列表
@@ -84,6 +85,7 @@ public class MapFileStatus {
         pathLineItemExes = rspGetDDRVLNMapEx.getData().getPathSet().getPathLineDataList();
         taskItemExes = rspGetDDRVLNMapEx.getData().getTaskSetList();
         if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
+           currentMapEx=reqDDRVLNMapEx;
             Logger.e("返回信息为当前地图");
             cTargetPoints.clear();
             cPathLines.clear();
@@ -217,6 +219,10 @@ public class MapFileStatus {
 
     public DDRVLNMap.reqDDRVLNMapEx getReqDDRVLNMapEx() {
         return reqDDRVLNMapEx;
+    }
+
+    public DDRVLNMap.reqDDRVLNMapEx getCurrentMapEx() {
+        return currentMapEx;
     }
 
     public void setMapInfos(List<MapInfo> mapInfos) {
