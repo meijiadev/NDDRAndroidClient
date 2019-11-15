@@ -18,7 +18,7 @@ public class MapFileStatus {
     public static MapFileStatus mapFileStatus;
     private List<String> mapNames=new ArrayList<>();                    // 服务端返回的地图名字列表
     private List<String> pictureUrls;                 //激光地图的http连接列表
-    private DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx;     //获取指定某一地图的相关信息
+    private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
     private List<MapInfo> mapInfos=new ArrayList<>();          //所有地图列表
     private List<DDRVLNMap.targetPtItem> targetPtItems;          // 接收到的目标点列表
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 接收到路径列表
@@ -73,7 +73,7 @@ public class MapFileStatus {
      * @param rspGetDDRVLNMapEx
      */
     public void setRspGetDDRVLNMap(DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx) {
-        this.rspGetDDRVLNMapEx = rspGetDDRVLNMapEx;
+        this.reqDDRVLNMapEx=rspGetDDRVLNMapEx.getData();
         affine_mat=rspGetDDRVLNMapEx.getData().getBasedata().getAffinedata();
         mapName=rspGetDDRVLNMapEx.getData().getBasedata().getName().toStringUtf8();
         targetPtItems = rspGetDDRVLNMapEx.getData().getTargetPtdata().getTargetPtList();
@@ -137,51 +137,50 @@ public class MapFileStatus {
                 taskMode.setTaskState(taskItemExes.get(i).getStateValue());
                 cTaskModes.add(taskMode);
             }
-        }else {
-            Logger.e("返回地图为查看信息");
-            targetPoints.clear();
-            pathLines.clear();
-            taskModes.clear();
-            for (int i = 0; i < targetPtItems.size(); i++) {
-                TargetPoint targetPoint = new TargetPoint();
-                targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
-                targetPoint.setX(targetPtItems.get(i).getPtData().getX());
-                targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-                targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
-                targetPoints.add(targetPoint);
+        }
+        //Logger.e("返回地图为查看信息");
+        targetPoints.clear();
+        pathLines.clear();
+        taskModes.clear();
+        for (int i = 0; i < targetPtItems.size(); i++) {
+            TargetPoint targetPoint = new TargetPoint();
+            targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+            targetPoint.setX(targetPtItems.get(i).getPtData().getX());
+            targetPoint.setY(targetPtItems.get(i).getPtData().getY());
+            targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
+            targetPoints.add(targetPoint);
+        }
+        for (int i = 0; i < pathLineItemExes.size(); i++) {
+            List<PathLine.PathPoint> pathPoints = new ArrayList<>();
+            List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
+            for (int j = 0; j < path_lint_pt_items.size(); j++) {
+                PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                pathPoint.setName("路径点-" + j);
+                pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
+                pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
+                pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
+                pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
+                pathPoints.add(pathPoint);
             }
-            for (int i = 0; i < pathLineItemExes.size(); i++) {
-                List<PathLine.PathPoint> pathPoints = new ArrayList<>();
-                List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
-                for (int j = 0; j < path_lint_pt_items.size(); j++) {
-                    PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
-                    pathPoint.setName("路径点-" + j);
-                    pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
-                    pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
-                    pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
-                    pathPoint.setRotationAngle(path_lint_pt_items.get(j).getRotationangle());
-                    pathPoints.add(pathPoint);
-                }
-                PathLine pathLine = new PathLine();
-                pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
-                pathLine.setPathPoints(pathPoints);
-                pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
-                pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
-                pathLines.add(pathLine);
-            }
-            for (int i = 0; i < taskItemExes.size(); i++) {
-                List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
-                List<BaseMode> baseModes = new ArrayList<>();
-                for (int j = 0; j < path_elementExes.size(); j++) {
-                    if (path_elementExes.get(j).getTypeValue() == 1) {
-                        PathLine pathLine = new PathLine(1);
-                        pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
-                        baseModes.add(pathLine);
-                    } else if (path_elementExes.get(j).getTypeValue() == 2) {
-                        TargetPoint targetPoint = new TargetPoint(2);
-                        targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
-                        baseModes.add(targetPoint);
-                    }
+            PathLine pathLine = new PathLine();
+            pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
+            pathLine.setPathPoints(pathPoints);
+            pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
+            pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+            pathLines.add(pathLine);
+        }
+        for (int i = 0; i < taskItemExes.size(); i++) {
+            List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
+            List<BaseMode> baseModes = new ArrayList<>();
+            for (int j = 0; j < path_elementExes.size(); j++) {
+                if (path_elementExes.get(j).getTypeValue() == 1) {
+                    PathLine pathLine = new PathLine(1);
+                    pathLine.setName(path_elementExes.get(j).getName().toStringUtf8());
+                    baseModes.add(pathLine);
+                } else if (path_elementExes.get(j).getTypeValue() == 2) {
+                    TargetPoint targetPoint = new TargetPoint(2);
+                    targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
+                    baseModes.add(targetPoint);
                 }
                 TaskMode taskMode = new TaskMode();
                 taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
@@ -194,14 +193,26 @@ public class MapFileStatus {
                 taskMode.setType(taskItemExes.get(i).getType().getNumber());
                 taskMode.setTaskState(taskItemExes.get(i).getStateValue());
                 taskModes.add(taskMode);
+
             }
+            TaskMode taskMode = new TaskMode();
+            taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
+            taskMode.setBaseModes(baseModes);
+            taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
+            taskMode.setStartHour(taskItemExes.get(i).getTimeSet().getStartHour());
+            taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
+            taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
+            taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
+            taskMode.setType(taskItemExes.get(i).getType().getNumber());
+            taskMode.setTaskState(taskItemExes.get(i).getStateValue());
+            taskModes.add(taskMode);
         }
 
 
     }
 
-    public DDRVLNMap.rspGetDDRVLNMapEx getRspGetDDRVLNMapEx() {
-        return rspGetDDRVLNMapEx;
+    public DDRVLNMap.reqDDRVLNMapEx getReqDDRVLNMapEx() {
+        return reqDDRVLNMapEx;
     }
 
     public void setMapInfos(List<MapInfo> mapInfos) {

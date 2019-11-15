@@ -40,7 +40,6 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * 放置激光地图的控件
  */
 public class MapImageView extends GLContinuousView {
-    private DDRVLNMap.rspGetDDRVLNMapEx rspGetDDRVLNMapEx;
     private DDRVLNMap.reqDDRVLNMapEx data;
     private DDRVLNMap.DDRMapBaseData baseData;       // 存放基础信息，采集模式结束时就有的东西。
     private DDRVLNMap.affine_mat affine_mat;
@@ -332,9 +331,8 @@ public class MapImageView extends GLContinuousView {
     public void upDate(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
             case updateDDRVLNMap:
-                rspGetDDRVLNMapEx=mapFileStatus.getRspGetDDRVLNMapEx();
-                data=rspGetDDRVLNMapEx.getData();
-                baseData=rspGetDDRVLNMapEx.getData().getBasedata();
+                data=mapFileStatus.getReqDDRVLNMapEx();
+                baseData=data.getBasedata();
                 Logger.e("--------"+baseData.getName().toStringUtf8());
                 //验证返回的地图信息是否是当前运行的地图
                 if (baseData.getName().toStringUtf8().equals(mapName)){

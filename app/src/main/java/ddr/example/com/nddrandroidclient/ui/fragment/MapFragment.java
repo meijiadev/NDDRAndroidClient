@@ -1,8 +1,10 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -53,12 +56,14 @@ import ddr.example.com.nddrandroidclient.ui.adapter.ActionAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.BaseModeAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import ddr.example.com.nddrandroidclient.widget.textview.DDRTextView;
+import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
 
 /**
@@ -242,11 +247,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onActionItemClick();
         onTaskItemClick();
         onSelectedItemClick();
+        /*************************路径模式***************************/
+        modeList=new ArrayList<>();
+        map=tv_Spinner.getMap();
+        modeList.add(map.get(64));
+        modeList.add(map.get(65));
+        modeList.add(map.get(66));
+        stringAdapter=new StringAdapter(R.layout.item_path_mode,modeList);
+        onModeItemClick();
+        /*************************************************************/
 
     }
 
     @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.bt_batch_delete, R.id.save_point, R.id.tv_path,
-            R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort})
+            R.id.spinner_mode, R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort})
     public void onViewClicked(View view)  {
         switch (view.getId()) {
             case R.id.bt_create_map:
@@ -265,6 +279,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 mapDetailLayout.setVisibility(View.GONE);
                 mapLayout.setVisibility(View.VISIBLE);
                 mPosition=0;
+                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                 break;
             case R.id.tv_target_point:
                 mPosition=0;
@@ -313,6 +328,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     leftDetailLayout.setVisibility(View.GONE);
                     pathDetailLayout.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.spinner_mode:
+                showPathModePopupWindow(tv_Spinner);
                 break;
             case R.id.save_path:
                 pathLines.get(mPosition).setName(etPathName.getText().toString());
@@ -366,11 +384,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
             case R.id.tv_add_new:
                 if (pointDetailLayout.getVisibility()==View.VISIBLE){
+                    startActivity(MapEditActivity.class);
                     EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPoint,lookBitmap));
-                    startActivity(MapEditActivity.class);
                 }else if (pathDetailLayout.getVisibility()==View.VISIBLE){
-                    EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPath,lookBitmap));
                     startActivity(MapEditActivity.class);
+                    EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPath,lookBitmap));
                 }
                 break;
         }
@@ -521,11 +539,80 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     public void onSelectedItemClick(){
         //目标点选择
         selectPointAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            TargetPoint targetPoint=selectPoints.get(position);
+            List<BaseMode> baseModes=taskModes.get(mPosition).getBaseModes();
+            if (targetPoint.isInTask()){               //如果目标点本来就被选中，再次点击将取消
+               targetPoint.setInTask(false);
+               for (int i=0;i<baseModes.size();i++){
+                   if (baseModes.get(i).getType()==2){
+                       TargetPoint targetPoint1= (TargetPoint) baseModes.get(i);
+                       if (targetPoint1.getName().equals(targetPoint.getName())){
+                           baseModes.remove(i);
+                       }
+                   }
+               }
+            }else {        //如果未被选中，将直接添加到列表中
+                targetPoint.setInTask(true);
+                baseModes.add(targetPoint);
+            }
+            selectPointAdapter.setData(position,targetPoint);
         });
         //路径选择
         selectPathAdapter.setOnItemClickListener((adapter, view, position) -> {
+            PathLine pathLine=selectPaths.get(position);
+            List<BaseMode> baseModes=taskModes.get(mPosition).getBaseModes();
+            if (pathLine.isInTask()){
+                pathLine.setInTask(false);
+                for (int i=0;i<baseModes.size();i++){
+                    if (baseModes.get(i).getType()==1){
+                        PathLine pathLine1= (PathLine) baseModes.get(i);
+                        if (pathLine.getName().equals(pathLine1.getName())){
+                            baseModes.remove(i);
+                        }
+                    }
+                }
+            }else {
+                pathLine.setInTask(true);
+                baseModes.add(pathLine);
+            }
+            selectPathAdapter.setData(position,pathLine);
+        });
+    }
 
+    /**
+     * 排序Recycler的点击事件
+     */
+    private void onSortItemClick(){
+        sortAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+
+        });
+    }
+
+    /************************路径选择路径模式的弹窗************************/
+    private CustomPopuWindow customPopuWindow;
+    private RecyclerView pathModeRecycler;
+    private StringAdapter stringAdapter;
+    private List<String> modeList;
+    private Map<Integer,String> map;
+    private void showPathModePopupWindow(View view){
+        View contentView=getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.window_path_mode,null);
+        customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+                .setView(contentView)
+                .create()
+        .showAsDropDown(view,0,5);
+        pathModeRecycler=contentView.findViewById(R.id.path_mode_recycler);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        pathModeRecycler.setLayoutManager(layoutManager);
+        pathModeRecycler.setAdapter(stringAdapter);
+    }
+
+    /**
+     * 路径模式的Recycler的点击事件
+     */
+    private void onModeItemClick(){
+        stringAdapter.setOnItemClickListener((adapter, view, position) -> {
+            tv_Spinner.setText(modeList.get(position));
+            customPopuWindow.dissmiss();
         });
     }
 
@@ -575,34 +662,32 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapInfos = infoList;
     }
 
+
+
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent)  {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
                 try {
-                    if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
-                        targetPoints=ListTool.deepCopy(mapFileStatus.getcTargetPoints());
-                        pathLines=ListTool.deepCopy(mapFileStatus.getcPathLines());
-                        taskModes=ListTool.deepCopy(mapFileStatus.getcTaskModes());
-                    }else {
-                        targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
-                        pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
-                        taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
-                    }
+                    targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                    pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
+                    taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
                 Logger.e("----------:" + targetPoints.size());
-                targetPointAdapter.setNewData(targetPoints);
-                recyclerDetail.setAdapter(targetPointAdapter);
                 if (targetPoints.size() > 0) {
                     etPointName.setText(targetPoints.get(0).getName());
                     etX.setText(targetPoints.get(0).getX());
                     etY.setText(targetPoints.get(0).getY());
                     etToward.setText(targetPoints.get(0).getTheta());
                 }
+                tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
+                tvPath.setText("路径"+"("+pathLines.size()+")");
+                tvTask.setText("任务"+"("+taskModes.size()+")");
                 if (dialog.isShowing()) {
                     getAttachActivity().postDelayed(() -> {
                         dialog.dismiss();
@@ -612,14 +697,27 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         pointDetailLayout.setVisibility(View.VISIBLE);
                         pathDetailLayout.setVisibility(View.GONE);
                         taskDetailLayout.setVisibility(View.GONE);
-                        tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
-                        tvPath.setText("路径"+"("+pathLines.size()+")");
-                        tvTask.setText("任务"+"("+taskModes.size()+")");
+                        targetPointAdapter.setNewData(targetPoints);
+                        recyclerDetail.setAdapter(targetPointAdapter);
                     }, 800);
                 }
                 break;
+            case updatePoints:
+                List<TargetPoint> targetPoints1= (List<TargetPoint>) messageEvent.getData();
+                Logger.e("-------接收新建点数据"+targetPoints1.size());
+                targetPoints.addAll(targetPoints1);
+                Logger.e("-------接收新建点后数据"+targetPoints.size());
+                targetPointAdapter.setNewData(targetPoints);
+                tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
+                break;
+            case updateRevamp:
+                Logger.e("更新数据");
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
+                break;
         }
     }
+
+
 
 
 

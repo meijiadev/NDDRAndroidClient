@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.entity;
 import java.util.List;
 
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 
 /**
  * desc: EvenBus的信息传递类
@@ -10,6 +11,7 @@ import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 public class MessageEvent {
     private Type type;
     private List<MapInfo> mapInfoList;
+    private List<Object> datas;
     private Object data;
     private String bitmapPath;
     public enum Type{
@@ -32,6 +34,7 @@ public class MessageEvent {
         addNewPath,     //添加路径
         updatePoints,   //添加完，更新目标点列表
         updatePaths,    //添加完，更新路径列表
+        updateRevamp,   //更新修改之后的地图信息，提醒UI层重新拉地图信息
 
 
     }
@@ -40,14 +43,19 @@ public class MessageEvent {
       this.type=type;
     }
 
-    public MessageEvent(Type type, List<MapInfo>mapInfos){
+  /*  public MessageEvent(Type type, List<MapInfo>mapInfos){
         this.type=type;
         this.mapInfoList=mapInfos;
-    }
+    }*/
 
     public MessageEvent(Type type, Object object){
         this.type=type;
         this.data=object;
+    }
+
+    public MessageEvent(Type type, List<Object> datas){
+        this.type=type;
+        this.datas=datas;
     }
 
     public Type getType() {

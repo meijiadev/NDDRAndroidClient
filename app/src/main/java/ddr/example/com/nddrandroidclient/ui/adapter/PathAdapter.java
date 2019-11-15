@@ -1,5 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.widget.ImageView;
+
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
@@ -39,8 +41,22 @@ public class PathAdapter extends BaseAdapter<PathLine> {
                 break;
             case R.layout.item_task_select:
                 helper.setText(R.id.tv_name,item.getName());
+                ImageView iv_select=helper.getView(R.id.iv_select);
+                if (item.isInTask()){
+                    iv_select.setImageResource(R.mipmap.checkedwg);
+                }else {
+                    iv_select.setImageResource(R.mipmap.nocheckedwg);
+                }
+                break;
+            case R.layout.item_show_recycler:
+                helper.setText(R.id.tv_show_name,item.getName());
                 break;
         }
 
+    }
+
+    @Override
+    public void setData(int index, @NonNull PathLine data) {
+        super.setData(index, data);
     }
 }

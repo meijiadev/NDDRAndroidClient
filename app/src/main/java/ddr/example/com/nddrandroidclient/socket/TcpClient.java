@@ -17,10 +17,16 @@ import com.xuhao.didi.socket.client.sdk.client.action.SocketActionAdapter;
 import com.xuhao.didi.socket.client.sdk.client.connection.IConnectionManager;
 
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Handler;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
+import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
@@ -353,5 +359,254 @@ public class TcpClient extends BaseSocketConnection {
         tcpClient.sendData(null,reqClientGetMapInfo);
         Logger.e("请求文件中....");
     }
+
+
+    /**
+     * 发送线速度，角速度
+     * @param lineSpeed
+     * @param palstance
+     */
+    public void sendSpeed(final float lineSpeed, final float palstance) {
+        BaseCmd.reqCmdMove reqCmdMove = BaseCmd.reqCmdMove.newBuilder()
+                .setLineSpeed(lineSpeed)
+                .setAngulauSpeed(palstance)
+                .build();
+        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
+                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
+                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
+                .build();
+        tcpClient.sendData(commonHeader, reqCmdMove);
+
+    }
+
+
+    /**
+     * 退出当前模式
+     */
+    public void exitModel() {
+        BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
+                .setError("noError")
+                .build();
+        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
+                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
+                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
+                .build();
+        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+    }
+
+    /**
+     * 只保存已修改的目标点到服务器
+     */
+    public void savePointData(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx,List<TargetPoint> targetPoints){
+        List<DDRVLNMap.targetPtItem> targetPtItems=new ArrayList<>();
+        for (int i=0;i<targetPoints.size();i++){
+            TargetPoint targetPoint=targetPoints.get(i);
+            DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
+                    .setX(targetPoint.getX())
+                    .setY(targetPoint.getY())
+                    .setTheta(targetPoint.getTheta())
+                    .build();
+            DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
+                    .setPtName(ByteString.copyFromUtf8(targetPoint.getName()))
+                    .setPtData(space_pointEx).build();
+            targetPtItems.add(targetPtItem);
+        }
+    }
+
+    /**
+     * 保存已修改路径数据到服务
+     * @param reqDDRVLNMapEx
+     * @param pathLines
+     */
+    public void savePathData(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx,List<PathLine> pathLines){
+        List<DDRVLNMap.path_line_itemEx> pathLineItemExes=new ArrayList<>();
+        for (int i=0;i<pathLines.size();i++){
+            PathLine pathLine=pathLines.get(i);
+            DDRVLNMap.path_line_config path_line_config=DDRVLNMap.path_line_config.newBuilder()
+                    .setConfig(ByteString.copyFromUtf8(pathLine.getConfig())).build();
+            List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> pathLintPtItems=new ArrayList<>();
+            List<PathLine.PathPoint> pathPoints=pathLine.getPathPoints();
+            for (int j=0;j<pathPoints.size();j++){
+                DDRVLNMap.space_pointEx spacePointEx=DDRVLNMap.space_pointEx.newBuilder()
+                        .setX(pathPoints.get(j).getX())
+                        .setY(pathPoints.get(j).getY())
+                        .build();
+                DDRVLNMap.path_line_itemEx.path_lint_pt_Item path_lint_pt_item=DDRVLNMap.path_line_itemEx.path_lint_pt_Item.newBuilder()
+                        .setPt(spacePointEx)
+                        .setRotationangle(pathPoints.get(j).getRotationAngle())
+                        .setTypeValue(pathPoints.get(j).getPointType())
+                        .build();
+                pathLintPtItems.add(path_lint_pt_item);
+            }
+            DDRVLNMap.path_line_itemEx path_line_itemEx=DDRVLNMap.path_line_itemEx.newBuilder()
+                    .setName(ByteString.copyFromUtf8(pathLine.getName()))
+                    .setModeValue(pathLine.getPathModel())
+                    .setVelocity(pathLine.getVelocity())
+                    .setConfig(path_line_config)
+                    .setVelocity(pathLine.getVelocity())
+                    .addAllPointSet(pathLintPtItems)
+                    .build();
+            pathLineItemExes.add(path_line_itemEx);
+        }
+    }
+
+    /**
+     * 保存已修改任务列表到服务
+     * @param reqDDRVLNMapEx
+     * @param taskModes
+     */
+    public void saveTaskData(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx,List<TaskMode> taskModes){
+        List<DDRVLNMap.task_itemEx> taskItemExes=new ArrayList<>();
+        for (int i=0;i<taskModes.size();i++){
+            TaskMode taskMode=taskModes.get(i);
+            List<BaseMode> baseModes=taskMode.getBaseModes();
+            List<DDRVLNMap.path_elementEx> path_elementExes=new ArrayList<>();
+            for (int j=0;j<baseModes.size();j++){
+                DDRVLNMap.path_elementEx path_elementEx;
+                String name="";
+                int typeValue=0;
+                if (baseModes.get(j).getType()==1){
+                    PathLine pathLine= (PathLine) baseModes.get(j);
+                    name=pathLine.getName();
+                    typeValue=1;
+                }else if (baseModes.get(j).getType()==2){
+                    TargetPoint targetPoint= (TargetPoint) baseModes.get(j);
+                    name=targetPoint.getName();
+                    typeValue=2;
+                }
+                path_elementEx=DDRVLNMap.path_elementEx.newBuilder()
+                        .setName(ByteString.copyFromUtf8(name))
+                        .setTypeValue(typeValue)
+                        .build();
+                path_elementExes.add(path_elementEx);
+            }
+            DDRVLNMap.timeItem timeItem=DDRVLNMap.timeItem.newBuilder()
+                    .setStartHour(taskMode.getStartHour())
+                    .setStartMin(taskMode.getStartMin())
+                    .setEndHour(taskMode.getEndHour())
+                    .setEndMin(taskMode.getEndMin())
+                    .build();
+            DDRVLNMap.task_itemEx task_itemEx=DDRVLNMap.task_itemEx.newBuilder()
+                    .setName(ByteString.copyFromUtf8(taskMode.getName()))
+                    .setRunCount(taskMode.getRunCounts())
+                    .setStateValue(taskMode.getTaskState())
+                    .setTypeValue(taskMode.getType())
+                    .setTimeSet(timeItem)
+                    .addAllPathSet(path_elementExes)
+                    .build();
+            taskItemExes.add(task_itemEx);
+        }
+
+    }
+
+
+    /**
+     * 所有数据保存到服务端
+     */
+    public void saveDataToServer(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx,List<TargetPoint> targetPoints,List<PathLine> pathLines,List<TaskMode> taskModes){
+        /*****************************保存到服务的目标点数据********************************************/
+        List<DDRVLNMap.targetPtItem> targetPtItems=new ArrayList<>();
+        for (int i=0;i<targetPoints.size();i++){
+            TargetPoint targetPoint=targetPoints.get(i);
+            DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
+                    .setX(targetPoint.getX())
+                    .setY(targetPoint.getY())
+                    .setTheta(targetPoint.getTheta())
+                    .build();
+            DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
+                    .setPtName(ByteString.copyFromUtf8(targetPoint.getName()))
+                    .setPtData(space_pointEx).build();
+            targetPtItems.add(targetPtItem);
+        }
+        DDRVLNMap.DDRMapTargetPointData targetPointData=DDRVLNMap.DDRMapTargetPointData.newBuilder()
+                .addAllTargetPt(targetPtItems)
+                .build();
+
+        /****************************保存到服务的路径数据**********************************************/
+        List<DDRVLNMap.path_line_itemEx> pathLineItemExes=new ArrayList<>();
+        for (int i=0;i<pathLines.size();i++){
+            PathLine pathLine=pathLines.get(i);
+            DDRVLNMap.path_line_config path_line_config=DDRVLNMap.path_line_config.newBuilder()
+                    .setConfig(ByteString.copyFromUtf8(pathLine.getConfig())).build();
+            List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> pathLintPtItems=new ArrayList<>();
+            List<PathLine.PathPoint> pathPoints=pathLine.getPathPoints();
+            for (int j=0;j<pathPoints.size();j++){
+                DDRVLNMap.space_pointEx spacePointEx=DDRVLNMap.space_pointEx.newBuilder()
+                        .setX(pathPoints.get(j).getX())
+                        .setY(pathPoints.get(j).getY())
+                        .build();
+                DDRVLNMap.path_line_itemEx.path_lint_pt_Item path_lint_pt_item=DDRVLNMap.path_line_itemEx.path_lint_pt_Item.newBuilder()
+                        .setPt(spacePointEx)
+                        .setRotationangle(pathPoints.get(j).getRotationAngle())
+                        .setTypeValue(pathPoints.get(j).getPointType())
+                        .build();
+                pathLintPtItems.add(path_lint_pt_item);
+            }
+            DDRVLNMap.path_line_itemEx path_line_itemEx=DDRVLNMap.path_line_itemEx.newBuilder()
+                    .setName(ByteString.copyFromUtf8(pathLine.getName()))
+                    .setModeValue(pathLine.getPathModel())
+                    .setVelocity(pathLine.getVelocity())
+                    .setConfig(path_line_config)
+                    .setVelocity(pathLine.getVelocity())
+                    .addAllPointSet(pathLintPtItems)
+                    .build();
+            pathLineItemExes.add(path_line_itemEx);
+        }
+        DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
+                .addAllPathLineData(pathLineItemExes)
+                .build();
+        /**********************************************保存到服务的任务数据***************************************/
+        List<DDRVLNMap.task_itemEx> taskItemExes=new ArrayList<>();
+        for (int i=0;i<taskModes.size();i++){
+            TaskMode taskMode=taskModes.get(i);
+            List<BaseMode> baseModes=taskMode.getBaseModes();
+            List<DDRVLNMap.path_elementEx> path_elementExes=new ArrayList<>();
+            for (int j=0;j<baseModes.size();j++){
+                DDRVLNMap.path_elementEx path_elementEx;
+                String name="";
+                int typeValue=0;
+                if (baseModes.get(j).getType()==1){
+                    PathLine pathLine= (PathLine) baseModes.get(j);
+                    name=pathLine.getName();
+                    typeValue=1;
+                }else if (baseModes.get(j).getType()==2){
+                    TargetPoint targetPoint= (TargetPoint) baseModes.get(j);
+                    name=targetPoint.getName();
+                    typeValue=2;
+                }
+                path_elementEx=DDRVLNMap.path_elementEx.newBuilder()
+                        .setName(ByteString.copyFromUtf8(name))
+                        .setTypeValue(typeValue)
+                        .build();
+                path_elementExes.add(path_elementEx);
+            }
+            DDRVLNMap.timeItem timeItem=DDRVLNMap.timeItem.newBuilder()
+                    .setStartHour(taskMode.getStartHour())
+                    .setStartMin(taskMode.getStartMin())
+                    .setEndHour(taskMode.getEndHour())
+                    .setEndMin(taskMode.getEndMin())
+                    .build();
+            DDRVLNMap.task_itemEx task_itemEx=DDRVLNMap.task_itemEx.newBuilder()
+                    .setName(ByteString.copyFromUtf8(taskMode.getName()))
+                    .setRunCount(taskMode.getRunCounts())
+                    .setStateValue(taskMode.getTaskState())
+                    .setTypeValue(taskMode.getType())
+                    .setTimeSet(timeItem)
+                    .addAllPathSet(path_elementExes)
+                    .build();
+            taskItemExes.add(task_itemEx);
+        }
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(reqDDRVLNMapEx.getBasedata())
+                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setTargetPtdata(targetPointData)
+                .addAllTaskSet(taskItemExes)
+                .setPathSet(ddrMapPathDataEx)
+                .build();
+        tcpClient.sendData(null,reqDDRVLNMapEx1);
+    }
+
 
 }

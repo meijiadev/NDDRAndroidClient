@@ -11,7 +11,7 @@ public class TargetPoint extends BaseMode implements Serializable {
     private float x;
     private float y;
     private float theta;  //朝向 单位：度 【-180,180】
-    private boolean isSelected;     //是否被选中
+    private boolean isSelected;     //是否被选中    地图编辑页面 是否显示出来
 
 
 

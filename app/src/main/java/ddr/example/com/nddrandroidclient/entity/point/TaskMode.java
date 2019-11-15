@@ -17,10 +17,10 @@ public class TaskMode implements Serializable {
     private List<String> pathLines=new ArrayList<>();         // 分离出 路径列表
     private int runCounts;                    //运行次数
     /*** 任务的执行时间*/
-    private long startHour;            //开始的时间，时
-    private long startMin;             //开始的时间，分
-    private long endHour;             // ...
-    private long endMin;              // ...
+    private int startHour;            //开始的时间，时
+    private int startMin;             //开始的时间，分
+    private int endHour;             // ...
+    private int endMin;              // ...
 
     private int taskState;                    //新增 任务状态  1-等待运行； 2-运行中； 3-暂停； 4-运行完了； 5-终止
     private int type;                        //新增 任务类型  0-不在执行队列中  1-临时任务  2-在队列中  3-临时任务+执行队列中
@@ -83,35 +83,35 @@ public class TaskMode implements Serializable {
         return taskState;
     }
 
-    public void setEndHour(long endHour) {
+    public void setEndHour(int endHour) {
         this.endHour = endHour;
     }
 
-    public void setEndMin(long endMin) {
+    public void setEndMin(int endMin) {
         this.endMin = endMin;
     }
 
-    public void setStartHour(long startHour) {
+    public void setStartHour(int startHour) {
         this.startHour = startHour;
     }
 
-    public void setStartMin(long startMin) {
+    public void setStartMin(int startMin) {
         this.startMin = startMin;
     }
 
-    public long getEndHour() {
+    public int getEndHour() {
         return endHour;
     }
 
-    public long getEndMin() {
+    public int getEndMin() {
         return endMin;
     }
 
-    public long getStartHour() {
+    public int getStartHour() {
         return startHour;
     }
 
-    public long getStartMin() {
+    public int getStartMin() {
         return startMin;
     }
 
