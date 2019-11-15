@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -36,6 +37,7 @@ import ddr.example.com.nddrandroidclient.download.FileUtil;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
@@ -176,6 +178,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private ActionAdapter actionAdapter;                     // 动作点列表
     private TaskAdapter taskAdapter;                         //任务Recycler的适配器
     private BaseModeAdapter sortAdapter;                     //排序的列表适配器
+    private String mapName;                                  //点击查看的地图名
 
 
 
@@ -357,15 +360,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 btSort.setBackgroundResource(R.drawable.button_shape_blue);
                 selectLayout.setVisibility(View.GONE);
                 sortRecycler.setVisibility(View.VISIBLE);
-                sortAdapter.setNewData(taskModes.get(mPosition).getBaseModes());
+                if (taskModes.size()>0){
+                    sortAdapter.setNewData(taskModes.get(mPosition).getBaseModes());
+                }
                 break;
             case R.id.tv_add_new:
-                startActivity(MapEditActivity.class);
+                if (pointDetailLayout.getVisibility()==View.VISIBLE){
+                    EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPoint,lookBitmap));
+                    startActivity(MapEditActivity.class);
+                }else if (pathDetailLayout.getVisibility()==View.VISIBLE){
+                    EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPath,lookBitmap));
+                    startActivity(MapEditActivity.class);
+                }
                 break;
         }
     }
 
     private BaseDialog dialog;
+    private Bitmap lookBitmap;
 
     /**
      * 地图Recycler的点击事件
@@ -382,15 +394,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 mapAdapter.setData(position, mapInfo);
             } else {
-                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()));
+                mapName=mapInfos.get(position).getMapName();
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 dialog = new WaitDialog.Builder(getAttachActivity())
                         .setMessage("加载地图信息中")
                         .show();
                 FileInputStream fis = null;
                 try {
                     fis = new FileInputStream(mapInfos.get(position).getBitmap());
-                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                    zoomMap.setImageBitmap(bitmap);
+                    lookBitmap= BitmapFactory.decodeStream(fis);
+                    zoomMap.setImageBitmap(lookBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (NullPointerException e) {
@@ -408,7 +421,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         taskDetailLayout.setVisibility(View.GONE);
                     }
 
-                }, 3000);
+                }, 5000);
             }
         }));
     }
@@ -567,9 +580,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
                 try {
-                    targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
-                    pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
-                    taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
+                    if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
+                        targetPoints=ListTool.deepCopy(mapFileStatus.getcTargetPoints());
+                        pathLines=ListTool.deepCopy(mapFileStatus.getcPathLines());
+                        taskModes=ListTool.deepCopy(mapFileStatus.getcTaskModes());
+                    }else {
+                        targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                        pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
+                        taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {

@@ -37,6 +37,7 @@ public class BaseModeAdapter extends BaseAdapter<BaseMode> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, BaseMode item) {
         super.convert(helper, item);
+        Logger.e("------:"+item.getType());
         if (item.getType()==1){
             PathLine pathLine= (PathLine) item;
             helper.setText(R.id.tv_name,pathLine.getName());

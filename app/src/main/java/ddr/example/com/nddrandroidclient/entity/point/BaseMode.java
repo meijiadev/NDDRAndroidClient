@@ -1,9 +1,11 @@
 package ddr.example.com.nddrandroidclient.entity.point;
 
+import java.io.Serializable;
+
 /**
  * 数据模型基类
  */
-public class BaseMode {
+public class BaseMode implements Serializable {
     private int type;   //type:1 路径  type:2 目标点
     private boolean inTask;       //是否在任务当中
 

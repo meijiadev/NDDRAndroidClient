@@ -20,12 +20,10 @@ public class RspCmdSetWorkPathProcessor extends BaseProcessor {
         Logger.e("----"+rspCmdSetWorkPath.getType());
         switch (rspCmdSetWorkPath.getTypeValue()){
             case 0:
-                EventBus.getDefault().postSticky(new MessageEvent(3,true));
                 Logger.e("------路径修改成功");
                 break;
             case 1:
                 Logger.e("------路径修改失败");
-                EventBus.getDefault().postSticky(new MessageEvent(3,false));
                 break;
         }
     }

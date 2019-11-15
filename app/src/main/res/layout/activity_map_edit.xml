@@ -10,7 +10,8 @@
         android:layout_height="44dp"
         android:background="#101112"
         app:leftIcon="@mipmap/iv_back"
-        app:leftTitle="      新建目标点"
+        app:leftTitle="新建目标点"
+        android:paddingStart="@dimen/dp_10"
         app:leftColor="@color/white" 
         app:leftSize="16sp"
         app:rightTitle="退出"
@@ -58,7 +59,7 @@
             android:layout_marginLeft="315dp"
             />
         <TextView
-            android:id="@+id/tv_0.25m"
+            android:id="@+id/tv_025m"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0.25m"
@@ -70,7 +71,7 @@
             android:layout_marginLeft="8.5dp"
             />
         <TextView
-            android:id="@+id/tv_0.5m"
+            android:id="@+id/tv_05m"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0.5m"
@@ -148,18 +149,21 @@
         android:layout_below="@id/second_title"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:drawableRight="@mipmap/checkedwg"
+        android:drawableRight="@mipmap/nocheckedwg"
         android:paddingRight="@dimen/dp_10"
         android:drawablePadding="@dimen/dp_10"
+        android:visibility="gone"
         />
 
     <LinearLayout
+        android:id="@+id/speed_layout"
         android:layout_width="30dp"
         android:layout_height="283dp"
         android:orientation="vertical"
         android:layout_marginTop="80dp"
         android:layout_below="@id/second_title"
         android:background="@drawable/layout_bg"
+        android:visibility="gone"
         >
         <TextView
             android:id="@+id/tv_speed"
@@ -228,6 +232,7 @@
         app:rockerScale="0.3"
         app:rockerSpeedLevel="11"
         android:layout_marginLeft="57dp"
+        android:visibility="gone"
         />
     <ddr.example.com.nddrandroidclient.widget.view.RockerView
         android:id="@+id/my_rocker_zy"
@@ -241,6 +246,7 @@
         app:rockerScale="0.3"
         app:rockerSpeedLevel="11"
         android:layout_marginRight="50dp"
+        android:visibility="invisible"
         />
 
 
