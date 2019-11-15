@@ -523,7 +523,6 @@ enum TaskType
 	eTaskTypeNotInList = 0; // 不在队列中
 	eTaskTypeInTemporary = 1; // 在临时队列中
 	eTaskTypeInTimeList = 2; // 在定时队列中
-	eTaskTypeTemporaryAndTime = 3; // 既在临时队列中又在定时队列中
 }
 
 // 

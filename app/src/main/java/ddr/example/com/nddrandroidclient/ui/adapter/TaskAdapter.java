@@ -1,6 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
-import android.widget.ImageView;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -12,7 +12,8 @@ import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
-import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
+import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
 
 /**
@@ -31,6 +32,17 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
     @Override
     public void setNewData(@Nullable List<TaskMode> data) {
         super.setNewData(data);
+        Logger.e("------"+data.size());
+    }
+
+    /**
+     *
+     * @param index
+     * @param data
+     */
+    @Override
+    public void setData(int index, @NonNull TaskMode data) {
+        super.setData(index, data);
     }
 
     @Override
@@ -41,16 +53,22 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 helper.setText(R.id.tv_target_name,item.getName());
                 break;
             case R.layout.item_recycle_tasklist:
-                GridTextView gridTextView=helper.getView(R.id.iv_check);
+                GridImageView gridImageView=helper.getView(R.id.iv_check);
                 NumEdit numEdit=helper.getView(R.id.task_num_check);
                 TextView tv_task_status=helper.getView(R.id.tv_task_status);
                 TextView tv_task_time=helper.getView(R.id.tv_task_time);
                switch (item.getType()){
                    case 0:
-                       gridTextView.setBackground(R.mipmap.nocheckedwg);
+                       Logger.e("未在列表中");
+                       gridImageView.setBackgroundResource(R.mipmap.nocheckedwg);
+                       break;
+                   case 1:
+                       Logger.e("临时列表中");
+                       gridImageView.setBackgroundResource(R.mipmap.nocheckedwg);
                        break;
                    case 2:
-                       gridTextView.setBackground(R.mipmap.checkedwg);
+                       Logger.e("在列表中");
+                       gridImageView.setBackgroundResource(R.mipmap.checkedwg);
                        break;
                }
                switch (item.getTaskState()){
@@ -93,7 +111,7 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
 
                numEdit.setNum(item.getRunCounts());
                 helper.setText(R.id.tv_map_list,item.getName())
-                        .addOnClickListener(R.id.tv_task_time)
+                        .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop)
                         .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
                 break;
         }

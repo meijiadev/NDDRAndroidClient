@@ -77,11 +77,17 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 if (notifyBaseStatusEx!=null){
                     currentMap=notifyBaseStatusEx.getCurroute();
                     currentTask=notifyBaseStatusEx.getCurrpath();
+                    Logger.e("--------:"+currentMap);
                 }
                 break;
             case updateMapList:
                 Logger.e("-------------updateMapList");
                 getMapInfo();
+                break;
+            case switchTaskSuccess:
+                Logger.e("--------更新地图");
+                getMapInfo();
+                Logger.e("---------"+currentMap);
                 break;
             case updateDDRVLNMap:
                 break;
@@ -224,8 +230,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def),null,null,null);
                 tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def),null,null,null);
                 tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def),null,null,null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check),null,null,null);
-                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def),null,null,null);
+                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def),null,null,null);
+                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_check),null,null,null);
                 break;
         }
     }
@@ -300,13 +306,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     public void getMapInfo(){
         new Thread(()->{
             while (true){
-                if (currentMap!=null){
+                if (currentMap!=null&&!currentMap.equals("PathError")){
                     Logger.e("-----------"+currentMap);
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(currentMap));  //获取某个地图信息
                     return;
                 }
             }
-
         }).start();
 
     }
