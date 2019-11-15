@@ -35,12 +35,13 @@ import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
+import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  * time:2019/10/26
  * desc: 主页界面
  */
-public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
+public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener , FloatView.OnFloatViewListener{
     @BindView(R.id.vp_home_pager)
     DDRViewPager vpHomePager;
     @BindView(R.id.status)
@@ -317,5 +318,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
+    @Override
+    public void onClickBottom() {
 
+    }
 }
