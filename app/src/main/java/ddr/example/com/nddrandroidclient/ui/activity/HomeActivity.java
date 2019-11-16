@@ -106,7 +106,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             case updateDDRVLNMap:
                 break;
             case touchFloatWindow:
-
+                showTaskPopupWindow();
                 break;
         }
     }
@@ -167,7 +167,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             case R.id.status:
                 Logger.e("---------setCurrentItem");
                 vpHomePager.setCurrentItem(0);
-                showTaskPopupWindow();
                 break;
             case R.id.mapmanager:
                 vpHomePager.setCurrentItem(1);
