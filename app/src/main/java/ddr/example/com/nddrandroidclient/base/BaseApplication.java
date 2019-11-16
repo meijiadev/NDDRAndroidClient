@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.base;
 
 import android.app.Application;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import com.hjq.toast.ToastInterceptor;
@@ -12,19 +14,24 @@ import com.yhao.floatwindow.MoveType;
 import com.yhao.floatwindow.PermissionListener;
 import com.yhao.floatwindow.Screen;
 
+import org.greenrobot.eventbus.EventBus;
+
 import cat.ereza.customactivityoncrash.config.CaocConfig;
+import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  * time :  2019/10/28
  * desc :  项目中的 application 基类
  */
-public class BaseApplication extends Application {
+public class BaseApplication extends Application implements FloatView.OnFloatViewListener {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -72,8 +79,37 @@ public class BaseApplication extends Application {
                 // 设置监听器
                 //.eventListener(new YourCustomEventListener())
                 .apply();
+        initFloatView();
     }
+
+    /**
+     * 显示悬浮窗
+     * @param
+     */
+    private void initFloatView(){
+        FloatView floatView=new FloatView(this);
+        floatView.setOnFloatViewListener(this);
+        FloatWindow
+                .with(getApplicationContext())
+                .setView(floatView)
+                /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
+                .setHeight(Screen.width, 0.2f)*/
+                .setX(Screen.height,1)
+                .setY(120)
+                .setMoveType(MoveType.active)
+                .setFilter(true, HomeActivity.class)
+                .setDesktopShow(false)
+                .build();
     }
+
+    @Override
+    public void onClickBottom() {
+        ToastUtils.show("点击底部");
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchFloatWindow));
+    }
+
+
+}
 
 
 

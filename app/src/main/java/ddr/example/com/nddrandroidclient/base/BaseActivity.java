@@ -13,10 +13,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.MoveType;
+import com.yhao.floatwindow.PermissionListener;
+import com.yhao.floatwindow.Screen;
+
 import java.util.Random;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  * time    ：2019/10/25
@@ -71,6 +79,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         hideSoftKeyboard();
         super.finish();
     }
+
+
 
     /**
      * 延迟执行

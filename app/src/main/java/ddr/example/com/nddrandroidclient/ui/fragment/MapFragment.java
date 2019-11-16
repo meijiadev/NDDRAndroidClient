@@ -279,7 +279,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 mapDetailLayout.setVisibility(View.GONE);
                 mapLayout.setVisibility(View.VISIBLE);
                 mPosition=0;
-                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                try {
+                    tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
                 break;
             case R.id.tv_target_point:
                 mPosition=0;

@@ -10,6 +10,10 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.hjq.toast.ToastUtils;
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.MoveType;
+import com.yhao.floatwindow.PermissionListener;
+import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,6 +25,9 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseActivity;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
+import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  *  time    ：2019/10/25
@@ -87,6 +94,8 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
     protected void initData() {
 
     }
+
+
 
     /**
      * 递归获取 ViewGroup 中的 TitleBar 对象

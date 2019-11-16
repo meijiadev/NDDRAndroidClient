@@ -36,6 +36,8 @@ public class MessageEvent {
         updatePaths,    //添加完，更新路径列表
         updateRevamp,   //更新修改之后的地图信息，提醒UI层重新拉地图信息
 
+        touchFloatWindow,
+
 
     }
 
