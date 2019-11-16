@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
+import DDRVLNMapProto.DDRVLNMap;
 import butterknife.BindView;
+import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
@@ -39,6 +41,8 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
 
     @BindView(R.id.recycle_task_list)
     RecyclerView recycle_task_list;
+    @BindView(R.id.tv_task_save)
+    TextView tv_task_save;
 
     private CustomPopuWindow customPopuWindow;
     private DpOrPxUtils dpOrPxUtils;
@@ -120,10 +124,14 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                         Logger.e("未在列表中");
                                         gridImageView.setSelected(true);
                                         gridImageView.setBackgroundResource(R.mipmap.intask_check);
+                                        taskModeList.get(position).setType(2);
+                                        toast("加入定时队列，记得点保存哦");
                                     }else {
                                         Logger.e("在列表中");
+                                        toast("退出定时队列，记得点保存哦");
                                         gridImageView.setSelected(false);
                                         gridImageView.setBackgroundResource(R.mipmap.intask_def);
+                                        taskModeList.get(position).setType(0);
                                     }
                                     break;
                                 case R.id.tv_task_pause:
@@ -143,7 +151,20 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                 });
                 break;
         }
+        taskAdapter.setNewData(taskModeList);
 
+    }
+    @OnClick({R.id.tv_task_save})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.tv_task_save:
+                for (int i=0;i<taskModeList.size();i++){
+                    Logger.e("队列"+taskModeList.get(i).getType());
+                }
+                tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                break;
+
+        }
     }
 
     /**
