@@ -119,11 +119,11 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                     if (!gridImageView.getSelected()){
                                         Logger.e("未在列表中");
                                         gridImageView.setSelected(true);
-                                        gridImageView.setBackgroundResource(R.mipmap.checkedwg);
+                                        gridImageView.setBackgroundResource(R.mipmap.intask_check);
                                     }else {
                                         Logger.e("在列表中");
                                         gridImageView.setSelected(false);
-                                        gridImageView.setBackgroundResource(R.mipmap.nocheckedwg);
+                                        gridImageView.setBackgroundResource(R.mipmap.intask_def);
                                     }
                                     break;
                                 case R.id.tv_task_pause:

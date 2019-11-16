@@ -60,15 +60,15 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                switch (item.getType()){
                    case 0:
                        Logger.e("未在列表中");
-                       gridImageView.setBackgroundResource(R.mipmap.nocheckedwg);
+                       gridImageView.setBackgroundResource(R.mipmap.intask_def);
                        break;
                    case 1:
                        Logger.e("临时列表中");
-                       gridImageView.setBackgroundResource(R.mipmap.nocheckedwg);
+                       gridImageView.setBackgroundResource(R.mipmap.intask_def);
                        break;
                    case 2:
                        Logger.e("在列表中");
-                       gridImageView.setBackgroundResource(R.mipmap.checkedwg);
+                       gridImageView.setBackgroundResource(R.mipmap.intask_check);
                        break;
                }
                switch (item.getTaskState()){

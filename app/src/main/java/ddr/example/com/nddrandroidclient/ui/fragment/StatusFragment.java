@@ -402,7 +402,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         switch (notifyBaseStatusEx.getSonMode()){
                             case 16:
                                 toast("暂停");
-                                pauseOrResume("stop");
+                                pauseOrResume("Pause");
                                 break;
                             case 17:
                                 toast("暂停状态中");
