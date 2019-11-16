@@ -246,11 +246,24 @@ public class MapEditActivity extends DDRActivity {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 PathLine pathLine=new PathLine();
-                                pathLine.setName();
-                                newPaths.add()
+                                pathLine.setName(content);
+                                List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
+                                try {
+                                     pathPoints1=ListTool.deepCopy(pathPoints);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                pathLine.setPathPoints(pathPoints1);
+                                pathLine.setVelocity(0.4f);
+                                newPaths.add(pathLine);
+                                pathLines.add(pathLine);
+                                pathPoints.clear();
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
+                                pathPoints.clear();
                                 toast("取消添加");
                             }
                         })
@@ -529,7 +542,11 @@ public class MapEditActivity extends DDRActivity {
      * 给原始页面传递数据
      */
     private void toPostData() {
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePoints, newPoints));
+        if (titleLayout.getLeftTitle().equals("新建目标点")){
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePoints, newPoints));
+        }else if (titleLayout.getLeftTitle().equals("新建路径")){
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePaths,newPaths));
+        }
     }
 
 }

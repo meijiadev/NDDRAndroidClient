@@ -171,6 +171,7 @@ public class MapFileStatus {
             pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
             pathLines.add(pathLine);
         }
+        Logger.e("-------------任务的数量："+taskItemExes.size());
         for (int i = 0; i < taskItemExes.size(); i++) {
             List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
             List<BaseMode> baseModes = new ArrayList<>();
@@ -184,18 +185,6 @@ public class MapFileStatus {
                     targetPoint.setName(path_elementExes.get(j).getName().toStringUtf8());
                     baseModes.add(targetPoint);
                 }
-                TaskMode taskMode = new TaskMode();
-                taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());
-                taskMode.setBaseModes(baseModes);
-                taskMode.setRunCounts(taskItemExes.get(i).getRunCount());
-                taskMode.setStartHour(taskItemExes.get(i).getTimeSet().getStartHour());
-                taskMode.setStartMin(taskItemExes.get(i).getTimeSet().getStartMin());
-                taskMode.setEndHour(taskItemExes.get(i).getTimeSet().getEndHour());
-                taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
-                taskMode.setType(taskItemExes.get(i).getType().getNumber());
-                taskMode.setTaskState(taskItemExes.get(i).getStateValue());
-                taskModes.add(taskMode);
-
             }
             TaskMode taskMode = new TaskMode();
             taskMode.setName(taskItemExes.get(i).getName().toStringUtf8());

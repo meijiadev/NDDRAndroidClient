@@ -12,7 +12,7 @@ import DDRVLNMapProto.DDRVLNMap;
  */
 public class TaskMode implements Serializable {
     private String name;
-    private List<BaseMode>baseModes;          //这里面可能是路径也可能是目标点
+    private List<BaseMode>baseModes=new ArrayList<>();          //这里面可能是路径也可能是目标点
     private List<String> targetPoints=new ArrayList<>();   // 分离出 目标点列表
     private List<String> pathLines=new ArrayList<>();         // 分离出 路径列表
     private int runCounts;                    //运行次数
