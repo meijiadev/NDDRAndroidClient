@@ -497,6 +497,14 @@ public class TcpClient extends BaseSocketConnection {
                     .addAllPathSet(path_elementExes)
                     .build();
             taskItemExes.add(task_itemEx);
+            DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                    .setBasedata(reqDDRVLNMapEx.getBasedata())
+                    .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                    .setTargetPtdata(reqDDRVLNMapEx.getTargetPtdata())
+                    .addAllTaskSet(taskItemExes)
+                    .setPathSet(reqDDRVLNMapEx.getPathSet())
+                    .build();
+            tcpClient.sendData(null,reqDDRVLNMapEx1);
         }
 
     }

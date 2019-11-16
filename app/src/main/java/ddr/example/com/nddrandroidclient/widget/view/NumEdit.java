@@ -52,7 +52,7 @@ public class NumEdit extends LinearLayout
     /**
      * 带初始数据实例化
      * @param context
-     * @param 初始数据
+     * @param
      */
     public NumEdit(Context context, int num)
     {
