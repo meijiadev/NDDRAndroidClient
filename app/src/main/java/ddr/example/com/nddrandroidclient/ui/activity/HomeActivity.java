@@ -2,9 +2,11 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 
@@ -52,7 +54,7 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  * time:2019/10/26
  * desc: 主页界面
  */
-public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener , FloatView.OnFloatViewListener{
+public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.vp_home_pager)
     DDRViewPager vpHomePager;
     @BindView(R.id.status)
@@ -83,7 +85,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateBaseStatus:
@@ -103,6 +105,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case updateDDRVLNMap:
                 break;
+            case touchFloatWindow:
+                showTaskPopupWindow();
+                break;
         }
     }
 
@@ -113,7 +118,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initView() {
-        initFloatView();
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());
@@ -136,6 +140,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
 
     }
+
+
+
 
 
     @Override
@@ -329,46 +336,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         }).start();
 
     }
-    /**
-     * 显示悬浮窗
-     * @param
-     */
-    private void initFloatView(){
-        FloatView floatView=new FloatView(this);
-        floatView.setOnFloatViewListener(this);
-        FloatWindow
-                .with(getApplicationContext())
-                .setView(floatView)
-                /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
-                .setHeight(Screen.width, 0.2f)*/
-                .setX(Screen.width,1.52f)
-                .setY(120)
-                .setMoveType(MoveType.slide)
-                .setFilter(true, HomeActivity.class)
-                .setPermissionListener(mPermissionListener)
-                .setDesktopShow(false)
-                .build();
-    }
 
-    private PermissionListener mPermissionListener = new PermissionListener() {
-        @Override
-        public void onSuccess() {
-            Logger.e("onSuccess");
-
-        }
-
-        @Override
-        public void onFail() {
-            Logger.e("onFail");
-        }
-    };
-
-
-    @Override
-    public void onClickBottom() {
-        showTaskPopupWindow();
-        ToastUtils.show("点击底部");
-    }
 
     private void showTaskPopupWindow() {
         Logger.e("---------showTaskPopupWindow");
@@ -376,9 +344,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         contentView = LayoutInflater.from(this).inflate(R.layout.dialog_yk_check, null);
         customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(this)
                 .setView(contentView)
+                .size(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)
                 .enableOutsideTouchableDissmiss(true)// 设置点击PopupWindow之外的地方，popWindow不关闭，如果不设置这个属性或者为true，则关闭
                 .setOutsideTouchable(false)//是否PopupWindow 以外触摸dissmiss
-                .create();
-//                .showAsDropDown(view, DpOrPxUtils.dip2px(this, 0), 5);
+                .create()
+                .showAsDropDown(findViewById(R.id.taskmanager));
     }
 }

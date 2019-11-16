@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.MoveType;
+import com.yhao.floatwindow.PermissionListener;
+import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,12 +38,13 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
+import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  *    time   : 2019/10/26
  *    desc   : 登录页
  */
-public final class LoginActivity extends DDRActivity {
+public final class LoginActivity extends DDRActivity  {
     @BindView(R.id.account)
     EditText account;
     @BindView(R.id.password)
@@ -223,4 +228,6 @@ public final class LoginActivity extends DDRActivity {
     public boolean statusBarDarkFont() {
         return false;
     }
+
+
 }

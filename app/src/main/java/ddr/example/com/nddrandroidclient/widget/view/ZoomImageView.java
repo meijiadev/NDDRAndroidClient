@@ -245,10 +245,20 @@ public class ZoomImageView extends View {
     }
 
     /**
-     * 获取标记点坐标
+     * 获取目标点的坐标
      * @return
      */
     public XyEntity getGaugePoint(){
+        float x=(width/2-totalTranslateX)/totalRatio;
+        float y=(height/2-totalTranslateY)/totalRatio;
+        return toPathXy(x,y);
+    }
+
+    /**
+     * 获取中心标签处在地图上的点
+     * @return 返回的是世界坐标
+     */
+    public XyEntity getTargetPoint(){
         float x=(width/2-totalTranslateX)/totalRatio;
         float y=(height/2-totalTranslateY)/totalRatio;
         return toPathXy(x,y);
