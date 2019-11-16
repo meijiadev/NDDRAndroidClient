@@ -114,6 +114,7 @@ public class MapEditActivity extends DDRActivity {
     private MapFileStatus mapFileStatus;
     private List<TargetPoint> newPoints = new ArrayList<>();
     private List<PathLine> newPaths = new ArrayList<>();
+    private List<PathLine.PathPoint> pathPoints=new ArrayList<>();
     private List<TargetPoint> targetPoints;
     private List<PathLine> pathLines;
     private TargetPointAdapter targetPointAdapter;
@@ -225,13 +226,35 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case R.id.iv_add_path:
-
+                PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                pathPoint.setName("point"+(pathPoints.size()+1));
+                pathPoint.setY(zmap.getTargetPoint().getY());
+                pathPoint.setX(zmap.getTargetPoint().getX());
+                pathPoints.add(pathPoint);
                 break;
             case R.id.delete_point:
-
+                if (pathPoints.size()>0){
+                    pathPoints.remove(pathPoints.size()-1);
+                }else {
+                    toast("请先添加点");
+                }
                 break;
             case R.id.save_path:
-
+                new InputDialog.Builder(this).setTitle("添加路径名")
+                        .setHint("请输入")
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                PathLine pathLine=new PathLine();
+                                pathLine.setName();
+                                newPaths.add()
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                                toast("取消添加");
+                            }
+                        })
+                        .show();
                 break;
 
         }

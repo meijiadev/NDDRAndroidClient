@@ -106,7 +106,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             case updateDDRVLNMap:
                 break;
             case touchFloatWindow:
-                showTaskPopupWindow();
+                showControlPopupWindow();
                 break;
         }
     }
@@ -338,8 +338,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    private void showTaskPopupWindow() {
-        Logger.e("---------showTaskPopupWindow");
+    /**
+     * 遥控弹窗
+     */
+    private void showControlPopupWindow() {
         View contentView = null;
         contentView = LayoutInflater.from(this).inflate(R.layout.dialog_yk_check, null);
         customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(this)
