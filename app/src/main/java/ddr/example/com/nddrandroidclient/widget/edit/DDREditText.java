@@ -3,6 +3,8 @@ package ddr.example.com.nddrandroidclient.widget.edit;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,17 +53,30 @@ public class DDREditText extends LinearLayout {
     }
 
     public void addListener(){
-        iv_add.setOnClickListener(v -> {
-            try {
-                Logger.e("--------:"+et_content.getText().toString());
-                float num=Float.valueOf(et_content.getText().toString());
-                num++;
-                et_content.setText(Float.toString(num));
-                Logger.e("-------"+Float.toString(num));
-            }catch (NumberFormatException e){
-                e.printStackTrace();
+        iv_add.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_UP:
+                        try {
+                            Logger.e("--------:"+et_content.getText().toString());
+                            float num=Float.valueOf(et_content.getText().toString());
+                            num++;
+                            et_content.setText(Float.toString(num));
+                            Logger.e("-------"+Float.toString(num));
+                        }catch (NumberFormatException e){
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+                return false;
             }
         });
+/*
+        iv_add.setOnClickListener(v -> {
+
+        });
+*/
 
         iv_reduce.setOnClickListener((v ->{
             try {

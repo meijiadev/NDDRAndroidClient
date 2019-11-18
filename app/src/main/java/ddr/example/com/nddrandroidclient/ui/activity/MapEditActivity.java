@@ -245,9 +245,9 @@ public class MapEditActivity extends DDRActivity {
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                PathLine pathLine=new PathLine();
+                             /*   PathLine pathLine=new PathLine();
                                 pathLine.setName();
-                                newPaths.add()
+                                newPaths.add()*/
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {

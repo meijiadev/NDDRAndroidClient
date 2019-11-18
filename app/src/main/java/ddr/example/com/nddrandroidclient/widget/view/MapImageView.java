@@ -103,32 +103,32 @@ public class MapImageView extends GLContinuousView {
             fis = new FileInputStream(pngPath);
             Bitmap bitmap = BitmapFactory.decodeStream(fis);
             mapBitmap=bitmap;
+            for (int i=0;i<taskItemExes.size();i++){
+                if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
+                    pathElementExes=taskItemExes.get(i).getPathSetList();
+                }
+            }
+            for (int i=0;i<pathElementExes.size();i++){
+                if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
+                    ByteString lineName=pathElementExes.get(i).getName();
+                    for (int j=0;j<pathLineItemExes.size();j++){
+                        if (lineName.equals(pathLineItemExes.get(j).getName())){
+                            pathLineItemExesS.add(pathLineItemExes.get(j));
+                        }
+                    }
+                }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
+                    ByteString pointName=pathElementExes.get(i).getName();
+                    for (int j=0;j<targetPtItems.size();j++){
+                        if (pointName.equals(targetPtItems.get(j).getPtName())){
+                            targetPtItemsS.add(targetPtItems.get(j));
+                        }
+                    }
+                }
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }catch (NullPointerException e){
             e.printStackTrace();
-        }
-        for (int i=0;i<taskItemExes.size();i++){
-            if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
-                pathElementExes=taskItemExes.get(i).getPathSetList();
-            }
-        }
-        for (int i=0;i<pathElementExes.size();i++){
-            if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
-                ByteString lineName=pathElementExes.get(i).getName();
-                for (int j=0;j<pathLineItemExes.size();j++){
-                    if (lineName.equals(pathLineItemExes.get(j).getName())){
-                        pathLineItemExesS.add(pathLineItemExes.get(j));
-                    }
-                }
-            }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
-                ByteString pointName=pathElementExes.get(i).getName();
-                for (int j=0;j<targetPtItems.size();j++){
-                    if (pointName.equals(targetPtItems.get(j).getPtName())){
-                        targetPtItemsS.add(targetPtItems.get(j));
-                    }
-                }
-            }
         }
     }
 

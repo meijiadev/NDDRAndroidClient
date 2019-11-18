@@ -32,9 +32,10 @@
         android:layout_marginTop="10dp"
         android:id="@+id/tv_task_time"
         android:layout_marginLeft="29dp"
-        android:paddingLeft="8dp"
-        android:paddingTop="8dp"
+        android:paddingLeft="18dp"
+        android:paddingTop="6dp"
         android:drawableRight="@mipmap/set_task_time"
+        android:textColor="#eaf1f5"
         />
     <TextView
         android:layout_width="1.5dp"
@@ -44,15 +45,23 @@
         android:layout_marginLeft="165dp"
         android:layout_marginTop="20dp"
         />
-    <ddr.example.com.nddrandroidclient.widget.view.NumEdit
+<!--    <ddr.example.com.nddrandroidclient.widget.view.NumEdit-->
+<!--        android:layout_width="106dp"-->
+<!--        android:layout_height="34dp"-->
+<!--        android:layout_toRightOf="@id/tv_task_time"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginLeft="60dp"-->
+<!--        android:id="@+id/task_num_check"-->
+<!--        android:gravity="center"-->
+<!--        />-->
+    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
         android:layout_width="106dp"
         android:layout_height="34dp"
         android:layout_toRightOf="@id/tv_task_time"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="60dp"
         android:id="@+id/task_num_check"
-        android:gravity="center"
-        />
+        android:gravity="center"/>
     <TextView
         android:layout_width="80dp"
         android:layout_height="34dp"
@@ -61,7 +70,8 @@
         android:layout_marginLeft="55dp"
         android:gravity="center"
         android:text="待命中"
-        android:id="@+id/tv_task_status"/>
+        android:id="@+id/tv_task_status"
+        android:textColor="#eaf1f5"/>
     <TextView
         android:layout_width="50dp"
         android:layout_height="34dp"

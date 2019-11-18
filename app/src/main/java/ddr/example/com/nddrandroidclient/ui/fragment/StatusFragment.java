@@ -106,10 +106,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private int taskNum;
     private double workTimes;
     private double taskSpeed;
+    private int Runnum;
     private List<String> groupList=new ArrayList<>();
     private List<TargetPoint> targetPoints= new ArrayList<>();
-    private List<DDRVLNMap.task_itemEx> task_itemList;
-    private List<DDRVLNMap.targetPtItem> targetPtItems;
     private TargetPoint targetPoint;
     private TargetPointAdapter targetPointAdapter;
     private MapFileStatus mapFileStatus;
@@ -118,6 +117,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private DpOrPxUtils DpOrPxUtils;
     private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
+    private List<TaskMode> taskModeList =new ArrayList<>();
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
@@ -130,7 +130,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setMapBitmap(mapName,taskName);
-                    groupList = new ArrayList<>();
+//                    groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
                     for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
                         groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
@@ -172,11 +172,20 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        taskModeList=mapFileStatus.getcTaskModes();
+    }
+
+    @Override
     protected void initData() {
         tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
+        taskModeList=mapFileStatus.getcTaskModes();
+        taskName = notifyBaseStatusEx.getCurrpath();
+        tv_now_task.setText(taskName);
         for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
             groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
             Logger.e("group列数"+groupList.size());
@@ -194,27 +203,28 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         DecimalFormat format = new DecimalFormat("0.00");
         int h=60;
         int times=notifyBaseStatusEx.getTaskDuration();
-//        Logger.e("电量"+batteryNum+"---"+df.format(notifyEnvInfo.getBatt()) + "%");
         batteryNum=Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
         circleBarView.setProgress(batteryNum,0,Color.parseColor("#02B5F8"));
         mapName = notifyBaseStatusEx.getCurroute();
-        taskName = notifyBaseStatusEx.getCurrpath();
         taskNum=notifyBaseStatusEx.getTaskCount();
         workTimes=Double.parseDouble(df.format((float) times/h));
         taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
+        tv_now_map.setText(mapName);
 //        Logger.e("次数"+taskNum+"时间"+workTimes+"速度"+taskSpeed);
-        if (mapName!=null && taskName!=null){
-            tv_now_task.setText(taskName);
-            tv_now_map.setText(mapName);
+        if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
+            rel_step_description.setVisibility(View.GONE);
+            recycle_gopoint.setVisibility(View.VISIBLE);
+        }else {
+            rel_step_description.setVisibility(View.VISIBLE);
+            recycle_gopoint.setVisibility(View.GONE);
         }
         tv_now_device.setText(robotID);
         tv_task_num.setText(String.valueOf(taskNum)+" 次");
         tv_work_time.setText(String.valueOf(workTimes)+" 分");
         tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
-        //Logger.e("模式"+notifyBaseStatusEx.getMode());
-        //Logger.e("模式"+notifyBaseStatusEx.geteSelfCalibStatus());
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
+                tv_work_statue.setText("自标定中");
                 //自标定
                 break;
             case 1:
@@ -222,13 +232,19 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
                         tv_work_statue.setText("待命中");
-                        rel_step_description.setVisibility(View.VISIBLE);
-                        recycle_gopoint.setVisibility(View.GONE);
+
                         break;
                     case 3:
                         tv_work_statue.setText("运动中");
-                        rel_step_description.setVisibility(View.GONE);
-                        recycle_gopoint.setVisibility(View.VISIBLE);
+
+                        switch (notifyBaseStatusEx.getSonMode()){
+                            case 3:
+                                tv_work_statue.setText("异常");
+                                break;
+                            case 15:
+                                tv_work_statue.setText("重定位中");
+                                break;
+                        }
                         break;
                 }
                 break;
@@ -334,6 +350,63 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         Logger.e("机器人暂停/重新运动");
     }
 
+    /**
+     * 添加或删除临时任务
+     * @param routeName
+     * @param taskName
+     * @param num
+     * @param type
+     */
+
+    private void addOrDetTemporary(ByteString routeName, ByteString taskName,int num,int type){
+        DDRVLNMap.eTaskOperationalType eTaskOperationalType;
+        switch (type){
+            case 0:
+                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalError;
+                break;
+            case 1:
+                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalStopTemporary;
+                break;
+            case 2:
+                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalAddTemporary;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
+        DDRVLNMap.reqTaskOperational.OptItem optItem= DDRVLNMap.reqTaskOperational.OptItem.newBuilder()
+                .setOnerouteName(routeName)
+                .setTaskName(taskName)
+                .setRunCount(num)
+                .setType(eTaskOperationalType)
+                .build();
+        List<DDRVLNMap.reqTaskOperational.OptItem> optItemList=new ArrayList<>();
+        optItemList.add(optItem);
+        DDRVLNMap.reqTaskOperational reqTaskOperational=DDRVLNMap.reqTaskOperational.newBuilder()
+                .addAllOptSet(optItemList)
+                .build();
+        tcpClient.sendData(null,reqTaskOperational);
+    }
+
+    private void goPointLet(int x,int y,float theta,ByteString pname, ByteString routeName){
+        DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
+                .setX(x)
+                .setX(y)
+                .setTheta(theta)
+                .build();
+        DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
+                .setPtName(pname)
+                .setPtData(space_pointEx)
+                .build();
+        List<DDRVLNMap.targetPtItem> targetPtItemList=new ArrayList<>();
+        DDRVLNMap.reqRunSpecificPoint reqRunSpecificPoint=DDRVLNMap.reqRunSpecificPoint.newBuilder()
+                .setOnerouteName(routeName)
+                .addAllTargetPt(targetPtItemList)
+                .build();
+        tcpClient.sendData(null,reqRunSpecificPoint);
+
+    }
+
+
 
     public void onItemClick(int type){
         switch (type){
@@ -343,6 +416,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskCheckAdapter.setOnItemClickListener((adapter, view, position) ->  {
                     tv_now_task.setText(groupList.get(position));
+                    taskName=groupList.get(position);
+                    mapImageView.setMapBitmap(mapName,taskName);
+//                    taskModeList.get(position).setName(groupList.get(position));
+//                    taskModeList.get(position).setType(2);
+//                    tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
                 });
                 break;
             case 2:
@@ -363,9 +441,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case 1:
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
+//                        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
                         //Logger.e("待命模式" + modeView.getText());
                         toast("请稍等，正在进入");
-                        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
+                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),3,2);
+
                         break;
                     case 3:
                         switch (notifyBaseStatusEx.getSonMode()){
@@ -430,7 +510,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         break;
                     case 3:
                         toast("请稍等，正在退出");
-                        exitModel();
+//                        exitModel();
+                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),10,1);
                         break;
                 }
                 break;

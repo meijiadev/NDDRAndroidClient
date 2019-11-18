@@ -13,6 +13,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
 
@@ -21,6 +22,11 @@ import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
  * desc : 任务列表适配器
  */
 public class TaskAdapter extends BaseAdapter<TaskMode> {
+    public GridImageView gridImageView;
+    public NumEdit numEdit;
+    public DDREditText ddrEditText;
+    public TextView tv_task_status;
+    public TextView tv_task_time;
     public TaskAdapter(int layoutResId) {
         super(layoutResId);
     }
@@ -53,22 +59,25 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 helper.setText(R.id.tv_target_name,item.getName());
                 break;
             case R.layout.item_recycle_tasklist:
-                GridImageView gridImageView=helper.getView(R.id.iv_check);
-                NumEdit numEdit=helper.getView(R.id.task_num_check);
-                TextView tv_task_status=helper.getView(R.id.tv_task_status);
-                TextView tv_task_time=helper.getView(R.id.tv_task_time);
+                 gridImageView=helper.getView(R.id.iv_check);
+                 ddrEditText=helper.getView(R.id.task_num_check);
+                 tv_task_status=helper.getView(R.id.tv_task_status);
+                 tv_task_time=helper.getView(R.id.tv_task_time);
                switch (item.getType()){
                    case 0:
                        Logger.e("未在列表中");
                        gridImageView.setBackgroundResource(R.mipmap.intask_def);
+                       gridImageView.setSelected(false);
                        break;
                    case 1:
                        Logger.e("临时列表中");
                        gridImageView.setBackgroundResource(R.mipmap.intask_def);
+                       gridImageView.setSelected(false);
                        break;
                    case 2:
                        Logger.e("在列表中");
                        gridImageView.setBackgroundResource(R.mipmap.intask_check);
+                       gridImageView.setSelected(true);
                        break;
                }
                switch (item.getTaskState()){
@@ -108,14 +117,18 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 }else {
                     endm=""+item.getEndMin();
                 }
-
-               numEdit.setNum(item.getRunCounts());
+                ddrEditText.setText(item.getRunCounts());
                 helper.setText(R.id.tv_map_list,item.getName())
-                        .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop)
+                        .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop,R.id.task_num_check)
                         .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
                 break;
         }
-
     }
 
+    @Nullable
+    @Override
+    public TaskMode getItem(int position) {
+        Logger.e("---------:"+position);
+        return super.getItem(position);
+    }
 }
