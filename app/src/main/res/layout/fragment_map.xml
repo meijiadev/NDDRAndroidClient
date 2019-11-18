@@ -621,6 +621,20 @@
                         android:layout_marginTop="18dp"
                         android:visibility="invisible"
                         ></androidx.recyclerview.widget.RecyclerView>
+                    <TextView
+                        android:id="@+id/save_task"
+                        android:layout_width="71dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bt_bg__map"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="保存"
+                        android:gravity="center"
+                        android:layout_below="@id/sort_Recycler"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="40dp"
+                        />
 
                 </RelativeLayout>
 

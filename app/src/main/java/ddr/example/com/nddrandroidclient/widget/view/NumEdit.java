@@ -518,7 +518,7 @@ public class NumEdit extends LinearLayout
          * @param view 整个AddAndSubView
          * @param num 输入框的数值
          */
-        public void onNumChange(View view, int num);
+         void onNumChange(View view, int num);
     }
 
 }

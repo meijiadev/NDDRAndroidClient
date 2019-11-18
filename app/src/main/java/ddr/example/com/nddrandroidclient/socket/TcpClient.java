@@ -606,6 +606,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             taskItemExes.add(task_itemEx);
         }
+        Logger.e("-------------保存到服务端的任务:"+taskItemExes.size());
         DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
                 .setBasedata(reqDDRVLNMapEx.getBasedata())
                 .setSpacedata(reqDDRVLNMapEx.getSpacedata())
