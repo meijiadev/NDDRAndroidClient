@@ -1,15 +1,21 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
+import android.os.Build;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
@@ -29,15 +35,17 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
+import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
 import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
 
 /**
  * time：2019/10/28
  * desc：任务管理界面
  */
-public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickValueView.onSelectedChangeListener{
+public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickValueView.onSelectedChangeListener {
 
     @BindView(R.id.recycle_task_list)
     RecyclerView recycle_task_list;
@@ -46,8 +54,8 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
 
     private CustomPopuWindow customPopuWindow;
     private DpOrPxUtils dpOrPxUtils;
-    private PickValueView pickValueView;
     private PickValueView pickValueViewNum;
+    private NumEdit numEdit;
     private  TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private NotifyEnvInfo notifyEnvInfo;
@@ -55,6 +63,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     private TaskAdapter taskAdapter;
     private List<TaskMode> taskModeList =new ArrayList<>();
     private TaskMode taskMode;
+    private DDREditText ddrEditText;
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
@@ -94,37 +103,46 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
-        taskAdapter.setNewData(taskModeList);
         Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
         taskModeList=mapFileStatus.getcTaskModes();
         taskAdapter.setNewData(taskModeList);
         onItemClick(1);
     }
-
+    TextView tv_task_time;
+    TextView tv_task_pause;
+    GridImageView gridImageView;
+    DDREditText task_num_check;
     private int mPosition;
     public void onItemClick(int type){
         switch (type){
             case 1:
                 //任务列表点击事件
+/*
+                taskAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    ddrEditText=view.findViewById(R.id.task_num_check);
+                    Logger.e("输入数字"+((int)(ddrEditText.getFloatText()))+"原来数字"+ taskModeList.get(position).getRunCounts());
+                    taskModeList.get(position).setRunCounts((int) ddrEditText.getFloatText());
+                });
+*/
                 Logger.e("task列表"+taskModeList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskAdapter.setOnItemChildClickListener((adapter, view, position) ->  {
                     mPosition=position;
-                            TextView tv_task_time=view.findViewById(R.id.tv_task_time);
-                            TextView tv_task_pause=view.findViewById(R.id.tv_task_pause);
-                            GridImageView gridImageView=view.findViewById(R.id.iv_check);
                             switch (view.getId()){
                                 case R.id.tv_task_time:
                                     Logger.e("点击----");
+                                    tv_task_time= (TextView) view;
                                     showTimePopupWindow(tv_task_time,1);
                                     break;
                                 case R.id.iv_check:
+                                    gridImageView= (GridImageView) view;
                                     Logger.e("gggg"+gridImageView.getSelected());
                                     if (!gridImageView.getSelected()){
                                         Logger.e("未在列表中");
                                         gridImageView.setSelected(true);
                                         gridImageView.setBackgroundResource(R.mipmap.intask_check);
                                         taskModeList.get(position).setType(2);
+                                        taskModeList.get(position).setTaskState(1);
                                         toast("加入定时队列，记得点保存哦");
                                     }else {
                                         Logger.e("在列表中");
@@ -132,9 +150,11 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                         gridImageView.setSelected(false);
                                         gridImageView.setBackgroundResource(R.mipmap.intask_def);
                                         taskModeList.get(position).setType(0);
+                                        taskModeList.get(position).setTaskState(3);
                                     }
                                     break;
                                 case R.id.tv_task_pause:
+                                    tv_task_pause= (TextView) view;
                                     if (tv_task_pause.getText().equals("暂停")) {
                                         pauseOrResume("Pause");
                                         tv_task_pause.setText("开始");
@@ -144,7 +164,23 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                     }
                                     break;
                                 case R.id.tv_task_stop:
-
+                                    if (taskModeList.get(position).getTaskState()==2){
+                                        toast("终止当前任务");
+                                        exitModel();
+                                        taskModeList.get(position).setTaskState(3);
+                                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                                    }else if (taskModeList.get(position).getTaskState()==1){
+                                        toast("终止未开始的任务");
+                                        taskModeList.get(position).setTaskState(3);
+                                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                                    }else if(taskModeList.get(position).getType()==0){
+                                        toast("不在定时任务中");
+                                    }
+                                    break;
+                                case R.id.task_num_check:
+                                    task_num_check=(DDREditText) view;
+                                    Logger.e("输入数字"+Integer.parseInt(ddrEditText.getText())+"原来数字"+ taskModeList.get(position).getRunCounts());
+                                    taskModeList.get(position).setRunCounts(Integer.parseInt(ddrEditText.getText()));
                                     break;
                             }
 
@@ -152,14 +188,18 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                 break;
         }
         taskAdapter.setNewData(taskModeList);
-
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick({R.id.tv_task_save})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.tv_task_save:
                 for (int i=0;i<taskModeList.size();i++){
                     Logger.e("队列"+taskModeList.get(i).getType());
+                }
+                taskModeList.sort(Comparator.comparing(TaskMode::getEndHour).thenComparing(TaskMode::getEndMin));
+                for (int i=0;i<taskModeList.size();i++){
+                    Logger.e("列表排序后"+taskModeList.get(i).getName());
                 }
                 tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
                 break;
@@ -223,6 +263,22 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         Logger.e("机器人暂停/重新运动");
     }
 
+    /**
+     * 退出当前模式
+     */
+    private void exitModel() {
+        BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
+                .setError("noError")
+                .build();
+        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
+                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
+                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
+                .build();
+        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+    }
+
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -283,4 +339,18 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         }
 
     }
+
+    /**
+     * 匿名内部类
+     */
+    private NumEdit.OnNumChangeListener onNumChangeListener =new NumEdit.OnNumChangeListener() {
+        @Override
+        public void onNumChange(View view, int num) {
+            Logger.e("Num"+num);
+            TaskMode taskModen=taskModeList.get(mPosition);
+                    taskModen.setRunCounts(num);
+
+        }
+    };
+
 }

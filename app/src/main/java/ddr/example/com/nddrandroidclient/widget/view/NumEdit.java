@@ -15,6 +15,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import ddr.example.com.nddrandroidclient.other.Logger;
+
+import static android.graphics.Color.*;
+
 
 /**
  *
@@ -117,10 +121,16 @@ public class NumEdit extends LinearLayout
         subButton.setText("-");
         addButton.setTag("+");
         subButton.setTag("-");
+
+        addButton.setBackgroundColor(Color.parseColor("#262626"));
+        subButton.setBackgroundColor(Color.parseColor("#262626"));
+        addButton.setTextColor(WHITE);
+        subButton.setTextColor(WHITE);
+
         //设置输入类型为数字
         editText.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
         editText.setText(String.valueOf(num));
-        editText.setTextColor(Color.WHITE);
+        editText.setTextColor(WHITE);
         editText.setTextSize(12);
         editText.setWidth(102);
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
@@ -374,6 +384,7 @@ public class NumEdit extends LinearLayout
     public void setOnNumChangeListener(OnNumChangeListener onNumChangeListener)
     {
         this.onNumChangeListener = onNumChangeListener;
+        Logger.e("-----注册监听");
     }
 
 
@@ -386,6 +397,7 @@ public class NumEdit extends LinearLayout
         subButton.setOnClickListener(new OnButtonClickListener());
         editText.addTextChangedListener(new OnTextChangeListener());
     }
+
 
 
     /**

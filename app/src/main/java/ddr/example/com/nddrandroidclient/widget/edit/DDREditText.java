@@ -74,7 +74,6 @@ public class DDREditText extends LinearLayout {
         });
        /* iv_add.setOnClickListener(v -> {
         });*/
-
         iv_reduce.setOnClickListener((v ->{
             try {
                 float num=Float.valueOf(et_content.getText().toString());
