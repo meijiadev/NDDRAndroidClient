@@ -111,6 +111,17 @@
                 android:layout_marginLeft="44dp"
                 />
             <TextView
+                android:id="@+id/tv_edit_map"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="任务 (0)"
+                android:textSize="11sp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:drawableLeft="@mipmap/iv_edit_gray"
+                android:layout_marginLeft="44dp"
+                />
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="网格 :"

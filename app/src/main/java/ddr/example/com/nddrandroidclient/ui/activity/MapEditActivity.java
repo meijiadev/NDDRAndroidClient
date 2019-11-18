@@ -310,7 +310,7 @@ public class MapEditActivity extends DDRActivity {
         });
     }
 
-    /****************************************************************************************************************/
+    /***************************************************end*************************************************************/
 
     @SuppressLint("NewApi")
     private void initSeekBar() {
@@ -507,6 +507,17 @@ public class MapEditActivity extends DDRActivity {
             case addNewPath:
                 Logger.e("新建路径");
                 titleLayout.setLeftTitle("新建路径");
+                ivCenter.setVisibility(View.VISIBLE);
+                tvAddPath.setVisibility(View.VISIBLE);
+                tvDeletePoint.setVisibility(View.VISIBLE);
+                tvSavePath.setVisibility(View.VISIBLE);
+                bitmap = (Bitmap) messageEvent.getData();
+                zmap.setImageBitmap(bitmap);
+                break;
+            case editMap:
+                titleLayout.setLeftTitle("编辑地图");
+                tvTargetPoint.setText("编辑类型");
+                tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
                 ivCenter.setVisibility(View.VISIBLE);
                 tvAddPath.setVisibility(View.VISIBLE);
                 tvDeletePoint.setVisibility(View.VISIBLE);

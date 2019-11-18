@@ -11,6 +11,13 @@ message timeItem
 	int32 endMin = 4; // 结束时间，分
 }
 
+message space_pointEx
+{ 
+	float x = 1;
+	float y = 2;
+	float theta = 3; // 朝向 单位度 [-180, 180]  
+}
+
 // 基础点
 message space_point 
 {
@@ -186,19 +193,19 @@ message task_item
 // 线段
 message line
 {
-	repeated bytes pointnameset = 1;
+	repeated space_pointEx pointset = 1;
 }
 
 // 多边形
 message polygon
 {
-	repeated bytes pointnameset = 1;
+	repeated space_pointEx pointset = 1;
 }
 
 // 圆形
 message circle
 {
-	bytes centername = 1;
+	space_pointEx center = 1;
 	float radius = 2;
 }
 
@@ -216,11 +223,11 @@ message space_item
 {
 	bytes name = 1; 
 	eSpaceItemType type = 2;
-	repeated line linedata = 3;
-	repeated polygon polygondata = 4;
-	repeated circle circledata = 5;
-	repeated int32 label_value = 6;
+	line linedata = 3;
+	polygon polygondata = 4;
+	circle circledata = 5;
 }
+
 // 空间描述 -----------------------------------------
 
 
@@ -266,7 +273,7 @@ message DDRMapMarkingPointData
 message DDRMapSpaceData
 {
 	repeated space_item spaceSet = 1;
-	repeated space_point spacePointData = 2; // 空间信息的点。
+	//repeated space_point spacePointData = 2; // 空间信息的点。
 }
 
 /*
@@ -465,12 +472,7 @@ message rspMapOperational
 
 // ========================================================== 以下是0.4版客户端对应的协议 =================================================
 
-message space_pointEx
-{ 
-	float x = 1;
-	float y = 2;
-	float theta = 3; // 朝向 单位度 [-180, 180]  
-}
+
 
 message targetPtItem
 {
@@ -609,11 +611,8 @@ message rspRunSpecificPoint
 enum eTaskOperationalType
 {
 	eTaskOperationalError = 0;
-	eTaskOperationalAdd = 1; // 添加到任务队列中去
-	eTaskOperationalDelete = 2; // 从队列中删除
-	eTaskOperationalStop = 3;  // 终止在队列中的任务
-	eTaskOperationalStopTemporary = 4; // 终止临时任务
-	eTaskOperationalAddTemporary = 5; // 以临时任务身份添加到任务队列中去
+	eTaskOperationalStopTemporary = 1; // 终止临时任务
+	eTaskOperationalAddTemporary = 2; // 以临时任务身份添加到任务队列中去
 }
 
 message reqTaskOperational

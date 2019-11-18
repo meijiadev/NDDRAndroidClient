@@ -74,4 +74,6 @@ public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder>
 
 
 
+
+
 }
