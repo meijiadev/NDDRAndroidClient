@@ -193,19 +193,19 @@ message task_item
 // 线段
 message line
 {
-	repeated space_pointEx pointnameset = 1;
+	repeated space_pointEx pointset = 1;
 }
 
 // 多边形
 message polygon
 {
-	repeated space_pointEx pointnameset = 1;
+	repeated space_pointEx pointset = 1;
 }
 
 // 圆形
 message circle
 {
-	bytes centername = 1;
+	space_pointEx center = 1;
 	float radius = 2;
 }
 
@@ -223,9 +223,9 @@ message space_item
 {
 	bytes name = 1; 
 	eSpaceItemType type = 2;
-	repeated line linedata = 3;
-	repeated polygon polygondata = 4;
-	repeated circle circledata = 5;
+	line linedata = 3;
+	polygon polygondata = 4;
+	circle circledata = 5;
 }
 
 // 空间描述 -----------------------------------------
@@ -273,7 +273,7 @@ message DDRMapMarkingPointData
 message DDRMapSpaceData
 {
 	repeated space_item spaceSet = 1;
-	repeated space_point spacePointData = 2; // 空间信息的点。
+	//repeated space_point spacePointData = 2; // 空间信息的点。
 }
 
 /*
@@ -600,6 +600,8 @@ message reqRunSpecificPoint
 {
 	repeated targetPtItem targetPt = 1; 
 	bytes onerouteName = 2;
+	bool bIsDynamicOA = 3; // 动态还是静态
+	bool bSelfCalib = 4; // 是否要自标定
 }
 
 message rspRunSpecificPoint
@@ -632,5 +634,14 @@ message rspTaskOperational
 	DDRCommProto.eCmdRspType type = 1;
 }
 
+message RobotLiveTime
+{
+	int32 year = 1;
+	int32 month = 2;
+	int32 day = 3;
+	int32 hour = 4;
+	int32 min = 5;
+	int32 sec = 6;
+}
 
 

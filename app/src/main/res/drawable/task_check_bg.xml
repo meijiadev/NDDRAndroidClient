@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <size android:width="160dp" android:height="25dp"/>
+    <size android:width="160dp" android:height="28dp"/>
     <!-- 设置描边 -->
     <stroke android:width="0.5dp" android:color="#0399ff" ></stroke>
 

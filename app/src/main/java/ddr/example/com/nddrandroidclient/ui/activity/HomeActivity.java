@@ -399,6 +399,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             @Override
             public void onClick(View v) {
                 customPopuWindow.dissmiss();
+                try {
+                    FloatWindow.get().show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 

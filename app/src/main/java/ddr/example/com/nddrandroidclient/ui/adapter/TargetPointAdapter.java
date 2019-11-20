@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -39,6 +40,13 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 // 状态页面的 前往目标点布局
                 Logger.e("-----------状态页面的 前往目标点布局");
                 helper.setText(R.id.item_recycle_gopoint,item.getName());
+                TextView tv_select=helper.getView(R.id.item_recycle_gopoint);
+                Logger.e("GOPOINT状态"+item.isSelected());
+                if (item.isSelected()){
+                   tv_select.setBackgroundResource(R.drawable.task_check_bg);
+                }else {
+                    tv_select.setBackgroundResource(R.drawable.bt_bg__map);
+                }
                 break;
             case R.layout.item_target_point:
                 //地图管理页面的布局
