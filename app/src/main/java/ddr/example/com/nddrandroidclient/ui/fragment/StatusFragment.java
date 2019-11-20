@@ -30,6 +30,7 @@ import DDRVLNMapProto.DDRVLNMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
@@ -45,6 +46,7 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
@@ -88,6 +90,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RecyclerView recycle_gopoint;
     @BindView(R.id.iv_cd_xs)
     ImageView iv_cd_xs;
+    @BindView(R.id.iv_task_xl)
+    ImageView iv_task_xl;
 
 
     private Animation hideAnimation;  //布局隐藏时的动画
@@ -102,11 +106,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private String mapName;//地图名
     private String taskName;//任务名
     public static String robotID;//机器人ID
-    private String workStatus;
-    private int taskNum;
-    private double workTimes;
-    private double taskSpeed;
-    private int Runnum;
+    private String workStatus; //工作状态
+    private int taskNum;//运行次数
+    private double workTimes; //工作时间
+    private double taskSpeed; //工作速度
+    private int lsNum; //临时任务次数
     private List<String> groupList=new ArrayList<>();
     private List<TargetPoint> targetPoints= new ArrayList<>();
     private TargetPoint targetPoint;
@@ -130,7 +134,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setMapBitmap(mapName,taskName);
-//                    groupList = new ArrayList<>();
+                    groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
                     for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
                         groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
@@ -232,11 +236,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
                         tv_work_statue.setText("待命中");
-
                         break;
                     case 3:
                         tv_work_statue.setText("运动中");
-
+                        tv_now_task.setClickable(false);
                         switch (notifyBaseStatusEx.getSonMode()){
                             case 3:
                                 tv_work_statue.setText("异常");
@@ -278,6 +281,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.recycle_task, null);
         customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
+                .enableOutsideTouchableDissmiss(false)
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
         recycler_task_check =contentView.findViewById(R.id.recycler_task_check);
@@ -285,7 +289,15 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         recycler_task_check.setLayoutManager(layoutManager);
         recycler_task_check.setAdapter(taskCheckAdapter);
         onItemClick(1);
+        customPopWindow.setOutsideTouchListener(()->{
+            Logger.e("点击外部已关闭");
+            customPopWindow.dissmiss();
+            tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
+            iv_task_xl.setImageResource(R.mipmap.xlright_5);
+        });
     }
+
+
     @OnClick({R.id.iv_shrink,R.id.tv_now_task})
     public void onViewClicked(View view) {
         switch (view.getId()){
@@ -296,10 +308,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }else if (shrinkTailLayout.getVisibility()==View.GONE){
                     shrinkTailLayout.setVisibility(View.VISIBLE);
                     shrinkLayout.startAnimation(showAnimation);
+                    ivShrink.setImageResource(R.mipmap.iv_back);
                 }
                 break;
             case R.id.tv_now_task:
                 showTaskPopupWindow(tv_now_task);
+                tv_now_task.setBackgroundResource(R.drawable.task_check_bg);
+                iv_task_xl.setImageResource(R.mipmap.xl_5);
                 break;
         }
     }
@@ -387,10 +402,19 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tcpClient.sendData(null,reqTaskOperational);
     }
 
-    private void goPointLet(int x,int y,float theta,ByteString pname, ByteString routeName){
+    /**
+     * 导航去目标点
+     * @param x
+     * @param y
+     * @param theta
+     * @param pname
+     * @param routeName
+     */
+
+    private void goPointLet(float x,float y,float theta,ByteString pname, ByteString routeName){
         DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
                 .setX(x)
-                .setX(y)
+                .setY(y)
                 .setTheta(theta)
                 .build();
         DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
@@ -398,6 +422,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 .setPtData(space_pointEx)
                 .build();
         List<DDRVLNMap.targetPtItem> targetPtItemList=new ArrayList<>();
+        targetPtItemList.add(targetPtItem);
         DDRVLNMap.reqRunSpecificPoint reqRunSpecificPoint=DDRVLNMap.reqRunSpecificPoint.newBuilder()
                 .setOnerouteName(routeName)
                 .addAllTargetPt(targetPtItemList)
@@ -415,17 +440,63 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 Logger.e("task列表"+groupList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskCheckAdapter.setOnItemClickListener((adapter, view, position) ->  {
-                    tv_now_task.setText(groupList.get(position));
-                    taskName=groupList.get(position);
-                    mapImageView.setMapBitmap(mapName,taskName);
-//                    taskModeList.get(position).setName(groupList.get(position));
-//                    taskModeList.get(position).setType(2);
-//                    tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                    new InputDialog.Builder(getAttachActivity())
+                            .setTitle("临时任务")
+                            .setHint("请输入循环次数")
+                            .setListener(new InputDialog.OnListener() {
+                                @Override
+                                public void onConfirm(BaseDialog dialog, String content) {
+                                    tv_now_task.setText(groupList.get(position));
+                                    taskName=groupList.get(position);
+                                    mapImageView.setMapBitmap(mapName,taskName);
+                                    if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<999 ){
+                                        lsNum=Integer.parseInt(content);
+                                    }else {
+                                        toast("输入数字不符合要求,默认为1");
+                                        lsNum=1;
+                                    }
+
+                                }
+                                @Override
+                                public void onCancel(BaseDialog dialog) {
+                                    toast("取消添加");
+                                }
+                            }).show();
+                    customPopWindow.dissmiss();
+                    tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
+                    iv_task_xl.setImageResource(R.mipmap.xlright_5);
                 });
                 break;
             case 2:
                 //标记点列表点击事件
                 targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    float x=targetPoints.get(position).getX();
+                    float y=targetPoints.get(position).getY();
+                    float theta=targetPoints.get(position).getTheta();
+                    switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
+                        case 0:
+                            toast("请稍等，正在自标定");
+                            //自标定
+                            break;
+                        case 1:
+                            switch (notifyBaseStatusEx.getMode()) {
+                                case 1:
+                                    //待命
+                                    Logger.e("当前点的名字"+targetPoints.get(position).getName());
+                                    goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName));
+                                    for (int i=0;i<targetPoints.size();i++){
+                                        targetPoints.get(i).setSelected(false);
+                                    }
+                                    targetPoints.get(position).setSelected(true);
+                                    targetPointAdapter.setNewData(targetPoints);
+                                    break;
+                                case 3:
+                                    toast("请先退出运动模式");
+                                    break;
+                            }
+                            break;
+                    }
+
                 });
                 break;
         }
@@ -444,7 +515,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 //                        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
                         //Logger.e("待命模式" + modeView.getText());
                         toast("请稍等，正在进入");
-                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),3,2);
+                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
 
                         break;
                     case 3:
@@ -511,7 +582,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 3:
                         toast("请稍等，正在退出");
 //                        exitModel();
-                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),10,1);
+                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
                         break;
                 }
                 break;

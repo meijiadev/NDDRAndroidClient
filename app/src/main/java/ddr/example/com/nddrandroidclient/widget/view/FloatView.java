@@ -11,8 +11,22 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.google.protobuf.ByteString;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.DecimalFormat;
+
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.socket.TcpClient;
 
 /**
  * time: 2019/11/1
@@ -27,9 +41,9 @@ public class FloatView extends View  {
     private Paint mPaint;
     private  int DEFAULT_WIDTH=74;         //单位都是像素
     private  int DEFAULT_HEIGHT=373;
-
     private OnFloatViewListener onFloatViewListener;
 
+    private NotifyBaseStatusEx notifyBaseStatusEx;
     public FloatView(Context context) {
         super(context);
         init();
@@ -40,18 +54,50 @@ public class FloatView extends View  {
         init();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void upDate(MessageEvent mainUpDate){
+        switch (mainUpDate.getType()){
+            case updateBaseStatus:
+                initStatusBar();
+                break;
+        }
+    }
+
     private void init(){
         mPaint=new Paint();
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.parseColor("#979797"));
+        EventBus.getDefault().register(this);
+        notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.float_bg);
-        JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
         YKBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.yk_def);
-        SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
-        CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
+    }
 
-
-
+    private void initStatusBar() {
+        //robotStatusEntity=RobotStatusEntity.getInstance();
+        switch (notifyBaseStatusEx.getStopStat()) {
+            case 4:
+                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_check);
+                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
+                break;
+            case 8:
+                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
+                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_check);
+                break;
+            case 12:
+                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_check);
+                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_check);
+                break;
+            case 0:
+                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
+                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
+                break;
+        }
+        if(notifyBaseStatusEx.isChargingStatus()) {
+            CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_check);
+        }else {
+            CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
+        }
     }
 
     /**

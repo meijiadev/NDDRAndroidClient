@@ -106,7 +106,11 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
     public void onClickBottom() {
         ToastUtils.show("点击底部");
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchFloatWindow));
-
+        try {
+            FloatWindow.get().hide();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

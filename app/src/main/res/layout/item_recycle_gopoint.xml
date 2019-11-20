@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="70dp"
+    android:layout_width="78dp"
     android:layout_height="25dp"
-    android:background="@drawable/task_gopoint_bg"
+    android:background="@drawable/bt_bg__map"
     android:textSize="10sp"
     android:textColor="#ffffff"
     android:gravity="center"
     android:id="@+id/item_recycle_gopoint"
     android:layout_marginLeft="6dp"
     android:layout_marginTop="10dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
         />

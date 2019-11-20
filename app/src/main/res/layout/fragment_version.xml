@@ -18,7 +18,7 @@
         <ImageView
             android:layout_width="226dp"
             android:layout_height="127dp"
-            android:src="@mipmap/logo"
+            android:src="@mipmap/versionlogo"
             android:layout_marginTop="196dp"
             android:layout_marginLeft="84dp"
             android:id="@+id/iv_icon_set"

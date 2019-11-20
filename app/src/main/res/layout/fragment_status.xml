@@ -83,7 +83,8 @@
                 android:textSize="12sp"
                 android:textColor="#ffffff"
                 android:gravity="center"
-                android:id="@+id/tv_now_map"/>
+                android:id="@+id/tv_now_map"
+                android:maxLength="19"/>
         </RelativeLayout>
 
         <!--点击是否伸缩-->
@@ -116,13 +117,13 @@
             android:text="当前任务:"
             android:textColor="#ccffffff"
             android:textSize="12sp"
-            android:layout_marginTop="32.5dp"
+            android:layout_marginTop="36dp"
             android:layout_marginLeft="16dp"
             android:id="@+id/tv_now_task_t"
             />
         <TextView
             android:layout_width="160dp"
-            android:layout_height="18dp"
+            android:layout_height="25dp"
             android:text="未选择"
             android:textColor="#ffffff"
             android:textSize="10sp"
@@ -131,8 +132,17 @@
             android:layout_marginLeft="9dp"
             android:id="@+id/tv_now_task"
             android:paddingLeft="20dp"
-            android:background="@drawable/task_check_bg"
+            android:gravity="center|left"
+            android:background="@drawable/bt_bg__map"
             />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="223dp"
+            android:layout_marginTop="33dp"
+            android:src="@mipmap/xlright_5"
+            android:id="@+id/iv_task_xl"/>
         <TextView
             android:layout_width="56dp"
             android:layout_height="18dp"
@@ -186,7 +196,7 @@
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="100dp"
             android:gravity="center"
-            android:textColor="#ccffffff"
+            android:textColor="#ffffff"
             android:hint="待命中"
             android:id="@+id/tv_work_statue"
             android:textSize="12sp"/>
@@ -196,7 +206,7 @@
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:textColor="#ccffffff"
+            android:textColor="#ffffff"
             android:hint="待命中"
             android:textSize="12sp"
             android:layout_below="@id/tv_work_statue"
@@ -208,7 +218,7 @@
             android:layout_toRightOf="@id/tv_work3"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:textColor="#ccffffff"
+            android:textColor="#ffffff"
             android:hint="待命中"
             android:textSize="12sp"
             android:layout_below="@id/tv_task_num"
@@ -219,7 +229,7 @@
             android:layout_toRightOf="@id/tv_work3"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:textColor="#ccffffff"
+            android:textColor="#ffffff"
             android:hint="待命中"
             android:textSize="12sp"
             android:layout_below="@id/tv_work_time"
@@ -245,7 +255,7 @@
         <ddr.example.com.nddrandroidclient.widget.StatusSwitchButton
             android:id="@+id/status_switch_bt"
             android:layout_width="308dp"
-            android:layout_height="44dp"
+            android:layout_height="50dp"
             android:layout_marginTop="282dp"
             android:layout_marginLeft="32dp"
             />
@@ -313,13 +323,12 @@
 
         </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="308dp"
+            android:layout_width="340dp"
             android:layout_height="75dp"
-            android:layout_marginLeft="32dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="426dp"
             android:id="@+id/recycle_gopoint"
             android:visibility="gone"
-            android:background="@color/blue"
             />
 
     </RelativeLayout>

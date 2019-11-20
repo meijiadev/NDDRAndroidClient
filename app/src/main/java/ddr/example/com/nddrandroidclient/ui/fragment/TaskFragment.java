@@ -1,8 +1,11 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -14,7 +17,9 @@ import com.google.protobuf.ByteString;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,6 +34,7 @@ import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
+import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -63,15 +69,15 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     private TaskAdapter taskAdapter;
     private List<TaskMode> taskModeList =new ArrayList<>();
     private TaskMode taskMode;
-    private DDREditText ddrEditText;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-                Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
-                taskModeList=mapFileStatus.getcTaskModes();
-                taskAdapter.setNewData(taskModeList);
+//                Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
+//                taskModeList=mapFileStatus.getcTaskModes();
+//                taskAdapter.setNewData(taskModeList);
                 break;
         }
     }
@@ -96,7 +102,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
 
 
     }
-
     @Override
     protected void initData() {
         tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
@@ -104,8 +109,16 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
         Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
-        taskModeList=mapFileStatus.getcTaskModes();
-        taskAdapter.setNewData(taskModeList);
+        try {
+            taskModeList=ListTool.deepCopy(mapFileStatus.getcTaskModes());
+            taskAdapter.setNewData(taskModeList);
+            tv_task_save.performClick();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         onItemClick(1);
     }
     TextView tv_task_time;
@@ -116,16 +129,11 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     public void onItemClick(int type){
         switch (type){
             case 1:
-                //任务列表点击事件
-                taskAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    ddrEditText=view.findViewById(R.id.task_num_check);
-                    Logger.e("输入数字"+((int)(ddrEditText.getFloatText()))+"原来数字"+ taskModeList.get(position).getRunCounts());
-                    taskModeList.get(position).setRunCounts((int) ddrEditText.getFloatText());
-                });
                 Logger.e("task列表"+taskModeList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskAdapter.setOnItemChildClickListener((adapter, view, position) ->  {
                     mPosition=position;
+                    Logger.e("task列表对应"+taskModeList.get(position).getName());
                             switch (view.getId()){
                                 case R.id.tv_task_time:
                                     Logger.e("点击----");
@@ -176,9 +184,14 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                     }
                                     break;
                                 case R.id.task_num_check:
-                                    //task_num_check=(DDREditText) view;
-                                    Logger.e("输入数字"+Integer.parseInt(ddrEditText.getText())+"原来数字"+ taskModeList.get(position).getRunCounts());
-                                    taskModeList.get(position).setRunCounts(Integer.parseInt(ddrEditText.getText()));
+                                    task_num_check=(DDREditText) view;
+                                    Logger.e("输入数字"+((int) task_num_check.getFloatText())+"原来数字"+ taskModeList.get(position).getRunCounts());
+                                    int count=(int) task_num_check.getFloatText();
+                                    if (count>999 || count<=0){
+                                        toast("输入次数范围有误");
+                                    }else {
+                                        taskModeList.get(position).setRunCounts(count);
+                                    }
                                     break;
                             }
 
@@ -195,11 +208,40 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                 for (int i=0;i<taskModeList.size();i++){
                     Logger.e("队列"+taskModeList.get(i).getType());
                 }
-                taskModeList.sort(Comparator.comparing(TaskMode::getEndHour).thenComparing(TaskMode::getEndMin));
-                for (int i=0;i<taskModeList.size();i++){
-                    Logger.e("列表排序后"+taskModeList.get(i).getName());
+                taskModeList.sort(Comparator.comparing(TaskMode::getType).reversed().thenComparing(TaskMode::getEndHour).thenComparing(TaskMode::getEndMin));
+                taskAdapter.setNewData(taskModeList);
+                int j=0;
+                boolean isCheckTime;
+                if (taskModeList.size()>1){
+                    for (int i=0;i<taskModeList.size();i++){
+                        Logger.e("列表排序后"+taskModeList.get(i).getName());
+                        if (taskModeList.get(i).getType()==2){
+                            j++;
+                        }
+                    }
+                    Logger.e("选中列数"+j);
+                    if (j>1){
+                        for (int i=0;i<j-1;i++){
+                            if (taskModeList.get(i+1).getStartHour()>taskModeList.get(i).getEndHour()){
+                                isCheckTime=true;
+                            }else {
+                                isCheckTime=false;
+                                toast("定时列表第"+(i+2)+"行时间设置有误");
+                            }
+                            if (isCheckTime){
+                                tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                            }
+
+                        }
+                    }else {
+                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                    }
+
+                }else {
+                    tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
                 }
-                tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+
+
                 break;
 
         }
@@ -284,6 +326,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
         taskModeList=mapFileStatus.getcTaskModes();
         taskAdapter.setNewData(taskModeList);
+        tv_task_save.performClick();
     }
 
     @Override
@@ -306,21 +349,23 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
             int endh = (int) threeValue;
             int endm = (int) rightValue;
             TaskMode taskMode1=taskModeList.get(mPosition);
-            if (mPosition>0){
-                TaskMode taskModeold=taskModeList.get(mPosition-1);
-                if (taskModeold.getEndHour()==starth && startm>taskModeold.getEndMin()){
-                    taskMode1.setStartHour(starth);
-                    taskMode1.setStartMin(startm);
-                }else if (taskModeold.getEndHour()<starth){
-                    taskMode1.setStartHour(starth);
-                    taskMode1.setStartMin(startm);
-                }else {
-                    toast("开始必须大于上一次结束时间");
-                }
-            }else {
                 taskMode1.setStartHour(starth);
                 taskMode1.setStartMin(startm);
-            }
+//            if (mPosition>0){
+//                TaskMode taskModeold=taskModeList.get(mPosition-1);
+//                if (taskModeold.getEndHour()==starth && startm>taskModeold.getEndMin()){
+//                    taskMode1.setStartHour(starth);
+//                    taskMode1.setStartMin(startm);
+//                }else if (taskModeold.getEndHour()<starth){
+//                    taskMode1.setStartHour(starth);
+//                    taskMode1.setStartMin(startm);
+//                }else {
+//                    toast("开始必须大于上一次结束时间");
+//                }
+//            }else {
+//                taskMode1.setStartHour(starth);
+//                taskMode1.setStartMin(startm);
+//            }
 
             if (endh==starth && endm > startm){
                 taskMode1.setEndHour(endh);

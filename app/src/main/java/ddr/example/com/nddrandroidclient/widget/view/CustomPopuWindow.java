@@ -138,6 +138,11 @@ public class CustomPopuWindow implements PopupWindow.OnDismissListener{
 
     }
 
+    public OutsideTouchListener outsideTouchListener;
+
+    public void setOutsideTouchListener(OutsideTouchListener outsideTouchListener){
+        this.outsideTouchListener=outsideTouchListener;
+    }
     private PopupWindow build(){
 
         if(mContentView == null){
@@ -211,6 +216,9 @@ public class CustomPopuWindow implements PopupWindow.OnDismissListener{
                     if ((event.getAction() == MotionEvent.ACTION_DOWN)
                             && ((x < 0) || (x >= mWidth) || (y < 0) || (y >= mHeight))) {
                         Logger.e("out side ");
+                        if (outsideTouchListener!=null){
+                            outsideTouchListener.onOutsideListener();
+                        }
                         Logger.e("width:"+mPopupWindow.getWidth()+"height:"+mPopupWindow.getHeight()+" x:"+x+" y  :"+y);
                         return false;
                     } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
@@ -385,5 +393,12 @@ public class CustomPopuWindow implements PopupWindow.OnDismissListener{
 
 
     }
+
+
+    public interface OutsideTouchListener{
+        void onOutsideListener();
+    }
+
+
 
 }

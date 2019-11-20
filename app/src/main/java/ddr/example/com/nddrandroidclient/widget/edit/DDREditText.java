@@ -1,6 +1,9 @@
 package ddr.example.com.nddrandroidclient.widget.edit;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,7 +24,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * desc: 左右带加减号的EditText
  */
 public class DDREditText extends LinearLayout {
-    private EditText et_content;
+    public EditText et_content;
     private ImageView iv_add;
     private ImageView iv_reduce;
     private Context context;
@@ -56,34 +59,39 @@ public class DDREditText extends LinearLayout {
         iv_add.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_UP:
-                        try {
-                            Logger.e("--------:"+et_content.getText().toString());
-                            float num=Float.valueOf(et_content.getText().toString());
-                            num++;
-                            et_content.setText(Float.toString(num));
-                            Logger.e("-------"+Float.toString(num));
-                        }catch (NumberFormatException e){
-                            e.printStackTrace();
-                        }
-                        break;
+                Logger.e("-------点击");
+                try {
+                    Logger.e("--------:"+et_content.getText().toString());
+                    float num=Float.valueOf(et_content.getText().toString());
+                    num++;
+                    et_content.setText(Float.toString(num));
+                    Logger.e("-------"+Float.toString(num));
+                }catch (NumberFormatException e){
+                    e.printStackTrace();
                 }
                 return false;
             }
         });
-       /* iv_add.setOnClickListener(v -> {
-        });*/
-     /*   iv_reduce.setOnClickListener((v ->{
-            try {
-                float num=Float.valueOf(et_content.getText().toString());
-                num--;
-                et_content.setText(Float.toString(num));
-            }catch (NumberFormatException e){
-                e.printStackTrace();
+
+
+        iv_reduce.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Logger.e("-------点击");
+                try {
+                    Logger.e("--------:"+et_content.getText().toString());
+                    float num=Float.valueOf(et_content.getText().toString());
+                    num--;
+                    et_content.setText(Float.toString(num));
+                    Logger.e("-------"+Float.toString(num));
+                }catch (NumberFormatException e){
+                    e.printStackTrace();
+                }
+                return false;
             }
-        }));*/
+        });
     }
+
 
     /**
      * 获取当前EditText的内容
