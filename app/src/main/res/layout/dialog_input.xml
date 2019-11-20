@@ -5,7 +5,7 @@
     android:layout_width="260dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="#252526"
     app:cardCornerRadius="@dimen/dialog_message_round_size"
     app:cardElevation="0px"
    >
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="#333333"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="标题" />
@@ -40,7 +40,8 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
             android:singleLine="true"
-            android:textColor="#333333"
+            android:textColorHint="#838383"
+            android:textColor="@color/white"
             android:textSize="14sp" />
 
         <View
@@ -63,7 +64,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:text="取消"
-                android:textColor="@color/colorCancel"
+                android:textColor="@color/red01"
                 android:textSize="14sp" />
 
             <View

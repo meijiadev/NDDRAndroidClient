@@ -687,4 +687,26 @@ public class TcpClient extends BaseSocketConnection {
     }
 
 
+    /**
+     * 对地图进行操作
+     */
+    public void reqMapOperational(List<DDRVLNMap.reqMapOperational.OptItem> optItems){
+        DDRVLNMap.reqMapOperational reqMapOperational=DDRVLNMap.reqMapOperational.newBuilder()
+                .addAllOptSet(optItems)
+                .build();
+        tcpClient.sendData(null,reqMapOperational);
+    }
+
+    /**
+     * 切换地图
+     * @param mapName
+     */
+    public void reqRunControlEx(String mapName){
+        DDRVLNMap.reqRunControlEx reqRunControlEx=DDRVLNMap.reqRunControlEx.newBuilder()
+                .setOnerouteName(ByteString.copyFromUtf8(mapName))
+                .build();
+        tcpClient.sendData(null,reqRunControlEx);
+    }
+
+
 }

@@ -47,6 +47,7 @@ import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
+import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -541,6 +542,97 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }, 5000);
             }
         }));
+        mapAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            showMapSettingWindow(view,position);
+        });
+
+
+    }
+
+    /**
+     * 点击地图右上角设置弹出弹窗
+     */
+    private void showMapSettingWindow(View view,int position){
+        View contentView=getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.map_management_window,null);
+        CustomPopuWindow customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+                .setView(contentView)
+                .create()
+                .showAsDropDown(view,-DpOrPxUtils.dip2px(getAttachActivity(),100),1);
+        View.OnClickListener listener=v -> {
+            customPopuWindow.dissmiss();
+          switch (v.getId()){
+              case R.id.tv_rename:
+                  String mapName=mapInfos.get(position).getMapName();
+                  if (!NotifyBaseStatusEx.getInstance().getCurroute().equals(mapName)){
+                      new InputDialog.Builder(getAttachActivity())
+                              .setTitle("修改名称")
+                              .setHint("输入地图名")
+                              .setListener(new InputDialog.OnListener() {
+                                  @Override
+                                  public void onConfirm(BaseDialog dialog, String content) {
+                                      if (!content.isEmpty()){
+                                          content="OneRoute_"+content;
+                                          List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();
+                                          DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                                                  .setTypeValue(3)
+                                                  .setSourceName(ByteString.copyFromUtf8(mapName))
+                                                  .setTargetName(ByteString.copyFromUtf8(content))
+                                                  .build();
+                                          optItems.add(optItem);
+                                          tcpClient.reqMapOperational(optItems);
+                                      }
+                                  }
+                                  @Override
+                                  public void onCancel(BaseDialog dialog) {
+                                      toast("取消修改地图名");
+                                  }
+                              }).show();
+                  }else {
+                      toast("当前地图正在使用中，无法修改");
+                  }
+                  break;
+              case R.id.tv_switch:
+                  if (NotifyBaseStatusEx.getInstance().getMode()==1){
+                      tcpClient.reqRunControlEx(mapInfos.get(position).getMapName());
+                  }else {
+                      toast("非待命模式无法切换地图");
+                  }
+                  break;
+              case R.id.tv_recover:
+                  if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
+                      toast("当前地图正在使用中，无法修改");
+                  }else {
+                      List<DDRVLNMap.reqMapOperational.OptItem> optItems1=new ArrayList<>();
+                      DDRVLNMap.reqMapOperational.OptItem optItem1=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                              .setTypeValue(2)
+                              .setSourceName(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()))
+                              .build();
+                      optItems1.add(optItem1);
+                      tcpClient.reqMapOperational(optItems1);
+                  }
+                  break;
+              case R.id.tv_delete:
+                  if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
+                      toast("当前地图正在使用中，无法删除");
+                  }else {
+                      List<DDRVLNMap.reqMapOperational.OptItem> optItems2=new ArrayList<>();
+                      DDRVLNMap.reqMapOperational.OptItem optItem2=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                              .setTypeValue(1)
+                              .setSourceName(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()))
+                              .build();
+                      optItems2.add(optItem2);
+                      tcpClient.reqMapOperational(optItems2);
+                      mapInfos.remove(position);
+                      mapAdapter.setNewData(mapInfos);
+                  }
+                  break;
+          }
+        };
+        contentView.findViewById(R.id.tv_rename).setOnClickListener(listener);
+        contentView.findViewById(R.id.tv_switch).setOnClickListener(listener);
+        contentView.findViewById(R.id.tv_recover).setOnClickListener(listener);
+        contentView.findViewById(R.id.tv_delete).setOnClickListener(listener);
+
     }
 
     /**

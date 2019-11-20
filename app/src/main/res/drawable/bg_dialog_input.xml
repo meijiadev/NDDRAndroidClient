@@ -5,6 +5,7 @@
     <stroke
         android:width="@dimen/line_size"
         android:color="#4A4A4A" />
+    <corners android:radius="2dp"/>
 
     <solid android:color="@color/white" />
 
