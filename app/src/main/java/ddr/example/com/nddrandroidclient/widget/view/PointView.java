@@ -105,4 +105,9 @@ public class PointView {
         }
     }
 
+    public void clearDraw(){
+        targetPoints=null;
+        targetPoint=null;
+    }
+
 }

@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bt_bg__map"
-            android:text="新建地图"
+            android:text="  新建地图"
             android:textSize="10sp"
             android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
@@ -32,7 +32,7 @@
             android:layout_toRightOf="@id/bt_create_map"
             android:layout_marginTop="24dp"
             android:layout_marginLeft="23dp"
-            android:text="批量管理"
+            android:text="  批量管理"
             android:textSize="10sp"
             android:gravity="center_vertical"
             android:textColor="#ccffffff"
@@ -114,7 +114,7 @@
                 android:id="@+id/tv_edit_map"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="任务 (0)"
+                android:text="地图编辑"
                 android:textSize="11sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
@@ -128,7 +128,7 @@
                 android:textSize="11sp"
                 android:textColor="@color/white"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="315dp"
+                android:layout_marginLeft="140dp"
                 />
             <TextView
                 android:id="@+id/tv_25m"
@@ -205,7 +205,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center_vertical"
-                android:text="新建"
+                android:text="  新建"
                 android:textColor="@color/white"
                 android:drawableLeft="@mipmap/add_map"
                 android:paddingLeft="10dp"
@@ -219,7 +219,7 @@
                 android:layout_marginBottom="18dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center_vertical"
-                android:text="删除"
+                android:text="  删除"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 android:drawableLeft="@mipmap/iv_delete"
@@ -227,11 +227,11 @@
                 />
 
             <View
-                android:layout_width="1dp"
+                android:layout_width="0.5dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="6dp"
                 android:layout_toRightOf="@id/recycler_detail"
-                android:background="#979797" />
+                android:background="#262728" />
             <!--列表右侧的延伸布局，里面包括目标点、路径、任务的布局-->
             <RelativeLayout
                 android:id="@+id/detail_layout"
@@ -398,7 +398,7 @@
                         android:textSize="11sp"
                         android:textColor="@color/white"
                         android:paddingLeft="14dp"
-                        android:drawableRight="@mipmap/iv_add"
+                        android:drawableRight="@mipmap/iv_down"
                         android:gravity="center_vertical"
                         />
                     <TextView

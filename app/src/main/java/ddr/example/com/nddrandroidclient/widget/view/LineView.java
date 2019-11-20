@@ -122,7 +122,6 @@ public class LineView {
                 }
             }
         }
-        pathLines=null;
 
 
         if (pathPoints!=null){
@@ -144,7 +143,6 @@ public class LineView {
                 }
             }
         }
-        pathPoints=null;
 
         if (lines!=null){
             for (int i=0;i<lines.size();i++){
@@ -157,7 +155,6 @@ public class LineView {
                 }
             }
         }
-        lines=null;
 
         if (polygons!=null){
             for (int i=0;i<polygons.size();i++){
@@ -170,7 +167,7 @@ public class LineView {
                 }
             }
         }
-        polygons=null;
+
 
     }
 
@@ -184,6 +181,9 @@ public class LineView {
      */
     public void clearDraw(){
         pathLines=null;
+        pathPoints=null;
+        polygons=null;
+        lines=null;
     }
 
 

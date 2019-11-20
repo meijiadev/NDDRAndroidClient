@@ -50,6 +50,8 @@ public class FloatView extends View  {
         SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
         CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
 
+
+
     }
 
     /**

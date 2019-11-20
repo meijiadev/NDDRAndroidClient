@@ -19,7 +19,7 @@
             android:visibility="gone"
             android:background="@mipmap/nocheckedwg"
             />
-        <TextView
+        <ddr.example.com.nddrandroidclient.widget.textview.SmartTextView
             android:id="@+id/tv_map_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -30,6 +30,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
+            android:maxLines="1"
             />
         <ImageView
             android:id="@+id/iv_more"

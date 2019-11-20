@@ -8,6 +8,10 @@ import java.io.Serializable;
 public class BaseMode implements Serializable {
     private int type;   //type:1 路径  type:2 目标点
     private boolean inTask;       //是否在任务当中
+    private boolean isSelected;   // 是否被选中 单选 用于点击效果
+    private boolean isMultiple;   // 是否被选中 复选
+
+
 
     public BaseMode(int type) {
         this.type=type;
@@ -32,5 +36,21 @@ public class BaseMode implements Serializable {
 
     public void setInTask(boolean inTask) {
         this.inTask = inTask;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public void setMultiple(boolean multiple) {
+        isMultiple = multiple;
+    }
+
+    public boolean isMultiple() {
+        return isMultiple;
     }
 }
