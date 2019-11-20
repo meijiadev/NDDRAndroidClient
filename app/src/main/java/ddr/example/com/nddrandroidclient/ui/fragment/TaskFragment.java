@@ -117,13 +117,11 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         switch (type){
             case 1:
                 //任务列表点击事件
-/*
                 taskAdapter.setOnItemClickListener((adapter, view, position) -> {
                     ddrEditText=view.findViewById(R.id.task_num_check);
                     Logger.e("输入数字"+((int)(ddrEditText.getFloatText()))+"原来数字"+ taskModeList.get(position).getRunCounts());
                     taskModeList.get(position).setRunCounts((int) ddrEditText.getFloatText());
                 });
-*/
                 Logger.e("task列表"+taskModeList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskAdapter.setOnItemChildClickListener((adapter, view, position) ->  {
@@ -178,7 +176,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                     }
                                     break;
                                 case R.id.task_num_check:
-                                    task_num_check=(DDREditText) view;
+                                    //task_num_check=(DDREditText) view;
                                     Logger.e("输入数字"+Integer.parseInt(ddrEditText.getText())+"原来数字"+ taskModeList.get(position).getRunCounts());
                                     taskModeList.get(position).setRunCounts(Integer.parseInt(ddrEditText.getText()));
                                     break;

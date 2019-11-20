@@ -8,8 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
@@ -23,6 +25,9 @@ public class LineView {
     private Paint linePaint,textPaint;
     private List<PathLine> pathLines;
     private List<PathLine.PathPoint> pathPoints;
+
+    private List<DDRVLNMap.space_pointEx> lines;       //线段
+    private List<DDRVLNMap.space_pointEx> polygons;    //多边形
 
     private Bitmap startBitamap,endBitamp;
     /**
@@ -71,6 +76,18 @@ public class LineView {
         this.pathPoints=pathPoints;
     }
 
+    /**
+     * 设置虚拟墙的显示
+     * @param lines
+     */
+    public void setLines(List<DDRVLNMap.space_pointEx> lines){
+        this.lines=lines;
+    }
+
+    public void setPolygons(List<DDRVLNMap.space_pointEx> polygons){
+        this.polygons=polygons;
+    }
+
 
     /**
      * 绘制路到画布上
@@ -81,28 +98,32 @@ public class LineView {
         //绘制路径
         if (pathLines!=null){
             for (int i=0;i<pathLines.size();i++){
-                List<PathLine.PathPoint> pathPoints=pathLines.get(i).getPathPoints();
-                if (pathPoints.size()>1){
-                    for (int j=0;j<pathPoints.size();j++){
-                        if (j<pathPoints.size()-1){
-                            XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
-                            xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                            XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                            xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                            canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
-                            if (j==0){
-                                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
-                            }else if (j==pathPoints.size()-2){
-                                mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
-                                canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
-                            }
+                if (pathLines.get(i).isInTask()){
+                    List<PathLine.PathPoint> pathPoints=pathLines.get(i).getPathPoints();
+                    if (pathPoints.size()>1){
+                        for (int j=0;j<pathPoints.size();j++){
+                            if (j<pathPoints.size()-1){
+                                XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
+                                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                                XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                                if (j==0){
+                                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                                }else if (j==pathPoints.size()-2){
+                                    mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
+                                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                }
 
+                            }
                         }
                     }
                 }
             }
         }
+        pathLines=null;
+
 
         if (pathPoints!=null){
             for (int j=0;j<pathPoints.size();j++){
@@ -122,9 +143,39 @@ public class LineView {
 
                 }
             }
-
         }
+        pathPoints=null;
+
+        if (lines!=null){
+            for (int i=0;i<lines.size();i++){
+                if (i<lines.size()-1){
+                    XyEntity xyEntity1=zoomImageView.toXorY(lines.get(i).getX(),lines.get(i).getY());
+                    xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                    XyEntity xyEntity2=zoomImageView.toXorY(lines.get(i+1).getX(),lines.get(i+1).getY());
+                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                }
+            }
+        }
+        lines=null;
+
+        if (polygons!=null){
+            for (int i=0;i<polygons.size();i++){
+                if (i<polygons.size()-1){
+                    XyEntity xyEntity1=zoomImageView.toXorY(polygons.get(i).getX(),polygons.get(i).getY());
+                    xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                    XyEntity xyEntity2=zoomImageView.toXorY(polygons.get(i+1).getX(),polygons.get(i+1).getY());
+                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                }
+            }
+        }
+        polygons=null;
+
     }
+
+
+
 
 
 

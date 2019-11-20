@@ -6,6 +6,7 @@ import java.util.List;
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -24,10 +25,13 @@ public class MapFileStatus {
     private List<DDRVLNMap.targetPtItem> targetPtItems;          // 接收到的目标点列表
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 接收到路径列表
     private List<DDRVLNMap.task_itemEx> taskItemExes;          //  接收到任务列表
+    private List<DDRVLNMap.space_item> space_items;           //接收到的空间数据
     /*** 查看的地图详情信息*/
     private List<TargetPoint> targetPoints=new ArrayList<>();         // 解析后的目标点数据
     private List<PathLine> pathLines=new ArrayList<>();               //解析后的路径数据
     private List<TaskMode> taskModes=new ArrayList<>();               //解析后的任务数据
+
+    private List<SpaceItem> spaceItems=new ArrayList<>();             //解析出来后的空间信息
     private String mapName;                                    //解析出获取到的地图信息的名字
     /**获取当前运行地图的详情信息*/
     private List<TargetPoint> cTargetPoints=new ArrayList<>();         // 解析后的目标点数据
@@ -80,6 +84,7 @@ public class MapFileStatus {
         targetPtItems = rspGetDDRVLNMapEx.getData().getTargetPtdata().getTargetPtList();
         pathLineItemExes = rspGetDDRVLNMapEx.getData().getPathSet().getPathLineDataList();
         taskItemExes = rspGetDDRVLNMapEx.getData().getTaskSetList();
+        space_items=reqDDRVLNMapEx.getSpacedata().getSpaceSetList();
         if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
            currentMapEx=reqDDRVLNMapEx;
             Logger.e("返回信息为当前地图");
@@ -144,6 +149,7 @@ public class MapFileStatus {
         targetPoints.clear();
         pathLines.clear();
         taskModes.clear();
+        spaceItems.clear();
         for (int i = 0; i < targetPtItems.size(); i++) {
             TargetPoint targetPoint = new TargetPoint();
             targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
@@ -199,6 +205,20 @@ public class MapFileStatus {
             taskModes.add(taskMode);
         }
 
+        for (int i=0;i<space_items.size();i++){
+            SpaceItem spaceItem=new SpaceItem();
+            spaceItem.setName(space_items.get(i).getName().toStringUtf8());
+            spaceItem.setType(space_items.get(i).getTypeValue());
+            float x=space_items.get(i).getCircledata().getCenter().getX();
+            float y=space_items.get(i).getCircledata().getCenter().getY();
+            float radius=space_items.get(i).getCircledata().getRadius();
+            SpaceItem.Circle circle=new SpaceItem.Circle(x,y,radius);
+            spaceItem.setCircle(circle);
+            spaceItem.setLines(space_items.get(i).getLinedata().getPointsetList());
+            spaceItem.setPolygons(space_items.get(i).getPolygondata().getPointsetList());
+            spaceItems.add(spaceItem);
+        }
+
 
     }
 
@@ -246,6 +266,14 @@ public class MapFileStatus {
         return taskModes;
     }
 
+
+    /**
+     * 获取空间信息
+     * @return
+     */
+    public List<SpaceItem> getSpaceItems() {
+        return spaceItems;
+    }
 
     /**
      * 获取当前地图的目标点

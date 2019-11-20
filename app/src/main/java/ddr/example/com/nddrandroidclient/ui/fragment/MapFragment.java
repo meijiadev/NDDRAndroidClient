@@ -569,7 +569,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             etSpeed.setText(pathLines.get(position).getVelocity());
             tvConfig.setText(pathLines.get(position).getConfig());
             actionAdapter.setNewData(pathLines.get(position).getPathPoints());
-            //LineView.getInstance(getAttachActivity()).setLineViews();
+            LineView.getInstance(getAttachActivity()).setPoints(pathLines.get(position).getPathPoints());
+            zoomMap.invalidate();
         });
     }
 
@@ -603,6 +604,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+            PointView.getInstance(getAttachActivity()).setPoints(selectPoints);
+            LineView.getInstance(getAttachActivity()).setLineViews(selectPaths);
+            zoomMap.invalidate();
         });
     }
 
@@ -622,7 +626,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
         }
         selectPointAdapter.setNewData(selectPoints);
-
         for (int i=0;i<selectPaths.size();i++){
             if (taskModes.get(position).getPathLines().contains(selectPaths.get(i).getName())){
                 selectPaths.get(i).setInTask(true);
@@ -812,9 +815,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
             case updatePoints:
                 List<TargetPoint> targetPoints1= (List<TargetPoint>) messageEvent.getData();
-                Logger.e("-------接收新建点数据"+targetPoints1.size());
                 targetPoints.addAll(targetPoints1);
-                Logger.e("-------接收新建点后数据"+targetPoints.size());
                 targetPointAdapter.setNewData(targetPoints);
                 tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
                 break;

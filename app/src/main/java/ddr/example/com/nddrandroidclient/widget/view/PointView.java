@@ -80,14 +80,16 @@ public class PointView {
 
         if (targetPoints!=null){
             for (int i=0;i<targetPoints.size();i++){
-                XyEntity xyEntity=zoomImageView.toXorY(targetPoints.get(i).getX(),targetPoints.get(i).getY());
-                xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-                int x= (int) xyEntity.getX();
-                int y= (int) xyEntity.getY();
-                mRectSrc=new Rect(0,0,22,22);
-                mRectDst=new Rect(x-11,y-11,x+11,y+11);
-                canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst,pointPaint);
-                canvas.drawText(targetPoints.get(i).getName(),x,y+15,textPaint);
+                if (targetPoints.get(i).isInTask()){
+                    XyEntity xyEntity=zoomImageView.toXorY(targetPoints.get(i).getX(),targetPoints.get(i).getY());
+                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    int x= (int) xyEntity.getX();
+                    int y= (int) xyEntity.getY();
+                    mRectSrc=new Rect(0,0,22,22);
+                    mRectDst=new Rect(x-11,y-11,x+11,y+11);
+                    canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst,pointPaint);
+                    canvas.drawText(targetPoints.get(i).getName(),x,y+15,textPaint);
+                }
             }
         }
 
