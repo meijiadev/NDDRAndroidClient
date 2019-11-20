@@ -129,7 +129,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     public void onItemClick(int type){
         switch (type){
             case 1:
-                //任务列表点击事件
                 Logger.e("task列表"+taskModeList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskAdapter.setOnItemChildClickListener((adapter, view, position) ->  {
@@ -193,7 +192,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                     }else {
                                         taskModeList.get(position).setRunCounts(count);
                                     }
-
                                     break;
                             }
 

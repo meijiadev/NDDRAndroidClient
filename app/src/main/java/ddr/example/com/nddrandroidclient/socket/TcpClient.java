@@ -23,8 +23,10 @@ import java.util.logging.Handler;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
@@ -607,12 +609,79 @@ public class TcpClient extends BaseSocketConnection {
             taskItemExes.add(task_itemEx);
         }
         Logger.e("-------------保存到服务端的任务:"+taskItemExes.size());
+        /***************************************保存到服务的空间信息******************************************/
+        List<DDRVLNMap.space_item> space_items=new ArrayList<>();           //接收到的空间数据
+        List<SpaceItem> spaceItems=MapFileStatus.getInstance().getSpaceItems();
+        for (int i=0;i<spaceItems.size();i++){
+            DDRVLNMap.line line=DDRVLNMap.line.newBuilder()
+                    .addAllPointset(spaceItems.get(i).getLines())
+                    .build();
+            DDRVLNMap.circle circle=DDRVLNMap.circle.newBuilder()
+                    .setCenter(DDRVLNMap.space_pointEx.newBuilder().setX(spaceItems.get(i).getCircle().getX()).setY(spaceItems.get(i).getCircle().getY()).build())
+                    .setRadius(spaceItems.get(i).getCircle().getRadius())
+                    .build();
+            DDRVLNMap.polygon polygon=DDRVLNMap.polygon.newBuilder()
+                    .addAllPointset(spaceItems.get(i).getPolygons())
+                    .build();
+            DDRVLNMap.space_item space_item=DDRVLNMap.space_item.newBuilder()
+                    .setName(ByteString.copyFromUtf8(spaceItems.get(i).getName()))
+                    .setTypeValue(spaceItems.get(i).getType())
+                    .setLinedata(line)
+                    .setCircledata(circle)
+                    .setPolygondata(polygon)
+                    .build();
+            space_items.add(space_item);
+        }
+        DDRVLNMap.DDRMapSpaceData spaceData=DDRVLNMap.DDRMapSpaceData.newBuilder()
+                .addAllSpaceSet(space_items)
+                .build();
+
         DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
                 .setBasedata(reqDDRVLNMapEx.getBasedata())
-                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setSpacedata(spaceData)
                 .setTargetPtdata(targetPointData)
                 .addAllTaskSet(taskItemExes)
                 .setPathSet(ddrMapPathDataEx)
+                .build();
+        tcpClient.sendData(null,reqDDRVLNMapEx1);
+    }
+
+    /**
+     * 保存空间信息到服务
+     * @param reqDDRVLNMapEx
+     */
+    public void saveSpaceToServer(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx){
+        List<DDRVLNMap.space_item> space_items=new ArrayList<>();           //接收到的空间数据
+        List<SpaceItem> spaceItems=MapFileStatus.getInstance().getSpaceItems();
+        for (int i=0;i<spaceItems.size();i++){
+            DDRVLNMap.line line=DDRVLNMap.line.newBuilder()
+                    .addAllPointset(spaceItems.get(i).getLines())
+                    .build();
+            DDRVLNMap.circle circle=DDRVLNMap.circle.newBuilder()
+                    .setCenter(DDRVLNMap.space_pointEx.newBuilder().setX(spaceItems.get(i).getCircle().getX()).setY(spaceItems.get(i).getCircle().getY()).build())
+                    .setRadius(spaceItems.get(i).getCircle().getRadius())
+                    .build();
+            DDRVLNMap.polygon polygon=DDRVLNMap.polygon.newBuilder()
+                    .addAllPointset(spaceItems.get(i).getPolygons())
+                    .build();
+            DDRVLNMap.space_item space_item=DDRVLNMap.space_item.newBuilder()
+                    .setName(ByteString.copyFromUtf8(spaceItems.get(i).getName()))
+                    .setTypeValue(spaceItems.get(i).getType())
+                    .setLinedata(line)
+                    .setCircledata(circle)
+                    .setPolygondata(polygon)
+                    .build();
+            space_items.add(space_item);
+        }
+        DDRVLNMap.DDRMapSpaceData spaceData=DDRVLNMap.DDRMapSpaceData.newBuilder()
+                .addAllSpaceSet(space_items)
+                .build();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(reqDDRVLNMapEx.getBasedata())
+                .setSpacedata(spaceData)
+                .setTargetPtdata(reqDDRVLNMapEx.getTargetPtdata())
+                .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
+                .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
         tcpClient.sendData(null,reqDDRVLNMapEx1);
     }

@@ -168,7 +168,10 @@ public class CollectingView extends GLContinuousView {
     }
 
 
-
+    /**
+     * 计算缩放比例
+     * @param list
+     */
     private void maxOrmin(List<BaseCmd.notifyLidarPts.Position> list){
        //long startTime=System.currentTimeMillis();
        if (list!=null){

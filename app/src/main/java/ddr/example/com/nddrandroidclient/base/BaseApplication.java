@@ -111,7 +111,6 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
 

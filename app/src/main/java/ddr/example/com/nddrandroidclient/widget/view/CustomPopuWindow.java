@@ -253,7 +253,6 @@ public class CustomPopuWindow implements PopupWindow.OnDismissListener{
         if(mOnDismissListener!=null){
             mOnDismissListener.onDismiss();
         }
-
         //如果设置了背景变暗，那么在dissmiss的时候需要还原
         if(mWindow!=null){
             WindowManager.LayoutParams params = mWindow.getAttributes();
@@ -391,6 +390,7 @@ public class CustomPopuWindow implements PopupWindow.OnDismissListener{
             mCustomPopWindow.build();
             return mCustomPopWindow;
         }
+
 
     }
 

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import DDRVLNMapProto.DDRVLNMap;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -40,15 +41,19 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.LineView;
+import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
 
@@ -119,6 +124,9 @@ public class MapEditActivity extends DDRActivity {
     private List<PathLine> pathLines;
     private TargetPointAdapter targetPointAdapter;
     private PathAdapter pathAdapter;
+    private StringAdapter editTypeAdapter,graphTypeAdapter;           //编辑类型 、图形类型适配器
+    private List<String> editTypes=new ArrayList<>();
+    private List<String> graphTypes=new ArrayList<>();
 
 
     @Override
@@ -137,6 +145,8 @@ public class MapEditActivity extends DDRActivity {
         setFixedSpeed();
         targetPointAdapter = new TargetPointAdapter(R.layout.item_show_recycler);
         pathAdapter = new PathAdapter(R.layout.item_show_recycler);
+        editTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
+        graphTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
     }
 
     @Override
@@ -157,8 +167,12 @@ public class MapEditActivity extends DDRActivity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
-        tvPath.setText("路径" + "(" + pathLines.size() + ")");
+        editTypes.add("虚拟墙");
+        graphTypes.add("直线");
+        graphTypes.add("圆");
+        graphTypes.add("多边形");
+        onShowItemClick();
+
     }
 
 
@@ -173,10 +187,18 @@ public class MapEditActivity extends DDRActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_target_point:
-                showPopupWindow(tvTargetPoint, 0);
+                if (tvTargetPoint.getText().toString().contains("目标点")){
+                    showPopupWindow(tvTargetPoint, 0);
+                }else {
+                    showPopupWindow(tvTargetPoint,2);
+                }
                 break;
             case R.id.tv_path:
-                showPopupWindow(tvPath, 1);
+                if (tvPath.getText().toString().contains("路径")){
+                    showPopupWindow(tvPath, 1);
+                }else {
+                    showPopupWindow(tvPath,3);
+                }
                 break;
             case R.id.tv_025m:
                 break;
@@ -213,8 +235,11 @@ public class MapEditActivity extends DDRActivity {
                                     targetPoint.setName(content);
                                     targetPoint.setX(notifyBaseStatusEx.getPosX());
                                     targetPoint.setY(notifyBaseStatusEx.getPosY());
+                                    targetPoint.setInTask(true);  //方便显示
                                     targetPoint.setTheta(1);
                                     newPoints.add(targetPoint);
+                                    PointView.getInstance(getApplicationContext()).setPoints(newPoints);
+                                    zmap.invalidate();
                                     targetPoints.add(targetPoint);
                                 }
                                 @Override
@@ -226,50 +251,126 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case R.id.iv_add_path:
-                PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
-                pathPoint.setName("point"+(pathPoints.size()+1));
-                pathPoint.setY(zmap.getTargetPoint().getY());
-                pathPoint.setX(zmap.getTargetPoint().getX());
-                pathPoints.add(pathPoint);
+                if (titleLayout.getLeftTitle().toString().contains("新建路径")){
+                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                    pathPoint.setName("point"+(pathPoints.size()+1));
+                    pathPoint.setY(zmap.getTargetPoint().getY());
+                    pathPoint.setX(zmap.getTargetPoint().getX());
+                    pathPoints.add(pathPoint);
+                    LineView.getInstance(getApplication()).setPoints(pathPoints);
+                    zmap.invalidate();
+                }else {
+                    addVirtualWall();
+                }
                 break;
             case R.id.delete_point:
-                if (pathPoints.size()>0){
-                    pathPoints.remove(pathPoints.size()-1);
+                if (titleLayout.getLeftTitle().toString().contains("新建路径")){
+                    if (pathPoints.size()>0){
+                        pathPoints.remove(pathPoints.size()-1);
+                        LineView.getInstance(getApplication()).setPoints(pathPoints);
+                        zmap.invalidate();
+                    }else {
+                        toast("请先添加点");
+                    }
+                }else {
+                    deleteVirtualWall();
+                }
+                break;
+            case R.id.save_path:
+                if (titleLayout.getLeftTitle().toString().contains("新建路径")){
+                    new InputDialog.Builder(this).setTitle("添加路径名")
+                            .setHint("请输入")
+                            .setListener(new InputDialog.OnListener() {
+                                @Override
+                                public void onConfirm(BaseDialog dialog, String content) {
+                                    PathLine pathLine=new PathLine();
+                                    pathLine.setName(content);
+                                    List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
+                                    try {
+                                        pathPoints1=ListTool.deepCopy(pathPoints);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (ClassNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                    pathLine.setPathPoints(pathPoints1);
+                                    pathLine.setVelocity(0.4f);
+                                    newPaths.add(pathLine);
+                                    pathLines.add(pathLine);
+                                    pathPoints.clear();
+                                }
+                                @Override
+                                public void onCancel(BaseDialog dialog) {
+                                    pathPoints.clear();
+                                    toast("取消添加");
+                                }
+                            })
+                            .show();
+                }else {
+                    saveVirtualWall();
+                }
+                break;
+
+        }
+    }
+
+    private List<DDRVLNMap.space_pointEx> lines=new ArrayList<>();       //线段
+    private List<DDRVLNMap.space_pointEx> polygons=new ArrayList<>();    //多边形
+    private void addVirtualWall(){
+        switch (mPosition){
+            case 0:
+                DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
+                        .setX(zmap.getTargetPoint().getX())
+                        .setY(zmap.getTargetPoint().getY())
+                        .build();
+                lines.add(space_pointEx);
+                LineView.getInstance(getApplication()).setLines(lines);
+                zmap.invalidate();
+                break;
+            case 2:
+                DDRVLNMap.space_pointEx space_pointEx1=DDRVLNMap.space_pointEx.newBuilder()
+                        .setX(zmap.getTargetPoint().getX())
+                        .setY(zmap.getTargetPoint().getY())
+                        .build();
+                polygons.add(space_pointEx1);
+                LineView.getInstance(getApplication()).setPolygons(polygons);
+                zmap.invalidate();
+                break;
+        }
+    }
+
+    private void deleteVirtualWall(){
+        switch (mPosition){
+            case 0:
+                if (lines.size()>0){
+                    lines.remove(lines.size()-1);
                 }else {
                     toast("请先添加点");
                 }
                 break;
-            case R.id.save_path:
-                new InputDialog.Builder(this).setTitle("添加路径名")
-                        .setHint("请输入")
-                        .setListener(new InputDialog.OnListener() {
-                            @Override
-                            public void onConfirm(BaseDialog dialog, String content) {
-                                PathLine pathLine=new PathLine();
-                                pathLine.setName(content);
-                                List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
-                                try {
-                                     pathPoints1=ListTool.deepCopy(pathPoints);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                                pathLine.setPathPoints(pathPoints1);
-                                pathLine.setVelocity(0.4f);
-                                newPaths.add(pathLine);
-                                pathLines.add(pathLine);
-                                pathPoints.clear();
-                            }
-                            @Override
-                            public void onCancel(BaseDialog dialog) {
-                                pathPoints.clear();
-                                toast("取消添加");
-                            }
-                        })
-                        .show();
+            case 2:
+                if (polygons.size()>0){
+                    polygons.remove(polygons.size()-1);
+                }else {
+                    toast("请先添加点");
+                }
                 break;
+        }
+    }
+    private List<SpaceItem> spaceItems;
+    private void saveVirtualWall(){
+        switch (mPosition){
+            case 0:
+                spaceItems=mapFileStatus.getSpaceItems();
+                SpaceItem spaceItem=new SpaceItem();
+                spaceItem.setName("space-"+spaceItems.size());
+                spaceItem.setType(1);
+                spaceItem.setLines(lines);
+                spaceItems.add(spaceItem);
+                break;
+            case 2:
 
+                break;
         }
     }
 
@@ -287,16 +388,29 @@ public class MapEditActivity extends DDRActivity {
         showRecycler = contentView.findViewById(R.id.show_Recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
-        if (type == 0) {
-            showRecycler.setAdapter(targetPointAdapter);
-            targetPointAdapter.setNewData(targetPoints);
-        } else if (type == 1) {
-            showRecycler.setAdapter(pathAdapter);
-            pathAdapter.setNewData(pathLines);
+        switch (type){
+            case 0:
+                showRecycler.setAdapter(targetPointAdapter);
+                targetPointAdapter.setNewData(targetPoints);
+                break;
+            case 1:
+                showRecycler.setAdapter(targetPointAdapter);
+                targetPointAdapter.setNewData(targetPoints);
+                break;
+            case 2:
+                showRecycler.setAdapter(editTypeAdapter);
+                editTypeAdapter.setNewData(editTypes);
+                break;
+            case 3:
+                showRecycler.setAdapter(graphTypeAdapter);
+                graphTypeAdapter.setNewData(graphTypes);
+                break;
         }
+
 
     }
 
+    private int mPosition;
     /**
      * 弹窗事件点击事件
      */
@@ -308,9 +422,31 @@ public class MapEditActivity extends DDRActivity {
         pathAdapter.setOnItemClickListener((adapter, view, position) -> {
 
         });
+
+        editTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
+
+        });
+
+        graphTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
+            mPosition=position;
+            switch (position){
+                case 0:
+                    tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
+                    break;
+                case 1:
+                    tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_circle_blue),null,null,null);
+                    break;
+                case 2:
+                    tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_polygon_blue),null,null,null);
+                    break;
+            }
+
+        });
+
+
     }
 
-    /****************************************************************************************************************/
+    /***************************************************end*************************************************************/
 
     @SuppressLint("NewApi")
     private void initSeekBar() {
@@ -503,10 +639,26 @@ public class MapEditActivity extends DDRActivity {
                 addPoi.setVisibility(View.VISIBLE);
                 bitmap = (Bitmap) messageEvent.getData();
                 zmap.setImageBitmap(bitmap);
+                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                tvPath.setText("路径" + "(" + pathLines.size() + ")");
                 break;
             case addNewPath:
                 Logger.e("新建路径");
                 titleLayout.setLeftTitle("新建路径");
+                ivCenter.setVisibility(View.VISIBLE);
+                tvAddPath.setVisibility(View.VISIBLE);
+                tvDeletePoint.setVisibility(View.VISIBLE);
+                tvSavePath.setVisibility(View.VISIBLE);
+                bitmap = (Bitmap) messageEvent.getData();
+                zmap.setImageBitmap(bitmap);
+                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                break;
+            case editMap:
+                titleLayout.setLeftTitle("编辑地图");
+                tvTargetPoint.setText("编辑类型");
+                tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
+                tvPath.setText("图形类型");
                 ivCenter.setVisibility(View.VISIBLE);
                 tvAddPath.setVisibility(View.VISIBLE);
                 tvDeletePoint.setVisibility(View.VISIBLE);

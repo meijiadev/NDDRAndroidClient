@@ -239,9 +239,9 @@ public class ZoomImageView extends View {
             }
         }
         currentStatus=0;
-       /* PointView.getInstance(context).drawPoint(canvas,this);
+        PointView.getInstance(context).drawPoint(canvas,this);
         LineView.getInstance(context).drawLine(canvas,this);
-        GridLayerView.getInstance(this).drawGrid(canvas);*/
+        //GridLayerView.getInstance(this).drawGrid(canvas);
     }
 
     /**

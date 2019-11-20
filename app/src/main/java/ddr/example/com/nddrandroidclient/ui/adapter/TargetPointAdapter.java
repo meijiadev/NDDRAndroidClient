@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,7 +64,13 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 }
                 break;
             case R.layout.item_show_recycler:
-                helper.setText(R.id.tv_show_name,item.getName());
+                if (item.isSelected()){
+                    helper.setText(R.id.tv_show_name,item.getName())
+                    .setTextColor(R.id.tv_show_name,Color.parseColor("#0399ff"));
+                }else {
+                    helper.setText(R.id.tv_show_name,item.getName())
+                            .setTextColor(R.id.tv_show_name,Color.parseColor("#ffffff"));
+                }
                 break;
 
         }

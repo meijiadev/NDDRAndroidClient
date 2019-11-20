@@ -73,6 +73,7 @@ public class DDREditText extends LinearLayout {
             }
         });
 
+
         iv_reduce.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -113,6 +114,8 @@ public class DDREditText extends LinearLayout {
             return 0;
         }
     }
+
+
 
     /**
      * 设置EditText float类型的值
