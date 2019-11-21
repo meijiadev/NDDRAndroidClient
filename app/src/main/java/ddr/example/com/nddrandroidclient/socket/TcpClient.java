@@ -459,7 +459,7 @@ public class TcpClient extends BaseSocketConnection {
      * @param reqDDRVLNMapEx
      * @param taskModes
      */
-    public void saveTaskData(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx,List<TaskMode> taskModes){
+    public void saveTaskData(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx,List<TaskMode> taskModes) throws NullPointerException{
         List<DDRVLNMap.task_itemEx> taskItemExes=new ArrayList<>();
         for (int i=0;i<taskModes.size();i++){
             TaskMode taskMode=taskModes.get(i);

@@ -13,6 +13,8 @@
         app:titleColor="@color/white"
         app:titleSize="16sp"
         app:lineColor="#161718"
+        app:rightTitle="保存  "
+        app:rightColor="@color/white"
         >
     </com.hjq.bar.TitleBar>
 

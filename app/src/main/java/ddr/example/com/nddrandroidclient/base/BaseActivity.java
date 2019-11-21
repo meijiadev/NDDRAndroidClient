@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +13,7 @@ import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.yhao.floatwindow.FloatWindow;
@@ -21,6 +24,7 @@ import com.yhao.floatwindow.Screen;
 import java.util.Random;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
@@ -58,6 +62,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             initSoftKeyboard();
         }
     }
+
+
     /**
      * 获取布局Id
      * @return

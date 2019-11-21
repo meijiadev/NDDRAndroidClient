@@ -61,6 +61,16 @@ public final class InputDialog {
             return this;
         }
 
+        /**
+         * 设置EditText是否可见
+         * @param visibility
+         * @return
+         */
+        public Builder setEditVisibility(int visibility){
+            mInputView.setVisibility(visibility);
+            return this;
+        }
+
         public Builder setHint(@StringRes int id) {
             return setHint(getString(id));
         }

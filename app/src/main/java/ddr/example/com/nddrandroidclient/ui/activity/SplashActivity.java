@@ -1,5 +1,10 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Build;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -11,6 +16,7 @@ import com.hjq.permissions.XXPermissions;
 
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
 import butterknife.BindView;
 
 import ddr.example.com.nddrandroidclient.R;
@@ -36,16 +42,27 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
         alphaAnimation.setDuration(ANIM_TIME);
         alphaAnimation.setAnimationListener(this);
         ivSplash.startAnimation(alphaAnimation);
-
-        // 设置状态栏和导航栏参数
-        getStatusBarConfig()
-                // 有导航栏的情况下，activity全屏显示，也就是activity最下面被导航栏覆盖，不写默认非全屏
-                .fullScreen(true)
-                // 隐藏状态栏
-                .hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
-                // 透明导航栏，不写默认黑色(设置此方法，fullScreen()方法自动为true)
-                .transparentNavigationBar()
+        getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
                 .init();
+    }
+
+    /**
+     * 沉浸式状态栏（已适配 ）
+     */
+    public  void initState(Activity activity) {
+        //Logger.e("启动沉浸式状态栏");
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
     }
 
 

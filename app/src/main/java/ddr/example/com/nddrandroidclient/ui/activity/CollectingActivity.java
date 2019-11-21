@@ -74,6 +74,7 @@ public class CollectingActivity extends DDRActivity {
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
+                Logger.e("-------:"+notifyBaseStatusEx.getSonMode());
                 if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
                     setTitle("正在自标定中...");
                 }else {
@@ -143,13 +144,16 @@ public class CollectingActivity extends DDRActivity {
 
     @Override
     public void onLeftClick(View v) {
+        quitCollect();
         finish();
     }
 
 
     @Override
     public void onRightClick(View v) {
-
+        exitModel();
+        processBar.setVisibility(View.VISIBLE);
+        collecting.unRegister();
     }
 
 
@@ -380,12 +384,32 @@ public class CollectingActivity extends DDRActivity {
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
     }
 
+    /**
+     * 退出采集模式
+     */
+
+    private void quitCollect(){
+        BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
+                .setError("noError")
+                .setCancelRec(true)
+                .build();
+        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
+                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
+                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
+                .build();
+        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+
+    }
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
+        tcpClient.requestFile();
     }
 
     @Override

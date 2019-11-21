@@ -148,15 +148,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initView() {
-        // 设置状态栏和导航栏参数
-        getStatusBarConfig()
-                // 有导航栏的情况下，activity全屏显示，也就是activity最下面被导航栏覆盖，不写默认非全屏
-                .fullScreen(true)
-                // 隐藏状态栏
-                .hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
-                // 透明导航栏，不写默认黑色(设置此方法，fullScreen()方法自动为true)
-                .transparentNavigationBar()
-                .init();
+        getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());

@@ -928,6 +928,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 Logger.e("更新数据");
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 break;
+            case updateMapList:
+                transformMapInfo(mapFileStatus.getMapInfos());
+                mapAdapter.setNewData(mapInfos);
+                break;
+
         }
     }
 
