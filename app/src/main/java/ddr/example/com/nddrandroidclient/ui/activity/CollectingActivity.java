@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
@@ -14,6 +15,7 @@ import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -23,6 +25,8 @@ import java.util.TimerTask;
 
 import DDRCommProto.BaseCmd;
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
@@ -74,10 +78,10 @@ public class CollectingActivity extends DDRActivity {
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
-                Logger.e("-------:"+notifyBaseStatusEx.getSonMode());
-                if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
+                Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
+                if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
                     setTitle("正在自标定中...");
-                }else {
+                } else {
                     if (notifyBaseStatusEx.getMode() == 2) {
                         switch (notifyBaseStatusEx.getSonMode()) {
                             case 2:
@@ -118,7 +122,7 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void initView() {
         super.initView();
-        tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+        tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
         initSeekBar();
         initRockerView();
         initTimer();
@@ -128,7 +132,7 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void initData() {
         super.initData();
-        notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
+        notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         processBar.setMax(100);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
@@ -162,8 +166,8 @@ public class CollectingActivity extends DDRActivity {
         seekBar.setOnRangeChangedListener(new OnRangeChangedListener() {
             @Override
             public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
-                if (!ishaveChecked){
-                    editor.putFloat("speed",(float) maxSpeed);                 //保存最近的改变速度
+                if (!ishaveChecked) {
+                    editor.putFloat("speed", (float) maxSpeed);                 //保存最近的改变速度
                     editor.commit();
                     tvSpeed.setText(String.valueOf(maxSpeed));
                 }
@@ -183,22 +187,30 @@ public class CollectingActivity extends DDRActivity {
         });
     }
 
-    private boolean ishaveChecked=false;
+    @OnClick(R.id.add_poi)
+    public void onViewClicked() {
+        BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
+        tcpClient.sendData(null,reqAddPathPointWhileCollecting);
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
+    }
+
+    private boolean ishaveChecked = false;
+
     /**
      * 固定速度
      */
-    public void setFixedSpeed(){
+    public void setFixedSpeed() {
         fixedSpeed.setOnCheckedChangeListener(((buttonView, isChecked) -> {
-            if (isChecked){
-                ishaveChecked=isChecked;
+            if (isChecked) {
+                ishaveChecked = isChecked;
                 maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
-                Logger.e("-----"+maxSpeed);
+                Logger.e("-----" + maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 seekBar.setEnabled(false);
                 toast("锁定");
-            }else {
+            } else {
                 seekBar.setEnabled(true);
-                ishaveChecked=isChecked;
+                ishaveChecked = isChecked;
                 maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 seekBar.setProgress((float) maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
@@ -218,7 +230,7 @@ public class CollectingActivity extends DDRActivity {
     private void setAnimation(final NumberProgressBar view, final int mProgressBar, int time) {
         ValueAnimator animator = ValueAnimator.ofInt(0, mProgressBar).setDuration(time);
 
-        animator.addUpdateListener((valueAnimator)-> {
+        animator.addUpdateListener((valueAnimator) -> {
             view.setProgress((int) valueAnimator.getAnimatedValue());
         });
         animator.start();
@@ -234,6 +246,7 @@ public class CollectingActivity extends DDRActivity {
             public void onStart() {
 
             }
+
             @Override
             public void direction(RockerView.Direction direction) {
                 if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
@@ -296,13 +309,13 @@ public class CollectingActivity extends DDRActivity {
         });
 
         /*** lambda 表达式 Java8*/
-        myRockerZy.setOnDistanceLevelListener((level)-> {
-                DecimalFormat df = new DecimalFormat("#.00");
-                palstance = Float.parseFloat(df.format(maxSpeed * level / 10));
-                if (isGoRight) {
-                    palstance = -palstance;
+        myRockerZy.setOnDistanceLevelListener((level) -> {
+                    DecimalFormat df = new DecimalFormat("#.00");
+                    palstance = Float.parseFloat(df.format(maxSpeed * level / 10));
+                    if (isGoRight) {
+                        palstance = -palstance;
+                    }
                 }
-            }
         );
 
         myRocker.setOnDistanceLevelListener((level -> {
@@ -388,7 +401,7 @@ public class CollectingActivity extends DDRActivity {
      * 退出采集模式
      */
 
-    private void quitCollect(){
+    private void quitCollect() {
         BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
                 .setError("noError")
                 .setCancelRec(true)
@@ -403,7 +416,6 @@ public class CollectingActivity extends DDRActivity {
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -416,5 +428,7 @@ public class CollectingActivity extends DDRActivity {
     public boolean statusBarDarkFont() {
         return false;
     }
+
+
 
 }

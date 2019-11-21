@@ -641,6 +641,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                   break;
               case R.id.tv_switch:
                   if (NotifyBaseStatusEx.getInstance().getMode()==1){
+                      Logger.e("-----把地图切换到："+mapInfos.get(position).getMapName());
                       tcpClient.reqRunControlEx(mapInfos.get(position).getMapName());
                       waitDialog=new WaitDialog.Builder(getAttachActivity())
                               .setMessage("正在切换中")
@@ -951,6 +952,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
             if (dirName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
                 infoList.get(i).setUsing(true);
+            }else {
+                infoList.get(i).setUsing(false);
             }
         }
         /*for (int i = 0; i < infoList.size(); i++) {
@@ -1027,6 +1030,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     mapAdapter.setNewData(mapInfos);
                 }
                 break;
+            case switchMapSucceed:
+                if (waitDialog.isShowing()) {
+                    getAttachActivity().postDelayed(() -> {
+                        waitDialog.dismiss();
+                        transformMapInfo(mapFileStatus.getMapInfos());
+                        mapAdapter.setNewData(mapInfos);
+                    }, 800);
+                }
+                break;
+
 
         }
     }

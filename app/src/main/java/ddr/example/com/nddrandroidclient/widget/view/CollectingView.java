@@ -111,6 +111,7 @@ public class CollectingView extends GLContinuousView {
         //long startTime=System.currentTimeMillis();
         drawMap(canvas);
         drawPath(canvas);
+        drawPoint(canvas);
         //long endTime=System.currentTimeMillis();
         //Logger.e("------绘制耗时："+(endTime-startTime)+"列表长度："+ptsEntityList.size());
 
@@ -165,6 +166,15 @@ public class CollectingView extends GLContinuousView {
                 }
             }
         }
+    }
+
+    private void drawPoint(ICanvasGL canvasGL){
+        int pts=poiPoints.size();
+       for (int i=0;i<pts;i++){
+           float y=(float)((-poiPoints.get(i).getX())*ratio+measureHeight/2);
+           float x=(float)((-poiPoints.get(i).getY())*ratio+measureWidth/2);
+           canvasGL.drawBitmap(poiBitmap,(int) x-10,(int) y-10);
+       }
     }
 
 

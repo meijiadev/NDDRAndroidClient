@@ -19,6 +19,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionPr
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspLoginProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspMapOperationalProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunControlExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.ServerInformationProcessor;
 
 
@@ -75,6 +76,9 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         DDRVLNMap.rspMapOperational rspMapOperational=DDRVLNMap.rspMapOperational.newBuilder().build();
         m_ProcessorMap.put(rspMapOperational.getClass().toString(),new RspMapOperationalProcessor());
+
+        DDRVLNMap.rspRunControlEx rspRunControlEx=DDRVLNMap.rspRunControlEx.newBuilder().build();
+        m_ProcessorMap.put(rspRunControlEx.getClass().toString(),new RspRunControlExProcessor());
 
 
     }

@@ -40,6 +40,7 @@ public class MessageEvent {
         touchFloatWindow, //
 
         mapOperationalSucceed,  //地图操作成功
+        switchMapSucceed,       //切换地图成功
 
 
     }
