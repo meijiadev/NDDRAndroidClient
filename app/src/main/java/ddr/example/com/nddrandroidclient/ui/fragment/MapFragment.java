@@ -533,7 +533,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
 
 
-    private BaseDialog dialog;
+    private BaseDialog dialog,waitDialog;
     private Bitmap lookBitmap;
 
     /**
@@ -619,6 +619,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                   .build();
                                           optItems.add(optItem);
                                           tcpClient.reqMapOperational(optItems);
+                                          waitDialog=new WaitDialog.Builder(getAttachActivity())
+                                                  .setMessage("正在修改中")
+                                                  .show();
+                                          getAttachActivity().postDelayed(() -> {
+                                              if (waitDialog.isShowing()) {
+                                                  waitDialog.dismiss();
+                                                  toast("修改失败！");
+                                              }
+                                          }, 4000);
                                       }
                                   }
                                   @Override
@@ -633,6 +642,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
               case R.id.tv_switch:
                   if (NotifyBaseStatusEx.getInstance().getMode()==1){
                       tcpClient.reqRunControlEx(mapInfos.get(position).getMapName());
+                      waitDialog=new WaitDialog.Builder(getAttachActivity())
+                              .setMessage("正在切换中")
+                              .show();
+                      getAttachActivity().postDelayed(() -> {
+                          if (waitDialog.isShowing()) {
+                              waitDialog.dismiss();
+                              toast("切换失败！");
+                          }
+                      }, 4000);
+
                   }else {
                       toast("非待命模式无法切换地图");
                   }
@@ -648,6 +667,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                               .build();
                       optItems1.add(optItem1);
                       tcpClient.reqMapOperational(optItems1);
+                      waitDialog=new WaitDialog.Builder(getAttachActivity())
+                              .setMessage("正在修改中")
+                              .show();
+                      getAttachActivity().postDelayed(() -> {
+                          if (waitDialog.isShowing()) {
+                              waitDialog.dismiss();
+                              toast("修改失败！");
+                          }
+                      }, 4000);
                   }
                   break;
               case R.id.tv_delete:
@@ -921,14 +949,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             } else {
                 infoList.remove(i);
             }
+            if (dirName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
+                infoList.get(i).setUsing(true);
+            }
         }
-        for (int i = 0; i < infoList.size(); i++) {
+        /*for (int i = 0; i < infoList.size(); i++) {
             Logger.e("------" + infoList.get(i).getTime());
-        }
+        }*/
         mapInfos = infoList;
     }
-
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -965,6 +994,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         taskDetailLayout.setVisibility(View.GONE);
                         targetPointAdapter.setNewData(targetPoints);
                         recyclerDetail.setAdapter(targetPointAdapter);
+                        setIconDefault();
+                        tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
+                        tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                     }, 800);
                 }
                 break;
@@ -988,12 +1020,14 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 transformMapInfo(mapFileStatus.getMapInfos());
                 mapAdapter.setNewData(mapInfos);
                 break;
+            case mapOperationalSucceed:
+                if (waitDialog.isShowing()){
+                    waitDialog.dismiss();
+                    transformMapInfo(mapFileStatus.getMapInfos());
+                    mapAdapter.setNewData(mapInfos);
+                }
+                break;
 
         }
     }
-
-
-
-
-
 }
