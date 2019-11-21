@@ -305,6 +305,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (shrinkTailLayout.getVisibility()==View.VISIBLE){
                     shrinkLayout.startAnimation(hideAnimation);
                     hideAnimation.setAnimationListener(this);
+                    ivShrink.setImageResource(R.mipmap.iv_shrink);
                 }else if (shrinkTailLayout.getVisibility()==View.GONE){
                     shrinkTailLayout.setVisibility(View.VISIBLE);
                     shrinkLayout.startAnimation(showAnimation);

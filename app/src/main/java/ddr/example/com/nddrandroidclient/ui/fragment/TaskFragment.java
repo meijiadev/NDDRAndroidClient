@@ -237,8 +237,10 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                         tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
                     }
 
-                }else {
+                }else if (taskModeList.size()==1){
                     tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                }else {
+                    toast("暂无定时任务");
                 }
 
 

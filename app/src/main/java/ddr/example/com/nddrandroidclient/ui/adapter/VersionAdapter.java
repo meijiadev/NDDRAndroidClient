@@ -39,7 +39,28 @@ public class VersionAdapter extends BaseAdapter<ComputerEdition> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, ComputerEdition item) {
         super.convert(helper, item);
-        helper.setText(R.id.tv_type,String.valueOf(item.getType()))
+        String type = null;
+        switch (item.getType()){
+            case 0:
+                type="上位机";
+                break;
+            case 1:
+                type="雷达模块";
+                break;
+            case 2:
+                type="视觉模块";
+                break;
+            case 3:
+                type="路径规划";
+                break;
+            case 4:
+                type="设备管理";
+                break;
+            case 5:
+                type="嵌入式";
+                break;
+        }
+        helper.setText(R.id.tv_type,type)
                 .setText(R.id.tv_version,String.valueOf(item.getVersion()))
                 .setText(R.id.tv_data,String.valueOf(item.getData()));
     }
