@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +64,7 @@ import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.MenuDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
@@ -255,9 +257,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onActionItemClick();
         onTaskItemClick();
         onSelectedItemClick();
-        /*************************路径模式***************************/
-        modeList=new ArrayList<>();
+        /*************************路径设置***************************/
         map=tv_Spinner.getMap();
+        actionList=new ArrayList<>();
+        for (int i=1;i<9;i++){
+            actionList.add(map.get(i));
+        }
+        modeList=new ArrayList<>();
         modeList.add(map.get(64));
         modeList.add(map.get(65));
         modeList.add(map.get(66));
@@ -678,12 +684,28 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
      */
     public void onActionItemClick() {
         actionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            int position1=position;
             switch (view.getId()) {
                 case R.id.tv_delete:
                     Logger.e("------点击删除该点动作");
                     break;
                 case R.id.tv_action_type:
                     Logger.e("-----点击修改动作");
+                    new MenuDialog.Builder(getAttachActivity())
+                            .setGravity(Gravity.CENTER)
+                            .setList(actionList)
+                            .setListener(new MenuDialog.OnListener<String>() {
+                                @Override
+                                public void onSelected(BaseDialog dialog, int position, String content) {
+                                    pathLines.get(mPosition).getPathPoints().get(position1).setPointType(position+1);
+                                    actionAdapter.setData(position1,pathLines.get(mPosition).getPathPoints().get(position1));
+                                }
+
+                                @Override
+                                public void onCancel(BaseDialog dialog) {
+
+                                }
+                            }).show();
                     break;
             }
         });
@@ -803,6 +825,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private RecyclerView pathModeRecycler;
     private StringAdapter stringAdapter;
     private List<String> modeList;
+    private List<String> actionList;
     private Map<Integer,String> map;
     private void showPathModePopupWindow(View view){
         View contentView=getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.window_path_mode,null);

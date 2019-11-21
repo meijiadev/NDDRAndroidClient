@@ -384,7 +384,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 .enableOutsideTouchableDissmiss(true)// 设置点击PopupWindow之外的地方，popWindow不关闭，如果不设置这个属性或者为true，则关闭
                 .setOutsideTouchable(false)//是否PopupWindow 以外触摸dissmiss
                 .create()
-                .showAsDropDown(findViewById(R.id.taskmanager));
+                .showAsDropDown(findViewById(R.id.taskmanager),0,-10);
         seekBar=contentView.findViewById(R.id.seek_bar_control);
         fixedSpeed=contentView.findViewById(R.id.fixed_speed);
         myRocker=contentView.findViewById(R.id.my_rocker_control);

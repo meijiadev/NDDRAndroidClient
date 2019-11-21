@@ -28,11 +28,12 @@ public class CircleBarView extends View {
     private Paint bgPaint;//绘制背景圆弧的画笔
     private Paint progressPaint;//绘制圆弧的画笔
     private Paint textPaint;
-    private float progressNum;  //可以更新的进度条数值
+    private int progressNum;  //可以更新的进度条数值
     private float MaxNum;       //进度条最大值
 
     private float progressSweepAngle;//进度条圆弧扫过的角度
     private float startAngle;  //背景圆弧的起始角度
+    private float startProgressAngle;
     private float sweepAngle;   //背景圆弧扫过的角度
 
     private float barWidth;    // 圆弧进度条宽度
@@ -90,6 +91,7 @@ public class CircleBarView extends View {
         progressNum=0;
         MaxNum=100;
         startAngle=0;
+        startProgressAngle=90;
         sweepAngle=360;
     }
 
@@ -108,8 +110,9 @@ public class CircleBarView extends View {
         canvas.drawBitmap(centerBg,src,dst,centerPaint);*/
         progressPaint.setColor(progressColor);
         canvas.drawArc(mRectF,startAngle,sweepAngle,false,bgPaint);//这里角度0对应的是三点钟方向，顺时针方向递增   背景圆弧
-        canvas.drawArc(mRectF,startAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
-        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight-71,textPaint);
+        Logger.e("-------:"+progressSweepAngle);
+        canvas.drawArc(mRectF,startProgressAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
+        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight-80,textPaint);
 
     }
 
@@ -157,12 +160,12 @@ public class CircleBarView extends View {
     public void setProgress(float progressNum,int time,int progressColor){
         circleBarAnim.setDuration(time);
         this.startAnimation(circleBarAnim);
-        this.progressNum=progressNum;
+        this.progressNum=(int)progressNum;
         this.progressColor=progressColor;
     }
 
     public void setProgress(float progressNum,int progressColor){
-        this.progressNum=progressNum;
+        this.progressNum=(int)progressNum;
         this.progressColor=progressColor;
         postInvalidate();
     }
