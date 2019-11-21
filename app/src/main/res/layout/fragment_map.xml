@@ -84,9 +84,9 @@
                 android:text="目标点 (0)"
                 android:textSize="11sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/white"
+                android:textColor="@color/blue01"
                 android:layout_marginLeft="44dp"
-                android:drawableLeft="@mipmap/iv_target_gray"
+                android:drawableLeft="@mipmap/iv_target_blue"
                 />
             <TextView
                 android:id="@+id/tv_path"
@@ -222,7 +222,7 @@
                 android:text="  删除"
                 android:textColor="@color/white"
                 android:textSize="10sp"
-                android:drawableLeft="@mipmap/iv_delete"
+                android:drawableLeft="@mipmap/iv_delete_01"
                 android:paddingLeft="10dp"
                 />
 

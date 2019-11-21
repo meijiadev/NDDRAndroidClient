@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Gravity;
@@ -273,6 +274,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     }
 
+    @SuppressLint("ResourceAsColor")
     @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete,R.id.bt_batch_delete, R.id.save_point, R.id.tv_path,
             R.id.spinner_mode, R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort,R.id.save_task,R.id.tv_edit_map})
     public void onViewClicked(View view)  {
@@ -331,6 +333,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     taskDetailLayout.setVisibility(View.GONE);
                     recyclerDetail.setAdapter(targetPointAdapter);
                     targetPointAdapter.setNewData(targetPoints);
+                    setIconDefault();
+                    tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
+                    tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                     if (targetPoints.size() > 0) {
                         etPointName.setText(targetPoints.get(mPosition).getName());
                         etX.setText(targetPoints.get(mPosition).getX());
@@ -338,6 +343,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         etToward.setText(targetPoints.get(mPosition).getTheta());
                     }
                 } else {
+                    setIconDefault();
                     leftDetailLayout.setVisibility(View.GONE);
                     pointDetailLayout.setVisibility(View.GONE);
                 }
@@ -352,6 +358,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.tv_path:
                 mPosition=0;
                 if (pathDetailLayout.getVisibility() == View.GONE) {        //如果路径编辑部分不可见
+                    setIconDefault();
+                    tvPath.setTextColor(Color.parseColor("#0399ff"));
+                    tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_path_blue),null,null,null);
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.GONE);
                     taskDetailLayout.setVisibility(View.GONE);
@@ -366,6 +375,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         actionAdapter.setNewData(pathLines.get(0).getPathPoints());
                     }
                 } else {
+                    setIconDefault();
                     leftDetailLayout.setVisibility(View.GONE);
                     pathDetailLayout.setVisibility(View.GONE);
                 }
@@ -382,6 +392,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.tv_task:
                 mPosition=0;
                 if (taskDetailLayout.getVisibility()==View.GONE){
+                    setIconDefault();
+                    tvTask.setTextColor(Color.parseColor("#0399ff"));
+                    tvTask.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_task_blue),null,null,null);
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.GONE);
                     taskDetailLayout.setVisibility(View.VISIBLE);
@@ -405,6 +418,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         }
                     }
                 }else {
+                    setIconDefault();
                     leftDetailLayout.setVisibility(View.GONE);
                     taskDetailLayout.setVisibility(View.GONE);
                 }
@@ -483,12 +497,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
             case R.id.tv_delete:
                 if (pointDetailLayout.getVisibility()==View.VISIBLE){
+                    if (targetPoints.size()>0)
                     targetPoints.remove(mPosition);
                     targetPointAdapter.setNewData(targetPoints);
                 }else if (pathDetailLayout.getVisibility()==View.VISIBLE){
+                    if (pathLines.size()>0)
                     pathLines.remove(mPosition);
                     pathAdapter.setNewData(pathLines);
                 }else if (taskDetailLayout.getVisibility()==View.VISIBLE){
+                    if (taskModes.size()>0)
                     taskModes.remove(mPosition);
                     taskAdapter.setNewData(taskModes);
                 }
@@ -499,6 +516,22 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
         }
     }
+
+    /**
+     * 把图标状态设置回默认
+     */
+    @SuppressLint("ResourceAsColor")
+    private void setIconDefault(){
+        tvTargetPoint.setTextColor(Color.parseColor("#ccffffff"));
+        tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_gray),null,null,null);
+        tvPath.setTextColor(Color.parseColor("#ccffffff"));
+        tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_path_gray),null,null,null);
+        tvTask.setTextColor(Color.parseColor("#ccffffff"));
+        tvTask.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_task_gray),null,null,null);
+
+    }
+
+
 
     private BaseDialog dialog;
     private Bitmap lookBitmap;

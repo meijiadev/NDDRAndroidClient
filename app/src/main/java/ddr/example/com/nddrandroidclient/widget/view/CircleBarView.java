@@ -67,7 +67,7 @@ public class CircleBarView extends View {
             //如何没有设置背景图片
         }
         defaultSize = DpOrPxUtils.dip2px(context,134);
-        barWidth = DpOrPxUtils.dip2px(context,4);
+        barWidth = DpOrPxUtils.dip2px(context,6);
         mRectF = new RectF();
 
         progressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -114,9 +114,8 @@ public class CircleBarView extends View {
         canvas.drawBitmap(centerBg,src,dst,centerPaint);*/
         progressPaint.setColor(progressColor);
         canvas.drawArc(mRectF,startAngle,sweepAngle,false,bgPaint);//这里角度0对应的是三点钟方向，顺时针方向递增   背景圆弧
-        Logger.e("-------:"+progressSweepAngle);
         canvas.drawArc(mRectF,startProgressAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
-        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight-80,textPaint);
+        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight-90,textPaint);
 
     }
 

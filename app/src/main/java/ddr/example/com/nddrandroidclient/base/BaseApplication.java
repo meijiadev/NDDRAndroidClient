@@ -21,6 +21,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.LoginActivity;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
@@ -68,7 +69,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 .trackActivities(true)
                 .minTimeBetweenCrashesMs(2000)
                 // 重启的 Activity
-                .restartActivity(HomeActivity.class)
+                .restartActivity(LoginActivity.class)
                 // 错误的 Activity
                 .errorActivity(CrashActivity.class)
                 // 设置监听器
