@@ -51,6 +51,7 @@ import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
@@ -367,6 +368,14 @@ public class MapEditActivity extends DDRActivity {
                 spaceItem.setType(1);
                 spaceItem.setLines(lines);
                 spaceItems.add(spaceItem);
+                BaseDialog dialog=new WaitDialog.Builder(this)
+                        .setMessage("保存中")
+                        .show();
+                postDelayed(() -> {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }, 500);
                 break;
             case 2:
 
@@ -659,6 +668,7 @@ public class MapEditActivity extends DDRActivity {
                 tvTargetPoint.setText("编辑类型");
                 tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
                 tvPath.setText("图形类型");
+                tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
                 ivCenter.setVisibility(View.VISIBLE);
                 tvAddPath.setVisibility(View.VISIBLE);
                 tvDeletePoint.setVisibility(View.VISIBLE);

@@ -11,20 +11,16 @@ import com.hjq.toast.ToastUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.yhao.floatwindow.FloatWindow;
 import com.yhao.floatwindow.MoveType;
-import com.yhao.floatwindow.PermissionListener;
 import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.EventBus;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
-import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
+
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
-import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
-import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
@@ -44,8 +40,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         if (LeakCanary.isInAnalyzerProcess(application)) {
             return;
         }
-        //全局异常捕获
-        CrashHandlerManager.getInstance().init(application.getApplicationContext());
+
         // 内存泄漏检测
         LeakCanary.install(application);
         // 设置 Toast 拦截器

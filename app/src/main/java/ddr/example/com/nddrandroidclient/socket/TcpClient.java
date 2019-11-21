@@ -612,14 +612,21 @@ public class TcpClient extends BaseSocketConnection {
         /***************************************保存到服务的空间信息******************************************/
         List<DDRVLNMap.space_item> space_items=new ArrayList<>();           //接收到的空间数据
         List<SpaceItem> spaceItems=MapFileStatus.getInstance().getSpaceItems();
+        Logger.e("-------空间信息:"+spaceItems.size());
         for (int i=0;i<spaceItems.size();i++){
             DDRVLNMap.line line=DDRVLNMap.line.newBuilder()
                     .addAllPointset(spaceItems.get(i).getLines())
                     .build();
-            DDRVLNMap.circle circle=DDRVLNMap.circle.newBuilder()
-                    .setCenter(DDRVLNMap.space_pointEx.newBuilder().setX(spaceItems.get(i).getCircle().getX()).setY(spaceItems.get(i).getCircle().getY()).build())
-                    .setRadius(spaceItems.get(i).getCircle().getRadius())
-                    .build();
+            SpaceItem.Circle circle1=spaceItems.get(i).getCircle();
+            DDRVLNMap.circle circle;
+            if (circle1!=null){
+                circle=DDRVLNMap.circle.newBuilder()
+                        .setCenter(DDRVLNMap.space_pointEx.newBuilder().setX(circle1.getX()).setY(circle1.getY()).build())
+                        .setRadius(circle1.getRadius())
+                        .build();
+            }else {
+                circle=DDRVLNMap.circle.newBuilder().build();
+            }
             DDRVLNMap.polygon polygon=DDRVLNMap.polygon.newBuilder()
                     .addAllPointset(spaceItems.get(i).getPolygons())
                     .build();
@@ -635,7 +642,6 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.DDRMapSpaceData spaceData=DDRVLNMap.DDRMapSpaceData.newBuilder()
                 .addAllSpaceSet(space_items)
                 .build();
-
         DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
                 .setBasedata(reqDDRVLNMapEx.getBasedata())
                 .setSpacedata(spaceData)
@@ -648,9 +654,10 @@ public class TcpClient extends BaseSocketConnection {
 
     /**
      * 保存空间信息到服务
-     * @param reqDDRVLNMapEx
+     * @param
      */
-    public void saveSpaceToServer(DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx){
+    public void saveSpaceToServer(){
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx=MapFileStatus.getInstance().getReqDDRVLNMapEx();
         List<DDRVLNMap.space_item> space_items=new ArrayList<>();           //接收到的空间数据
         List<SpaceItem> spaceItems=MapFileStatus.getInstance().getSpaceItems();
         for (int i=0;i<spaceItems.size();i++){
