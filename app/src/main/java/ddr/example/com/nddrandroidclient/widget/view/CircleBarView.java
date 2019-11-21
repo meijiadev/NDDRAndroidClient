@@ -19,6 +19,8 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
+import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+
 
 /**
  *自定义圆形进度条
@@ -68,9 +70,11 @@ public class CircleBarView extends View {
         barWidth = DpOrPxUtils.dip2px(context,4);
         mRectF = new RectF();
 
-        progressPaint = new Paint();
+        progressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         progressPaint.setStyle(Paint.Style.STROKE);//只描边，不填充
         progressPaint.setAntiAlias(true);//设置抗锯齿
+        progressPaint.setStrokeJoin(Paint.Join.ROUND);
+        progressPaint.setStrokeCap(Paint.Cap.ROUND);
         progressPaint.setStrokeWidth(barWidth);      //设置一个画笔的宽度
         circleBarAnim=new CircleBarAnim();
 
