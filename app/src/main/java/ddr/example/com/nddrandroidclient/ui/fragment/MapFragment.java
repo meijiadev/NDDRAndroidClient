@@ -323,6 +323,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }catch (NullPointerException e){
                     e.printStackTrace();
                 }
+                PointView.getInstance(getAttachActivity()).clearDraw();
+                LineView.getInstance(getAttachActivity()).clearDraw();
                 break;
             case R.id.tv_target_point:
                 mPosition=0;
@@ -560,7 +562,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 try {
                     fis = new FileInputStream(mapInfos.get(position).getBitmap());
                     lookBitmap= BitmapFactory.decodeStream(fis);
-                    zoomMap.setImageBitmap(lookBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (NullPointerException e) {
@@ -576,6 +577,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         pointDetailLayout.setVisibility(View.VISIBLE);
                         pathDetailLayout.setVisibility(View.GONE);
                         taskDetailLayout.setVisibility(View.GONE);
+                        zoomMap.setImageBitmap(lookBitmap);
                     }
 
                 }, 5000);
@@ -1000,6 +1002,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         setIconDefault();
                         tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
                         tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
+                        zoomMap.setImageBitmap(lookBitmap);
                     }, 800);
                 }
                 break;
