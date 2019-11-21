@@ -71,6 +71,9 @@ public class FloatView extends View  {
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.float_bg);
         YKBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.yk_def);
+        JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
+        CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
+        SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
     }
 
     private void initStatusBar() {
