@@ -287,6 +287,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 if (!content.isEmpty()){
+                                    content=content.replaceAll(" ","");
                                     String name="OneRoute_"+content;
                                     BaseCmd.reqCmdStartActionMode reqCmdStartActionMode=BaseCmd.reqCmdStartActionMode.newBuilder()
                                             .setMode(BaseCmd.eCmdActionMode.eRec)
@@ -460,6 +461,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 public void onConfirm(BaseDialog dialog, String content) {
                                     if (!content.isEmpty()){
                                         //选择按键
+                                        content=content.replaceAll(" ","");
                                         String name="DDRTask_"+content+".task";
                                         btSelect.setBackgroundResource(R.drawable.button_shape_blue);
                                         //排序按键

@@ -87,7 +87,6 @@ public class ZoomImageView extends View {
     }
 
     /**
-     * 将待展示的图片设置进来。
      * @param bitmap
      * 待展示的Bitmap对象
      */
