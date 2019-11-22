@@ -301,6 +301,21 @@
         android:paddingTop="39.5dp"
         android:visibility="gone"
         />
+    <Button
+        android:id="@+id/bt_delete_wall"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:text="删除"
+        android:textStyle="bold"
+        android:textSize="12dp"
+        android:background="@drawable/bt_delete_wall_bg"
+        android:textColor="@color/white"
+        android:layout_below="@id/second_title"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        />
 
 
 

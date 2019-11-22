@@ -515,8 +515,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case R.id.tv_edit_map:
-                startActivity(MapEditActivity.class);
                 EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.editMap,lookBitmap));
+                getAttachActivity().postDelayed(()->{
+                    startActivity(MapEditActivity.class);
+                        },100
+                );
                 break;
         }
     }

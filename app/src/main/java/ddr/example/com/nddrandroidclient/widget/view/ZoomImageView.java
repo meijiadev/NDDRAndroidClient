@@ -207,6 +207,7 @@ public class ZoomImageView extends View {
                 // 手指离开屏幕时将临时值还原
                 lastXMove = -1;
                 lastYMove = -1;
+                LineView.getInstance(context).onClick(this,event.getX(),event.getY());
                 break;
             default:
                 break;
@@ -270,6 +271,7 @@ public class ZoomImageView extends View {
     public XyEntity coordinate2View(float x,float y){
         float cx=x*totalRatio+totalTranslateX;
         float cy=y*totalRatio+totalTranslateY;
+        Logger.e("-----像素坐标："+cx+";"+cy);
         return new XyEntity(cx,cy);
     }
 
@@ -298,7 +300,6 @@ public class ZoomImageView extends View {
     public XyEntity toXorY(float x,float y){
         float x1=(float)( r00*x+r01*y+t0);
         float y1=(float) (r10*x+r11*y+t1);
-        Logger.e("-----像素坐标："+x1+";"+y1);
         return new XyEntity(x1,y1);
     }
 

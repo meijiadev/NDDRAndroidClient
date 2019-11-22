@@ -14,7 +14,9 @@ import java.util.List;
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  *  time : 2019/11/18
@@ -22,12 +24,14 @@ import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
  */
 public class LineView {
     public static LineView lineView;
-    private Paint linePaint,textPaint;
+    private Paint linePaint,textPaint,linePaint1,selectPaint;
     private List<PathLine> pathLines;
     private List<PathLine.PathPoint> pathPoints;
 
     private List<DDRVLNMap.space_pointEx> lines;       //线段
     private List<DDRVLNMap.space_pointEx> polygons;    //多边形
+
+    private List<SpaceItem> spaceItems;
 
     private Bitmap startBitamap,endBitamp;
     /**
@@ -56,6 +60,14 @@ public class LineView {
         linePaint.setColor(Color.GRAY);
         linePaint.setStrokeWidth(3);
         linePaint.setAntiAlias(true);
+        linePaint1=new Paint();
+        linePaint1.setColor(Color.BLACK);
+        linePaint1.setStrokeWidth(2);
+        linePaint1.setAntiAlias(true);
+        selectPaint=new Paint();
+        selectPaint.setColor(Color.RED);
+        selectPaint.setStrokeWidth(5);
+        selectPaint.setAntiAlias(true);
         textPaint=new Paint();
         textPaint.setStrokeWidth(8);
         textPaint.setTextAlign(Paint.Align.CENTER);
@@ -86,6 +98,14 @@ public class LineView {
 
     public void setPolygons(List<DDRVLNMap.space_pointEx> polygons){
         this.polygons=polygons;
+    }
+
+    /**
+     * 显示所有虚拟墙（直线)
+     * @param spaceItems
+     */
+    public void setSpaceItems(List<SpaceItem> spaceItems){
+        this.spaceItems=spaceItems;
     }
 
 
@@ -146,13 +166,15 @@ public class LineView {
 
         if (lines!=null){
             for (int i=0;i<lines.size();i++){
+                XyEntity xyEntity1=zoomImageView.toXorY(lines.get(i).getX(),lines.get(i).getY());
+                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),3,linePaint1);
                 if (i<lines.size()-1){
-                    XyEntity xyEntity1=zoomImageView.toXorY(lines.get(i).getX(),lines.get(i).getY());
-                    xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
                     XyEntity xyEntity2=zoomImageView.toXorY(lines.get(i+1).getX(),lines.get(i+1).getY());
                     xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint1);
                 }
+
             }
         }
 
@@ -163,12 +185,66 @@ public class LineView {
                     xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
                     XyEntity xyEntity2=zoomImageView.toXorY(polygons.get(i+1).getX(),polygons.get(i+1).getY());
                     xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint1);
                 }
             }
         }
 
+        if (spaceItems!=null){
+            for (int i=0;i<spaceItems.size();i++){
+                List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
+                for (int j=0;j<space_pointExes.size();j++){
+                    if (j<space_pointExes.size()-1){
+                        XyEntity xyEntity1=zoomImageView.toXorY(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
+                        xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        XyEntity xyEntity2=zoomImageView.toXorY(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
+                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        if (i==selectPosition){
+                            canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),selectPaint);
+                        }else {
+                            canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint1);
+                        }
+                    }
+                }
+            }
+        }
 
+    }
+
+    public int selectPosition=-1;
+
+    /**
+     * 点击区域的坐标
+     * @param x
+     * @param y
+     */
+    public void onClick(ZoomImageView zoomImageView,float x,float y){
+        if (spaceItems!=null){
+            for (int i=0;i<spaceItems.size();i++){
+                List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
+                for (int j=0;j<space_pointExes.size();j++){
+                    if (j<space_pointExes.size()-1){
+                        XyEntity xyEntity1=zoomImageView.toXorY(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
+                        xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        float x1=xyEntity1.getX(); float y1=xyEntity1.getY();
+                        XyEntity xyEntity2=zoomImageView.toXorY(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
+                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        float x2=xyEntity2.getX(); float y2=xyEntity2.getY();
+                        float minX=Math.min(x1,x2);
+                        float maxX=Math.max(x1,x2);
+                        if (x>minX-18&&x<maxX+18){
+                            double L=((y2-y1)*x+(x1-x2)*y+(x2*y1-x1*y2))/Math.sqrt(Math.pow(y2-y1,2)+Math.pow(x1-x2,2));
+                            if (L<18){
+                                selectPosition=i;
+                                Logger.e("------:"+L+"-----"+selectPosition);
+                                zoomImageView.invalidate();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
