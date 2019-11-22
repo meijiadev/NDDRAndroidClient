@@ -236,10 +236,15 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
                         tv_work_statue.setText("待命中");
+                        tv_now_task.setClickable(true);
+                        tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
+                        iv_task_xl.setVisibility(View.VISIBLE);
                         break;
                     case 3:
                         tv_work_statue.setText("运动中");
                         tv_now_task.setClickable(false);
+                        tv_now_task.setBackgroundResource(0);
+                        iv_task_xl.setVisibility(View.GONE);
                         switch (notifyBaseStatusEx.getSonMode()){
                             case 3:
                                 tv_work_statue.setText("异常");
