@@ -32,6 +32,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -56,12 +57,13 @@ public class MapImageView extends GLContinuousView {
 
     private MapFileStatus mapFileStatus;
     private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
+    private List<SpaceItem> spaceItems;
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
 
     private Bitmap mapBitmap;
     private Bitmap targetBitmap; //目标点
     private Bitmap directionBitmap,directionBitmap1;
-    private GLPaint glPaint,radarPaint;
+    private GLPaint glPaint,radarPaint,linePaint1;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private double r00=0;
     private double r01=-61.5959;
@@ -161,6 +163,12 @@ public class MapImageView extends GLContinuousView {
         radarPaint.setColor(Color.parseColor("#00CED1"));
         radarPaint.setLineWidth(1);
 
+        linePaint1=new GLPaint();
+        linePaint1.setLineWidth(3);
+        linePaint1.setColor(Color.BLACK);
+
+
+
     }
 
     @Override
@@ -168,6 +176,7 @@ public class MapImageView extends GLContinuousView {
         drawBitmap(canvas);
         drawLine(canvas);
         drawRadarLine(canvas);
+        onDrawWall(canvas);
 
     }
 
@@ -251,8 +260,25 @@ public class MapImageView extends GLContinuousView {
             }
        }
 
+    }
 
+    /**
+     * 绘制虚拟墙
+     */
+    private void onDrawWall(ICanvasGL canvasGL){
+        if (spaceItems!=null){
+            for (int i=0;i<spaceItems.size();i++){
+                List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
+                for (int j=0;j<space_pointExes.size();j++){
+                    if (j<space_pointExes.size()-1){
+                        XyEntity xyEntity1=toXorY(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
+                        XyEntity xyEntity2=toXorY(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
+                        canvasGL.drawLine(xyEntity1.getX()+mRectDst.left,xyEntity1.getY()+mRectDst.top,xyEntity2.getX()+mRectDst.left,xyEntity2.getY()+mRectDst.top,linePaint1);
+                    }
+                }
+            }
 
+        }
     }
 
     /**
@@ -338,15 +364,16 @@ public class MapImageView extends GLContinuousView {
                 if (baseData.getName().toStringUtf8().equals(mapName)){
                     Logger.e("---------验证通过");
                     affine_mat=baseData.getAffinedata();
-                    targetPtItems=data.getTargetPtdata().getTargetPtList();
-                    pathLineItemExes=data.getPathSet().getPathLineDataList();
-                    taskItemExes=data.getTaskSetList();
                     r00=affine_mat.getR11();
                     r01=affine_mat.getR12();
                     t0=affine_mat.getTx();
                     r10=affine_mat.getR21();
                     r11=affine_mat.getR22();
                     t1=affine_mat.getTy();
+                    targetPtItems=data.getTargetPtdata().getTargetPtList();
+                    pathLineItemExes=data.getPathSet().getPathLineDataList();
+                    taskItemExes=data.getTaskSetList();
+                    spaceItems=mapFileStatus.getcSpaceItems();
                 }
                 break;
             case updateBaseStatus:

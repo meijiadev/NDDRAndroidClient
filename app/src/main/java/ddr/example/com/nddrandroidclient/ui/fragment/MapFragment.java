@@ -449,11 +449,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
             case R.id.tv_add_new:
                 if (pointDetailLayout.getVisibility()==View.VISIBLE){
-                    startActivity(MapEditActivity.class);
-                    EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPoint,lookBitmap));
+                    Intent intent=new Intent(getAttachActivity(),MapEditActivity.class);
+                    intent.putExtra("type",1);
+                    intent.putExtra("bitmapPath",bitmapPath);
+                    startActivity(intent);
                 }else if (pathDetailLayout.getVisibility()==View.VISIBLE){
-                    startActivity(MapEditActivity.class);
-                    EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.addNewPath,lookBitmap));
+                    Intent intent=new Intent(getAttachActivity(),MapEditActivity.class);
+                    intent.putExtra("type",2);
+                    intent.putExtra("bitmapPath",bitmapPath);
+                    startActivity(intent);
                 }else if (taskDetailLayout.getVisibility()==View.VISIBLE){
                     new InputDialog.Builder(getAttachActivity())
                             .setTitle("任务名")
@@ -517,11 +521,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case R.id.tv_edit_map:
-                EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.editMap,lookBitmap));
-                getAttachActivity().postDelayed(()->{
-                    startActivity(MapEditActivity.class);
-                        },200
-                );
+                Intent intent=new Intent(getAttachActivity(),MapEditActivity.class);
+                intent.putExtra("type",3);
+                intent.putExtra("bitmapPath",bitmapPath);
+                startActivity(intent);
                 break;
         }
     }
@@ -544,6 +547,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     private BaseDialog dialog,waitDialog;
     private Bitmap lookBitmap;
+    private String bitmapPath;          // 点击的图片存储地址
 
     /**
      * 地图Recycler的点击事件
@@ -561,6 +565,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 mapAdapter.setData(position, mapInfo);
             } else {
                 mapName=mapInfos.get(position).getMapName();
+                bitmapPath=mapInfos.get(position).getBitmap();
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 dialog = new WaitDialog.Builder(getAttachActivity())
                         .setMessage("加载地图信息中")
@@ -798,8 +803,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            PointView.getInstance(getAttachActivity()).setPoints(selectPoints);
-            LineView.getInstance(getAttachActivity()).setLineViews(selectPaths);
             zoomMap.invalidate();
         });
     }
@@ -828,6 +831,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
         }
         selectPathAdapter.setNewData(selectPaths);
+
+        PointView.getInstance(getAttachActivity()).setPoints(selectPoints);
+        LineView.getInstance(getAttachActivity()).setLineViews(selectPaths);
 
     }
 
@@ -1009,6 +1015,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
                         tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                         zoomMap.setImageBitmap(lookBitmap);
+                        try {
+                            initSelectRecycler(0);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }, 800);
                 }
                 break;

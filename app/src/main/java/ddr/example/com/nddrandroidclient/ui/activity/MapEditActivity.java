@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -113,7 +116,6 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.bt_delete_wall)
     Button btDeleteWall;
 
-    private Bitmap bitmap;
     private boolean ishaveChecked = false;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -133,6 +135,7 @@ public class MapEditActivity extends DDRActivity {
     private StringAdapter editTypeAdapter,graphTypeAdapter;           //编辑类型 、图形类型适配器
     private List<String> editTypes=new ArrayList<>();
     private List<String> graphTypes=new ArrayList<>();
+    private Bitmap lookBitmap;
 
 
     @Override
@@ -159,7 +162,18 @@ public class MapEditActivity extends DDRActivity {
     protected void initData() {
         super.initData();
         Intent intent=getIntent();
-
+        int type=intent.getIntExtra("type",0);
+        String bitmap=intent.getStringExtra("bitmapPath");
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(bitmap);
+            lookBitmap= BitmapFactory.decodeStream(fis);
+            zmap.setImageBitmap(lookBitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         mapFileStatus = MapFileStatus.getInstance();
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -179,6 +193,7 @@ public class MapEditActivity extends DDRActivity {
         graphTypes.add("直线");
         graphTypes.add("圆");
         graphTypes.add("多边形");
+        initType(type);
         onShowItemClick();
 
     }
@@ -660,7 +675,52 @@ public class MapEditActivity extends DDRActivity {
         editor.commit();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    /**
+     * 判断进来的是何种操作（添加目标点、添加路径、或者添加虚拟墙）
+     * @param type
+     */
+    public void initType(int type){
+        switch (type){
+            case 1:
+                Logger.e("新建点");
+                titleLayout.setLeftTitle("新建目标点");
+                tvMarkCurrent.setVisibility(View.VISIBLE);
+                addPoi.setVisibility(View.VISIBLE);
+                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                break;
+            case 2:
+                titleLayout.setLeftTitle("新建路径");
+                ivCenter.setVisibility(View.VISIBLE);
+                tvAddPath.setVisibility(View.VISIBLE);
+                tvDeletePoint.setVisibility(View.VISIBLE);
+                tvSavePath.setVisibility(View.VISIBLE);
+                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                break;
+            case 3:
+                mapFileStatus = MapFileStatus.getInstance();
+                titleLayout.setLeftTitle("编辑地图");
+                tvTargetPoint.setText("编辑类型");
+                tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
+                tvPath.setText("图形类型");
+                tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
+                btDeleteWall.setVisibility(View.VISIBLE);
+                ivCenter.setVisibility(View.VISIBLE);
+                tvAddPath.setVisibility(View.VISIBLE);
+                tvDeletePoint.setVisibility(View.VISIBLE);
+                tvSavePath.setVisibility(View.VISIBLE);
+                spaceItems=mapFileStatus.getSpaceItems();
+                if (spaceItems==null){
+                    Logger.e("列表为空");
+                    spaceItems=new ArrayList<>();
+                }
+                LineView.getInstance(getApplication()).setSpaceItems(spaceItems);
+                break;
+        }
+    }
+
+ /*   @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case addNewPoint:
@@ -709,7 +769,7 @@ public class MapEditActivity extends DDRActivity {
         }
     }
 
-
+*/
     /**
      * 左上角退出按键
      *

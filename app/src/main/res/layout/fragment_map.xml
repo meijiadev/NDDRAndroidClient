@@ -202,6 +202,7 @@
                 android:layout_width="94dp"
                 android:layout_height="32dp"
                 android:layout_above="@id/tv_delete"
+                android:layout_marginLeft="12dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center_vertical"
@@ -216,7 +217,8 @@
                 android:layout_width="94dp"
                 android:layout_height="32dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="18dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="12dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center_vertical"
                 android:text="  删除"
@@ -472,7 +474,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/action_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="150dp"
                         android:layout_below="@id/tv_action_recycler"
                         android:layout_marginTop="12dp"
                         ></androidx.recyclerview.widget.RecyclerView>
