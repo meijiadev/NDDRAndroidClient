@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.EventBus;
@@ -251,6 +252,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         downloadMapNames = mapFileStatus.getMapNames();
         checkFilesAllName(downloadMapNames);
         transformMapInfo(mapFileStatus.getMapInfos());
+        mapAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mapAdapter.setNewData(mapInfos);
         onItemClick();
         onTargetItemClick();
@@ -963,9 +965,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 infoList.get(i).setUsing(false);
             }
         }
-        /*for (int i = 0; i < infoList.size(); i++) {
-            Logger.e("------" + infoList.get(i).getTime());
-        }*/
         mapInfos = infoList;
     }
 

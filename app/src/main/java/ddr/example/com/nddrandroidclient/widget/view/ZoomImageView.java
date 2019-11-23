@@ -65,8 +65,6 @@ public class ZoomImageView extends View {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void upDate(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
-            case updatePng:
-                break;
             case updateDDRVLNMap:
 
                 break;

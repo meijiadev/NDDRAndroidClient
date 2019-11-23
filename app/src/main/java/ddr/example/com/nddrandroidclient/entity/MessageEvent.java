@@ -20,10 +20,7 @@ public class MessageEvent {
         LoginSuccess,        //登陆成功
         updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息
-        updateMap,
-        updateDDRVLNMap,
-        updatePng,
-        readFile,
+        updateDDRVLNMap,  // 更新地图信息
         realTimeDraw,
         addPoiPoint,
         updateVersion, //获取版本信息
