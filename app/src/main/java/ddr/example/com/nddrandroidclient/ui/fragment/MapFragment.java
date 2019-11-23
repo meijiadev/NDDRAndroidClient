@@ -728,6 +728,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             targetPoints.get(position).setSelected(true);
             targetPointAdapter.setData(position,targetPoints.get(position));
             PointView.getInstance(getAttachActivity()).clearDraw();
+            LineView.getInstance(getAttachActivity()).clearDraw();
             PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(position));
             zoomMap.invalidate();
         });
@@ -745,6 +746,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             tvConfig.setText(pathLines.get(position).getConfig());
             actionAdapter.setNewData(pathLines.get(position).getPathPoints());
             LineView.getInstance(getAttachActivity()).clearDraw();
+            PointView.getInstance(getAttachActivity()).clearDraw();
             LineView.getInstance(getAttachActivity()).setPoints(pathLines.get(position).getPathPoints());
             zoomMap.invalidate();
         });

@@ -487,6 +487,7 @@
                         android:layout_marginTop="18dp"
                         android:layout_alignLeft="@id/tv_action_recycler"
                         android:gravity="center_vertical"
+                        android:visibility="gone"
                         />
                     <TextView
                         android:id="@+id/tv_config"
@@ -501,6 +502,7 @@
                         android:background="@mipmap/file_edit_bg"
                         android:textColor="@color/white"
                         android:paddingLeft="5dp"
+                        android:visibility="gone"
                         />
                     <TextView
                         android:id="@+id/save_path"
