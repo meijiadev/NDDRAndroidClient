@@ -520,7 +520,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.editMap,lookBitmap));
                 getAttachActivity().postDelayed(()->{
                     startActivity(MapEditActivity.class);
-                        },100
+                        },200
                 );
                 break;
         }

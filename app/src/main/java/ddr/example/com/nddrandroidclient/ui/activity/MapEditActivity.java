@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -157,6 +158,8 @@ public class MapEditActivity extends DDRActivity {
     @Override
     protected void initData() {
         super.initData();
+        Intent intent=getIntent();
+
         mapFileStatus = MapFileStatus.getInstance();
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -696,7 +699,6 @@ public class MapEditActivity extends DDRActivity {
                 tvSavePath.setVisibility(View.VISIBLE);
                 bitmap = (Bitmap) messageEvent.getData();
                 zmap.setImageBitmap(bitmap);
-
                 spaceItems=mapFileStatus.getSpaceItems();
                 if (spaceItems==null){
                     Logger.e("列表为空");

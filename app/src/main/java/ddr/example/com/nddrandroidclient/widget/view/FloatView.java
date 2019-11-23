@@ -42,6 +42,7 @@ public class FloatView extends View  {
     private  int DEFAULT_WIDTH=74;         //单位都是像素
     private  int DEFAULT_HEIGHT=373;
     private OnFloatViewListener onFloatViewListener;
+    private int oldStopStat,oldCharging;           // oldCharging :如果为0默认不在充电 为1 表示在充电状态
 
     private NotifyBaseStatusEx notifyBaseStatusEx;
     public FloatView(Context context) {
@@ -98,9 +99,26 @@ public class FloatView extends View  {
         }
         if(notifyBaseStatusEx.isChargingStatus()) {
             CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_check);
+            if (oldCharging==0){
+                oldCharging=1;
+                invalidate();
+            }
         }else {
             CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
+            if (oldCharging==1){
+                invalidate();
+            }
         }
+        if (oldStopStat==notifyBaseStatusEx.getStopStat()){
+            oldStopStat=notifyBaseStatusEx.getStopStat();
+        }else {
+            invalidate();
+            oldStopStat=notifyBaseStatusEx.getStopStat();
+        }
+
+
+
+
     }
 
     /**

@@ -46,19 +46,9 @@ public class MessageEvent {
       this.type=type;
     }
 
-  /*  public MessageEvent(Type type, List<MapInfo>mapInfos){
-        this.type=type;
-        this.mapInfoList=mapInfos;
-    }*/
-
     public MessageEvent(Type type, Object object){
         this.type=type;
         this.data=object;
-    }
-
-    public MessageEvent(Type type, List<Object> datas){
-        this.type=type;
-        this.datas=datas;
     }
 
     public Type getType() {
