@@ -109,9 +109,7 @@ public class FloatView extends View  {
                 invalidate();
             }
         }
-        if (oldStopStat==notifyBaseStatusEx.getStopStat()){
-            oldStopStat=notifyBaseStatusEx.getStopStat();
-        }else {
+        if (oldStopStat!=notifyBaseStatusEx.getStopStat()){
             invalidate();
             oldStopStat=notifyBaseStatusEx.getStopStat();
         }
