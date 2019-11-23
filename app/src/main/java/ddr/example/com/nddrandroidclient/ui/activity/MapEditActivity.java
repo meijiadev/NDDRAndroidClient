@@ -719,57 +719,7 @@ public class MapEditActivity extends DDRActivity {
                 break;
         }
     }
-
- /*   @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void update(MessageEvent messageEvent) {
-        switch (messageEvent.getType()) {
-            case addNewPoint:
-                Logger.e("新建点");
-                titleLayout.setLeftTitle("新建目标点");
-                tvMarkCurrent.setVisibility(View.VISIBLE);
-                addPoi.setVisibility(View.VISIBLE);
-                bitmap = (Bitmap) messageEvent.getData();
-                zmap.setImageBitmap(bitmap);
-                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
-                tvPath.setText("路径" + "(" + pathLines.size() + ")");
-                break;
-            case addNewPath:
-                Logger.e("新建路径");
-                titleLayout.setLeftTitle("新建路径");
-                ivCenter.setVisibility(View.VISIBLE);
-                tvAddPath.setVisibility(View.VISIBLE);
-                tvDeletePoint.setVisibility(View.VISIBLE);
-                tvSavePath.setVisibility(View.VISIBLE);
-                bitmap = (Bitmap) messageEvent.getData();
-                zmap.setImageBitmap(bitmap);
-                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
-                tvPath.setText("路径" + "(" + pathLines.size() + ")");
-                break;
-            case editMap:
-                mapFileStatus = MapFileStatus.getInstance();
-                titleLayout.setLeftTitle("编辑地图");
-                tvTargetPoint.setText("编辑类型");
-                tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
-                tvPath.setText("图形类型");
-                tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
-                btDeleteWall.setVisibility(View.VISIBLE);
-                ivCenter.setVisibility(View.VISIBLE);
-                tvAddPath.setVisibility(View.VISIBLE);
-                tvDeletePoint.setVisibility(View.VISIBLE);
-                tvSavePath.setVisibility(View.VISIBLE);
-                bitmap = (Bitmap) messageEvent.getData();
-                zmap.setImageBitmap(bitmap);
-                spaceItems=mapFileStatus.getSpaceItems();
-                if (spaceItems==null){
-                    Logger.e("列表为空");
-                    spaceItems=new ArrayList<>();
-                }
-                LineView.getInstance(getApplication()).setSpaceItems(spaceItems);
-                break;
-        }
-    }
-
-*/
+    
     /**
      * 左上角退出按键
      *
