@@ -92,6 +92,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     ImageView iv_cd_xs;
     @BindView(R.id.iv_task_xl)
     ImageView iv_task_xl;
+    @BindView(R.id.tv_set_go)
+    TextView tv_set_go;
 
 
     private Animation hideAnimation;  //布局隐藏时的动画
@@ -218,9 +220,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
             rel_step_description.setVisibility(View.GONE);
             recycle_gopoint.setVisibility(View.VISIBLE);
+            tv_set_go.setText("前往目标点");
         }else {
             rel_step_description.setVisibility(View.VISIBLE);
             recycle_gopoint.setVisibility(View.GONE);
+            tv_set_go.setText("建立任务步骤：");
         }
         tv_now_device.setText(robotID);
         tv_task_num.setText(String.valueOf(taskNum)+" 次");
@@ -388,7 +392,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                  eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalError;
                 break;
             case 1:
-                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalStopTemporary;
+                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalStopTask;
                 break;
             case 2:
                  eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalAddTemporary;
@@ -402,10 +406,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 .setRunCount(num)
                 .setType(eTaskOperationalType)
                 .build();
-        List<DDRVLNMap.reqTaskOperational.OptItem> optItemList=new ArrayList<>();
-        optItemList.add(optItem);
         DDRVLNMap.reqTaskOperational reqTaskOperational=DDRVLNMap.reqTaskOperational.newBuilder()
-                .addAllOptSet(optItemList)
+                .setOptSet(optItem)
                 .build();
         tcpClient.sendData(null,reqTaskOperational);
     }
@@ -434,6 +436,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         DDRVLNMap.reqRunSpecificPoint reqRunSpecificPoint=DDRVLNMap.reqRunSpecificPoint.newBuilder()
                 .setOnerouteName(routeName)
                 .addAllTargetPt(targetPtItemList)
+                .setBIsDynamicOA(true)
                 .build();
         tcpClient.sendData(null,reqRunSpecificPoint);
 
@@ -524,7 +527,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         //Logger.e("待命模式" + modeView.getText());
                         toast("请稍等，正在进入");
                         addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
-
                         break;
                     case 3:
                         switch (notifyBaseStatusEx.getSonMode()){

@@ -269,6 +269,7 @@ message reqCmdStartActionMode{
 	bytes route_name = 2;
 	float rec_speed = 3;
 }
+
 message rspCmdStartActionMode{
 	eCmdActionMode mode = 1;
 	eCmdRspType type = 2;
@@ -276,12 +277,25 @@ message rspCmdStartActionMode{
 // Cmd stop autorun or out rec
 message reqCmdEndActionMode{
 	string error = 1;
-	bool cancel_rec = 2; // 为true时表示采集模式中放弃当前的地图，不生成地图。
+	bool cancel_rec = 2; // 为true时表示采集模式中放弃当前的地图，不生成地图
+	bool bEndTaskRun = 3;// true - 终止全局任务运行。否则这个proto仅仅是退出当前模式用的。
 }
+
 message rspCmdEndActionMode{
 	eCmdActionMode actionmode = 1;
 	eCmdRspType type = 2;
 	bytes route_name = 3;
+}
+
+
+// 运行特定任务，由SDK或者AIService触发，这时一般是要处于终止全局任务状态
+message reqRunSpecificTask{
+	bytes route_name = 1;
+	bytes task_name = 2;
+}
+
+message rspRunSpecificTask{
+	eCmdRspType type = 1;
 }
 
 // Cmd Delete curr route data
@@ -502,6 +516,18 @@ enum eSelfCalibStatus
 	eNoSelfCalib = 1; // 没在自标定
 }
 
+/*
+大状态有两种：
+	全局任务运行：这里包含临时任务和定时任务两种模式，主要是根据地图中配置的时间次数决定的。 客户端发送startActionMode进入
+	全局任务终止：相当于不跑临时任务和定时任务。只能跑AB点模式，或者SDK，AIServiece指定要跑的task。  客户端发送EndActionMode进入
+*/
+enum eTaskWorkMode
+{
+	eTaskWorkError = 0;
+	eTaskWorkRunningTemporary = 1; // 临时任务
+	eTaskWorkRunningTimeList = 2; // 定时任务
+	eTaskWorkRunEnd = 3; // 不在工作中，也有可能是出于AB点模式
+}
 
 message notifyBaseStatusEx{
 	eNavRobotMode mode = 1;
@@ -523,6 +549,8 @@ message notifyBaseStatusEx{
 	int32 taskCount = 17; // 任务次数
 	int32 taskDuration = 18; // 任务时长，单位秒
 	bool bLocated = 19; // 当前是否有定位
+	int32 currOAMode = 20; // 获取当前路段动态/静态避障模式  0 - 静态; 1 - 动态; -1 - 未处于运行状态
+	eTaskWorkMode taskmode = 21; 
 }
 
 // Environmental sensor info

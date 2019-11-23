@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="505dp"
-            android:layout_marginTop="143dp"
+            android:layout_marginTop="133dp"
             android:textColor="#ccffffff"
             android:textSize="12sp"
             android:background="@drawable/version"
@@ -51,13 +51,13 @@
             android:textSize="16sp"
             android:textColor="#ffffff"
             android:id="@+id/computer_type"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="190dp"
             android:layout_marginLeft="505dp"
             />
         <RelativeLayout
             android:layout_width="400dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="254dp"
+            android:layout_marginTop="244dp"
             android:layout_marginLeft="505dp"
             android:id="@+id/head_title"
             >
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/computer_type_recycle"
             android:textSize="11sp"
-            android:layout_marginTop="278dp"
+            android:layout_marginTop="268dp"
             android:layout_marginLeft="505dp"
             />
 
