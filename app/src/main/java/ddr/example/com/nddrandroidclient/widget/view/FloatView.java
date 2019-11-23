@@ -106,7 +106,7 @@ public class FloatView extends View  {
         }else {
             CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
             if (oldCharging==1){
-                invalidate();
+                invalidate();     //刷新界面 重绘view
             }
         }
         if (oldStopStat!=notifyBaseStatusEx.getStopStat()){
