@@ -613,7 +613,7 @@ message rspRunSpecificPoint
 enum eTaskOperationalType
 {
 	eTaskOperationalError = 0;
-	eTaskOperationalStopTemporary = 1; // 终止临时任务
+	eTaskOperationalStopTask = 1; // 终止任务  上位机去判断终止临时任务还是定时任务
 	eTaskOperationalAddTemporary = 2; // 以临时任务身份添加到任务队列中去
 }
 
@@ -626,7 +626,7 @@ message reqTaskOperational
 		eTaskOperationalType type = 3;
 		int32 runCount = 4; // 只有添加临时任务时这个字段才有用
 	}
-	repeated OptItem optSet = 1; 
+	OptItem optSet = 1; 
 }
 
 message rspTaskOperational
