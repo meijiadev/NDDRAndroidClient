@@ -261,6 +261,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
+
+
         if(notifyBaseStatusEx.isChargingStatus()) {
             iv_cd_xs.setImageResource(R.mipmap.sd_check);
         }else {

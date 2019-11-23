@@ -116,7 +116,7 @@
             android:layout_height="18dp"
             android:text="当前任务:"
             android:textColor="#ccffffff"
-            android:textSize="12sp"
+            android:textSize="14dp"
             android:layout_marginTop="36dp"
             android:layout_marginLeft="16dp"
             android:id="@+id/tv_now_task_t"
@@ -144,10 +144,10 @@
             android:src="@mipmap/xlright_5"
             android:id="@+id/iv_task_xl"/>
         <TextView
-            android:layout_width="56dp"
+            android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:text="工作状态："
-            android:textSize="10sp"
+            android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_marginTop="100dp"
             android:id="@+id/tv_work1"
@@ -155,10 +155,10 @@
             android:gravity="center"
             />
         <TextView
-            android:layout_width="56dp"
+            android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:text="任务次数："
-            android:textSize="10sp"
+            android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_below="@id/tv_work1"
             android:layout_marginLeft="202dp"
@@ -167,10 +167,10 @@
             android:gravity="center"
            />
         <TextView
-            android:layout_width="56dp"
+            android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:text="工作时长："
-            android:textSize="10sp"
+            android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_below="@id/tv_work2"
             android:layout_marginLeft="202dp"
@@ -179,10 +179,10 @@
             android:gravity="center"
             />
         <TextView
-            android:layout_width="56dp"
+            android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:text="任务速度："
-            android:textSize="10sp"
+            android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_below="@id/tv_work3"
             android:layout_marginLeft="202dp"
@@ -199,16 +199,16 @@
             android:textColor="#ffffff"
             android:hint="待命中"
             android:id="@+id/tv_work_statue"
-            android:textSize="12sp"/>
+            android:textSize="14dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:textColor="#ffffff"
             android:hint="待命中"
-            android:textSize="12sp"
+            android:textSize="14dp"
             android:layout_below="@id/tv_work_statue"
             android:id="@+id/tv_task_num"/>
         <TextView
@@ -220,7 +220,7 @@
             android:gravity="center"
             android:textColor="#ffffff"
             android:hint="待命中"
-            android:textSize="12sp"
+            android:textSize="14dp"
             android:layout_below="@id/tv_task_num"
             />
         <TextView
@@ -231,14 +231,14 @@
             android:gravity="center"
             android:textColor="#ffffff"
             android:hint="待命中"
-            android:textSize="12sp"
+            android:textSize="14dp"
             android:layout_below="@id/tv_work_time"
             android:id="@+id/tv_task_speed"/>
         <TextView
-            android:layout_width="90dp"
+            android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:text="建立任务步骤："
-            android:textSize="12sp"
+            android:textSize="14dp"
             android:textColor="#ffffff"
             android:layout_marginTop="380dp"
             android:layout_marginLeft="16dp"

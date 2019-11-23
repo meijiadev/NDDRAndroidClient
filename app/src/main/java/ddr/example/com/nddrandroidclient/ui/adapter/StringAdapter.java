@@ -41,6 +41,9 @@ public class StringAdapter extends BaseAdapter<String> {
             case R.layout.item_path_mode:
                 helper.setText(R.id.mode_name,item);
                 break;
+            case R.layout.item_show_recycler:
+                helper.setText(R.id.tv_show_name,item);
+                break;
         }
 
     }

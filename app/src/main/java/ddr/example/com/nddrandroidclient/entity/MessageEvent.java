@@ -20,10 +20,7 @@ public class MessageEvent {
         LoginSuccess,        //登陆成功
         updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息
-        updateMap,
-        updateDDRVLNMap,
-        updatePng,
-        readFile,
+        updateDDRVLNMap,  // 更新地图信息
         realTimeDraw,
         addPoiPoint,
         updateVersion, //获取版本信息
@@ -49,19 +46,9 @@ public class MessageEvent {
       this.type=type;
     }
 
-  /*  public MessageEvent(Type type, List<MapInfo>mapInfos){
-        this.type=type;
-        this.mapInfoList=mapInfos;
-    }*/
-
     public MessageEvent(Type type, Object object){
         this.type=type;
         this.data=object;
-    }
-
-    public MessageEvent(Type type, List<Object> datas){
-        this.type=type;
-        this.datas=datas;
     }
 
     public Type getType() {

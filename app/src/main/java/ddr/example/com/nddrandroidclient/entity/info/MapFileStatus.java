@@ -32,6 +32,7 @@ public class MapFileStatus {
     private List<TaskMode> taskModes=new ArrayList<>();               //解析后的任务数据
 
     private List<SpaceItem> spaceItems=new ArrayList<>();             //解析出来后的空间信息
+    private List<SpaceItem> cSpaceItems=new ArrayList<>();
     private String mapName;                                    //解析出获取到的地图信息的名字
     /**获取当前运行地图的详情信息*/
     private List<TargetPoint> cTargetPoints=new ArrayList<>();         // 解析后的目标点数据
@@ -91,6 +92,7 @@ public class MapFileStatus {
             cTargetPoints.clear();
             cPathLines.clear();
             cTaskModes.clear();
+            cSpaceItems.clear();
             for (int i = 0; i < targetPtItems.size(); i++) {
                 TargetPoint targetPoint = new TargetPoint();
                 targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
@@ -144,6 +146,21 @@ public class MapFileStatus {
                 taskMode.setTaskState(taskItemExes.get(i).getStateValue());
                 cTaskModes.add(taskMode);
             }
+
+            for (int i=0;i<space_items.size();i++){
+                SpaceItem spaceItem=new SpaceItem();
+                spaceItem.setName(space_items.get(i).getName().toStringUtf8());
+                spaceItem.setType(space_items.get(i).getTypeValue());
+                float x=space_items.get(i).getCircledata().getCenter().getX();
+                float y=space_items.get(i).getCircledata().getCenter().getY();
+                float radius=space_items.get(i).getCircledata().getRadius();
+                SpaceItem.Circle circle=new SpaceItem.Circle(x,y,radius);
+                spaceItem.setCircle(circle);
+                spaceItem.setLines(space_items.get(i).getLinedata().getPointsetList());
+                spaceItem.setPolygons(space_items.get(i).getPolygondata().getPointsetList());
+                cSpaceItems.add(spaceItem);
+            }
+
         }
         //Logger.e("返回地图为查看信息");
         targetPoints.clear();
@@ -273,6 +290,14 @@ public class MapFileStatus {
      */
     public List<SpaceItem> getSpaceItems() {
         return spaceItems;
+    }
+
+    /**
+     * 获取当前地图的空间信息
+     * @return
+     */
+    public List<SpaceItem> getcSpaceItems() {
+        return cSpaceItems;
     }
 
     /**
