@@ -94,10 +94,8 @@ public class MapImageView extends GLContinuousView {
     private Matrix matrix,mapMatrix;
 
 
-    public void setMapBitmap(String mapName,String taskName){
+    public void setMapBitmap(String mapName){
         this.mapName=mapName;
-        pathLineItemExesS=new ArrayList<>();
-        targetPtItemsS=new ArrayList<>();
         Logger.e("设置图片");
         String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
         FileInputStream fis = null;
@@ -105,6 +103,19 @@ public class MapImageView extends GLContinuousView {
             fis = new FileInputStream(pngPath);
             Bitmap bitmap = BitmapFactory.decodeStream(fis);
             mapBitmap=bitmap;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void setTaskName(String taskName){
+        pathLineItemExesS=new ArrayList<>();
+        targetPtItemsS=new ArrayList<>();
+        Logger.e("设置任务");
+        try {
             for (int i=0;i<taskItemExes.size();i++){
                 if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
                     pathElementExes=taskItemExes.get(i).getPathSetList();
@@ -127,13 +138,11 @@ public class MapImageView extends GLContinuousView {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (NullPointerException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
-    }
 
+    }
 
     public MapImageView(Context context) {
         super(context);

@@ -133,6 +133,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 getMapInfo();
                 Logger.e("---------" + currentMap);
                 break;
+            case switchMapSucceed:
+                postDelayed(()->{
+                    getMapInfo();
+                },800);
+                break;
             case touchFloatWindow:
                 showControlPopupWindow();
                 break;

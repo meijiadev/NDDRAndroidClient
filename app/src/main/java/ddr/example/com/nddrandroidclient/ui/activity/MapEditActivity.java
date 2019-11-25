@@ -719,7 +719,7 @@ public class MapEditActivity extends DDRActivity {
                 break;
         }
     }
-    
+
     /**
      * 左上角退出按键
      *
