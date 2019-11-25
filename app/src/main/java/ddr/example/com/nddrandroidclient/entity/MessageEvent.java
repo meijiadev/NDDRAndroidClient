@@ -10,8 +10,6 @@ import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
  */
 public class MessageEvent {
     private Type type;
-    private List<MapInfo> mapInfoList;
-    private List<Object> datas;
     private Object data;
     private String bitmapPath;
     public enum Type{
@@ -21,11 +19,11 @@ public class MessageEvent {
         updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息
         updateDDRVLNMap,  // 更新地图信息
-        realTimeDraw,
-        addPoiPoint,
+        realTimeDraw,     //实时绘制
+        addPoiPoint,   //采集过程中添加点
         updateVersion, //获取版本信息
-        receivePointCloud,
-        switchTaskSuccess,
+        receivePointCloud,    //接收点云
+        switchTaskSuccess,   //
 
         addNewPoint,    //添加目标点
         addNewPath,     //添加路径
@@ -34,8 +32,7 @@ public class MessageEvent {
         updatePaths,    //添加完，更新路径列表
         updateRevamp,   //更新修改之后的地图信息，提醒UI层重新拉地图信息
 
-        touchFloatWindow, //
-
+        touchFloatWindow, // 点击浮窗
         mapOperationalSucceed,  //地图操作成功
         switchMapSucceed,       //切换地图成功
 
@@ -55,9 +52,6 @@ public class MessageEvent {
         return type;
     }
 
-    public List<MapInfo> getMapInfoList() {
-        return mapInfoList;
-    }
 
     public Object getData(){
         return data;

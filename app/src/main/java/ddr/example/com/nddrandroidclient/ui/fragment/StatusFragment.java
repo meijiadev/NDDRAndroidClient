@@ -135,7 +135,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
-                    mapImageView.setMapBitmap(mapName,taskName);
+                    mapImageView.setMapBitmap(mapName);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
                     for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
@@ -459,7 +459,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 public void onConfirm(BaseDialog dialog, String content) {
                                     tv_now_task.setText(groupList.get(position));
                                     taskName=groupList.get(position);
-                                    mapImageView.setMapBitmap(mapName,taskName);
+                                    mapImageView.setTaskName(taskName);
                                     if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<999 ){
                                         lsNum=Integer.parseInt(content);
                                     }else {
