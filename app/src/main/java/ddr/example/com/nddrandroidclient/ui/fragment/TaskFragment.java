@@ -299,6 +299,9 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
     }
 
+    /**
+     * 上传任务列表
+     */
     private void submissionTask(){
         taskModeList.sort(Comparator.comparing(TaskMode::getType).reversed().thenComparing(TaskMode::getEndHour).thenComparing(TaskMode::getEndMin));
         taskAdapter.setNewData(taskModeList);
