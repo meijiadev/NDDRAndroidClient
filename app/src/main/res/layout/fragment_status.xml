@@ -11,17 +11,31 @@
         <TextView
             android:layout_width="140dp"
             android:layout_height="24dp"
-            android:text="暂无地图正在运行"
+            android:text="暂无地图正在运行,"
             android:textSize="16sp"
             android:id="@+id/tv_ti_map"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="207dp"
             android:textColor="#ffffff"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/tv_create_map"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="新建地图"
+            android:textColor="@color/blue01"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_toRightOf="@id/tv_ti_map"
+            android:layout_alignBaseline="@id/tv_ti_map"
             />
 
         <ddr.example.com.nddrandroidclient.widget.view.MapImageView
             android:id="@+id/iv_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
     </RelativeLayout>
 
     <RelativeLayout

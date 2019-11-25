@@ -71,7 +71,9 @@ import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import ddr.example.com.nddrandroidclient.widget.textview.DDRTextView;
+import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
@@ -119,14 +121,14 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     TextView tvMapSize;
     @BindView(R.id.tv_create_time)
     TextView tvCreateTime;
-    @BindView(R.id.tv_25m)
-    TextView tv25m;
-    @BindView(R.id.tv_5m)
-    TextView tv5m;
+    @BindView(R.id.tv_025m)
+    GridTextView tv025m;
+    @BindView(R.id.tv_05m)
+    GridTextView tv05m;
     @BindView(R.id.tv_1m)
-    TextView tv1m;
+    GridTextView tv1m;
     @BindView(R.id.tv_2m)
-    TextView tv2m;
+    GridTextView tv2m;
     /**目标点的子项查看和再编辑布局*/
     @BindView(R.id.point_detail_layout)
     RelativeLayout pointDetailLayout;
@@ -278,7 +280,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     @SuppressLint("ResourceAsColor")
     @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete,R.id.bt_batch_delete, R.id.save_point, R.id.tv_path,
-            R.id.spinner_mode, R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort,R.id.save_task,R.id.tv_edit_map})
+            R.id.spinner_mode, R.id.save_path, R.id.tv_task,R.id.bt_select,R.id.bt_sort,R.id.save_task,R.id.tv_edit_map,R.id.tv_025m,R.id.tv_05m,R.id.tv_1m,R.id.tv_2m})
     public void onViewClicked(View view)  {
         switch (view.getId()) {
             case R.id.bt_create_map:
@@ -328,6 +330,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 PointView.getInstance(getAttachActivity()).clearDraw();
                 LineView.getInstance(getAttachActivity()).clearDraw();
+                GridLayerView.getInstance(zoomMap).onDestroy();
                 break;
             case R.id.tv_target_point:
                 mPosition=0;
@@ -526,6 +529,60 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 intent.putExtra("bitmapPath",bitmapPath);
                 startActivity(intent);
                 break;
+            case R.id.tv_025m:
+                if (!tv025m.getSelected()) {
+                    GridLayerView.getInstance(zoomMap).setPrecision((float) 0.25);        //将图片网格化
+                    zoomMap.invalidate();
+                    setIconDefault1();
+                    tv025m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
+                    tv025m.setSelected(true);
+                } else {
+                    GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
+                    zoomMap.invalidate();
+                    setIconDefault1();
+
+                }
+                break;
+            case R.id.tv_05m:
+                if (!tv05m.getSelected()) {
+                    GridLayerView.getInstance(zoomMap).setPrecision((float) 0.5);        //将图片网格化
+                    zoomMap.invalidate();
+                    setIconDefault1();
+                    tv05m.setSelected(true);
+                    tv05m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
+                    zoomMap.invalidate();
+
+                }
+                break;
+            case R.id.tv_1m:
+                if (!tv1m.getSelected()) {
+                    GridLayerView.getInstance(zoomMap).setPrecision((float) 1);        //将图片网格化
+                    zoomMap.invalidate();
+                    setIconDefault1();
+                    tv1m.setSelected(true);
+                    tv1m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
+                    zoomMap.invalidate();
+                }
+                break;
+            case R.id.tv_2m:
+                if (!tv2m.getSelected()) {
+                    GridLayerView.getInstance(zoomMap).setPrecision((float) 2);        //将图片网格化
+                    zoomMap.invalidate();
+                    setIconDefault1();
+                    tv2m.setSelected(true);
+                    tv2m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
+                    zoomMap.invalidate();
+                }
+                break;
         }
     }
 
@@ -541,6 +598,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         tvTask.setTextColor(Color.parseColor("#ccffffff"));
         tvTask.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_task_gray),null,null,null);
 
+    }
+
+    /**
+     * 设置网格图标默认状态
+     */
+    private void setIconDefault1(){
+        tv025m.setSelected(false);
+        tv05m.setSelected(false);
+        tv1m.setSelected(false);
+        tv2m.setSelected(false);
+        tv025m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv05m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv1m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv2m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
     }
 
 
@@ -1012,6 +1083,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         targetPointAdapter.setNewData(targetPoints);
                         recyclerDetail.setAdapter(targetPointAdapter);
                         setIconDefault();
+                        setIconDefault1();
                         tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
                         tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                         zoomMap.setImageBitmap(lookBitmap);

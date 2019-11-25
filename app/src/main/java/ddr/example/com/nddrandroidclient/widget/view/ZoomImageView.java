@@ -8,6 +8,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.chillingvan.canvasgl.CanvasGL;
+import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.androidCanvas.IAndroidCanvasHelper;
+import com.chillingvan.canvasgl.glview.GLView;
+import com.chillingvan.canvasgl.glview.texture.GLTextureView;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -25,13 +31,15 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 /**
  * 图片缩放平移的控件
  */
-public class ZoomImageView extends View {
+public class ZoomImageView extends GLTextureView {
     private Context context;
     public static final int STATUS_INIT = 1;//常量初始化
     public static final int STATUS_ZOOM_OUT = 2;//图片放大状态常量
     public static final int STATUS_ZOOM_IN = 3;//图片缩小状态常量
     public static final int STATUS_MOVE = 4;//图片拖动状态常量
-    private Matrix matrix = new Matrix();//对图片进行移动和缩放变换的矩阵
+    //private Matrix matrix=new Matrix();
+   // private ICanvasGL.BitmapMatrix matrix = new ICanvasGL.BitmapMatrix();//对图片进行移动和缩放变换的矩阵
+    private CanvasGL.BitmapMatrix matrix=new CanvasGL.BitmapMatrix();
     private Bitmap sourceBitmap;//待展示的Bitmap对象
     private int currentStatus;//记录当前操作的状态，可选值为STATUS_INIT、STATUS_ZOOM_OUT、STATUS_ZOOM_IN和STATUS_MOVE
     private int width;//ZoomImageView控件的宽度
@@ -62,14 +70,6 @@ public class ZoomImageView extends View {
     public double r11=0;
     public double t1=410.973;
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void upDate(MessageEvent mainUpDate){
-        switch (mainUpDate.getType()){
-            case updateDDRVLNMap:
-
-                break;
-        }
-    }
 
     /**
      * ZoomImageView构造函数，将当前操作状态设为STATUS_INIT。
@@ -79,10 +79,11 @@ public class ZoomImageView extends View {
     public ZoomImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         currentStatus = STATUS_INIT;
-        EventBus.getDefault().register(this);        /**注册EvenBus事件监听器**/
         this.context=context;
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
     }
+
+
 
     /**
      * @param bitmap
@@ -101,7 +102,8 @@ public class ZoomImageView extends View {
         r10=affine_mat.getR21();
         r11=affine_mat.getR22();
         t1=affine_mat.getTy();
-        invalidate();
+        requestRender();
+
     }
 
     @Override
@@ -159,7 +161,8 @@ public class ZoomImageView extends View {
                         movedDistanceY = 0;
                     }
                     // 调用onDraw()方法绘制图片
-                    invalidate();
+                    //invalidate();
+                    requestRender();
                     lastXMove = xMove;
                     lastYMove = yMove;
                 } else if (event.getPointerCount() == 2) {
@@ -189,7 +192,8 @@ public class ZoomImageView extends View {
                             totalRatio = initRatio;
                         }
                        // 调用onDraw()方法绘制图片
-                        invalidate();
+                        //invalidate();
+                        requestRender();
                         lastFingerDis = fingerDis;
                     }
                 }
@@ -213,12 +217,12 @@ public class ZoomImageView extends View {
         return true;
     }
 
+
     /**
      * 根据currentStatus的值来决定对图片进行什么样的绘制操作。
      */
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    protected void onGLDraw(ICanvasGL canvas) {
         if (sourceBitmap != null) {
             switch (currentStatus) {
                 case STATUS_ZOOM_OUT:
@@ -232,14 +236,14 @@ public class ZoomImageView extends View {
                 case STATUS_INIT:
                     initBitmap(canvas);
                 default:
-                    canvas.drawBitmap(sourceBitmap, matrix, null);
+                    canvas.drawBitmap(sourceBitmap, matrix);
                     break;
             }
         }
         currentStatus=0;
         PointView.getInstance(context).drawPoint(canvas,this);
         LineView.getInstance(context).drawLine(canvas,this);
-        //GridLayerView.getInstance(this).drawGrid(canvas);
+        GridLayerView.getInstance(this).drawGrid(canvas);
     }
 
     /**
@@ -310,11 +314,12 @@ public class ZoomImageView extends View {
      *
      * @param canvas
      */
-    private void zoom(Canvas canvas) {
+    private void zoom(ICanvasGL canvas) {
         matrix.reset();
         // 将图片按总缩放比例进行缩放
-        // GridLayerView.getInstance(this).setScalePrecision(totalRatio);
-        matrix.postScale(totalRatio, totalRatio);
+         GridLayerView.getInstance(this).setScalePrecision(totalRatio);
+         matrix.scale(totalRatio, totalRatio);
+        //matrix.postScale(totalRatio, totalRatio);
         //Logger.e("-----缩放比例："+totalRatio+";");
         float scaledWidth = sourceBitmap.getWidth() * totalRatio;
         float scaledHeight = sourceBitmap.getHeight() * totalRatio;
@@ -345,12 +350,15 @@ public class ZoomImageView extends View {
             }
         }
         // 缩放后对图片进行偏移，以保证缩放后中心点位置不变
-        matrix.postTranslate(translateX, translateY);
+        matrix.translate(translateX, translateY);
+
+        //matrix.postTranslate(translateX, translateY);
         totalTranslateX = translateX;
         totalTranslateY = translateY;
         currentBitmapWidth = scaledWidth;
         currentBitmapHeight = scaledHeight;
-        canvas.drawBitmap(sourceBitmap, matrix, null);
+        //canvas.drawBitmap(sourceBitmap, matrix, null);
+        canvas.drawBitmap(sourceBitmap, matrix);
     }
 
     /**
@@ -358,27 +366,31 @@ public class ZoomImageView extends View {
      *
      * @param canvas
      */
-    private void move(Canvas canvas) {
+    private void move(ICanvasGL canvas) {
         matrix.reset();
         // 根据手指移动的距离计算出总偏移值
         float translateX = totalTranslateX + movedDistanceX;
         float translateY = totalTranslateY + movedDistanceY;
         // 先按照已有的缩放比例对图片进行缩放
-        matrix.postScale(totalRatio, totalRatio);
+        matrix.scale(totalRatio, totalRatio);
+        //matrix.postScale(totalRatio, totalRatio);
         //matrix.postRotate(90,currentBitmapWidth/2,currentBitmapHeight/2);
         // 再根据移动距离进行偏移
-        matrix.postTranslate(translateX, translateY);
+        matrix.translate(translateX, translateY);
+        //matrix.postTranslate(translateX, translateY);
         totalTranslateX = translateX;
         totalTranslateY = translateY;
-        canvas.drawBitmap(sourceBitmap, matrix, null);
+        canvas.drawBitmap(sourceBitmap, matrix);
     }
+
+
 
     /**
      * 对图片进行初始化操作，包括让图片居中，以及当图片大于屏幕宽高时对图片进行压缩。
      *
      * @param canvas
      */
-    private void initBitmap(Canvas canvas) {
+    private void initBitmap(ICanvasGL canvas) {
         if (sourceBitmap != null) {
             matrix.reset();
             int bitmapWidth = sourceBitmap.getWidth();
@@ -387,19 +399,23 @@ public class ZoomImageView extends View {
                 if (bitmapWidth - width > bitmapHeight - height) {
                     // 当图片宽度大于屏幕宽度时，将图片等比例压缩，使它可以完全显示出来
                     float ratio = width / (bitmapWidth * 1.0f);
-                    matrix.postScale(ratio, ratio);
+                    //matrix.postScale(ratio, ratio);
+                    matrix.scale(ratio, ratio);
                     float translateY = (height - (bitmapHeight * ratio)) / 2f;
                     // 在纵坐标方向上进行偏移，以保证图片居中显示
-                    matrix.postTranslate(0, translateY);
+                    //matrix.postTranslate(0, translateY);
+                    matrix.translate(0, translateY);
                     totalTranslateY = translateY;
                     totalRatio = initRatio = ratio;
                 } else {
                     // 当图片高度大于屏幕高度时，将图片等比例压缩，使它可以完全显示出来
                     float ratio = height / (bitmapHeight * 1.0f);
-                    matrix.postScale(ratio, ratio);
+                    //matrix.postScale(ratio, ratio);
+                    matrix.scale(ratio, ratio);
                     float translateX = (width - (bitmapWidth * ratio)) / 2f;
                     // 在横坐标方向上进行偏移，以保证图片居中显示
-                    matrix.postTranslate(translateX, 0);
+                    //matrix.postTranslate(translateX, 0);
+                    matrix.translate(translateX, 0);
                     totalTranslateX = translateX;
                     totalRatio = initRatio = ratio;
                 }
@@ -409,14 +425,15 @@ public class ZoomImageView extends View {
                 // 当图片的宽高都小于屏幕宽高时，直接让图片居中显示
                 float translateX = (width - sourceBitmap.getWidth()) / 2f;
                 float translateY = (height - sourceBitmap.getHeight()) / 2f;
-                matrix.postTranslate(translateX, translateY);
+                //matrix.postTranslate(translateX, translateY);
+                matrix.translate(translateX,translateY);
                 totalTranslateX = translateX;
                 totalTranslateY = translateY;
                 totalRatio = initRatio = 1f;
                 currentBitmapWidth = bitmapWidth;
                 currentBitmapHeight = bitmapHeight;
             }
-            canvas.drawBitmap(sourceBitmap, matrix, null);
+            canvas.drawBitmap(sourceBitmap, matrix);
         }
     }
 

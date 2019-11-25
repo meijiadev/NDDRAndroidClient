@@ -354,9 +354,8 @@ public class TcpClient extends BaseSocketConnection {
      * 请求文件（txt、png) 刷新文件列表
      */
     public void requestFile() {
-        final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
+        //final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
         BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
-                .setParam(currentFile)
                 .build();
         tcpClient.sendData(null,reqClientGetMapInfo);
         Logger.e("请求文件中....");

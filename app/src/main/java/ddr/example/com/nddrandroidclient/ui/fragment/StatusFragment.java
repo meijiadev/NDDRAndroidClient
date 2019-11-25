@@ -41,8 +41,10 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
@@ -309,7 +311,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -328,37 +330,33 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 tv_now_task.setBackgroundResource(R.drawable.task_check_bg);
                 iv_task_xl.setImageResource(R.mipmap.xl_5);
                 break;
+            case R.id.tv_create_map:
+                new InputDialog.Builder(getAttachActivity())
+                        .setTitle("采集地图")
+                        .setHint("输入地图名称")
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                if (!content.isEmpty()){
+                                    content=content.replaceAll(" ","");
+                                    String name="OneRoute_"+content;
+                                    BaseCmd.reqCmdStartActionMode reqCmdStartActionMode=BaseCmd.reqCmdStartActionMode.newBuilder()
+                                            .setMode(BaseCmd.eCmdActionMode.eRec)
+                                            .setRouteName(ByteString.copyFromUtf8(name))
+                                            .build();
+                                    tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eLSMSlamNavigation),reqCmdStartActionMode);
+                                    startActivity(CollectingActivity.class);
+                                }else {
+                                    toast("请输入地图名字");
+                                }
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                                toast("取消新建地图");
+                            }
+                        }).show();
+                break;
         }
-    }
-    /**
-     * 运行当前地图
-     * @param eCmdActionMode
-     */
-    private void sendModel(BaseCmd.eCmdActionMode eCmdActionMode) {
-        BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
-                .setMode(eCmdActionMode)
-                .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqCmdStartActionMode);
-    }
-
-    /**
-     * 退出当前模式
-     */
-    private void exitModel() {
-        BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
-                .setError("noError")
-                .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
     }
     /**
      * 机器人暂停/重新运动

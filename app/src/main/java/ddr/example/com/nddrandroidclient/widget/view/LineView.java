@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.chillingvan.canvasgl.ICanvasGL;
+import com.chillingvan.canvasgl.glcanvas.GLPaint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +27,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  */
 public class LineView {
     public static LineView lineView;
-    private Paint linePaint,textPaint,linePaint1,selectPaint;
+    private GLPaint linePaint,textPaint,linePaint1,selectPaint;
     private List<PathLine> pathLines;
     private List<PathLine.PathPoint> pathPoints;
 
@@ -56,21 +59,18 @@ public class LineView {
     }
 
     private LineView(Context context) {
-        linePaint=new Paint();
+        linePaint=new GLPaint();
         linePaint.setColor(Color.GRAY);
-        linePaint.setStrokeWidth(3);
-        linePaint.setAntiAlias(true);
-        linePaint1=new Paint();
+        linePaint.setLineWidth(3);
+        linePaint1=new GLPaint();
         linePaint1.setColor(Color.BLACK);
-        linePaint1.setStrokeWidth(2);
-        linePaint1.setAntiAlias(true);
-        selectPaint=new Paint();
+        linePaint1.setLineWidth(3);
+        selectPaint=new GLPaint();
         selectPaint.setColor(Color.RED);
-        selectPaint.setStrokeWidth(5);
-        selectPaint.setAntiAlias(true);
-        textPaint=new Paint();
-        textPaint.setStrokeWidth(8);
-        textPaint.setTextAlign(Paint.Align.CENTER);
+        selectPaint.setLineWidth(5);
+        textPaint=new GLPaint();
+        textPaint.setLineWidth(8);
+        //textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setStyle(Paint.Style.FILL);
         startBitamap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.start_default);
         endBitamp=BitmapFactory.decodeResource(context.getResources(),R.mipmap.end_defalut);
@@ -114,7 +114,7 @@ public class LineView {
      * @param canvas
      * @param zoomImageView
      */
-    public void drawLine(Canvas canvas,ZoomImageView zoomImageView){
+    public void drawLine(ICanvasGL canvas, ZoomImageView zoomImageView){
         //绘制路径
         if (pathLines!=null){
             for (int i=0;i<pathLines.size();i++){
@@ -130,10 +130,10 @@ public class LineView {
                                 canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                                 if (j==0){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst);
                                 }else if (j==pathPoints.size()-2){
                                     mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
-                                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst);
                                 }
 
                             }
@@ -154,10 +154,10 @@ public class LineView {
                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                     if (j==0){
                         mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                        canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                        canvas.drawBitmap(startBitamap,mRectSrc,mRectDst);
                     }else if (j==pathPoints.size()-2){
                         mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
-                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst);
                     }
 
                 }

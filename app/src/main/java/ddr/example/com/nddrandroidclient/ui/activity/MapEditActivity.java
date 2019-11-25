@@ -57,7 +57,9 @@ import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
+import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
@@ -79,13 +81,13 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.tv_path)
     TextView tvPath;
     @BindView(R.id.tv_025m)
-    TextView tv025m;
+    GridTextView tv025m;
     @BindView(R.id.tv_05m)
-    TextView tv05m;
+    GridTextView tv05m;
     @BindView(R.id.tv_1m)
-    TextView tv1m;
+    GridTextView tv1m;
     @BindView(R.id.tv_2m)
-    TextView tv2m;
+    GridTextView tv2m;
     @BindView(R.id.speed_layout)
     LinearLayout speedLayout;         //速度调节布局
     @BindView(R.id.zmap)
@@ -156,6 +158,7 @@ public class MapEditActivity extends DDRActivity {
         pathAdapter = new PathAdapter(R.layout.item_show_recycler);
         editTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
         graphTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
+        GridLayerView.getInstance(zmap).onDestroy();
     }
 
     @Override
@@ -224,12 +227,58 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case R.id.tv_025m:
+                if (!tv025m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 0.25);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv025m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
+                    tv025m.setSelected(true);
+                } else {
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+                    setIconDefault1();
+
+                }
                 break;
             case R.id.tv_05m:
+                if (!tv05m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 0.5);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv05m.setSelected(true);
+                    tv05m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+
+                }
                 break;
             case R.id.tv_1m:
+                if (!tv1m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 1);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv1m.setSelected(true);
+                    tv1m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+                }
                 break;
             case R.id.tv_2m:
+                if (!tv2m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 2);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv2m.setSelected(true);
+                    tv2m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+                }
                 break;
             case R.id.tv_mark_current:
                 if (speedLayout.getVisibility() == View.VISIBLE) {
@@ -419,6 +468,20 @@ public class MapEditActivity extends DDRActivity {
 
                 break;
         }
+    }
+
+    /**
+     * 设置网格图标默认状态
+     */
+    private void setIconDefault1(){
+        tv025m.setSelected(false);
+        tv05m.setSelected(false);
+        tv1m.setSelected(false);
+        tv2m.setSelected(false);
+        tv025m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv05m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv1m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv2m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
     }
 
 
@@ -686,6 +749,7 @@ public class MapEditActivity extends DDRActivity {
                 titleLayout.setLeftTitle("新建目标点");
                 tvMarkCurrent.setVisibility(View.VISIBLE);
                 addPoi.setVisibility(View.VISIBLE);
+                ivCenter.setVisibility(View.VISIBLE);
                 tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
                 tvPath.setText("路径" + "(" + pathLines.size() + ")");
                 break;

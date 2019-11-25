@@ -59,7 +59,8 @@
             android:layout_height="match_parent"
             android:id="@+id/highset"
             android:text="高级设置"
-            android:textSize="12dp"
+
+            android:textSize="14dp"
             android:layout_toRightOf="@id/taskmanager"
             android:layout_centerInParent="true"
             android:layout_marginLeft="34dp"
