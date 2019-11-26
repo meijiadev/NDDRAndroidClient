@@ -12,7 +12,7 @@
         app:leftIcon="@mipmap/iv_back"
         app:leftTitle="新建目标点"
         android:paddingStart="@dimen/dp_10"
-        app:leftColor="@color/white" 
+        app:leftColor="@color/white"
         app:leftSize="16sp"
         app:rightTitle="退出"
         android:paddingRight="@dimen/dp_10"

@@ -104,6 +104,7 @@
         app:layout_constraintHorizontal_bias="1"
         android:layout_marginRight="43dp"
         app:layout_constraintVertical_bias="1"
+        android:visibility="invisible"
         />
 
     <ddr.example.com.nddrandroidclient.widget.view.RockerView
@@ -122,6 +123,7 @@
         app:rockerScale="0.3"
         app:rockerSpeedLevel="11"
         android:layout_marginLeft="57dp"
+        android:visibility="invisible"
         />
     <ddr.example.com.nddrandroidclient.widget.view.RockerView
         android:id="@+id/my_rocker_zy"
@@ -139,6 +141,7 @@
         app:rockerScale="0.3"
         app:rockerSpeedLevel="11"
         android:layout_marginRight="50dp"
+        android:visibility="invisible"
         />
 
 

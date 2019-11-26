@@ -81,6 +81,7 @@
         <!-- ActionMode 覆盖 Actionbar，不顶下来 -->
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowContentOverlay">@null</item>
+
         <!-- 不感知敏感的切换 -->
         <!--<item name="android:configChanges">orientation|screenSize|keyboardHidden</item>-->
         <!-- 默认隐藏输入法 -->

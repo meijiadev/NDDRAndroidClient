@@ -402,17 +402,17 @@
                         android:drawableRight="@mipmap/iv_down"
                         android:gravity="center_vertical"
                         />
+
                     <TextView
                         android:id="@+id/tv_cs"
-                        android:layout_width="37.5dp"
-                        android:layout_height="16.5dp"
-                        android:text="参数："
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_alignLeft="@id/tv_path_name"
+                        android:layout_width="62.5dp"
+                        android:layout_height="18.5dp"
                         android:layout_below="@id/tv_mode"
+                        android:layout_alignLeft="@id/tv_path_name"
                         android:layout_marginTop="30dp"
-                        />
+                        android:text="延边距离："
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                     <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                         android:id="@+id/et_parameter"
                         android:layout_width="105.5dp"
@@ -433,9 +433,9 @@
                         />
                     <TextView
                         android:id="@+id/tv_speed"
-                        android:layout_width="37.5dp"
-                        android:layout_height="16.5dp"
-                        android:text="速度："
+                        android:layout_width="62.5dp"
+                        android:layout_height="18.5dp"
+                        android:text="行驶速度："
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:layout_alignLeft="@id/tv_cs"
@@ -470,6 +470,20 @@
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:gravity="center_vertical"/>
+                    <TextView
+                        android:id="@+id/bt_add_action"
+                        android:layout_width="64dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/bt_bg__map"
+                        android:layout_toRightOf="@id/tv_action_recycler"
+                        android:layout_below="@id/tv_speed"
+                        android:layout_marginTop="26.5dp"
+                        android:layout_marginLeft="85dp"
+                        android:text="添加"
+                        android:textSize="10sp"
+                        android:gravity="center"
+                        android:textColor="#ccffffff"
+                        />
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/action_recycler"
                         android:layout_width="match_parent"
