@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.chillingvan.canvasgl.ICanvasGL;
-
 import java.util.List;
 
 import ddr.example.com.nddrandroidclient.R;
@@ -78,7 +76,7 @@ public class PointView {
     }
 
 
-    public void drawPoint(ICanvasGL canvas, ZoomImageView zoomImageView){
+    public void drawPoint(Canvas canvas,ZoomImageView zoomImageView){
 
         if (targetPoints!=null){
             for (int i=0;i<targetPoints.size();i++){
@@ -89,8 +87,8 @@ public class PointView {
                     int y= (int) xyEntity.getY();
                     mRectSrc=new Rect(0,0,22,22);
                     mRectDst=new Rect(x-11,y-11,x+11,y+11);
-                    canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst);
-                    //canvas.drawText(targetPoints.get(i).getName(),x,y+15,textPaint);
+                    canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst,pointPaint);
+                    canvas.drawText(targetPoints.get(i).getName(),x,y+15,textPaint);
                 }
             }
         }
@@ -102,8 +100,8 @@ public class PointView {
             int y= (int) xyEntity.getY();
             mRectSrc=new Rect(0,0,22,22);
             mRectDst=new Rect(x-11,y-11,x+11,y+11);
-            canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst);
-            //canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
+            canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst,pointPaint);
+            canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
     }
 

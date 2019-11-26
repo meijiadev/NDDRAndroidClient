@@ -4,9 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.chillingvan.canvasgl.ICanvasGL;
-import com.chillingvan.canvasgl.glcanvas.GLPaint;
-
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 
@@ -16,7 +13,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public class GridLayerView {
     public static GridLayerView gridLayerView;
     private ZoomImageView zoomImageView;
-    private GLPaint paint;
+    private Paint paint;
     private double pixIntervalX,prxIntervalY;
     private float precision=0;
 
@@ -32,9 +29,9 @@ public class GridLayerView {
     }
 
     private GridLayerView(ZoomImageView zoomImageView){
-        paint=new GLPaint();
+        paint=new Paint();
         paint.setColor(Color.BLACK);
-        paint.setLineWidth(1);
+        paint.setStrokeWidth(1);
         this.zoomImageView=zoomImageView;
     }
 
@@ -51,7 +48,7 @@ public class GridLayerView {
         prxIntervalY=precision/Math.abs(1/zoomImageView.r10)*scale;
     }
 
-    public void drawGrid(ICanvasGL canvas){
+    public void drawGrid(Canvas canvas){
         int viewWidth=zoomImageView.getWidth();       //得到画布的宽
         int viewHeight=zoomImageView.getHeight();     //得到画布的高
         //画横线
