@@ -26,6 +26,7 @@ public class LineView {
     public static LineView lineView;
     private Paint linePaint,textPaint,linePaint1,selectPaint;
     private List<PathLine> pathLines;
+    private List<PathLine> pathLines1;
     private List<PathLine.PathPoint> pathPoints;
 
     private List<DDRVLNMap.space_pointEx> lines;       //线段
@@ -82,6 +83,14 @@ public class LineView {
      */
     public void setLineViews(List<PathLine> pathLines){
         this.pathLines=pathLines;
+    }
+
+    /**
+     * 设置需要显示的路径（多选）
+     * @param pathLines
+     */
+    public void setPathLines(List<PathLine> pathLines){
+        this.pathLines1=pathLines;
     }
 
     public void setPoints(List<PathLine.PathPoint> pathPoints){
@@ -141,6 +150,34 @@ public class LineView {
                     }
                 }
             }
+        }
+
+        if (pathLines1!=null){
+            for (int i=0;i<pathLines1.size();i++){
+                if (pathLines1.get(i).isMultiple()){
+                    List<PathLine.PathPoint> pathPoints=pathLines1.get(i).getPathPoints();
+                    if (pathPoints.size()>1){
+                        for (int j=0;j<pathPoints.size();j++){
+                            if (j<pathPoints.size()-1){
+                                XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
+                                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                                XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                                if (j==0){
+                                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                                }else if (j==pathPoints.size()-2){
+                                    mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
+                                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
 
@@ -260,6 +297,9 @@ public class LineView {
         pathPoints=null;
         polygons=null;
         lines=null;
+        pathLines1=null;
+        selectPosition=-1;
+        spaceItems=null;
     }
 
 

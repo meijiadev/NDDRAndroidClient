@@ -293,6 +293,16 @@
                         >
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
                     <TextView
+                        android:text="m"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/et_toward"
+                        android:layout_alignBottom="@id/et_x"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18.5dp"
+                        android:layout_marginLeft="5dp"/>
+                    <TextView
                         android:id="@+id/tv_y"
                         android:layout_width="23dp"
                         android:layout_height="18.5dp"
@@ -313,6 +323,16 @@
                         android:layout_marginTop="16.5dp">
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
                     <TextView
+                        android:text="m"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/et_toward"
+                        android:layout_alignBottom="@id/et_y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18.5dp"
+                        android:layout_marginLeft="5dp"/>
+                    <TextView
                         android:id="@+id/tv_point_toward"
                         android:layout_width="54.5dp"
                         android:layout_height="18.5dp"
@@ -332,6 +352,16 @@
                         android:layout_alignLeft="@id/et_y"
                         android:layout_marginTop="16.5dp">
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                    <TextView
+                        android:text="°"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/et_toward"
+                        android:layout_below="@+id/et_y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16.5dp"
+                        android:layout_marginLeft="5dp"/>
                     <TextView
                         android:id="@+id/save_point"
                         android:layout_width="71dp"

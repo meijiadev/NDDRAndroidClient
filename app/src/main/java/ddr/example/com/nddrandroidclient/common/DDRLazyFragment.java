@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 
@@ -27,12 +29,13 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
     private ImmersionBar mImmersionBar;
     /** ButterKnife 注解 */
     private Unbinder mButterKnife;
+    private View view;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
             mButterKnife = ButterKnife.bind(this, view);
         }
@@ -45,6 +48,7 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
         super.initFragment();
         EventBusManager.register(this);
     }
+
 
 
     /**

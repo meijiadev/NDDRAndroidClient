@@ -25,6 +25,8 @@ public class TaskMode implements Serializable {
     private int taskState;                    //新增 任务状态  1-等待运行； 2-运行中； 3-暂停； 4-运行完了； 5-终止
     private int type;                        //新增 任务类型  0-不在执行队列中  1-临时任务  2-在队列中
 
+    private boolean isSelected;
+
 
     public TaskMode() {
 
@@ -129,5 +131,13 @@ public class TaskMode implements Serializable {
      */
     public List<String> getTargetPoints() {
         return targetPoints;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 }
