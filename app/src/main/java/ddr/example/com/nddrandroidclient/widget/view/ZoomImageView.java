@@ -82,18 +82,23 @@ public class ZoomImageView extends View {
      */
     public void setImageBitmap(Bitmap bitmap) {
         if (bitmap!=null){
-            sourceBitmap = bitmap;
-            Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+            try {
+                sourceBitmap = bitmap;
+                Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+                MapFileStatus mapFileStatus=MapFileStatus.getInstance();
+                DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
+                r00=affine_mat.getR11();
+                r01=affine_mat.getR12();
+                t0=affine_mat.getTx();
+                r10=affine_mat.getR21();
+                r11=affine_mat.getR22();
+                t1=affine_mat.getTy();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            invalidate();
         }
-        MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-        DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
-        r00=affine_mat.getR11();
-        r01=affine_mat.getR12();
-        t0=affine_mat.getTx();
-        r10=affine_mat.getR21();
-        r11=affine_mat.getR22();
-        t1=affine_mat.getTy();
-        invalidate();
+
     }
 
     @Override

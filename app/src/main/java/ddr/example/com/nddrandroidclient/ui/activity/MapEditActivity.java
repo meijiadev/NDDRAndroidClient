@@ -186,8 +186,8 @@ public class MapEditActivity extends DDRActivity {
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
         try {
-            targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
-            pathLines = ListTool.deepCopy(mapFileStatus.getPathLines());
+            targetPoints = ListTool.deepCopy((List<TargetPoint>)intent.getSerializableExtra("targetList"));
+            pathLines = ListTool.deepCopy((List<PathLine>)intent.getSerializableExtra("pathList"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -324,8 +324,15 @@ public class MapEditActivity extends DDRActivity {
                                     targetPoint.setInTask(true);  //方便显示
                                     targetPoint.setTheta(0);
                                     newPoints.add(targetPoint);
-                                    PointView.getInstance(getApplicationContext()).setPoints(newPoints);
-                                    zmap.invalidate();
+                                    try {
+                                        List<TargetPoint> points=ListTool.deepCopy(newPoints);
+                                        PointView.getInstance(getApplicationContext()).setPoints(points);
+                                        zmap.invalidate();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (ClassNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
                                     targetPoints.add(targetPoint);
                                 }
                                 @Override

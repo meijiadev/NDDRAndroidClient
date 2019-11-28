@@ -211,6 +211,7 @@ public class CollectingView extends GLContinuousView {
        //Logger.e("------计算耗时："+(endTime-startTime));
 
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

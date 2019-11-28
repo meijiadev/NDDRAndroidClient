@@ -149,7 +149,7 @@ public class TcpClient extends BaseSocketConnection {
                     showToast(activity,"连接已断开，请重现连接",Toast.LENGTH_LONG);
                 }else {
                     Logger.e("-------断开连接的页面："+activity.getLocalClassName());
-                    showDialog(activity);
+                    showDialog(activity );
                 }
             }
         }
