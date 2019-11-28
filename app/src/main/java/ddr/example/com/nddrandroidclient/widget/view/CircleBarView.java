@@ -84,7 +84,7 @@ public class CircleBarView extends View {
         textPaint.setColor(Color.WHITE);
         bgPaint=new Paint();
         bgPaint.setStyle(Paint.Style.STROKE);
-        bgPaint.setColor(Color.GRAY);
+        bgPaint.setColor(Color.parseColor("#272829"));
         bgPaint.setAntiAlias(true);
         bgPaint.setStrokeWidth(barWidth);
 
