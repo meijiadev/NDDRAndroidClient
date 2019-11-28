@@ -10,7 +10,7 @@ public class TargetPoint extends BaseMode implements Serializable {
     private String name;
     private float x;
     private float y;
-    private float theta;  //朝向 单位：度 【-180,180】
+    private int theta;  //朝向 单位：度 【-180,180】
 
 
 
@@ -47,11 +47,11 @@ public class TargetPoint extends BaseMode implements Serializable {
         this.y = y;
     }
 
-    public float getTheta() {
+    public int getTheta() {
         return theta;
     }
 
-    public void setTheta(float theta) {
+    public void setTheta(int theta) {
         this.theta = theta;
     }
 

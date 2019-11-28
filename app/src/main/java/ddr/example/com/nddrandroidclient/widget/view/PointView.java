@@ -5,12 +5,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 
@@ -21,8 +28,10 @@ import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 public class PointView {
     public static PointView pointView;
     private List<TargetPoint> targetPoints;
+    private List<TargetPoint> targetPoints1;
     private Paint pointPaint,textPaint;
     private TargetPoint targetPoint;
+    private NotifyBaseStatusEx notifyBaseStatusEx;
     /**
      *用于裁剪源图像的矩形（可重复使用）。
      */
@@ -34,6 +43,13 @@ public class PointView {
     private Rect mRectDst;
 
     private Bitmap autoBitmap;
+    private float x,y;
+    private float angle; //角度
+    public boolean isRuning;
+    private Matrix matrix=new Matrix();
+    private Bitmap directionBitmap,directionBitmap1;
+    private Bitmap targetBitmap,targetBitmap1;
+
 
     /**
      * 设置需要显示的点列表
@@ -42,8 +58,31 @@ public class PointView {
         this.targetPoints=targetPoints;
     }
 
+    /**
+     * 显示被选中的点（多选）
+     * @param targetPoints
+     */
+    public void setTargetPoints(List<TargetPoint> targetPoints){
+        this.targetPoints1=targetPoints;
+    }
+
+    /**
+     * 显示点击的该点（单选）
+     * @param targetPoint
+     */
     public void setPoint(TargetPoint targetPoint){
         this.targetPoint=targetPoint;
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void update(MessageEvent messageEvent){
+        switch (messageEvent.getType()){
+            case updateBaseStatus:
+                x=notifyBaseStatusEx.getPosX();
+                y=notifyBaseStatusEx.getPosY();
+                angle=radianToangle(notifyBaseStatusEx.getPosDirection());
+                break;
+        }
     }
 
 
@@ -73,6 +112,10 @@ public class PointView {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(16);
         autoBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.auto_default);
+        directionBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.direction);
+        targetBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.target_point);
+        notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
+        EventBus.getDefault().register(this);
     }
 
 
@@ -92,22 +135,58 @@ public class PointView {
                 }
             }
         }
+        if (targetPoints1 != null) {
+            for (int i=0;i<targetPoints1.size();i++){
+                if (targetPoints1.get(i).isMultiple()){
+                    XyEntity xyEntity=zoomImageView.toXorY(targetPoints1.get(i).getX(),targetPoints1.get(i).getY());
+                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    int x= (int) xyEntity.getX();
+                    int y= (int) xyEntity.getY();
+                    mRectSrc=new Rect(0,0,40,40);
+                    mRectDst=new Rect(x-20,y-20,x+20,y+20);
+                    matrix.setRotate(-targetPoints1.get(i).getTheta());
+                    targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+                    canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+                    canvas.drawText(targetPoints1.get(i).getName(),x,y+15,textPaint);
+                }
+            }
+        }
 
         if (targetPoint!=null){
             XyEntity xyEntity=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
             int x= (int) xyEntity.getX();
             int y= (int) xyEntity.getY();
-            mRectSrc=new Rect(0,0,22,22);
-            mRectDst=new Rect(x-11,y-11,x+11,y+11);
-            canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst,pointPaint);
+            mRectSrc=new Rect(0,0,40,40);
+            mRectDst=new Rect(x-20,y-20,x+20,y+20);
+            matrix.setRotate(-targetPoint.getTheta());
+            targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+            canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
+        if (isRuning){
+            XyEntity xyEntity=zoomImageView.toXorY(x,y);
+            xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+            matrix.setRotate(-angle);
+            directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
+            canvas.drawBitmap(directionBitmap1,(int)xyEntity.getX()-30,(int)xyEntity.getY()-30,pointPaint);
+        }
+
+    }
+
+
+    /**
+     * 弧度转角度
+     */
+    public float radianToangle(float angle){
+        return (float)(180/Math.PI*angle);
     }
 
     public void clearDraw(){
         targetPoints=null;
         targetPoint=null;
+        targetPoints1=null;
+        isRuning=false;
     }
 
 }

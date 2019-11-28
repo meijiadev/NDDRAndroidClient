@@ -28,12 +28,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
@@ -73,7 +75,7 @@ public class CollectingActivity extends DDRActivity {
     private boolean iscreatingMap = false;       //是否正在生成地图
     private boolean haveCtrated = false;         //是否地图生成完成
     private String mapName;
-
+    private BaseDialog waitDialog;
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
@@ -91,6 +93,10 @@ public class CollectingActivity extends DDRActivity {
                                 break;
                             case 6:
                                 setTitle("采集中...");
+                                waitDialog.dismiss();
+                                myRockerZy.setVisibility(View.VISIBLE);
+                                myRocker.setVisibility(View.VISIBLE);
+                                addPoi.setVisibility(View.VISIBLE);
                                 break;
                             case 7:
                                 setTitle("地图生成中...");
@@ -139,6 +145,7 @@ public class CollectingActivity extends DDRActivity {
         maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
+        initWaitDialog();
     }
 
     @Override
@@ -158,6 +165,15 @@ public class CollectingActivity extends DDRActivity {
         exitModel();
         processBar.setVisibility(View.VISIBLE);
         collecting.unRegister();
+    }
+
+    /**
+     * 自标定等待弹窗
+     */
+    public void initWaitDialog(){
+        waitDialog= new WaitDialog.Builder(this)
+        .setMessage("自标定中...")
+        .show();
     }
 
 

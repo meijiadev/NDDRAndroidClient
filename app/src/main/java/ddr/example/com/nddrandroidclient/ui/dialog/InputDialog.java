@@ -31,7 +31,6 @@ public final class InputDialog {
         private final EditText mInputView;
 
         private final TextView mCancelView;
-        private final View mLineView;
         private final TextView mConfirmView;
 
         public Builder(FragmentActivity activity) {
@@ -43,7 +42,6 @@ public final class InputDialog {
             mInputView = findViewById(R.id.tv_input_message);
 
             mCancelView  = findViewById(R.id.tv_input_cancel);
-            mLineView = findViewById(R.id.v_input_line);
             mConfirmView  = findViewById(R.id.tv_input_confirm);
 
             mCancelView.setOnClickListener(this);
@@ -106,7 +104,6 @@ public final class InputDialog {
         public Builder setCancel(CharSequence text) {
             mCancelView.setText(text);
 
-            mLineView.setVisibility((text == null || "".equals(text.toString())) ? View.GONE : View.VISIBLE);
             return this;
         }
 
@@ -120,6 +117,11 @@ public final class InputDialog {
             return this;
         }
 
+        @Override
+        public InputDialog.Builder setThemeStyle(int id) {
+            return super.setThemeStyle(id);
+        }
+
         /**
          * {@link BaseDialog.OnShowListener}
          */
@@ -130,7 +132,7 @@ public final class InputDialog {
                 public void run() {
                     getSystemService(InputMethodManager.class).showSoftInput(mInputView, 0);
                 }
-            }, 500);
+            }, 300);
         }
 
         /**

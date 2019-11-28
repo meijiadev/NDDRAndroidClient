@@ -48,9 +48,11 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -73,7 +75,7 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
  * time:2019/10/26
  * desc: 主页界面
  */
-public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener {
+public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeListener,KeyboardWatcher.SoftKeyboardStateListener {
     @BindView(R.id.vp_home_pager)
     DDRViewPager vpHomePager;
     @BindView(R.id.status)
@@ -151,6 +153,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     @Override
     protected void initView() {
+        KeyboardWatcher.with(this).setListener(this);
         getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
@@ -170,6 +173,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void initData() {
         tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
+        ImageLoader.clear(this); //清除图片缓存
         tcpClient.requestFile();     //请求所有地图
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
@@ -585,6 +589,16 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
             }
         }));
+    }
+
+    @Override
+    public void onSoftKeyboardOpened(int keyboardHeight) {
+
+    }
+
+    @Override
+    public void onSoftKeyboardClosed() {
+
     }
 }
 

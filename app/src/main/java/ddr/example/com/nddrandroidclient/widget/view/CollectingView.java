@@ -144,10 +144,10 @@ public class CollectingView extends GLContinuousView {
         long endTime1=System.currentTimeMillis();
         Logger.e("------绘制耗时："+(endTime1-startTime1)+"列表长度："+ptsSize);
         matrix.setRotate(-angle);
-        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,40,40,matrix,true);
+        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
         float posx=(float)(-posY*ratio+measureWidth/2);
         float posy=(float)(-posX*ratio+measureHeight/2);
-        canvas.drawBitmap(directionBitmap1,(int)posx-20,(int)posy-20);
+        canvas.drawBitmap(directionBitmap1,(int)posx-30,(int)posy-30);
     }
 
     /**

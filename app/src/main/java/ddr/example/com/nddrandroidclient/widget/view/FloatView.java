@@ -115,8 +115,6 @@ public class FloatView extends View  {
         }
 
 
-
-
     }
 
     /**

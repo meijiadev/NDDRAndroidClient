@@ -62,14 +62,7 @@ public class ZoomImageView extends View {
     public double r11=0;
     public double t1=410.973;
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void upDate(MessageEvent mainUpDate){
-        switch (mainUpDate.getType()){
-            case updateDDRVLNMap:
 
-                break;
-        }
-    }
 
     /**
      * ZoomImageView构造函数，将当前操作状态设为STATUS_INIT。
@@ -79,7 +72,6 @@ public class ZoomImageView extends View {
     public ZoomImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         currentStatus = STATUS_INIT;
-        EventBus.getDefault().register(this);        /**注册EvenBus事件监听器**/
         this.context=context;
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
     }
@@ -239,7 +231,7 @@ public class ZoomImageView extends View {
         currentStatus=0;
         PointView.getInstance(context).drawPoint(canvas,this);
         LineView.getInstance(context).drawLine(canvas,this);
-        //GridLayerView.getInstance(this).drawGrid(canvas);
+        GridLayerView.getInstance(this).drawGrid(canvas);
     }
 
     /**
@@ -313,7 +305,7 @@ public class ZoomImageView extends View {
     private void zoom(Canvas canvas) {
         matrix.reset();
         // 将图片按总缩放比例进行缩放
-        // GridLayerView.getInstance(this).setScalePrecision(totalRatio);
+         GridLayerView.getInstance(this).setScalePrecision(totalRatio);
         matrix.postScale(totalRatio, totalRatio);
         //Logger.e("-----缩放比例："+totalRatio+";");
         float scaledWidth = sourceBitmap.getWidth() * totalRatio;

@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -62,7 +63,12 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
         super.convert(helper, item);
         switch (viewType){
             case R.layout.item_target_point:
-                helper.setText(R.id.tv_target_name,item.getName());
+                if (item.isSelected()){
+                    helper.setText(R.id.tv_target_name,item.getName()).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
+                }else {
+                    helper.setText(R.id.tv_target_name,item.getName())
+                            .setTextColor(R.id.tv_target_name,Color.parseColor("#ffffff"));
+                }
                 break;
             case R.layout.item_recycle_tasklist:
                  gridImageView=helper.getView(R.id.iv_check);

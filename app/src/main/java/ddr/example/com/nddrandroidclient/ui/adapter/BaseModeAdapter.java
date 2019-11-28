@@ -45,6 +45,7 @@ public class BaseModeAdapter extends BaseAdapter<BaseMode> {
             TargetPoint targetPoint= (TargetPoint) item;
             helper.setText(R.id.tv_name,targetPoint.getName());
         }
+        helper.addOnClickListener(R.id.iv_up,R.id.iv_down);
 
     }
 

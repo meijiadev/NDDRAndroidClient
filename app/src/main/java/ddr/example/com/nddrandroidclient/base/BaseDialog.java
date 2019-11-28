@@ -38,6 +38,7 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.core.content.ContextCompat;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  *    time   : 2019/11/7
@@ -62,6 +63,7 @@ public class BaseDialog extends AppCompatDialog implements
 
     public BaseDialog(Context context) {
         this(context, R.style.BaseDialogStyle);
+        Logger.e("-----初始化 BaseDialog");
     }
 
     public BaseDialog(Context context, int themeResId) {
@@ -71,26 +73,6 @@ public class BaseDialog extends AppCompatDialog implements
     @Override
     public void setCancelable(boolean flag) {
         super.setCancelable(mCancelable = flag);
-    }
-
-    @Override
-    public void show() {
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        super.show();
-        fullScreenImmersive(getWindow().getDecorView());
-        this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-    }
-
-    private void fullScreenImmersive(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            view.setSystemUiVisibility(uiOptions);
-        }
     }
 
     /**

@@ -1,6 +1,8 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.graphics.Color;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -37,7 +39,12 @@ public class PathAdapter extends BaseAdapter<PathLine> {
         super.convert(helper, item);
         switch (viewType){
             case R.layout.item_target_point:
-                helper.setText(R.id.tv_target_name,item.getName());
+                if (item.isSelected()){
+                    helper.setText(R.id.tv_target_name,item.getName()).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
+                }else {
+                    helper.setText(R.id.tv_target_name,item.getName())
+                            .setTextColor(R.id.tv_target_name,Color.parseColor("#ffffff"));
+                }
                 break;
             case R.layout.item_task_select:
                 helper.setText(R.id.tv_name,item.getName());
@@ -49,7 +56,11 @@ public class PathAdapter extends BaseAdapter<PathLine> {
                 }
                 break;
             case R.layout.item_show_recycler:
-                helper.setText(R.id.tv_show_name,item.getName());
+                if (item.isMultiple()){
+                    helper.setText(R.id.tv_show_name,item.getName()).setImageResource(R.id.iv_select,R.mipmap.checkedwg);
+                }else {
+                    helper.setText(R.id.tv_show_name,item.getName()).setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
+                }
                 break;
         }
 

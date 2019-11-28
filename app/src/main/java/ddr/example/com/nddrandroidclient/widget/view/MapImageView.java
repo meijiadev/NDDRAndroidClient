@@ -305,9 +305,9 @@ public class MapImageView extends GLContinuousView {
                     canvasGL.drawLine(posX+mRectDst.left,posY+mRectDst.top,x,y,radarPaint);
                 }
                 matrix.setRotate(-angle);
-                directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,40,40,matrix,true);
+                directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
                 if (mapBitmap!=null){
-                    canvasGL.drawBitmap(directionBitmap1,mRectDst.left+posX-20,mRectDst.top+posY-20);
+                    canvasGL.drawBitmap(directionBitmap1,mRectDst.left+posX-30,mRectDst.top+posY-30);
                 }
             }
         }

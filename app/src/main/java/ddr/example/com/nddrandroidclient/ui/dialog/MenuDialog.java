@@ -173,18 +173,7 @@ public final class MenuDialog {
         @Nullable
         @Override
         public Object getItem(int position) {
-           /* if (position == 0) {
-                // 当前是否只有一个条目
-                if (getItemCount() == 1) {
-                    mView.setVisibility(View.GONE);
-                } else {
-                    mView.setVisibility(View.VISIBLE);
-                }
-            } else if (position == getItemCount() - 1) {
-                mView.setVisibility(View.GONE);
-            } else {
-                mView.setVisibility(View.VISIBLE);
-            }*/
+
             return super.getItem(position);
         }
     }

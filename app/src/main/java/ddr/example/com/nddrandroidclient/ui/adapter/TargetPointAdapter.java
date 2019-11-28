@@ -52,7 +52,12 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
             case R.layout.item_target_point:
                 //地图管理页面的布局
                 Logger.e("-----------地图管理页面的布局");
-                helper.setText(R.id.tv_target_name,item.getName());
+                if (item.isSelected()){
+                    helper.setText(R.id.tv_target_name,item.getName()).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
+                }else {
+                    helper.setText(R.id.tv_target_name,item.getName())
+                            .setTextColor(R.id.tv_target_name,Color.parseColor("#ffffff"));
+                }
                 break;
             case R.layout.item_task_select:
                 helper.setText(R.id.tv_name,item.getName());
@@ -64,12 +69,12 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 }
                 break;
             case R.layout.item_show_recycler:
-                if (item.isSelected()){
+                if (item.isMultiple()){
                     helper.setText(R.id.tv_show_name,item.getName())
-                    .setTextColor(R.id.tv_show_name,Color.parseColor("#0399ff"));
+                    .setImageResource(R.id.iv_select,R.mipmap.checkedwg);
                 }else {
                     helper.setText(R.id.tv_show_name,item.getName())
-                            .setTextColor(R.id.tv_show_name,Color.parseColor("#ffffff"));
+                            .setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
                 }
                 break;
 

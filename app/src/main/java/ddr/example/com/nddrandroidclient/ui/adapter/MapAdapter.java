@@ -43,7 +43,9 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
             helper.getView(R.id.iv_select).setVisibility(View.GONE);
         }
         Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
-        helper.setText(R.id.tv_map_name,item.getMapName())
+        String mapName=item.getMapName();
+        mapName=mapName.replaceAll("OneRoute_","");
+        helper.setText(R.id.tv_map_name,mapName)
                 .setText(R.id.tv_size,String.valueOf(item.getWidth())+"x"+String.valueOf(item.getHeight())+"m²")
                 .setText(R.id.tv_selected_centre,"使用中")
                 .setGone(R.id.tv_selected_centre,item.isUsing())

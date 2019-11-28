@@ -115,6 +115,21 @@ public class DDREditText extends LinearLayout {
         }
     }
 
+    /**
+     * 返回Integer格式内容
+     * @return
+     */
+    public int getIntegerText(){
+        try {
+            return Integer.valueOf(et_content.getText().toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            ToastUtils.show("数据格式不对，请重输！");
+            return 0;
+        }
+
+    }
+
 
 
     /**
@@ -122,6 +137,15 @@ public class DDREditText extends LinearLayout {
      * @param text
      */
     public void setText(float text){
+        try {
+            String text1=String.format("%.2f",text);
+            et_content.setText(text1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setText(int text){
         try {
             et_content.setText(String.valueOf(text));
         }catch (Exception e){

@@ -130,56 +130,55 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="140dp"
                 />
-            <TextView
-                android:id="@+id/tv_25m"
+            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
+                android:id="@+id/tv_025m"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="0.25m"
                 android:textColor="#ccffffff"
                 android:textSize="11sp"
-                android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/checkedwg"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@mipmap/nocheckedwg"
                 android:drawablePadding="6dp"
                 android:layout_marginLeft="8.5dp"
                 />
-            <TextView
-                android:id="@+id/tv_5m"
+            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
+                android:id="@+id/tv_05m"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="0.5m"
                 android:textColor="#ccffffff"
                 android:textSize="11sp"
-                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:drawableLeft="@mipmap/nocheckedwg"
                 android:drawablePadding="6dp"
                 android:layout_marginLeft="28dp"
                 />
-            <TextView
+            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
                 android:id="@+id/tv_1m"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="1m"
                 android:textColor="#ccffffff"
                 android:textSize="11sp"
-                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:drawableLeft="@mipmap/nocheckedwg"
                 android:drawablePadding="6dp"
                 android:layout_marginLeft="28dp"
                 />
 
-            <TextView
+            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
                 android:id="@+id/tv_2m"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="2m"
                 android:textColor="#ccffffff"
                 android:textSize="11sp"
-                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:drawableLeft="@mipmap/nocheckedwg"
                 android:drawablePadding="6dp"
                 android:layout_marginLeft="28dp"
                 />
-
         </LinearLayout>
 
         <RelativeLayout
@@ -294,6 +293,16 @@
                         >
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
                     <TextView
+                        android:text="m"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/et_toward"
+                        android:layout_alignBottom="@id/et_x"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18.5dp"
+                        android:layout_marginLeft="5dp"/>
+                    <TextView
                         android:id="@+id/tv_y"
                         android:layout_width="23dp"
                         android:layout_height="18.5dp"
@@ -314,6 +323,16 @@
                         android:layout_marginTop="16.5dp">
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
                     <TextView
+                        android:text="m"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/et_toward"
+                        android:layout_alignBottom="@id/et_y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18.5dp"
+                        android:layout_marginLeft="5dp"/>
+                    <TextView
                         android:id="@+id/tv_point_toward"
                         android:layout_width="54.5dp"
                         android:layout_height="18.5dp"
@@ -333,6 +352,16 @@
                         android:layout_alignLeft="@id/et_y"
                         android:layout_marginTop="16.5dp">
                     </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                    <TextView
+                        android:text="°"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/et_toward"
+                        android:layout_below="@+id/et_y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16.5dp"
+                        android:layout_marginLeft="5dp"/>
                     <TextView
                         android:id="@+id/save_point"
                         android:layout_width="71dp"
@@ -403,17 +432,17 @@
                         android:drawableRight="@mipmap/iv_down"
                         android:gravity="center_vertical"
                         />
+
                     <TextView
                         android:id="@+id/tv_cs"
-                        android:layout_width="37.5dp"
-                        android:layout_height="16.5dp"
-                        android:text="参数："
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_alignLeft="@id/tv_path_name"
+                        android:layout_width="62.5dp"
+                        android:layout_height="18.5dp"
                         android:layout_below="@id/tv_mode"
+                        android:layout_alignLeft="@id/tv_path_name"
                         android:layout_marginTop="30dp"
-                        />
+                        android:text="延边距离："
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                     <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                         android:id="@+id/et_parameter"
                         android:layout_width="105.5dp"
@@ -434,9 +463,9 @@
                         />
                     <TextView
                         android:id="@+id/tv_speed"
-                        android:layout_width="37.5dp"
-                        android:layout_height="16.5dp"
-                        android:text="速度："
+                        android:layout_width="62.5dp"
+                        android:layout_height="18.5dp"
+                        android:text="行驶速度："
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:layout_alignLeft="@id/tv_cs"
@@ -471,6 +500,20 @@
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:gravity="center_vertical"/>
+                    <TextView
+                        android:id="@+id/bt_add_action"
+                        android:layout_width="64dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/bt_bg__map"
+                        android:layout_toRightOf="@id/tv_action_recycler"
+                        android:layout_below="@id/tv_speed"
+                        android:layout_marginTop="26.5dp"
+                        android:layout_marginLeft="85dp"
+                        android:text="添加"
+                        android:textSize="10sp"
+                        android:gravity="center"
+                        android:textColor="#ccffffff"
+                        />
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/action_recycler"
                         android:layout_width="match_parent"

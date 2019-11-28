@@ -19,7 +19,7 @@ public class MessageEvent {
         updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息
         updateDDRVLNMap,  // 更新地图信息
-        realTimeDraw,     //实时绘制
+        realTimeDraw,     //实时绘制 机器人当前位置
         addPoiPoint,   //采集过程中添加点
         updateVersion, //获取版本信息
         receivePointCloud,    //接收点云

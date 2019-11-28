@@ -57,7 +57,9 @@ import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
+import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
+import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
@@ -79,13 +81,13 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.tv_path)
     TextView tvPath;
     @BindView(R.id.tv_025m)
-    TextView tv025m;
+    GridTextView tv025m;
     @BindView(R.id.tv_05m)
-    TextView tv05m;
+    GridTextView tv05m;
     @BindView(R.id.tv_1m)
-    TextView tv1m;
+    GridTextView tv1m;
     @BindView(R.id.tv_2m)
-    TextView tv2m;
+    GridTextView tv2m;
     @BindView(R.id.speed_layout)
     LinearLayout speedLayout;         //速度调节布局
     @BindView(R.id.zmap)
@@ -136,6 +138,7 @@ public class MapEditActivity extends DDRActivity {
     private List<String> editTypes=new ArrayList<>();
     private List<String> graphTypes=new ArrayList<>();
     private Bitmap lookBitmap;
+    private boolean isFreeHand=true;          //是否是手绘点 ,即不是通过移动机器人获取的点坐标
 
 
     @Override
@@ -156,6 +159,7 @@ public class MapEditActivity extends DDRActivity {
         pathAdapter = new PathAdapter(R.layout.item_show_recycler);
         editTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
         graphTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
+        GridLayerView.getInstance(zmap).onDestroy();
     }
 
     @Override
@@ -224,23 +228,77 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case R.id.tv_025m:
+                if (!tv025m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 0.25);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv025m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
+                    tv025m.setSelected(true);
+                } else {
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+                    setIconDefault1();
+
+                }
                 break;
             case R.id.tv_05m:
+                if (!tv05m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 0.5);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv05m.setSelected(true);
+                    tv05m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+
+                }
                 break;
             case R.id.tv_1m:
+                if (!tv1m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 1);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv1m.setSelected(true);
+                    tv1m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+                }
                 break;
             case R.id.tv_2m:
+                if (!tv2m.getSelected()) {
+                    GridLayerView.getInstance(zmap).setPrecision((float) 2);        //将图片网格化
+                    zmap.invalidate();
+                    setIconDefault1();
+                    tv2m.setSelected(true);
+                    tv2m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                } else {
+                    setIconDefault1();
+                    GridLayerView.getInstance(zmap).setPrecision(0);        //取消网格
+                    zmap.invalidate();
+                }
                 break;
             case R.id.tv_mark_current:
                 if (speedLayout.getVisibility() == View.VISIBLE) {
                     speedLayout.setVisibility(View.GONE);
                     myRocker.setVisibility(View.GONE);
+                    ivCenter.setVisibility(View.VISIBLE);
                     myRockerZy.setVisibility(View.INVISIBLE);
+                    isFreeHand=true;
+                    PointView.getInstance(this).isRuning=false;
+                    zmap.invalidate();
                     tvMarkCurrent.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.nocheckedwg), null);
                 } else {
+                    ivCenter.setVisibility(View.VISIBLE);
                     speedLayout.setVisibility(View.VISIBLE);
                     myRocker.setVisibility(View.VISIBLE);
                     myRockerZy.setVisibility(View.VISIBLE);
+                    PointView.getInstance(this).isRuning=true;
+                    isFreeHand=false;
+                    zmap.invalidate();
                     tvMarkCurrent.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.checkedwg), null);
                 }
                 break;
@@ -256,10 +314,15 @@ public class MapEditActivity extends DDRActivity {
                                 public void onConfirm(BaseDialog dialog, String content) {
                                     TargetPoint targetPoint = new TargetPoint(2);
                                     targetPoint.setName(content);
-                                    targetPoint.setX(notifyBaseStatusEx.getPosX());
-                                    targetPoint.setY(notifyBaseStatusEx.getPosY());
+                                    if (!isFreeHand){
+                                        targetPoint.setX(notifyBaseStatusEx.getPosX());
+                                        targetPoint.setY(notifyBaseStatusEx.getPosY());
+                                    }else {
+                                        targetPoint.setX(zmap.getTargetPoint().getX());
+                                        targetPoint.setY(zmap.getTargetPoint().getY());
+                                    }
                                     targetPoint.setInTask(true);  //方便显示
-                                    targetPoint.setTheta(1);
+                                    targetPoint.setTheta(0);
                                     newPoints.add(targetPoint);
                                     PointView.getInstance(getApplicationContext()).setPoints(newPoints);
                                     zmap.invalidate();
@@ -421,10 +484,25 @@ public class MapEditActivity extends DDRActivity {
         }
     }
 
+    /**
+     * 设置网格图标默认状态
+     */
+    private void setIconDefault1(){
+        tv025m.setSelected(false);
+        tv05m.setSelected(false);
+        tv1m.setSelected(false);
+        tv2m.setSelected(false);
+        tv025m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv05m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv1m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+        tv2m.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+    }
+
 
     /*************************************显示选择目标点和路径的弹窗*********************************************/
     private CustomPopuWindow customPopuWindow;
     private RecyclerView showRecycler;
+    private TextView tv_all_selected;
 
     private void showPopupWindow(View view, int type) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.window_point, null);
@@ -433,6 +511,7 @@ public class MapEditActivity extends DDRActivity {
                 .create()
                 .showAsDropDown(view, 0, 0);
         showRecycler = contentView.findViewById(R.id.show_Recycler);
+        tv_all_selected=contentView.findViewById(R.id.tv_all_select);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
         switch (type){
@@ -441,8 +520,8 @@ public class MapEditActivity extends DDRActivity {
                 targetPointAdapter.setNewData(targetPoints);
                 break;
             case 1:
-                showRecycler.setAdapter(targetPointAdapter);
-                targetPointAdapter.setNewData(targetPoints);
+                showRecycler.setAdapter(pathAdapter);
+                pathAdapter.setNewData(pathLines);
                 break;
             case 2:
                 showRecycler.setAdapter(editTypeAdapter);
@@ -463,11 +542,31 @@ public class MapEditActivity extends DDRActivity {
      */
     private void onShowItemClick() {
         targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            if (targetPoints.get(position).isMultiple()){
+                targetPoints.get(position).setMultiple(false);
+                PointView.getInstance(this).setTargetPoints(targetPoints);
+                zmap.invalidate();
+                targetPointAdapter.setNewData(targetPoints);
+            }else {
+                targetPoints.get(position).setMultiple(true);
+                PointView.getInstance(this).setTargetPoints(targetPoints);
+                zmap.invalidate();
+                targetPointAdapter.setNewData(targetPoints);
+            }
         });
 
         pathAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            if (pathLines.get(position).isMultiple()){
+                pathLines.get(position).setMultiple(false);
+                LineView.getInstance(this).setPathLines(pathLines);
+                zmap.invalidate();
+                pathAdapter.setNewData(pathLines);
+            }else {
+                pathLines.get(position).setMultiple(true);
+                LineView.getInstance(this).setPathLines(pathLines);
+                zmap.invalidate();
+                pathAdapter.setNewData(pathLines);
+            }
         });
 
         editTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -615,6 +714,7 @@ public class MapEditActivity extends DDRActivity {
     Timer timer;
     TimerTask task;
     int a = 0;
+    private boolean isRuning;      // 是否在遥控机器人运行
 
     /**
      * 定时器，每90毫秒执行一次
@@ -628,14 +728,17 @@ public class MapEditActivity extends DDRActivity {
                 // Logger.e("线速度，角速度："+lineSpeed+";"+palstance);
                 if (lineSpeed == 0 && palstance == 0) {
                     a++;
-                    if (a <= 5) {
+                    if (a <= 10) {
                         //Logger.e("----a:" + a);
                         tcpClient.sendSpeed(lineSpeed, palstance);
+                    }else {
+                        isRuning=false;
                     }
                 } else {
                     a = 0;
                     //Logger.e("线速度，角速度：" + lineSpeed + ";" + palstance);
                     tcpClient.sendSpeed(lineSpeed, palstance);
+                    isRuning=true;
                 }
 
             }
@@ -686,8 +789,10 @@ public class MapEditActivity extends DDRActivity {
                 titleLayout.setLeftTitle("新建目标点");
                 tvMarkCurrent.setVisibility(View.VISIBLE);
                 addPoi.setVisibility(View.VISIBLE);
+                ivCenter.setVisibility(View.VISIBLE);
                 tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
                 tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                LineView.getInstance(this).clearDraw();
                 break;
             case 2:
                 titleLayout.setLeftTitle("新建路径");
@@ -697,6 +802,7 @@ public class MapEditActivity extends DDRActivity {
                 tvSavePath.setVisibility(View.VISIBLE);
                 tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
                 tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                LineView.getInstance(this).clearDraw();
                 break;
             case 3:
                 mapFileStatus = MapFileStatus.getInstance();
@@ -719,6 +825,16 @@ public class MapEditActivity extends DDRActivity {
                 break;
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void update(MessageEvent messageEvent){
+        switch (messageEvent.getType()){
+            case updateBaseStatus:
+                if (isRuning){
+                    zmap.invalidate();
+                }
+                break;
+        }
+    }
 
     /**
      * 左上角退出按键
@@ -737,9 +853,9 @@ public class MapEditActivity extends DDRActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Logger.e("-------退出");
-        LineView.getInstance(getApplication()).setSpaceItems(null);
-        LineView.getInstance(getApplication()).selectPosition=-1;
-
+        PointView.getInstance(context).clearDraw();
+        LineView.getInstance(context).clearDraw();
+        isRuning=false;
         toPostData();
     }
 

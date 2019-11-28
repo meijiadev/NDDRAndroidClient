@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import cat.ereza.customactivityoncrash.config.CaocConfig;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 
+import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
@@ -41,6 +42,8 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         if (LeakCanary.isInAnalyzerProcess(application)) {
             return;
         }
+        // 图片加载器
+        ImageLoader.init(application);
 
         // 内存泄漏检测
         LeakCanary.install(application);
@@ -90,7 +93,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 .setView(floatView)
                 /*.setWidth(Screen.width, 0.2f) //设置悬浮控件宽高
                 .setHeight(Screen.width, 0.2f)*/
-                .setX(Screen.width,1)
+                .setX(Screen.width,0.9f)
                 .setY(120)
                 .setMoveType(MoveType.active)
                 .setFilter(true, HomeActivity.class)

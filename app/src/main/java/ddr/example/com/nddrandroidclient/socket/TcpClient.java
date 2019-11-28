@@ -23,6 +23,8 @@ import java.util.logging.Handler;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
+import androidx.fragment.app.FragmentActivity;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
@@ -33,6 +35,8 @@ import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
+import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 
 
 /**
@@ -94,6 +98,7 @@ public class TcpClient extends BaseSocketConnection {
      * 连接的状态信息
      */
     public class SocketCallBack extends SocketActionAdapter{
+        private BaseDialog waitDialog;
 
         public SocketCallBack() {
             super();
@@ -113,6 +118,9 @@ public class TcpClient extends BaseSocketConnection {
                 showToast(activity,"连接成功",Toast.LENGTH_SHORT);
             }
             sendHeartBeat();
+            if (waitDialog.isShowing()){
+                waitDialog.dismiss();
+            }
         }
 
         /**
@@ -141,7 +149,7 @@ public class TcpClient extends BaseSocketConnection {
                     showToast(activity,"连接已断开，请重现连接",Toast.LENGTH_LONG);
                 }else {
                     Logger.e("-------断开连接的页面："+activity.getLocalClassName());
-                    //showDialog(activity);
+                    showDialog(activity);
                 }
             }
         }
@@ -169,6 +177,23 @@ public class TcpClient extends BaseSocketConnection {
         public void onSocketWriteResponse(ConnectionInfo info, String action, ISendable data) {
 
         }
+
+        private void showDialog(Activity activity){
+            activity.runOnUiThread(()->{
+                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").show();
+            });
+            if (activity.getLocalClassName().contains("HomeActivity")){
+                HomeActivity fragmentActivity= (HomeActivity) activity;
+                fragmentActivity.postDelayed(()->{
+                    if (waitDialog.isShowing()){
+                        waitDialog.dismiss();
+                        fragmentActivity.toast("网络无法连接，请退出重连");
+                    }
+                },4000);
+            }
+
+        }
+
     }
 
     /**
@@ -202,37 +227,6 @@ public class TcpClient extends BaseSocketConnection {
         }
     }
 
-/*    *//**
-     * 显示Dialog对话框
-     * @param activity
-     *//*
-    private void showDialog(final Activity activity){
-       activity.runOnUiThread(new Runnable() {
-           @Override
-           public void run() {
-               customDialog=new CustomDialog(activity, "", 2,"", new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       customDialog.dismiss();
-                       Intent intent_login = new Intent();
-                       intent_login.setClass(activity,LoginActivity.class);
-                       intent_login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //关键的一句，将新的activity置为栈顶
-                       activity.startActivity(intent_login);
-                       activity.finish();
-                   }
-               }, "", new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       customDialog.dismiss();
-                   }
-               });
-               customDialog.setCancelable(false);
-               customDialog.show();
-           }
-       });
-
-    }*/
-
     /**
      * 显示Toast提醒
      * @param activity
@@ -247,6 +241,7 @@ public class TcpClient extends BaseSocketConnection {
             }
         });
     }
+
 
 
     /**
@@ -354,9 +349,8 @@ public class TcpClient extends BaseSocketConnection {
      * 请求文件（txt、png) 刷新文件列表
      */
     public void requestFile() {
-        final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
+        //final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
         BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
-                .setParam(currentFile)
                 .build();
         tcpClient.sendData(null,reqClientGetMapInfo);
         Logger.e("请求文件中....");
