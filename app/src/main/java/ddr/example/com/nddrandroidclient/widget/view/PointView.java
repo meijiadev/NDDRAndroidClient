@@ -18,6 +18,7 @@ import java.util.List;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 
@@ -32,6 +33,7 @@ public class PointView {
     private Paint pointPaint,textPaint;
     private TargetPoint targetPoint;
     private NotifyBaseStatusEx notifyBaseStatusEx;
+    private PathLine.PathPoint pathPoint;
     /**
      *用于裁剪源图像的矩形（可重复使用）。
      */
@@ -64,6 +66,14 @@ public class PointView {
      */
     public void setTargetPoints(List<TargetPoint> targetPoints){
         this.targetPoints1=targetPoints;
+    }
+
+    /**
+     * 显示路径中的某个点
+     * @param pathPoint
+     */
+    public void setPathPoint(PathLine.PathPoint pathPoint){
+        this.pathPoint=pathPoint;
     }
 
     /**
@@ -164,6 +174,18 @@ public class PointView {
             canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
+
+        if (pathPoint!=null){
+            XyEntity xyEntity=zoomImageView.toXorY(pathPoint.getX(),pathPoint.getY());
+            xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+            int x= (int) xyEntity.getX();
+            int y= (int) xyEntity.getY();
+            mRectSrc=new Rect(0,0,40,40);
+            mRectDst=new Rect(x-20,y-20,x+20,y+20);
+            matrix.setRotate(-pathPoint.getRotationAngle());
+            targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+            canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+        }
         if (isRuning){
             XyEntity xyEntity=zoomImageView.toXorY(x,y);
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
@@ -187,6 +209,7 @@ public class PointView {
         targetPoint=null;
         targetPoints1=null;
         isRuning=false;
+        pathPoint=null;
     }
 
 }
