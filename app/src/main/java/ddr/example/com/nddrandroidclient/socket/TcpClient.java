@@ -189,7 +189,7 @@ public class TcpClient extends BaseSocketConnection {
                         waitDialog.dismiss();
                         fragmentActivity.toast("网络无法连接，请退出重连");
                     }
-                },4000);
+                },6000);
             }
 
         }

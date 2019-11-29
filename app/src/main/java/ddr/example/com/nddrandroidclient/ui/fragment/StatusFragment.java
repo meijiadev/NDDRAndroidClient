@@ -469,7 +469,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                     taskName=groupList.get(position);
                                     mapImageView.setTaskName(taskName);
                                     if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<999 ){
-                                        lsNum=Integer.parseInt(content);
+                                        try {
+                                            lsNum=Integer.parseInt(content);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
+                                        }
                                     }else {
                                         toast("输入数字不符合要求,默认为1");
                                         lsNum=1;
@@ -546,7 +550,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
 //                        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
                         //Logger.e("待命模式" + modeView.getText());
-                        if (mapName!=null && taskName!=null && taskName.equals("PathError")){
+                        Logger.e("----mapName:"+mapName+"taskName:"+taskName);
+                        if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
                             toast("请稍等，正在进入");
                             addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
                         }else {

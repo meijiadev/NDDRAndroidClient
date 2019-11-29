@@ -107,6 +107,8 @@ public final class SelectDialog {
                     break;
                 case R.id.tv_confirm:
                     Logger.e("点击确定");
+                    PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(mPosition);
+                    pathPoint.setRotationAngle(et_toward.getFloatText());
                     mListener.onConfirm();
                     dismiss();
                     break;
@@ -143,6 +145,7 @@ public final class SelectDialog {
                     mListener.onSelected(position,mAdapter.getItem(position));
                     PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(position);
                     tv_point_name.setText(pathPoint.getName());
+                    tv_action_name.setText("请选择动作类型");
                     mPosition=position;
                     customPopuWindow.dissmiss();
                 }else if (view==tv_action_name){
@@ -150,6 +153,7 @@ public final class SelectDialog {
                     tv_action_name.setText(mAdapter.getItem(position).toString());
                     PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(mPosition);
                     pathPoint.setPointType(position+1);
+                    pathPoint.setRotationAngle(et_toward.getFloatText());
                     customPopuWindow.dissmiss();
                 }
             });

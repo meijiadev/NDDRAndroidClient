@@ -376,21 +376,25 @@ public class MapEditActivity extends DDRActivity {
                             .setListener(new InputDialog.OnListener() {
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {
-                                    PathLine pathLine=new PathLine();
-                                    pathLine.setName(content);
-                                    List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
-                                    try {
-                                        pathPoints1=ListTool.deepCopy(pathPoints);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (ClassNotFoundException e) {
-                                        e.printStackTrace();
+                                    if (!content.isEmpty()){
+                                        PathLine pathLine=new PathLine();
+                                        pathLine.setName(content);
+                                        List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
+                                        try {
+                                            pathPoints1=ListTool.deepCopy(pathPoints);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (ClassNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                        pathLine.setPathPoints(pathPoints1);
+                                        pathLine.setVelocity(0.4f);
+                                        newPaths.add(pathLine);
+                                        pathLines.add(pathLine);
+                                        pathPoints.clear();
+                                    }else {
+                                        toast("请先输入名称");
                                     }
-                                    pathLine.setPathPoints(pathPoints1);
-                                    pathLine.setVelocity(0.4f);
-                                    newPaths.add(pathLine);
-                                    pathLines.add(pathLine);
-                                    pathPoints.clear();
                                 }
                                 @Override
                                 public void onCancel(BaseDialog dialog) {

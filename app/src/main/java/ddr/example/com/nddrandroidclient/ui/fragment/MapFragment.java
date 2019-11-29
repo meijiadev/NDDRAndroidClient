@@ -373,6 +373,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     targetPoints.get(mPosition).setY(etY.getFloatText());
                     targetPoints.get(mPosition).setTheta(etToward.getIntegerText());
                     targetPointAdapter.setNewData(targetPoints);
+                    etX.setText(targetPoints.get(mPosition).getX());
+                    etY.setText(targetPoints.get(mPosition).getY());
+                    etToward.setText(targetPoints.get(mPosition).getTheta());
                     BaseDialog waitDialog1=new WaitDialog.Builder(getAttachActivity()).setMessage("保存中...").show();
                     getAttachActivity().postDelayed(()->{
                         waitDialog1.dismiss();
@@ -1035,7 +1038,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     break;
                 case R.id.tv_action_type:
                     Logger.e("-----点击修改动作");
-                    new MenuDialog.Builder(getAttachActivity())
+                    /*new MenuDialog.Builder(getAttachActivity())
                             .setGravity(Gravity.CENTER)
                             .setList(actionList)
                             .setListener(new MenuDialog.OnListener<String>() {
@@ -1049,7 +1052,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 public void onCancel(BaseDialog dialog) {
 
                                 }
-                            }).show();
+                            }).show();*/
+                    PointView.getInstance(getAttachActivity()).setPathPoint(selectActionList(pathLines.get(mPosition).getPathPoints()).get(position));
+                    zoomMap.invalidate();
                     break;
             }
         });
