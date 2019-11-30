@@ -97,6 +97,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     ImageView iv_task_xl;
     @BindView(R.id.tv_set_go)
     TextView tv_set_go;
+    @BindView(R.id.tv_restart_point)
+    TextView tv_restart_point;
 
 
     private Animation hideAnimation;  //布局隐藏时的动画
@@ -224,7 +226,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
         tv_now_map.setText(mapName);
 //        Logger.e("次数"+taskNum+"时间"+workTimes+"速度"+taskSpeed);
-        if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
+        if (mapName!=null){
             rel_step_description.setVisibility(View.GONE);
             recycle_gopoint.setVisibility(View.VISIBLE);
             tv_set_go.setText("前往目标点");
@@ -321,7 +323,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -365,6 +367,12 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 toast("取消新建地图");
                             }
                         }).show();
+                break;
+            case R.id.tv_restart_point:
+                float theat= (float) 1.0;
+                float x= (float) 1.0;
+                float y= (float) 1.0;
+                goPointLet(x,y,theat,ByteString.copyFromUtf8(targetPoints.get(1).getName()),ByteString.copyFromUtf8(mapName),2);
                 break;
         }
     }
@@ -421,7 +429,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
     /**
-     * 导航去目标点
+     * 导航去目标点或者恢复
      * @param x
      * @param y
      * @param theta
@@ -429,7 +437,18 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
      * @param routeName
      */
 
-    private void goPointLet(float x,float y,float theta,ByteString pname, ByteString routeName){
+    private void goPointLet(float x,float y,float theta,ByteString pname, ByteString routeName,int type){
+        DDRVLNMap.eRunSpecificPointType eRunSpecificPointTyp;
+        switch (type){
+            case 1:
+                eRunSpecificPointTyp=DDRVLNMap.eRunSpecificPointType.eRunSpecificPointTypeAdd;
+                break;
+            case 2:
+                eRunSpecificPointTyp=DDRVLNMap.eRunSpecificPointType.eRunSpecificPointTypeResume;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
         DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
                 .setX(x)
                 .setY(y)
@@ -445,6 +464,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 .setOnerouteName(routeName)
                 .addAllTargetPt(targetPtItemList)
                 .setBIsDynamicOA(true)
+                .setOptType(eRunSpecificPointTyp)
                 .build();
         tcpClient.sendData(null,reqRunSpecificPoint);
 
@@ -496,22 +516,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     float x=targetPoints.get(position).getX();
                     float y=targetPoints.get(position).getY();
                     float theta=targetPoints.get(position).getTheta();
-                    switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
-                        case 0:
-                            toast("请稍等，正在自标定");
-                            //自标定
-                            break;
-                        case 1:
-                            switch (notifyBaseStatusEx.getMode()) {
-                                case 1:
-                                    //待命
                                     Logger.e("当前点的名字"+targetPoints.get(position).getName());
                                     new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
                                             .setTitle("是否前往"+targetPoints.get(position).getName())
                                             .setListener(new InputDialog.OnListener() {
                                                 @Override
                                                 public void onConfirm(BaseDialog dialog, String content) {
-                                                    goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName));
+                                                    goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName),1);
                                                     for (int i=0;i<targetPoints.size();i++){
                                                         targetPoints.get(i).setSelected(false);
                                                     }
@@ -525,14 +536,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                                 }
                                             })
                                             .show();
-                                    break;
-                                case 3:
-                                    toast("请先退出运动模式");
-                                    break;
-                            }
-                            break;
-                    }
-
                 });
                 break;
         }

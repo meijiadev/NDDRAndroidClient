@@ -30,7 +30,6 @@
             android:layout_toRightOf="@id/tv_ti_map"
             android:layout_alignBaseline="@id/tv_ti_map"
             />
-
         <ddr.example.com.nddrandroidclient.widget.view.MapImageView
             android:id="@+id/iv_map"
             android:layout_width="match_parent"
@@ -258,6 +257,17 @@
             android:layout_marginLeft="16dp"
             android:gravity="center"
             android:id="@+id/tv_set_go"
+            />
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="18dp"
+            android:text="恢复"
+            android:textSize="14dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="380dp"
+            android:layout_marginLeft="160dp"
+            android:gravity="center"
+            android:id="@+id/tv_restart_point"
             />
         <ddr.example.com.nddrandroidclient.widget.view.CircleBarView
             android:layout_width="130dp"
