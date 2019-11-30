@@ -577,6 +577,13 @@ message rspGetDDRVLNMapEx
 message reqRunControlEx
 {
 	bytes onerouteName = 1;
+	
+	// 以下为针对永牧项目需要的
+	bytes runMode = 2; // 指定模式：左延边 右延边 左绕圈 右绕圈
+	int32 runCount = 3; // 0 是无限循环 否则为运行次数
+	float speed = 4; // 行走速度
+	float distance = 5; // 距离
+	float waittime = 6; // 前后两次间隔时间 单位是s
 }
 
 message rspRunControlEx
@@ -595,6 +602,13 @@ message rspGetRunControlEx
 	reqRunControlEx data = 1;
 }
 
+enum eRunSpecificPointType
+{
+	eRunSpecificPointTypeError = 0;
+	eRunSpecificPointTypeAdd = 1; // 添加目标点
+	eRunSpecificPointTypeResume = 2; // 恢复目标点。这时上位机回到离开的位置，接着进行下一次任务。
+}
+
 // 运行特定目标点
 message reqRunSpecificPoint
 {
@@ -602,6 +616,8 @@ message reqRunSpecificPoint
 	bytes onerouteName = 2;
 	bool bIsDynamicOA = 3; // 动态还是静态
 	bool bSelfCalib = 4; // 是否要自标定
+	eRunSpecificPointType optType = 5;
+	
 }
 
 message rspRunSpecificPoint
