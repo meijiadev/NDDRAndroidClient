@@ -64,8 +64,9 @@ public class DDREditText extends LinearLayout {
                     Logger.e("--------:"+et_content.getText().toString());
                     float num=Float.valueOf(et_content.getText().toString());
                     num++;
-                    et_content.setText(Float.toString(num));
-                    Logger.e("-------"+Float.toString(num));
+                    String n=String.format("%.2f",num);
+                    et_content.setText(n);
+                    Logger.e("-------"+n);
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
@@ -82,8 +83,9 @@ public class DDREditText extends LinearLayout {
                     Logger.e("--------:"+et_content.getText().toString());
                     float num=Float.valueOf(et_content.getText().toString());
                     num--;
-                    et_content.setText(Float.toString(num));
-                    Logger.e("-------"+Float.toString(num));
+                    String n=String.format("%.2f",num);
+                    et_content.setText(n);
+                    Logger.e("-------"+n);
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
