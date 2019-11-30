@@ -49,7 +49,6 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
                 .setText(R.id.tv_size,String.valueOf(item.getWidth())+"x"+String.valueOf(item.getHeight())+"m²")
                 .setText(R.id.tv_selected_centre,"使用中")
                 .setGone(R.id.tv_selected_centre,item.isUsing())
-                .addOnClickListener(R.id.iv_more)
                 .setBackgroundRes(R.id.item_head_layout,R.drawable.item_map_head_dark);
         if (item.isUsing()){
             helper.getView(R.id.item_head_layout).setBackgroundResource(R.drawable.item_map_head_blue);

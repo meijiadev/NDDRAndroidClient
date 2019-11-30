@@ -52,7 +52,7 @@ public class TcpClient extends BaseSocketConnection {
     private SocketCallBack socketCallBack;
     private byte[] heads=new byte[4];  //存储头部长度信息的字节数组
     private byte [] bodyLenths=new byte[4];        //存储body体的信息长度
-    //private CustomDialog customDialog;    //断开连接的弹窗
+
 
 
     /**
@@ -178,16 +178,19 @@ public class TcpClient extends BaseSocketConnection {
 
         }
 
+        /**
+         * 断连弹窗
+         * @param activity
+         */
         private void showDialog(Activity activity){
             activity.runOnUiThread(()->{
-                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").show();
+                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").setCancelable(true).show();
             });
             if (activity.getLocalClassName().contains("HomeActivity")){
                 HomeActivity fragmentActivity= (HomeActivity) activity;
                 fragmentActivity.postDelayed(()->{
                     if (waitDialog.isShowing()){
-                        waitDialog.dismiss();
-                        fragmentActivity.toast("网络无法连接，请退出重连");
+                        fragmentActivity.toast("网络无法连接，请退出重连！");
                     }
                 },6000);
             }

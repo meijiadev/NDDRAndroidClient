@@ -72,6 +72,7 @@ import ddr.example.com.nddrandroidclient.ui.dialog.MenuDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
+import ddr.example.com.nddrandroidclient.widget.edit.MyEditTextChangeListener;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import ddr.example.com.nddrandroidclient.widget.textview.DDRTextView;
 import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
@@ -359,6 +360,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         etX.setText(targetPoints.get(mPosition).getX());
                         etY.setText(targetPoints.get(mPosition).getY());
                         etToward.setText(targetPoints.get(mPosition).getTheta());
+                        etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
+                        etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
                     }
                 } else {
                     setIconDefault();
@@ -825,42 +828,51 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 mapAdapter.setData(position, mapInfo);
             } else {
-                mapName=mapInfos.get(position).getMapName();
-                bitmapPath=mapInfos.get(position).getBitmap();
-                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
-                dialog = new WaitDialog.Builder(getAttachActivity())
-                        .setMessage("加载地图信息中")
-                        .show();
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(mapInfos.get(position).getBitmap());
-                    lookBitmap= BitmapFactory.decodeStream(fis);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-                getAttachActivity().postDelayed(() -> {
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                        toast("加载失败！");
-                        mapLayout.setVisibility(View.GONE);
-                        mapDetailLayout.setVisibility(View.VISIBLE);
-                        leftDetailLayout.setVisibility(View.VISIBLE);
-                        pointDetailLayout.setVisibility(View.VISIBLE);
-                        pathDetailLayout.setVisibility(View.GONE);
-                        taskDetailLayout.setVisibility(View.GONE);
-                        zoomMap.setImageBitmap(lookBitmap);
-                    }
+                if (mapInfos.get(position).isUsing()){               //判断当前点击的地图是否在使用中，是则跳转详情
+                   intoMapDetail(position);
+                }else {        //如果不再使用中 则弹出弹窗
+                    showMapSettingWindow(view.findViewById(R.id.iv_more),position);
 
-                }, 5000);
+                }
             }
         }));
-        mapAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            showMapSettingWindow(view,position);
-        });
 
 
+    }
+
+    /**
+     * 进入地图详情页面
+     */
+    private void intoMapDetail(int position){
+        mapName=mapInfos.get(position).getMapName();
+        bitmapPath=mapInfos.get(position).getBitmap();
+        tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
+        dialog = new WaitDialog.Builder(getAttachActivity())
+                .setMessage("加载地图信息中")
+                .show();
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(mapInfos.get(position).getBitmap());
+            lookBitmap= BitmapFactory.decodeStream(fis);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        getAttachActivity().postDelayed(() -> {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+                toast("加载失败！");
+                mapLayout.setVisibility(View.GONE);
+                mapDetailLayout.setVisibility(View.VISIBLE);
+                leftDetailLayout.setVisibility(View.VISIBLE);
+                pointDetailLayout.setVisibility(View.VISIBLE);
+                pathDetailLayout.setVisibility(View.GONE);
+                taskDetailLayout.setVisibility(View.GONE);
+                zoomMap.setImageBitmap(lookBitmap);
+            }
+
+        }, 5000);
     }
 
     /**
@@ -871,7 +883,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         CustomPopuWindow customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
                 .create()
-                .showAsDropDown(view,-DpOrPxUtils.dip2px(getAttachActivity(),100),1);
+                .showAsDropDown(view,-DpOrPxUtils.dip2px(getAttachActivity(),100),-10);
         View.OnClickListener listener=v -> {
             customPopuWindow.dissmiss();
           switch (v.getId()){
@@ -969,12 +981,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                       mapAdapter.setNewData(mapInfos);
                   }
                   break;
+              case R.id.tv_detail:
+                  intoMapDetail(position);
+                  break;
           }
         };
         contentView.findViewById(R.id.tv_rename).setOnClickListener(listener);
         contentView.findViewById(R.id.tv_switch).setOnClickListener(listener);
         contentView.findViewById(R.id.tv_recover).setOnClickListener(listener);
         contentView.findViewById(R.id.tv_delete).setOnClickListener(listener);
+        contentView.findViewById(R.id.tv_detail).setOnClickListener(listener);
 
     }
 
@@ -988,6 +1004,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             etY.setText(targetPoints.get(position).getY());
             etToward.setText(targetPoints.get(position).getTheta());
             mPosition = position;
+            etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
+            etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
             for (TargetPoint targetPoint:targetPoints){
                 targetPoint.setSelected(false);
             }

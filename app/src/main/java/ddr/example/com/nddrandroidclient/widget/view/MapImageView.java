@@ -242,6 +242,7 @@ public class MapImageView extends GLContinuousView {
             canvasGL.drawBitmap(targetBitmap,mRectDst.left+(int)xyEntity.getX()-10,mRectDst.top+(int)xyEntity.getY()-10);
         }
        if (pathLineItemExesS!=null){
+            pathLines=new ArrayList<>();
             for (int i=0;i<pathLineItemExesS.size();i++){
                 List<PathLine.PathPoint> pathPoints=new ArrayList<>();
                 List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExesS.get(i).getPointSetList();
