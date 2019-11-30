@@ -442,7 +442,8 @@
                         android:layout_marginTop="30dp"
                         android:text="延边距离："
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="gone"/>
                     <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                         android:id="@+id/et_parameter"
                         android:layout_width="105.5dp"
@@ -450,8 +451,10 @@
                         android:layout_alignLeft="@id/spinner_mode"
                         android:layout_below="@id/spinner_mode"
                         android:layout_marginTop="23dp"
+                        android:visibility="gone"
                         />
                     <TextView
+                        android:id="@+id/tv_cm"
                         android:layout_width="18dp"
                         android:layout_height="14dp"
                         android:text="cm"
@@ -460,6 +463,7 @@
                         android:layout_toRightOf="@id/et_parameter"
                         android:layout_alignBottom="@id/et_parameter"
                         android:layout_marginLeft="10dp"
+                        android:visibility="gone"
                         />
                     <TextView
                         android:id="@+id/tv_speed"

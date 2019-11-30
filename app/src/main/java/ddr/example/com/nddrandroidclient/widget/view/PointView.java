@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Logger;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -167,11 +168,9 @@ public class PointView {
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
             int x= (int) xyEntity.getX();
             int y= (int) xyEntity.getY();
-            mRectSrc=new Rect(0,0,40,40);
-            mRectDst=new Rect(x-20,y-20,x+20,y+20);
             matrix.setRotate(-targetPoint.getTheta());
             targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
-            canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+            canvas.drawBitmap(targetBitmap1,x-20,y-20,pointPaint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
 
@@ -180,11 +179,9 @@ public class PointView {
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
             int x= (int) xyEntity.getX();
             int y= (int) xyEntity.getY();
-            mRectSrc=new Rect(0,0,40,40);
-            mRectDst=new Rect(x-20,y-20,x+20,y+20);
             matrix.setRotate(-pathPoint.getRotationAngle());
             targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
-            canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+            canvas.drawBitmap(targetBitmap1,x-20,y-20,pointPaint);
         }
         if (isRuning){
             XyEntity xyEntity=zoomImageView.toXorY(x,y);

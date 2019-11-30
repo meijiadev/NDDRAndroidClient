@@ -30,6 +30,7 @@ public class DDREditText extends LinearLayout {
     private Context context;
 
 
+
     public DDREditText(Context context) {
         super(context);
     }
@@ -64,9 +65,13 @@ public class DDREditText extends LinearLayout {
                     Logger.e("--------:"+et_content.getText().toString());
                     float num=Float.valueOf(et_content.getText().toString());
                     num++;
-                    String n=String.format("%.2f",num);
-                    et_content.setText(n);
-                    Logger.e("-------"+n);
+                    if (viewType==0){
+                        String n=String.format("%.2f",num);
+                        et_content.setText(n);
+                    }else {
+                        int num1= (int) num;
+                        et_content.setText(String.valueOf(num1));
+                    }
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
@@ -83,9 +88,13 @@ public class DDREditText extends LinearLayout {
                     Logger.e("--------:"+et_content.getText().toString());
                     float num=Float.valueOf(et_content.getText().toString());
                     num--;
-                    String n=String.format("%.2f",num);
-                    et_content.setText(n);
-                    Logger.e("-------"+n);
+                    if (viewType==0){
+                        String n=String.format("%.2f",num);
+                        et_content.setText(n);
+                    }else {
+                        int num1= (int) num;
+                        et_content.setText(String.valueOf(num1));
+                    }
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
@@ -123,7 +132,9 @@ public class DDREditText extends LinearLayout {
      */
     public int getIntegerText(){
         try {
-            return Integer.valueOf(et_content.getText().toString());
+            float a=Float.valueOf(et_content.getText().toString());
+            int b= (int) a;
+            return b;
         }catch (Exception e){
             e.printStackTrace();
             ToastUtils.show("数据格式不对，请重输！");
@@ -161,5 +172,10 @@ public class DDREditText extends LinearLayout {
      */
     public void setText(String text){
         et_content.setText(text);
+    }
+
+    private int viewType;
+    public void  setViewType(int type){
+        viewType=type;
     }
 }
