@@ -63,10 +63,13 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
         super.convert(helper, item);
         switch (viewType){
             case R.layout.item_target_point:
+                String taskName=item.getName();
+                taskName=taskName.replaceAll("DDRTask_","");
+                taskName=taskName.replaceAll(".task","");
                 if (item.isSelected()){
-                    helper.setText(R.id.tv_target_name,item.getName()).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
+                    helper.setText(R.id.tv_target_name,taskName).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
                 }else {
-                    helper.setText(R.id.tv_target_name,item.getName())
+                    helper.setText(R.id.tv_target_name,taskName)
                             .setTextColor(R.id.tv_target_name,Color.parseColor("#ffffff"));
                 }
                 break;
@@ -131,7 +134,10 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                     endm=""+item.getEndMin();
                 }
 //                ddrEditText.setText(item.getRunCounts());
-                helper.setText(R.id.tv_map_list,item.getName())
+                String taskName1=item.getName();
+                taskName1=taskName1.replaceAll("DDRTask_","");
+                taskName1=taskName1.replaceAll(".task","");
+                helper.setText(R.id.tv_map_list,taskName1)
                         .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop,R.id.task_num_check)
                         .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
                 editListen(item);

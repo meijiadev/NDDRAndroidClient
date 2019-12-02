@@ -296,6 +296,7 @@ public class MapEditActivity extends DDRActivity {
                     speedLayout.setVisibility(View.VISIBLE);
                     myRocker.setVisibility(View.VISIBLE);
                     myRockerZy.setVisibility(View.VISIBLE);
+                    ivCenter.setVisibility(View.GONE);
                     PointView.getInstance(this).isRuning=true;
                     isFreeHand=false;
                     zmap.invalidate();

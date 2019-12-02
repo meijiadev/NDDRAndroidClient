@@ -84,6 +84,9 @@ public class MyEditTextChangeListener implements TextWatcher {
                         ToastUtils.show("输入超出范围,请输入正确的数值");
                     }else {
                         //pointView.setActionPointTowards(gaugeName,Float.valueOf(s.toString()));
+                        float angle=Float.valueOf(s.toString());
+                        targetPoint.setTheta((int) angle);
+                        pointView.setPoint(targetPoint);
                         zoomImageView.invalidate();
                     }
                 }catch (Exception e){

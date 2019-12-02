@@ -151,8 +151,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     RegexEditText etPathName;
     @BindView(R.id.spinner_mode)
     DDRTextView tv_Spinner;        // 模式的下拉框触发
+    @BindView(R.id.tv_cs)
+    TextView tv_cs;
     @BindView(R.id.et_parameter)
     DDREditText etParameter;
+    @BindView(R.id.tv_cm)
+    TextView tv_cm;
     @BindView(R.id.et_speed)
     DDREditText etSpeed;
     @BindView(R.id.action_recycler)
@@ -280,6 +284,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         stringAdapter=new StringAdapter(R.layout.item_path_mode,modeList);
         onModeItemClick();
         /*************************************************************/
+        etToward.setViewType(1);
 
     }
 
@@ -362,6 +367,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         etToward.setText(targetPoints.get(mPosition).getTheta());
                         etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
                         etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
+                        etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
                     }
                 } else {
                     setIconDefault();
@@ -408,6 +414,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     if (pathLines.size() > 0) {
                         etPathName.setText(pathLines.get(0).getName());
                         tv_Spinner.setValueText(pathLines.get(0).getPathModel());
+                        initCS(tv_Spinner.getTextVaule());
                         etSpeed.setText(pathLines.get(0).getVelocity());
                         tvConfig.setText(pathLines.get(0).getConfig());
                         actionAdapter.setNewData(selectActionList(pathLines.get(0).getPathPoints()));
@@ -488,7 +495,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     LineView.getInstance(getAttachActivity()).clearDraw();
                     zoomMap.invalidate();
                     if (taskModes.size()>0){
-                        etTaskName.setText(taskModes.get(0).getName());
+                        String taskName=taskModes.get(0).getName();
+                        taskName=taskName.replaceAll("DDRTask_","");
+                        taskName=taskName.replaceAll(".task","");
+                        etTaskName.setText(taskName);
                         try {
                             initSelectRecycler(0);
                         } catch (IOException e) {
@@ -521,7 +531,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.save_task:
                 if (mPosition<taskModes.size()){
                     if (taskModes.get(mPosition).getBaseModes().size()>0){
-                        taskModes.get(mPosition).setName(etTaskName.getText().toString());
+                        String taskName=etTaskName.getText().toString().trim();
+                        taskName="DDRTask_"+taskName+".task";
+                        taskModes.get(mPosition).setName(taskName);
                         taskAdapter.setNewData(taskModes);
                         BaseDialog waitDialog3=new WaitDialog.Builder(getAttachActivity()).setMessage("保存中...").show();
                         getAttachActivity().postDelayed(()->{
@@ -580,7 +592,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                         taskAdapter.setNewData(taskModes);
                                         mPosition=0;
                                         if (taskModes.size()>0){
-                                            etTaskName.setText(taskModes.get(0).getName());
+                                            etTaskName.setText(content);
                                             try {
                                                 initSelectRecycler(0);
                                             } catch (IOException e) {
@@ -666,7 +678,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 selectPointAdapter.setNewData(null);
                                 selectPathAdapter.setNewData(null);
                             }else {
-                                etTaskName.setText(taskModes.get(0).getName());
+                                String taskName=taskModes.get(0).getName();
+                                taskName=taskName.replaceAll("DDRTask_","");
+                                taskName=taskName.replaceAll(".task","");
+                                etTaskName.setText(taskName);
                                 try {
                                     initSelectRecycler(0);
                                 } catch (IOException e) {
@@ -995,6 +1010,22 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     /**
+     * 判断是否显示贴边距离
+     * @param mode
+     */
+    private void initCS(int mode){
+        if (mode==66){
+            tv_cs.setVisibility(View.VISIBLE);
+            tv_cm.setVisibility(View.VISIBLE);
+            etParameter.setVisibility(View.VISIBLE);
+        }else {
+            tv_cs.setVisibility(View.GONE);
+            tv_cm.setVisibility(View.GONE);
+            etParameter.setVisibility(View.GONE);
+        }
+    }
+
+    /**
      * 目标点Recycler的点击事件
      */
     public void onTargetItemClick() {
@@ -1006,6 +1037,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             mPosition = position;
             etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
             etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
+            etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2,PointView.getInstance(getAttachActivity()),targetPoints.get(mPosition),zoomMap));
             for (TargetPoint targetPoint:targetPoints){
                 targetPoint.setSelected(false);
             }
@@ -1029,7 +1061,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
             pathLines.get(position).setSelected(true);
             etPathName.setText(pathLines.get(position).getName());
-            tv_Spinner.setValueText(pathLines.get(position).getPathModel());
+            int mode=pathLines.get(position).getPathModel();
+            tv_Spinner.setValueText(mode);
+            initCS(mode);
             etSpeed.setText(pathLines.get(position).getVelocity());
             tvConfig.setText(pathLines.get(position).getConfig());
             actionAdapter.setNewData(selectActionList(pathLines.get(position).getPathPoints()));
@@ -1089,7 +1123,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
             taskModes.get(position).setSelected(true);
             taskAdapter.setNewData(taskModes);
-            etTaskName.setText(taskModes.get(position).getName());
+            String taskName=taskModes.get(position).getName();
+            taskName=taskName.replaceAll("DDRTask_","");
+            taskName=taskName.replaceAll(".task","");
+            etTaskName.setText(taskName);
             try {
                 initSelectRecycler(position);
             } catch (IOException e) {
@@ -1241,6 +1278,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private void onModeItemClick(){
         stringAdapter.setOnItemClickListener((adapter, view, position) -> {
             tv_Spinner.setText(modeList.get(position));
+            initCS(tv_Spinner.getTextVaule());
             customPopuWindow.dissmiss();
         });
     }
