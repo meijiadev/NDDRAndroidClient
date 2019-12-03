@@ -929,7 +929,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                   waitDialog.dismiss();
                                                   toast("修改失败！");
                                               }
-                                          }, 4000);
+                                          }, 10000);
                                       }
                                   }
                                   @Override
@@ -1089,22 +1089,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     actionAdapter.setNewData(selectActionList(pathLines.get(mPosition).getPathPoints()));
                     break;
                 case R.id.tv_action_type:
-                    Logger.e("-----点击修改动作");
-                    /*new MenuDialog.Builder(getAttachActivity())
-                            .setGravity(Gravity.CENTER)
-                            .setList(actionList)
-                            .setListener(new MenuDialog.OnListener<String>() {
-                                @Override
-                                public void onSelected(BaseDialog dialog, int position, String content) {
-                                    selectActionList(pathLines.get(mPosition).getPathPoints()).get(position1).setPointType(position+1);
-                                    actionAdapter.setNewData(selectActionList(pathLines.get(mPosition).getPathPoints()));
-                                }
-
-                                @Override
-                                public void onCancel(BaseDialog dialog) {
-
-                                }
-                            }).show();*/
                     PointView.getInstance(getAttachActivity()).setPathPoint(selectActionList(pathLines.get(mPosition).getPathPoints()).get(position));
                     zoomMap.invalidate();
                     break;
@@ -1408,6 +1392,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
             case mapOperationalSucceed:
                 if (waitDialog.isShowing()){
+                    tcpClient.requestFile();
                     waitDialog.dismiss();
                     transformMapInfo(mapFileStatus.getMapInfos());
                     mapAdapter.setNewData(mapInfos);

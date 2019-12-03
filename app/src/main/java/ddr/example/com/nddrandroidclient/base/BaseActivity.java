@@ -43,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initState(this);
         context=getApplicationContext();
         initActivity();
     }
@@ -51,6 +52,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         initLayout();
         initView();
         initData();
+    }
+
+    /**
+     * 沉浸式状态栏（已适配 ）
+     */
+    public  void initState(Activity activity) {
+        //Logger.e("启动沉浸式状态栏");
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
     }
 
     /**

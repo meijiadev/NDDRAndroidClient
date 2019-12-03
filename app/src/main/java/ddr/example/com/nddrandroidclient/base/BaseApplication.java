@@ -1,9 +1,12 @@
 package ddr.example.com.nddrandroidclient.base;
 
+
 import android.app.Application;
+
+
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
+
+
 import android.widget.Toast;
 
 import com.hjq.toast.ToastInterceptor;
@@ -109,6 +112,9 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
             e.printStackTrace();
         }
     }
+
+
+
 
 
 }

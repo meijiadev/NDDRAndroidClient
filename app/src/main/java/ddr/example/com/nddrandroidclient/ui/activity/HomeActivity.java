@@ -154,7 +154,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initView() {
         KeyboardWatcher.with(this).setListener(this);
-        getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
         mPagerAdapter.addFragment(MapFragment.newInstance());

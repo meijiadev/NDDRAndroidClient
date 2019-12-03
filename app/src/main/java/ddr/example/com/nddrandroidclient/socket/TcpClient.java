@@ -348,6 +348,10 @@ public class TcpClient extends BaseSocketConnection {
         Logger.e("请求地图信息");
     }
 
+
+
+
+
     /**
      * 请求文件（txt、png) 刷新文件列表
      */
