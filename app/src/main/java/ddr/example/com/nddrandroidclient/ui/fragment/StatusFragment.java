@@ -372,7 +372,21 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 float theat= (float) 1.0;
                 float x= (float) 1.0;
                 float y= (float) 1.0;
-                goPointLet(x,y,theat,ByteString.copyFromUtf8(targetPoints.get(1).getName()),ByteString.copyFromUtf8(mapName),2);
+                new InputDialog.Builder(getAttachActivity())
+                        .setEditVisibility(View.GONE)
+                        .setTitle("是否恢复任务")
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                goPointLet(x,y,theat,ByteString.copyFromUtf8("one"),ByteString.copyFromUtf8(mapName),2);
+                            }
+
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                                toast("取消恢复任务");
+                            }
+                        }).show();
+
                 break;
         }
     }
