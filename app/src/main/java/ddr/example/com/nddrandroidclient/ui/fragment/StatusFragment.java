@@ -531,13 +531,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     float x=targetPoints.get(position).getX();
                     float y=targetPoints.get(position).getY();
                     float theta=targetPoints.get(position).getTheta();
+                    mapImageView.setTargetPoint(targetPoints.get(position));
                                     Logger.e("当前点的名字"+targetPoints.get(position).getName());
                                     new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
                                             .setTitle("是否前往"+targetPoints.get(position).getName())
                                             .setListener(new InputDialog.OnListener() {
                                                 @Override
                                                 public void onConfirm(BaseDialog dialog, String content) {
-                                                    mapImageView.setTargetPoint(targetPoints.get(position));
                                                     goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName),1);
                                                     for (int i=0;i<targetPoints.size();i++){
                                                         targetPoints.get(i).setSelected(false);

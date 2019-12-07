@@ -287,111 +287,117 @@
                         android:textSize="11sp"
                         android:layout_marginLeft="8dp"
                         />
-                    <TextView
-                        android:id="@+id/tv_x"
-                        android:layout_width="23dp"
-                        android:layout_height="18.5dp"
-                        android:text="X :"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:layout_marginLeft="17dp"
-                        android:layout_below="@id/tv_point_name"
-                        android:layout_marginTop="22dp"
-                        />
-                    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
-                        android:id="@+id/et_x"
-                        android:layout_width="105.5dp"
-                        android:layout_height="24dp"
-                        android:layout_toRightOf="@id/tv_x"
-                        android:layout_below="@id/et_point_name"
-                       android:layout_alignLeft="@id/et_point_name"
-                        android:layout_marginTop="16.5dp"
-                        >
-                    </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
-                    <TextView
-                        android:text="m"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"
-                        android:layout_toRightOf="@id/et_toward"
-                        android:layout_alignBottom="@id/et_x"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/layout_edit"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18.5dp"
-                        android:layout_marginLeft="5dp"/>
-                    <TextView
-                        android:id="@+id/tv_y"
-                        android:layout_width="23dp"
-                        android:layout_height="18.5dp"
-                        android:text="Y :"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:layout_marginLeft="17dp"
-                        android:layout_below="@id/tv_x"
-                        android:layout_marginTop="22dp"
-                        />
-                    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
-                        android:id="@+id/et_y"
-                        android:layout_width="105.5dp"
-                        android:layout_height="24dp"
-                        android:layout_toRightOf="@id/tv_x"
-                        android:layout_below="@id/et_x"
-                        android:layout_alignLeft="@id/et_x"
-                        android:layout_marginTop="16.5dp">
-                    </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
-                    <TextView
-                        android:text="m"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"
-                        android:layout_toRightOf="@id/et_toward"
-                        android:layout_alignBottom="@id/et_y"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18.5dp"
-                        android:layout_marginLeft="5dp"/>
-                    <TextView
-                        android:id="@+id/tv_point_toward"
-                        android:layout_width="54.5dp"
-                        android:layout_height="18.5dp"
-                        android:text="点朝向："
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:layout_marginLeft="17dp"
-                        android:layout_below="@id/tv_y"
-                        android:layout_marginTop="22dp"
-                        />
-                    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
-                        android:id="@+id/et_toward"
-                        android:layout_width="105.5dp"
-                        android:layout_height="24dp"
-                        android:layout_toRightOf="@id/tv_point_toward"
-                        android:layout_below="@id/et_y"
-                        android:layout_alignLeft="@id/et_y"
-                        android:layout_marginTop="16.5dp">
-                    </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
-                    <TextView
-                        android:text="°"
-                        android:textSize="15sp"
-                        android:textColor="@color/white"
-                        android:layout_toRightOf="@id/et_toward"
-                        android:layout_below="@+id/et_y"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16.5dp"
-                        android:layout_marginLeft="5dp"/>
-                    <TextView
-                        android:id="@+id/save_point"
-                        android:layout_width="71dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/bt_bg__map"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"
-                        android:text="保存"
-                        android:gravity="center"
-                        android:layout_below="@id/et_toward"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginTop="40dp"
-                        />
+                        android:layout_below="@id/tv_point_name">
+                        <TextView
+                            android:id="@+id/tv_x"
+                            android:layout_width="23dp"
+                            android:layout_height="18.5dp"
+                            android:text="X :"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:layout_marginLeft="17dp"
+                            android:layout_marginTop="22dp"
+                            />
+                        <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+                            android:id="@+id/et_x"
+                            android:layout_width="105.5dp"
+                            android:layout_height="24dp"
+                            android:layout_toRightOf="@id/tv_x"
+                            android:layout_marginLeft="42dp"
+                            android:layout_marginTop="16.5dp"
+                            >
+                        </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                        <TextView
+                            android:text="m"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:layout_toRightOf="@id/et_toward"
+                            android:layout_alignBottom="@id/et_x"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18.5dp"
+                            android:layout_marginLeft="5dp"/>
+                        <TextView
+                            android:id="@+id/tv_y"
+                            android:layout_width="23dp"
+                            android:layout_height="18.5dp"
+                            android:text="Y :"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:layout_marginLeft="17dp"
+                            android:layout_below="@id/tv_x"
+                            android:layout_marginTop="22dp"
+                            />
+                        <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+                            android:id="@+id/et_y"
+                            android:layout_width="105.5dp"
+                            android:layout_height="24dp"
+                            android:layout_toRightOf="@id/tv_x"
+                            android:layout_below="@id/et_x"
+                            android:layout_alignLeft="@id/et_x"
+                            android:layout_marginTop="16.5dp">
+                        </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                        <TextView
+                            android:text="m"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:layout_toRightOf="@id/et_toward"
+                            android:layout_alignBottom="@id/et_y"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18.5dp"
+                            android:layout_marginLeft="5dp"/>
+                        <TextView
+                            android:id="@+id/tv_point_toward"
+                            android:layout_width="54.5dp"
+                            android:layout_height="18.5dp"
+                            android:text="点朝向："
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:layout_marginLeft="17dp"
+                            android:layout_below="@id/tv_y"
+                            android:layout_marginTop="22dp"
+                            />
+                        <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+                            android:id="@+id/et_toward"
+                            android:layout_width="105.5dp"
+                            android:layout_height="24dp"
+                            android:layout_toRightOf="@id/tv_point_toward"
+                            android:layout_below="@id/et_y"
+                            android:layout_alignLeft="@id/et_y"
+                            android:layout_marginTop="16.5dp">
+                        </ddr.example.com.nddrandroidclient.widget.edit.DDREditText>
+                        <TextView
+                            android:text="°"
+                            android:textSize="15sp"
+                            android:textColor="@color/white"
+                            android:layout_toRightOf="@id/et_toward"
+                            android:layout_below="@+id/et_y"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16.5dp"
+                            android:layout_marginLeft="5dp"/>
+                        <TextView
+                            android:id="@+id/save_point"
+                            android:layout_width="71dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bt_bg__map"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:text="保存"
+                            android:gravity="center"
+                            android:layout_below="@id/et_toward"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="40dp"
+                            />
+                    </RelativeLayout>
+
+
                 </RelativeLayout>
                 <!--路径编辑布局-->
                 <RelativeLayout
@@ -594,7 +600,7 @@
                     <RelativeLayout
                         android:id="@+id/layout_select"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:visibility="visible"
                         >
                         <TextView
@@ -707,7 +713,7 @@
                     <RelativeLayout
                         android:id="@+id/sort_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:visibility="gone">
                         <TextView
                             android:layout_width="wrap_content"
@@ -750,102 +756,6 @@
                             android:gravity="center"/>
 
                     </RelativeLayout>
-
-
-
-
-
-
-                  <!--  <Button
-                        android:id="@+id/bt_select"
-                        android:layout_width="94dp"
-                        android:layout_height="32dp"
-                        android:text="选择"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:layout_alignLeft="@id/tv_task_name"
-                        android:layout_below="@id/tv_task_name"
-                        android:layout_marginTop="50dp"
-                        android:background="@drawable/button_shape_blue"
-                        />
-                    <TextView
-                        android:id="@+id/bt_sort"
-                        android:layout_width="94dp"
-                        android:layout_height="32dp"
-                        android:text="排序"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"
-                        android:layout_alignRight="@id/et_task_name"
-                        android:layout_below="@id/tv_task_name"
-                        android:layout_marginTop="50dp"
-                        android:background="@drawable/bt_bg__map" 
-                        android:gravity="center"
-                        />
-                    <RelativeLayout
-                        android:id="@+id/select_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/bt_select">
-                        <TextView
-                            android:id="@+id/text1"
-                            android:layout_width="50dp"
-                            android:layout_height="24dp"
-                            android:text="目标点 :"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:gravity="center_vertical"
-                            android:layout_marginLeft="17dp"
-                            android:layout_marginTop="18dp"
-                            />
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/select_point_Recycler"
-                            android:layout_width="90dp"
-                            android:layout_height="150dp"
-                            android:layout_below="@id/text1"
-                            android:layout_alignLeft="@id/text1"
-                            ></androidx.recyclerview.widget.RecyclerView>
-                        <TextView
-                            android:id="@+id/text2"
-                            android:layout_width="50dp"
-                            android:layout_height="24dp"
-                            android:text="路径 :"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:gravity="center_vertical"
-                            android:layout_toRightOf="@id/text1"
-                            android:layout_marginLeft="70dp"
-                            android:layout_marginTop="18dp"/>
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/select_path_Recycler"
-                            android:layout_width="90dp"
-                            android:layout_height="150dp"
-                            android:layout_below="@id/text2"
-                            android:layout_alignLeft="@id/text2"
-                            ></androidx.recyclerview.widget.RecyclerView>
-                    </RelativeLayout>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/sort_Recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:layout_below="@id/bt_sort"
-                        android:layout_marginTop="18dp"
-                        android:visibility="invisible"
-                        ></androidx.recyclerview.widget.RecyclerView>
-                    <TextView
-                        android:id="@+id/save_task"
-                        android:layout_width="71dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/bt_bg__map"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"
-                        android:text="保存"
-                        android:gravity="center"
-                        android:layout_below="@id/sort_Recycler"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginTop="40dp"
-                        />-->
-
                 </RelativeLayout>
 
 

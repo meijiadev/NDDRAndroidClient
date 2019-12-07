@@ -284,8 +284,8 @@ public class MapImageView extends GLContinuousView {
        }
        if (targetPoint!=null){
             XyEntity xyEntity=toXorY(targetPoint.getX(),targetPoint.getY());
-           int x= (int) xyEntity.getX();
-           int y= (int) xyEntity.getY();
+           int x= (int) xyEntity.getX()+mRectDst.left;
+           int y= (int) xyEntity.getY()+mRectDst.top;
            matrix.setRotate(-targetPoint.getTheta());
            Bitmap targetBitmap2=Bitmap.createBitmap(targetBitmap1,0,0,40,40,matrix,true);
            canvasGL.drawBitmap(targetBitmap2,x -20,y-20);
