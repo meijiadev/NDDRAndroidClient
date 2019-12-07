@@ -101,6 +101,7 @@ public class MapFileStatus {
                 targetPoint.setTheta((int) targetPtItems.get(i).getPtData().getTheta());
                 cTargetPoints.add(targetPoint);
             }
+
             for (int i = 0; i < pathLineItemExes.size(); i++) {
                 List<PathLine.PathPoint> pathPoints = new ArrayList<>();
                 List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();

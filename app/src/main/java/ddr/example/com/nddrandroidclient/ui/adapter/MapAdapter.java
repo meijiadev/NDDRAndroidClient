@@ -37,7 +37,7 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MapInfo item) {
         super.convert(helper, item);
-        if (allSelected){
+        if (allSelected&&!item.isUsing()){
             helper.getView(R.id.iv_select).setVisibility(View.VISIBLE);
         }else {
             helper.getView(R.id.iv_select).setVisibility(View.GONE);

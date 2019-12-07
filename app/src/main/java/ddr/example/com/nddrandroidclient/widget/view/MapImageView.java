@@ -33,6 +33,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -61,7 +62,7 @@ public class MapImageView extends GLContinuousView {
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
 
     private Bitmap mapBitmap;
-    private Bitmap targetBitmap; //目标点
+    private Bitmap targetBitmap,targetBitmap1; //目标点
     private Bitmap directionBitmap,directionBitmap1;
     private GLPaint glPaint,radarPaint,linePaint1;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -80,6 +81,8 @@ public class MapImageView extends GLContinuousView {
     private boolean isStartRadar=false;       //是否雷达开始绘制
     private String mapName;
 
+    private TargetPoint targetPoint;         //目标点
+
 
     /**
      *用于裁剪源图像的矩形（可重复使用）。
@@ -92,6 +95,14 @@ public class MapImageView extends GLContinuousView {
     private final Rect mRectDst = new Rect();
 
     private Matrix matrix,mapMatrix;
+
+    /**
+     * 显示将要去的目标点
+     * @param targetPoint
+     */
+    public void setTargetPoint(TargetPoint targetPoint){
+        this.targetPoint=targetPoint;
+    }
 
 
     public void setMapBitmap(String mapName){
@@ -164,6 +175,7 @@ public class MapImageView extends GLContinuousView {
         mapFileStatus=MapFileStatus.getInstance();
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         targetBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.action_default);
+        targetBitmap1=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
         matrix=new Matrix();
         glPaint=new GLPaint();
         glPaint.setColor(Color.GRAY);
@@ -258,6 +270,7 @@ public class MapImageView extends GLContinuousView {
                 pathLines.add(pathLine);
             }
 
+
             for (int i=0;i<pathLines.size();i++){
                 List<PathLine.PathPoint>pathPoints=pathLines.get(i).getPathPoints();
                 for (int j=0;j<pathPoints.size();j++){
@@ -269,6 +282,14 @@ public class MapImageView extends GLContinuousView {
                 }
             }
        }
+       if (targetPoint!=null){
+            XyEntity xyEntity=toXorY(targetPoint.getX(),targetPoint.getY());
+           int x= (int) xyEntity.getX();
+           int y= (int) xyEntity.getY();
+           matrix.setRotate(-targetPoint.getTheta());
+           Bitmap targetBitmap2=Bitmap.createBitmap(targetBitmap1,0,0,40,40,matrix,true);
+           canvasGL.drawBitmap(targetBitmap2,x -20,y-20);
+       }
 
     }
 
@@ -278,6 +299,7 @@ public class MapImageView extends GLContinuousView {
     private void onDrawWall(ICanvasGL canvasGL){
         if (spaceItems!=null){
             for (int i=0;i<spaceItems.size();i++){
+
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){
                     if (j<space_pointExes.size()-1){
@@ -326,9 +348,7 @@ public class MapImageView extends GLContinuousView {
         return new XyEntity(x1,y1);
     }
 
-    public void transformXy(){
 
-    }
 
     /**
      * 实时绘制（将世界坐标经过矩阵变换成图片上的像素坐标)
@@ -355,6 +375,10 @@ public class MapImageView extends GLContinuousView {
     public void unRegister(){
         EventBus.getDefault().unregister(this);
         onPause();
+    }
+
+    public void clearDraw(){
+        targetPoint=null;
     }
 
     @Override

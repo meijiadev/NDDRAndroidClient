@@ -20,7 +20,7 @@ public class MyEditTextChangeListener implements TextWatcher {
     private final static int ET_Towards=2;
     private final static int ET_Speed=3;
     private final static int ET_distance=4;
-    private TargetPoint targetPoint;
+    private TargetPoint targetPoint1=new TargetPoint();
     private ZoomImageView zoomImageView;
     private PointView pointView;
     private int editType;
@@ -28,7 +28,10 @@ public class MyEditTextChangeListener implements TextWatcher {
 
     public MyEditTextChangeListener( int type,PointView pointView, TargetPoint targetPoint, ZoomImageView zoomImageView) {
         this.pointView=pointView;
-        this.targetPoint=targetPoint;
+        targetPoint1.setName(targetPoint.getName());
+        targetPoint1.setX(targetPoint.getX());
+        targetPoint1.setY(targetPoint.getY());
+        targetPoint1.setTheta(targetPoint.getTheta());
         this.zoomImageView=zoomImageView;
         this.editType=type;
     }
@@ -61,8 +64,8 @@ public class MyEditTextChangeListener implements TextWatcher {
             case ET_X:
                 try {
                     float x=Float.valueOf(s.toString());
-                    targetPoint.setX(x);
-                    pointView.setPoint(targetPoint);
+                    targetPoint1.setX(x);
+                    pointView.setPoint(targetPoint1);
                     zoomImageView.invalidate();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -71,8 +74,8 @@ public class MyEditTextChangeListener implements TextWatcher {
             case ET_Y:
                 try{
                    float y=Float.valueOf(s.toString());
-                   targetPoint.setY(y);
-                   pointView.setPoint(targetPoint);
+                   targetPoint1.setY(y);
+                   pointView.setPoint(targetPoint1);
                    zoomImageView.invalidate();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -85,8 +88,8 @@ public class MyEditTextChangeListener implements TextWatcher {
                     }else {
                         //pointView.setActionPointTowards(gaugeName,Float.valueOf(s.toString()));
                         float angle=Float.valueOf(s.toString());
-                        targetPoint.setTheta((int) angle);
-                        pointView.setPoint(targetPoint);
+                        targetPoint1.setTheta((int) angle);
+                        pointView.setPoint(targetPoint1);
                         zoomImageView.invalidate();
                     }
                 }catch (Exception e){

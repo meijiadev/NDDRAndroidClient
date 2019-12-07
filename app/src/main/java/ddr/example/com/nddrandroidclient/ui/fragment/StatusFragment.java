@@ -378,6 +378,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
+                                mapImageView.clearDraw();
                                 goPointLet(x,y,theat,ByteString.copyFromUtf8("one"),ByteString.copyFromUtf8(mapName),2);
                             }
 
@@ -536,6 +537,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                             .setListener(new InputDialog.OnListener() {
                                                 @Override
                                                 public void onConfirm(BaseDialog dialog, String content) {
+                                                    mapImageView.setTargetPoint(targetPoints.get(position));
                                                     goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName),1);
                                                     for (int i=0;i<targetPoints.size();i++){
                                                         targetPoints.get(i).setSelected(false);
