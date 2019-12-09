@@ -74,7 +74,7 @@ public class CollectingActivity extends DDRActivity {
     private SharedPreferences.Editor editor;
     private boolean iscreatingMap = false;       //是否正在生成地图
     private boolean haveCtrated = false;         //是否地图生成完成
-    private String mapName;
+    private String collectName;                  //采集的地图名
     private BaseDialog waitDialog;
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
@@ -108,13 +108,19 @@ public class CollectingActivity extends DDRActivity {
                             case 8:
                                 setTitle("建图完成");
                                 if (!haveCtrated) {
-                                    setAnimation(processBar, 100, 1000);
-                                    finish();
+                                    tcpClient.reqRunControlEx(collectName);       //切换地图
+                                    setAnimation(processBar, 90, 2000);
                                 }
                                 break;
                         }
                     }
 
+                }
+                break;
+            case switchMapSucceed:
+                if (!haveCtrated) {
+                    setAnimation(processBar, 100, 1000);
+                    finish();
                 }
                 break;
         }
@@ -138,6 +144,8 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void initData() {
         super.initData();
+        collectName=getIntent().getStringExtra("CollectName");
+        Logger.e("-----采集的地图名");
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         processBar.setMax(100);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -165,6 +173,7 @@ public class CollectingActivity extends DDRActivity {
         exitModel();
         processBar.setVisibility(View.VISIBLE);
         collecting.unRegister();
+
     }
 
     /**
@@ -208,6 +217,8 @@ public class CollectingActivity extends DDRActivity {
         BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
         tcpClient.sendData(null,reqAddPathPointWhileCollecting);
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
+        toast("标记成功");
+
     }
 
     private boolean ishaveChecked = false;

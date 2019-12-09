@@ -70,7 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
     }
 
     /**

@@ -390,6 +390,7 @@ public class MapEditActivity extends DDRActivity {
                                         }
                                         pathLine.setPathPoints(pathPoints1);
                                         pathLine.setVelocity(0.4f);
+                                        pathLine.setPathModel(64);
                                         newPaths.add(pathLine);
                                         pathLines.add(pathLine);
                                         pathPoints.clear();
