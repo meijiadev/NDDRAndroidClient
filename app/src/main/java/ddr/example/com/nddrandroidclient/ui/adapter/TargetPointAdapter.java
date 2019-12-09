@@ -77,6 +77,15 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                             .setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
                 }
                 break;
+            case R.layout.item_point_to_path:
+                if (item.isMultiple()){
+                    helper.setText(R.id.tv_name,item.getName())
+                            .setImageResource(R.id.iv_select,R.mipmap.checkedwg);
+                }else {
+                    helper.setText(R.id.tv_name,item.getName())
+                            .setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
+                }
+                break;
 
         }
 

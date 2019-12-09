@@ -172,6 +172,7 @@ public class CollectingActivity extends DDRActivity {
     public void onRightClick(View v) {
         exitModel();
         processBar.setVisibility(View.VISIBLE);
+        setAnimation(processBar, 20, 3000);
         collecting.unRegister();
 
     }

@@ -950,8 +950,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        tvMapName.setText(mapInfos.get(position).getMapName());
-        tvMapSize.setText("地图面积："+(int)mapInfos.get(position).getWidth()+"x"+(int)mapInfos.get(position).getHeight()+"m");
+        String name=mapInfos.get(position).getMapName();
+        name=name.replaceAll("OneRoute_","");
+        tvMapName.setText("地图名称："+name);
+        tvMapSize.setText("地图面积："+(int)mapInfos.get(position).getWidth()+"x"+(int)mapInfos.get(position).getHeight()+"m²");
         tvCreateTime.setText("建立日期："+mapInfos.get(position).getTime());
         getAttachActivity().postDelayed(() -> {
             if (dialog.isShowing()) {
@@ -1473,11 +1475,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 break;
             case updateMapList:
+                transformMapInfo(mapFileStatus.getMapInfos());
+                mapAdapter.setNewData(mapInfos);
                 if (waitDialog.isShowing()){
                     waitDialog.dismiss();
                 }
-                transformMapInfo(mapFileStatus.getMapInfos());
-                mapAdapter.setNewData(mapInfos);
                 break;
             case mapOperationalSucceed:
                 if (waitDialog.isShowing()){

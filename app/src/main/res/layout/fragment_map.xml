@@ -741,6 +741,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="24.5dp"
+                            android:layout_marginBottom="18.5dp"
                             android:background="@drawable/button_shape_blue"/>
                         <Button
                             android:id="@+id/bt_back"

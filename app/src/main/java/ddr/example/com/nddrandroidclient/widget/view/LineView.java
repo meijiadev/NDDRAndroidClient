@@ -185,18 +185,20 @@ public class LineView {
             for (int j=0;j<pathPoints.size();j++){
                 XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                 xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                if (j<pathPoints.size()-1){
-                    XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
-                     if (j==pathPoints.size()-2){
-                        mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
-                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
-                    }
-                }
                 if (j==0){
                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
                     canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                }
+                if (pathPoints.size()>1){
+                    if (j<pathPoints.size()-1){
+                        XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                    }
+                    if (j==pathPoints.size()-1){
+                        mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                    }
                 }
             }
         }
