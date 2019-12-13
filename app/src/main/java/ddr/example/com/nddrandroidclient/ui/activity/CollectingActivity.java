@@ -109,7 +109,8 @@ public class CollectingActivity extends DDRActivity {
                                 setTitle("建图完成");
                                 if (!haveCtrated) {
                                     tcpClient.reqRunControlEx(collectName);       //切换地图
-                                    setAnimation(processBar, 90, 2000);
+                                    setAnimation(processBar, 100, 3000);
+                                    finish();
                                 }
                                 break;
                         }
@@ -117,12 +118,7 @@ public class CollectingActivity extends DDRActivity {
 
                 }
                 break;
-            case switchMapSucceed:
-                if (!haveCtrated) {
-                    setAnimation(processBar, 100, 1000);
-                    finish();
-                }
-                break;
+
         }
     }
 

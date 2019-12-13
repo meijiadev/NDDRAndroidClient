@@ -82,12 +82,25 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/version_def"
             />
+        <TextView
+            android:id="@+id/tv_shutdown"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="关机"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:layout_toLeftOf="@id/tv_quit"
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
+            />
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25.5dp"
             android:src="@mipmap/quit"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="25dp"
             android:id="@+id/tv_quit"
             />

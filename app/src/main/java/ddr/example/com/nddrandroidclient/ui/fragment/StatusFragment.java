@@ -197,7 +197,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         taskModeList=mapFileStatus.getcTaskModes();
         taskName = notifyBaseStatusEx.getCurrpath();
         if (taskName!=null && !taskName.equals("PathError")){
-            tv_now_task.setText(taskName);
+            String showName=taskName.replaceAll("DDRTask_","");
+            showName=showName.replaceAll(".task","");
+            tv_now_task.setText(showName);
         }else {
             tv_now_task.setText("无任务");
         }
@@ -391,6 +393,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
         }
     }
+
     /**
      * 机器人暂停/重新运动
      * @param value
@@ -495,13 +498,16 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskCheckAdapter.setOnItemClickListener((adapter, view, position) ->  {
                     new InputDialog.Builder(getAttachActivity())
-                            .setTitle("临时任务")
-                            .setHint("请输入循环次数")
+                            .setTitle("请输入循环次数")
+                            .setHint("1")
+                            .setConfirm("执行")
                             .setListener(new InputDialog.OnListener() {
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {
-                                    tv_now_task.setText(groupList.get(position));
                                     taskName=groupList.get(position);
+                                    String showName=taskName.replaceAll("DDRTask_","");
+                                    showName=showName.replaceAll(".task","");
+                                    tv_now_task.setText(showName);
                                     mapImageView.setTaskName(taskName);
                                     if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<999 ){
                                         try {
@@ -510,10 +516,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                             e.printStackTrace();
                                         }
                                     }else {
-                                        toast("输入数字不符合要求,默认为1");
                                         lsNum=1;
                                     }
-
+                                    addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
                                 }
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
@@ -674,7 +679,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             e.printStackTrace();
         }
 
-    }
+    } 
 
 
 

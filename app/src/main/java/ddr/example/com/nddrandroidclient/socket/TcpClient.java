@@ -717,6 +717,19 @@ public class TcpClient extends BaseSocketConnection {
     }
 
 
+    /**
+     * 关机or重启
+     * @param eCmdIPCMode
+     */
+    public void reqCmdIpcMethod(BaseCmd.eCmdIPCMode eCmdIPCMode ){
+        BaseCmd.reqCmdIPC reqCmdIPC=BaseCmd.reqCmdIPC.newBuilder()
+                .setMode(eCmdIPCMode)
+                .build();
+        tcpClient.sendData(null,reqCmdIPC);
+    }
+
+
+
 
 
 

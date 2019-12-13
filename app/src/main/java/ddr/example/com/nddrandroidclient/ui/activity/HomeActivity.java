@@ -29,6 +29,7 @@ import com.yhao.floatwindow.Screen;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import DDRCommProto.BaseCmd;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
@@ -41,6 +42,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseApplication;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 
@@ -57,6 +59,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
@@ -197,7 +200,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion, R.id.tv_quit})
+    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion, R.id.tv_quit,R.id.tv_shutdown})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.status:
@@ -219,6 +222,20 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case R.id.tv_quit:
                 onBack();
+                break;
+            case R.id.tv_shutdown:
+                new InputDialog.Builder(this).setEditVisibility(View.GONE).setConfirm("关机").setCancel("重启").setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eShutDown);
+                        toast("机器人正在关机中...");
+                    }
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                        tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eReStart);
+                        toast("机器人正在重启中，请退出到登陆页面等待重启完成后再重新连接");
+                    }
+                }).show();
                 break;
         }
         isChecked();

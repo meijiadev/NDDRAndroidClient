@@ -78,7 +78,7 @@ public class LineView {
     }
 
     /**
-     * 设置需要绘制的路径
+     * 设置需要绘制的路径（选择任务）
      * @param pathLines
      */
     public void setLineViews(List<PathLine> pathLines){

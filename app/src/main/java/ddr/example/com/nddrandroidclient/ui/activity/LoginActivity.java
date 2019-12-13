@@ -44,7 +44,7 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  *    time   : 2019/10/26
  *    desc   : 登录页
  */
-public final class LoginActivity extends DDRActivity  {
+public  class LoginActivity extends DDRActivity  {
     @BindView(R.id.account)
     EditText account;
     @BindView(R.id.password)

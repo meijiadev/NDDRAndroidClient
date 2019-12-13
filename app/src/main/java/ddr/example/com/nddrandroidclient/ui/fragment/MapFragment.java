@@ -443,6 +443,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     etToward.setText(targetPoints.get(mPosition).getTheta());
                     BaseDialog waitDialog1=new WaitDialog.Builder(getAttachActivity()).setMessage("保存中...").show();
                     getAttachActivity().postDelayed(()->{
+                        try {
+                            tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                            Logger.e("----------:"+targetPoints.size());
+                        }catch (NullPointerException e){
+                            e.printStackTrace();
+                        }
                         waitDialog1.dismiss();
                     },500);
                 }else {
@@ -521,6 +527,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     pathAdapter.setNewData(pathLines);
                     BaseDialog waitDialog2=new WaitDialog.Builder(getAttachActivity()).setMessage("保存中...").show();
                     getAttachActivity().postDelayed(()->{
+                        try {
+                            tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                            Logger.e("----------:"+pathLines.size());
+                        }catch (NullPointerException e){
+                            e.printStackTrace();
+                        }
                         waitDialog2.dismiss();
                     },500);
                 }else {
@@ -606,6 +618,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         taskAdapter.setNewData(taskModes);
                         BaseDialog waitDialog3=new WaitDialog.Builder(getAttachActivity()).setMessage("保存中...").show();
                         getAttachActivity().postDelayed(()->{
+                            try {
+                                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                                Logger.e("----------:"+taskModes.size());
+                            }catch (NullPointerException e){
+                                e.printStackTrace();
+                            }
                             waitDialog3.dismiss();
                             layoutSelect.setVisibility(View.VISIBLE);
                             layoutSort.setVisibility(View.GONE);
@@ -1188,6 +1206,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
      * 任务Recycler的点击事件
      */
     public void onTaskItemClick(){
+        
         taskAdapter.setOnItemClickListener((adapter, view, position) -> {
             mPosition=position;
             for (TaskMode taskMode:taskModes){
@@ -1408,39 +1427,39 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     public void update(MessageEvent messageEvent)  {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-                try {
-                    targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
-                    pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
-                    taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Logger.e("----------:" + taskModes.size());
-                if (targetPoints.size() > 0) {
-                    etPointName.setText(targetPoints.get(0).getName());
-                    etX.setText(targetPoints.get(0).getX());
-                    etY.setText(targetPoints.get(0).getY());
-                    etToward.setText(targetPoints.get(0).getTheta());
-                    targetPoints.get(0).setSelected(true);
-                    PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
-                    if (targetPoints.get(0).getName().equals("初始点")){
-                        layoutEdit.setVisibility(View.GONE);
-                    }else {
-                        layoutEdit.setVisibility(View.VISIBLE);
-                    }
-                }else {
-                    etPointName.setText("无目标点");
-                    etX.setText(0);
-                    etY.setText(0);
-                    etToward.setText(0);
-                }
-                tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
-                tvPath.setText("路径"+"("+pathLines.size()+")");
-                tvTask.setText("任务"+"("+taskModes.size()+")");
                 if (dialog.isShowing()) {
                     getAttachActivity().postDelayed(() -> {
+                        try {
+                            targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                            pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
+                            taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Logger.e("----------:" + taskModes.size());
+                        if (targetPoints.size() > 0) {
+                            etPointName.setText(targetPoints.get(0).getName());
+                            etX.setText(targetPoints.get(0).getX());
+                            etY.setText(targetPoints.get(0).getY());
+                            etToward.setText(targetPoints.get(0).getTheta());
+                            targetPoints.get(0).setSelected(true);
+                            PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
+                            if (targetPoints.get(0).getName().equals("初始点")){
+                                layoutEdit.setVisibility(View.GONE);
+                            }else {
+                                layoutEdit.setVisibility(View.VISIBLE);
+                            }
+                        }else {
+                            etPointName.setText("无目标点");
+                            etX.setText(0);
+                            etY.setText(0);
+                            etToward.setText(0);
+                        }
+                        tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
+                        tvPath.setText("路径"+"("+pathLines.size()+")");
+                        tvTask.setText("任务"+"("+taskModes.size()+")");
                         dialog.dismiss();
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
