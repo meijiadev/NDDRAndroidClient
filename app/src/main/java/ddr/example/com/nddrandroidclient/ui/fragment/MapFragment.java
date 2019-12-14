@@ -300,6 +300,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onModeItemClick();
         /*************************************************************/
         etToward.setViewType(1);
+        etSpeed.setEt_content(3);
 
     }
 
@@ -381,12 +382,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 mapDetailLayout.setVisibility(View.GONE);
                 mapLayout.setVisibility(View.VISIBLE);
                 mPosition=0;
-                try {
+              /*  try {
                     tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                     Logger.e("----------:"+taskModes.size());
                 }catch (NullPointerException e){
                     e.printStackTrace();
-                }
+                }*/
                 PointView.getInstance(getAttachActivity()).clearDraw();
                 LineView.getInstance(getAttachActivity()).clearDraw();
                 GridLayerView.getInstance(zoomMap).onDestroy();
@@ -1053,7 +1054,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                               waitDialog.dismiss();
                               toast("切换失败！");
                           }
-                      }, 4000);
+                      }, 5000);
 
                   }else {
                       toast("非待命模式无法切换地图");
@@ -1503,15 +1504,22 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case mapOperationalSucceed:
                 if (waitDialog.isShowing()){
                     tcpClient.requestFile();
+                    waitDialog.dismiss();
                 }
                 break;
             case switchMapSucceed:
-                if (waitDialog.isShowing()) {
-                    getAttachActivity().postDelayed(() -> {
-                        waitDialog.dismiss();
-                        transformMapInfo(mapFileStatus.getMapInfos());
-                        mapAdapter.setNewData(mapInfos);
-                    }, 800);
+                if (waitDialog!=null){
+                    if (waitDialog.isShowing()) {
+                        Logger.e("切换地图");
+                        getAttachActivity().postDelayed(() -> {
+                            waitDialog.dismiss();
+                            transformMapInfo(mapFileStatus.getMapInfos());
+                            mapAdapter.setNewData(mapInfos);
+                        }, 300);
+                    }
+                }else {
+                    transformMapInfo(mapFileStatus.getMapInfos());
+                    mapAdapter.setNewData(mapInfos);
                 }
                 break;
 

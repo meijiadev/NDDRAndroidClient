@@ -381,13 +381,19 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         super.onDestroy();
     }
 
+    private boolean exit=false;       //线程是否被终止
     public void getMapInfo() {
         new Thread(() -> {
-            while (true) {
+            while (!exit) {
                 if (currentMap != null && !currentMap.equals("PathError")) {
                     Logger.e("-----------" + currentMap);
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(currentMap));  //获取某个地图信息
-                    return;
+                    exit=true;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

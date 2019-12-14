@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -39,7 +40,7 @@ public class CollectingView extends GLContinuousView {
     private List<XyEntity>poiPoints=new ArrayList<>();
     private int DEFAULT_SIZE=800;
     private int measureWidth, measureHeight;
-    private GLPaint paint,lastFrame,pathPaint;
+    private GLPaint paint,lastFrame,pathPaint,pointPaint;
     private float posX,posY;
     private float radian;
     private float angle;
@@ -98,6 +99,8 @@ public class CollectingView extends GLContinuousView {
         pathPaint=new GLPaint();
         pathPaint.setColor(Color.BLACK);
         pathPaint.setLineWidth(2);
+        pointPaint=new GLPaint();
+        pointPaint.setColor(Color.BLUE);
         poiBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.poi_default);
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         bgBitmap=Bitmap.createBitmap(1000,1000,Bitmap.Config.ARGB_8888);
@@ -136,6 +139,7 @@ public class CollectingView extends GLContinuousView {
                 float ptX=(float)(-positions.get(j).getPtY()*ratio+measureWidth/2);
                 float ptY=(float)(-positions.get(j).getPtX()*ratio+measureHeight/2);
                 canvas.drawLine(x,y,ptX,ptY,paint);
+                canvas.drawCircle(ptX,ptY,2,pointPaint);
                 if (i==ptsSize-1){
                     canvas.drawLine(x,y,ptX,ptY,lastFrame);
                 }

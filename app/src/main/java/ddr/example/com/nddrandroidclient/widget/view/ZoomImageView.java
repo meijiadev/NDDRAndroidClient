@@ -36,6 +36,7 @@ public class ZoomImageView extends View {
     private int currentStatus;//记录当前操作的状态，可选值为STATUS_INIT、STATUS_ZOOM_OUT、STATUS_ZOOM_IN和STATUS_MOVE
     private int width;//ZoomImageView控件的宽度
     private int height;//ZoomImageView控件的高度
+    private int measureWidth,measureHeight;
     private float centerPointX;//记录两指同时放在屏幕上时，中心点的横坐标值
     private float centerPointY;//记录两指同时放在屏幕上时，中心点的纵坐标值
     private float currentBitmapWidth;//记录当前图片的宽度，图片被缩放时，这个值会一起变动
@@ -254,7 +255,7 @@ public class ZoomImageView extends View {
      * @return 返回的是世界坐标
      */
     public XyEntity getTargetPoint(){
-        float x=(width/2-totalTranslateX)/totalRatio;
+        float x=(width/2-totalTranslateX)/totalRatio;           //相对于图片左上角的距离
         float y=(height/2-totalTranslateY)/totalRatio;
         return toPathXy(x,y);
     }
@@ -417,6 +418,30 @@ public class ZoomImageView extends View {
         }
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
+        int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = View.MeasureSpec.getSize(heightMeasureSpec);
+
+        if (widthMode == View.MeasureSpec.EXACTLY) {
+            // 具体的值和match_parent
+            measureWidth = widthSize;
+        } else {
+            // wrap_content
+            measureWidth = 1000;
+        }
+
+        if (heightMode == View.MeasureSpec.EXACTLY) {
+            measureHeight = heightSize;
+        } else {
+            measureHeight = 1000;
+        }
+        int max=Math.max(measureWidth,measureHeight);
+        setMeasuredDimension(max, max);
+    }
 
     /**
      * 计算两个手指之间的距离。

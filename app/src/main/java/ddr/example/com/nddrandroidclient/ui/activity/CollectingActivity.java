@@ -37,6 +37,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
+import ddr.example.com.nddrandroidclient.widget.view.CollectingView2;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
@@ -49,7 +50,7 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
 public class CollectingActivity extends DDRActivity {
 
     @BindView(R.id.collecting)
-    CollectingView collecting;
+    CollectingView2 collecting;
     @BindView(R.id.process_bar)
     NumberProgressBar processBar;
     @BindView(R.id.tv_speed)
@@ -160,6 +161,7 @@ public class CollectingActivity extends DDRActivity {
     @Override
     public void onLeftClick(View v) {
         quitCollect();
+        collecting.onStop();
         finish();
     }
 
@@ -169,7 +171,8 @@ public class CollectingActivity extends DDRActivity {
         exitModel();
         processBar.setVisibility(View.VISIBLE);
         setAnimation(processBar, 20, 3000);
-        collecting.unRegister();
+        //collecting.unRegister();
+        collecting.onStop();
 
     }
 

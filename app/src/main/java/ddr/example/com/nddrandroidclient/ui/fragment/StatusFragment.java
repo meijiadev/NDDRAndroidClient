@@ -143,9 +143,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     mapImageView.setMapBitmap(mapName);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
-                    for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
-                        groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
-                        Logger.e("group列数"+groupList.size());
+                    for (TaskMode taskMode:mapFileStatus.getcTaskModes()){
+                        groupList.add(taskMode.getName());
                     }
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getTargetPoints();

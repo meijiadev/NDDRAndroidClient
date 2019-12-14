@@ -28,6 +28,7 @@ public class DDREditText extends LinearLayout {
     private ImageView iv_add;
     private ImageView iv_reduce;
     private Context context;
+    private int ET_SPEED=3;
 
 
 
@@ -64,7 +65,12 @@ public class DDREditText extends LinearLayout {
                 try {
                     Logger.e("--------:"+et_content.getText().toString());
                     float num=Float.valueOf(et_content.getText().toString());
-                    num++;
+
+                    if (viewType1==3){
+                        num=num+0.1f;
+                    }else {
+                        num++;
+                    }
                     if (viewType==0){
                         String n=String.format("%.2f",num);
                         et_content.setText(n);
@@ -87,7 +93,11 @@ public class DDREditText extends LinearLayout {
                 try {
                     Logger.e("--------:"+et_content.getText().toString());
                     float num=Float.valueOf(et_content.getText().toString());
-                    num--;
+                    if (viewType1==3){
+                        num=num-0.1f;
+                    }else {
+                        num--;
+                    }
                     if (viewType==0){
                         String n=String.format("%.2f",num);
                         et_content.setText(n);
@@ -177,5 +187,9 @@ public class DDREditText extends LinearLayout {
     private int viewType;
     public void  setViewType(int type){
         viewType=type;
+    }
+    private int viewType1;
+    public void setEt_content(int viewType){
+        this.viewType1=viewType;
     }
 }
