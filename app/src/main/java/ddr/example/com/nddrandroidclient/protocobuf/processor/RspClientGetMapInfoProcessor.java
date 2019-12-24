@@ -84,6 +84,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
             Collections.sort(mapInfoList,sortClass);
             for(int i=0,size=mapInfoList.size();i<size;i++){
                 mapNames.add(mapInfoList.get(i).getMapName());
+                Logger.e("-------:"+mapInfoList.get(i).getTime());
             }
             MapFileStatus mapFileStatus=MapFileStatus.getInstance();
             mapFileStatus.setMapNames(mapNames);
@@ -116,7 +117,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
      */
     private String longToDate(long time){
         Date date=new Date(time);
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd ");
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm ");
         return simpleDateFormat.format(date);
     }
 

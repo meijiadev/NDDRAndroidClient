@@ -419,7 +419,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         myRocker=contentView.findViewById(R.id.my_rocker_control);
         myRockerZy=contentView.findViewById(R.id.my_rocker_zy_control);
         tvSpeed=contentView.findViewById(R.id.tv_speed_control);
-        iv_quit_yk=contentView.findViewById(R.id.iv_quit_yk);initSeekBar();
+        iv_quit_yk=contentView.findViewById(R.id.iv_quit_yk);
+        initSeekBar();
         initRockerView();
         initTimer();
         setFixedSpeed();
@@ -430,6 +431,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             @Override
             public void onClick(View v) {
                 customPopuWindow.dissmiss();
+                timer.cancel();
+                task.cancel();
                 try {
                     FloatWindow.get().show();
                 }catch (Exception e){
@@ -585,7 +588,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
             }
         };
-        timer.schedule(task, 0, 90);
+        timer.schedule(task, 0, 50);
     }
 
 

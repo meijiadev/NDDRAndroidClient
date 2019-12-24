@@ -69,7 +69,6 @@ public class UdpClient extends BaseSocketConnection {
         }
         return true;
     }
-
     public void readData(){
         if (readThread==null){
             readThread=new Thread(new Runnable() {
@@ -78,6 +77,7 @@ public class UdpClient extends BaseSocketConnection {
                 public void run() {
                     while (udpLife){
                         try {
+                            long a=System.currentTimeMillis();
                             readPacket=new DatagramPacket(data,data.length);
                             datagramSocket.receive(readPacket);
                             //Logger.e("udp读取的长度"+readPacket.getLength());

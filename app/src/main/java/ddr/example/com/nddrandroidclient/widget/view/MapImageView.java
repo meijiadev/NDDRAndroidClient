@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
 import com.chillingvan.canvasgl.glview.GLContinuousView;
+import com.chillingvan.canvasgl.glview.GLView;
 import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,7 +42,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 /**
  * 放置激光地图的控件
  */
-public class MapImageView extends GLContinuousView {
+public class MapImageView extends GLView {
     private DDRVLNMap.reqDDRVLNMapEx data;
     private DDRVLNMap.DDRMapBaseData baseData;       // 存放基础信息，采集模式结束时就有的东西。
     private DDRVLNMap.affine_mat affine_mat;
@@ -75,7 +76,7 @@ public class MapImageView extends GLContinuousView {
     private float radian,angle;                /**经过矩阵变换后的坐标（相对于图片，单位是像素)**/
     private int posX,posY;
 
-    private int scale;
+    private float scale;
     private boolean waitData=false;           //是否需要等待数据
     private String taskName;
     private boolean isStartRadar=false;       //是否雷达开始绘制
@@ -119,6 +120,7 @@ public class MapImageView extends GLContinuousView {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
+        requestRender();
 
     }
 
@@ -152,6 +154,7 @@ public class MapImageView extends GLContinuousView {
         }catch (Exception e){
             e.printStackTrace();
         }
+        requestRender();
 
     }
 
@@ -161,8 +164,6 @@ public class MapImageView extends GLContinuousView {
 
     public MapImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Activity activity= (Activity) context;
-        Logger.e("--------");
 
     }
 
@@ -212,26 +213,31 @@ public class MapImageView extends GLContinuousView {
         if (mapBitmap!=null){
             int bitmapWidth=mapBitmap.getWidth();
             int bitmapHeight=mapBitmap.getHeight();
+            //Logger.e("-------地图宽高："+bitmapWidth+";"+bitmapHeight);
             mRectSrc.left=0;
             mRectSrc.top=0;
             mRectSrc.right=bitmapWidth;
             mRectSrc.bottom=bitmapHeight;
             if (bitmapWidth<width&bitmapHeight<height){
-
+                setZOrderOnTop(true);
             }else if (bitmapWidth>width&&bitmapHeight>height){
-                scale=Math.max(bitmapWidth/width,bitmapHeight/height);
-                bitmapWidth=bitmapWidth/scale;
-                bitmapHeight=bitmapHeight/scale;
-
+                setZOrderOnTop(false);
+                scale=Math.max((float) bitmapWidth/width,(float) bitmapHeight/height);
+                bitmapWidth=(int) (bitmapWidth/scale);
+                bitmapHeight=(int)(bitmapHeight/scale);
+                //Logger.e("--宽高都大于画布的宽高："+scale);
             }else if (bitmapWidth>width){
-                scale=bitmapWidth/width;
-                bitmapWidth=bitmapWidth/scale;
-                bitmapHeight=bitmapHeight/scale;
-
+                setZOrderOnTop(false);
+                scale=(float)bitmapWidth/width ;
+                bitmapWidth=(int)(bitmapWidth/scale);
+                bitmapHeight=(int)(bitmapHeight/scale);
+                //Logger.e("--宽大于画布的宽："+scale);
             }else if (bitmapHeight>height){
+                setZOrderOnTop(false);
                 scale=bitmapHeight/height;
-                bitmapWidth=bitmapWidth/scale;
-                bitmapHeight=bitmapHeight/scale;
+                bitmapWidth=(int)(bitmapWidth/scale);
+                bitmapHeight=(int)(bitmapHeight/scale);
+                //Logger.e("--高大于画布的高："+scale);
             }
             mRectDst.left=(width-bitmapWidth)/2;
             mRectDst.top=(height-bitmapHeight)/2;
@@ -416,6 +422,7 @@ public class MapImageView extends GLContinuousView {
                 break;
             case receivePointCloud:
                 isStartRadar=true;
+                requestRender();
                 break;
 
         }

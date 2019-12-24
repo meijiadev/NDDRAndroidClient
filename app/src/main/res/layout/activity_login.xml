@@ -44,7 +44,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="11dp"
                 android:inputType="none"
-                android:text="机器人ID"
+                android:hint="机器人IP"
                 android:textColor="@color/fontColor"
                 android:textSize="13sp" />
 
@@ -82,7 +82,7 @@
                 android:layout_marginLeft="43dp"
                 android:src="@mipmap/account" />
 
-            <ddr.example.com.nddrandroidclient.widget.edit.RegexEditText
+            <EditText
                 android:id="@+id/account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,6 @@
                 android:textSize="13sp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                app:regexType="name"
                 />
 
             <View
@@ -131,7 +130,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-
                 android:layout_marginRight="20dp"
                 android:background="@null"
                 android:hint="密码"

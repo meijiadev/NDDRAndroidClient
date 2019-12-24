@@ -242,6 +242,14 @@ message affine_mat
 	float ty = 6;
 }
 
+// AB点模式，分为自主导航  自主巡线
+enum eABNaviType 
+{
+	eABNaviTypeError = 0;
+	eABNaviTypeFollowLine = 1; // 自主巡线  去目标点时会尽量往提前设定好的路线上走
+	eABNaviTypeAutoPlanning = 2; // 自主导航 完全靠自主规划走过去
+}
+
 // 保存基础信息，主要是采集模式结束时生成的东西。每个OneRoute有一个DDRMapBaseData，每个DDRMapBaseData保存成一个文件
 message DDRMapBaseData
 {
@@ -251,6 +259,10 @@ message DDRMapBaseData
 	ListColPt colPointData = 4; 
 	int64 rec_time = 5;  // 采集时的时间戳，单位为ms
 	bytes rec_user_name = 6; //  采集用户名，默认会是admin
+	int32 waittime = 7; // 单位为秒
+	bytes targetPtName = 8; // 目标点名字  表示在多少秒内没操作，就回到这个目标点
+	eABNaviType abNaviType = 9;
+	
 }
 
 // 每个OneRoute有一个DDRMapPathData，每个DDRMapPathData保存成一个文件。这里类似于存放的是Task拼图中的所有元素
@@ -485,6 +497,14 @@ message DDRMapTargetPointData
 	repeated targetPtItem targetPt = 1; 
 }
 
+// 路径模式
+enum path_line_itemEx_Type
+{
+	epathTypeHandError = 0;
+	epathTypeHandDraw = 1; // 手绘路径
+	epathTypeSelectTargetPt = 2; // 选择目标点的路径，只有这里的路径才会在巡线模式下用到
+};
+
 message path_line_itemEx
 {
 	message path_lint_pt_Item
@@ -493,12 +513,14 @@ message path_line_itemEx
 		eMarkingItemType type = 2;
 		float rotationangle = 3; //
 		bytes config = 4; // 配置文件
+		bytes ptName = 5; // 巡线模式下，通过这个名字的唯一性确保连通性
 	}
 	bytes name = 1;
 	repeated path_lint_pt_Item pointSet = 2;
 	float velocity = 3;
 	ePathItemMode mode = 4; // 路径模式
 	path_line_config config = 5; // 配置文件
+	path_line_itemEx_Type type = 6;
 }
 
 message path_elementEx
@@ -571,6 +593,7 @@ message rspGetDDRVLNMapEx
 {
 	DDRCommProto.eCmdRspType type = 1;
 	reqDDRVLNMapEx data = 2;
+	bytes bkpicData = 3;
 }
 
 // 0.4版任务调度协议
@@ -579,7 +602,7 @@ message reqRunControlEx
 	bytes onerouteName = 1;
 	
 	// 以下为针对永牧项目需要的
-	bytes runMode = 2; // 指定模式：左延边 右延边 左绕圈 右绕圈
+	bytes runMode = 2; // 指定模式: leftcircle rightcircle leftstraight rightstraight
 	int32 runCount = 3; // 0 是无限循环 否则为运行次数
 	float speed = 4; // 行走速度
 	float distance = 5; // 距离

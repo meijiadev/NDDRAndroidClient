@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -50,6 +51,7 @@ import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.SwitchModeDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
@@ -71,6 +73,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RelativeLayout shrinkTailLayout; // 伸缩的尾部布局
     @BindView(R.id.shrink_layout)
     RelativeLayout shrinkLayout;
+    @BindView(R.id.tv_ti_map)
+    TextView tvTiMap;
+    @BindView(R.id.tv_create_map)
+    TextView tvCreateMap;
     @BindView(R.id.iv_map)
     MapImageView mapImageView;
     @BindView(R.id.tv_now_task)
@@ -100,6 +106,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_restart_point)
     TextView tv_restart_point;
 
+    @BindView(R.id.tv_switch_mode)
+    TextView tv_switch_mode;
+
 
     private Animation hideAnimation;  //布局隐藏时的动画
     private Animation showAnimation;  // 布局显示时的动画效果
@@ -120,15 +129,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private int lsNum; //临时任务次数
     private List<String> groupList=new ArrayList<>();
     private List<TargetPoint> targetPoints= new ArrayList<>();
-    private TargetPoint targetPoint;
     private TargetPointAdapter targetPointAdapter;
     private MapFileStatus mapFileStatus;
     private StringAdapter taskCheckAdapter;
     private CustomPopuWindow customPopWindow;
-    private DpOrPxUtils DpOrPxUtils;
-    private StringAdapter robotIdAdapter;
+    //private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
     private List<TaskMode> taskModeList =new ArrayList<>();
+    private int modeType;
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
@@ -141,17 +149,24 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setMapBitmap(mapName);
+                    tvTiMap.setVisibility(View.GONE);
+                    tvCreateMap.setVisibility(View.GONE);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
                     for (TaskMode taskMode:mapFileStatus.getcTaskModes()){
                         groupList.add(taskMode.getName());
                     }
                     taskCheckAdapter.setNewData(groupList);
-                    targetPoints=mapFileStatus.getTargetPoints();
+                    targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
-                    if (robotIdAdapter!=null){
-                        robotIdAdapter.setNewData(groupList);
-                        robotIdAdapter.notifyDataSetChanged();
+                    modeType=mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue();
+                    Logger.e("---------模式:"+modeType);
+                    if (modeType==1){
+                        tv_switch_mode.setText("自主巡线模式");
+                    }else if (modeType==2){
+                        tv_switch_mode.setText("自主导航模式");
+                    }else{
+                        tv_switch_mode.setText("无当前运行地图");
                     }
                 }
                 break;
@@ -225,7 +240,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         taskNum=notifyBaseStatusEx.getTaskCount();
         workTimes=Integer.parseInt(df.format( times/h));
         taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
-        tv_now_map.setText(mapName);
+        String showName=mapName.replaceAll("OneRoute_","");
+        tv_now_map.setText(showName);
 //        Logger.e("次数"+taskNum+"时间"+workTimes+"速度"+taskSpeed);
         if (mapName!=null){
             rel_step_description.setVisibility(View.GONE);
@@ -285,15 +301,15 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     /**
      * 将机器id赋值
      */
-    public static void setRobotID(String robotid, Context context){
+    public static void setRobotID(String robotid){
         String stringd="DDR";
         if(!Pattern.compile(regEx).matcher(robotid).find()&&!robotid.contains("BLANK")){
             robotID =robotid;
         }else {
-            Looper.prepare();
-            Toast.makeText(context,"机器目前为默认ID，请修改机器ID",Toast.LENGTH_SHORT).show();
+            //Looper.prepare();
+            //Toast.makeText(context,"机器目前为默认ID，请修改机器ID",Toast.LENGTH_SHORT).show();
             robotID=stringd+"001";
-            Looper.loop();
+           // Looper.loop();
         }
     }
     /**
@@ -324,7 +340,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point,R.id.tv_switch_mode})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -389,6 +405,26 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             }
                         }).show();
 
+                break;
+            case R.id.tv_switch_mode:
+                new SwitchModeDialog.Builder(getAttachActivity())
+                        .setModeType(modeType)
+                        .setGravity(Gravity.CENTER)
+                        .setListener(new SwitchModeDialog.OnListener() {
+                            @Override
+                            public void onConfirm(int type) {
+                                modeType=type;
+                                if (modeType==1){
+                                    tv_switch_mode.setText("自主巡线模式");
+                                }else if (modeType==2){
+                                    tv_switch_mode.setText("自主导航模式");
+                                }else{
+                                    tv_switch_mode.setText("无当前运行地图");
+                                }
+                                tcpClient.saveDataToServer(modeType);
+                                Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
+                            }
+                        }).show();
                 break;
         }
     }

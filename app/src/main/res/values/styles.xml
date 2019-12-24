@@ -26,8 +26,9 @@
 
     <!-- 解决启动页白屏的问题 -->
     <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <!-- 默认文本框样式 -->

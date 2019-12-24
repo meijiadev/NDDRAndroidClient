@@ -262,6 +262,7 @@ enum eCmdActionMode{
 	eRec = 4;
 	eReCharging = 5;
 	eUWBAuto = 6;
+	eReloc = 7; // 只是重定位
 }
 // Cmd start to autorun or rec
 message reqCmdStartActionMode{
@@ -524,9 +525,17 @@ enum eSelfCalibStatus
 enum eTaskWorkMode
 {
 	eTaskWorkError = 0;
+	
+	// 工作中
 	eTaskWorkRunningTemporary = 1; // 临时任务
 	eTaskWorkRunningTimeList = 2; // 定时任务
-	eTaskWorkRunEnd = 3; // 不在工作中，也有可能是出于AB点模式
+	
+	// 休息中
+	eTaskWorkRunEnd = 3; // 处于休息中
+	
+	// 任务中
+	eTaskWorkRunInTask = 4; // 处于任务中的执行中
+	eTaskWorkRunResumeTask = 5; // 处于任务中的恢复中
 }
 
 message notifyBaseStatusEx{

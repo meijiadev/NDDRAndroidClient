@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 
 import java.util.ArrayList;
@@ -132,6 +133,7 @@ public class LineView {
                     if (pathPoints.size()>1){
                         for (int j=0;j<pathPoints.size();j++){
                             if (j<pathPoints.size()-1){
+                                Path path=new Path();
                                 XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                                 xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
                                 XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());

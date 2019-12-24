@@ -1,10 +1,5 @@
 package ddr.example.com.nddrandroidclient.entity;
 
-import java.util.List;
-
-import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
-import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
-
 /**
  * desc: EvenBus的信息传递类
  */
@@ -15,6 +10,7 @@ public class MessageEvent {
     public enum Type{
         updateIPList,          //更新IP列表
         updatePort,           // 更新端口号
+        tcpConnected,         //tcp已连接
         LoginSuccess,        //登陆成功
         updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息

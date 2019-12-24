@@ -419,8 +419,13 @@ public class MapEditActivity extends DDRActivity {
                                     if (!content.isEmpty()){
                                         PathLine pathLine=new PathLine();
                                         pathLine.setName(content);
-                                        for (int i=0;i<pathPoints.size();i++){
-                                            pathPoints.get(i).setName(content+"_"+i);
+                                        if (recyclerTarget.getVisibility()!=View.VISIBLE){
+                                            for (int i=0;i<pathPoints.size();i++){
+                                                pathPoints.get(i).setName(content+"_"+i);
+                                            }
+                                            pathLine.setPathType(1);
+                                        }else {
+                                            pathLine.setPathType(2);
                                         }
                                         List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
                                         try {
@@ -439,6 +444,7 @@ public class MapEditActivity extends DDRActivity {
                                         for (TargetPoint targetPoint:selectPoints){
                                             targetPoint.setMultiple(false);
                                         }
+                                        selectPointAdapter.setNewData(selectPoints);
                                         toast("保存成功!");
                                     }else {
                                         toast("请先输入名称");
@@ -562,6 +568,7 @@ public class MapEditActivity extends DDRActivity {
     private CustomPopuWindow customPopuWindow;
     private RecyclerView showRecycler;
     private TextView tv_all_selected;
+    private boolean allShowPoint,allShowPath;
 
     private void showPopupWindow(View view, int type) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.window_point, null);
@@ -577,10 +584,20 @@ public class MapEditActivity extends DDRActivity {
             case 0:
                 showRecycler.setAdapter(targetPointAdapter);
                 targetPointAdapter.setNewData(targetPoints);
+                if (allShowPoint){
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                }else {
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                }
                 break;
             case 1:
                 showRecycler.setAdapter(pathAdapter);
                 pathAdapter.setNewData(pathLines);
+                if (allShowPath){
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                }else {
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                }
                 break;
             case 2:
                 showRecycler.setAdapter(editTypeAdapter);
@@ -591,6 +608,47 @@ public class MapEditActivity extends DDRActivity {
                 graphTypeAdapter.setNewData(graphTypes);
                 break;
         }
+        //全选的点击事件
+        tv_all_selected.setOnClickListener((v)->{
+            switch (type){
+                case 0:
+                    if (allShowPoint){
+                        allShowPoint=false;
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                        for (TargetPoint targetPoint:targetPoints){
+                            targetPoint.setMultiple(false);
+                        }
+                    }else {
+                        allShowPoint=true;
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                        for (TargetPoint targetPoint:targetPoints){
+                            targetPoint.setMultiple(true);
+                        }
+                    }
+                    PointView.getInstance(this).setTargetPoints(targetPoints);
+                    zmap.invalidate();
+                    targetPointAdapter.setNewData(targetPoints);
+                    break;
+                case 1:
+                    if (allShowPath){
+                        allShowPath=false;
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                        for (PathLine pathLine:pathLines){
+                            pathLine.setMultiple(false);
+                        }
+                    }else {
+                        allShowPath=true;
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                        for (PathLine pathLine:pathLines){
+                            pathLine.setMultiple(true);
+                        }
+                    }
+                    LineView.getInstance(this).setPathLines(pathLines);
+                    zmap.invalidate();
+                    pathAdapter.setNewData(pathLines);
+                    break;
+            }
+        });
 
 
     }
@@ -865,6 +923,8 @@ public class MapEditActivity extends DDRActivity {
         super.onDestroy();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
+        timer.cancel();
+        task.cancel();
     }
 
     /**

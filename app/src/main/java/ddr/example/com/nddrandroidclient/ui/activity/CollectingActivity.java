@@ -81,6 +81,7 @@ public class CollectingActivity extends DDRActivity {
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
+
                 Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
                 if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
                     setTitle("正在自标定中...");
@@ -109,9 +110,14 @@ public class CollectingActivity extends DDRActivity {
                             case 8:
                                 setTitle("建图完成");
                                 if (!haveCtrated) {
-                                    tcpClient.reqRunControlEx(collectName);       //切换地图
+                                    try {
+                                        tcpClient.reqRunControlEx(collectName);       //切换地图
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                     setAnimation(processBar, 100, 3000);
                                     finish();
+                                    
                                 }
                                 break;
                         }
@@ -181,7 +187,7 @@ public class CollectingActivity extends DDRActivity {
      */
     public void initWaitDialog(){
         waitDialog= new WaitDialog.Builder(this)
-        .setMessage("自标定中...")
+        .setMessage("正在定位中，请勿挪动机器人...")
         .show();
     }
 
@@ -448,7 +454,8 @@ public class CollectingActivity extends DDRActivity {
         super.onDestroy();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
-        tcpClient.requestFile();
+        timer.cancel();
+        task.cancel();
     }
 
     @Override

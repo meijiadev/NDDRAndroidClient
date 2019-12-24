@@ -35,82 +35,99 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/shrink_layout"
-        android:layout_width="380dp"
-        android:layout_height="44dp"
-        android:layout_toRightOf="@id/left_layout"
-        android:layout_marginTop="14dp"
-        >
-        <!--伸缩的内容-->
+        <TextView
+            android:id="@+id/tv_switch_mode"
+            android:layout_width="172.5dp"
+            android:layout_height="29dp"
+            android:layout_marginLeft="215dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bt_bg_mode"
+            android:drawableLeft="@drawable/circle_blue"
+            android:paddingLeft="21dp"
+            android:drawablePadding="15dp"
+            android:text="自主导航模式"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            />
         <RelativeLayout
-            android:id="@+id/shrink_tail_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@mipmap/shrink_tail"
-            android:visibility="gone"
+            android:id="@+id/shrink_layout"
+            android:layout_width="380dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="14dp"
             >
-            <TextView
+            <!--伸缩的内容-->
+            <RelativeLayout
+                android:id="@+id/shrink_tail_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="16.5dp"
-                android:text="当前设备:"
-                android:textSize="12sp"
-                android:textColor="#ffffff"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="14dp"
-                android:gravity="center"
-                android:id="@+id/tv_now_d"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@mipmap/shrink_tail"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16.5dp"
+                    android:text="当前设备:"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginLeft="14dp"
+                    android:gravity="center"
+                    android:id="@+id/tv_now_d"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16.5dp"
+                    android:layout_toRightOf="@id/tv_now_d"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="14dp"
+                    android:text="*****"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:gravity="center"
+                    android:id="@+id/tv_now_device"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16.5dp"
+                    android:layout_toRightOf="@id/tv_now_device"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="14dp"
+                    android:text="当前地图:"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:gravity="center"
+                    android:id="@+id/tv_now_m"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16.5dp"
+                    android:layout_toRightOf="@id/tv_now_m"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="14dp"
+                    android:text="*****"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:gravity="center"
+                    android:id="@+id/tv_now_map"
+                    android:maxLength="19"/>
+            </RelativeLayout>
+
+            <!--点击是否伸缩-->
+            <ImageView
+                android:id="@+id/iv_shrink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/iv_shrink"
+                android:scaleType="center"
+                android:background="@mipmap/shrink_head"
+                android:layout_toRightOf="@id/shrink_tail_layout"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="16.5dp"
-                android:layout_toRightOf="@id/tv_now_d"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="14dp"
-                android:text="*****"
-                android:textSize="12sp"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:id="@+id/tv_now_device"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="16.5dp"
-                android:layout_toRightOf="@id/tv_now_device"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="14dp"
-                android:text="当前地图:"
-                android:textSize="12sp"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:id="@+id/tv_now_m"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="16.5dp"
-                android:layout_toRightOf="@id/tv_now_m"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="14dp"
-                android:text="*****"
-                android:textSize="12sp"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:id="@+id/tv_now_map"
-                android:maxLength="19"/>
         </RelativeLayout>
 
-        <!--点击是否伸缩-->
-        <ImageView
-            android:id="@+id/iv_shrink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/iv_shrink"
-            android:scaleType="center"
-            android:background="@mipmap/shrink_head"
-            android:layout_toRightOf="@id/shrink_tail_layout"
-            />
     </RelativeLayout>
+
+
 
     <RelativeLayout
         android:id="@+id/left_layout"
@@ -135,7 +152,7 @@
             android:id="@+id/tv_now_task_t"
             />
         <TextView
-            android:layout_width="180dp"
+            android:layout_width="160dp"
             android:layout_height="26dp"
             android:text="未选择"
             android:textColor="#ffffff"

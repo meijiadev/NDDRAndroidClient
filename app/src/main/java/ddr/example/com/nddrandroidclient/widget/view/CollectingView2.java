@@ -7,11 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
@@ -26,6 +28,7 @@ import java.util.List;
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -34,10 +37,12 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * time ：2019/12/13
  * desc : 利用SurfaceView绘制地图
  */
-public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callback,Runnable{
+public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callback{
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
     private NotifyLidarPtsEntity notifyLidarPtsEntity1;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
+    //private List<NotifyLidarPtsEntity> ptsSwitchs=new ArrayList<>(); //经过坐标转化之后的点云列表（可以直接绘制到画布上的）
+    private int posXSwitch,posYSwitch;                             //坐标转换之后的坐标
     private List<XyEntity>poiPoints=new ArrayList<>();
     private float posX,posY;
     private float radian;
@@ -52,7 +57,8 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
     private Matrix matrix;
     private SurfaceHolder holder;
     public boolean isRunning=false;
-    private Thread thread;
+    private DrawMapThread drawThread;          //绘制线程
+    private CalculateThread calculateThread;  //计算线程
 
     private Paint paint,lastFrame,pathPaint,pointPaint,bitmapPaint;
 
@@ -61,16 +67,18 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
     public void upDate(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case receivePointCloud:
-                posX=notifyLidarPtsEntity.getPosX();
-                posY=notifyLidarPtsEntity.getPosY();
-                radian=notifyLidarPtsEntity.getPosdirection();
-                angle=radianToangle(radian);
-                notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
-                notifyLidarPtsEntity1.setPosX(notifyLidarPtsEntity.getPosX());
-                notifyLidarPtsEntity1.setPosY(notifyLidarPtsEntity.getPosY());
-                notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
-                ptsEntityList.add(notifyLidarPtsEntity1);
-                maxOrmin(notifyLidarPtsEntity.getPositionList());
+                if (NotifyBaseStatusEx.getInstance().getSonMode()==6){
+                    posX=notifyLidarPtsEntity.getPosX();
+                    posY=notifyLidarPtsEntity.getPosY();
+                    radian=notifyLidarPtsEntity.getPosdirection();
+                    angle=radianToangle(radian);
+                    notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
+                    notifyLidarPtsEntity1.setPosX(notifyLidarPtsEntity.getPosX());
+                    notifyLidarPtsEntity1.setPosY(notifyLidarPtsEntity.getPosY());
+                    notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
+                    ptsEntityList.add(notifyLidarPtsEntity1);
+                    maxOrmin(notifyLidarPtsEntity.getPositionList());
+                }
                 break;
             case addPoiPoint:
                 poiPoints.add(new XyEntity(posX,posY));
@@ -93,6 +101,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
         paint.setStrokeWidth(3);
         lastFrame=new Paint();
         lastFrame.setStrokeWidth(1);
+        lastFrame.setStyle(Paint.Style.FILL);
         lastFrame.setColor(Color.parseColor("#00CED1"));
         pathPaint=new Paint();
         pathPaint.setColor(Color.BLACK);
@@ -107,99 +116,13 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
         bgBitmap=Bitmap.createBitmap(1000,1000,Bitmap.Config.ARGB_8888);
         bgBitmap.eraseColor(Color.parseColor("#646464"));
         EventBus.getDefault().register(this);       //注册监听
-    }
 
-    /**
-     * 绘制
-     */
-    private void doDraw(){
-        Canvas canvas=null;
-        try {
-            canvas=holder.lockCanvas();
-            if (canvas!=null){
-                drawMap(canvas);
-                drawPath(canvas);
-                drawPoint(canvas);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if (canvas!=null)
-            holder.unlockCanvasAndPost(canvas);
-        }
-    }
-
-
-
-    /**
-     * 实时绘制地图
-     * @param canvas
-     */
-    private void drawMap(Canvas canvas){
-            int ptsSize=ptsEntityList.size();
-            long startTime1=System.currentTimeMillis();
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-            canvas.drawPaint(paint);
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
-            canvas.drawColor(Color.parseColor("#101112"));
-            for (int i=0;i<ptsSize;i++){
-                //long startTime=System.currentTimeMillis();
-                float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
-                float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
-                List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(i).getPositionList();
-                int pSize=positions.size();
-                for (int j=0;j<pSize;j++){
-                    float ptX=(float)(-positions.get(j).getPtY()*ratio+measureWidth/2);
-                    float ptY=(float)(-positions.get(j).getPtX()*ratio+measureHeight/2);
-                    canvas.drawLine(x,y,ptX,ptY,paint);
-                    canvas.drawPoint(ptX,ptY,pointPaint);
-                    if (i==ptsSize-1){
-                        canvas.drawLine(x,y,ptX,ptY,lastFrame);
-                    }
-                }
-            }
-            long endTime1=System.currentTimeMillis();
-            matrix.setRotate(-angle);
-            directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
-            float posx=(float)(-posY*ratio+measureWidth/2);
-            float posy=(float)(-posX*ratio+measureHeight/2);
-            canvas.drawBitmap(directionBitmap1,(int)posx-30,(int)posy-30,paint);
-            Logger.e("------绘制耗时："+(endTime1-startTime1)+"列表长度："+ptsSize);
-
-    }
-
-    /**
-     * 绘制行走路线
-     */
-    private void drawPath(Canvas canvas){
-        int ptsSize=ptsEntityList.size();
-        if (ptsSize>1){
-            for (int i=0;i<ptsSize;i++){
-                if (i<ptsSize-1){
-                    float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
-                    float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
-                    float y1=(float)((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
-                    float x1=(float)((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
-                    canvas.drawLine(x,y,x1,y1,pathPaint);
-                }
-            }
-        }
-    }
-
-    private void drawPoint(Canvas canvas){
-        int pts=poiPoints.size();
-        for (int i=0;i<pts;i++){
-            float y=(float)((-poiPoints.get(i).getX())*ratio+measureHeight/2);
-            float x=(float)((-poiPoints.get(i).getY())*ratio+measureWidth/2);
-            canvas.drawBitmap(poiBitmap,(int) x-10,(int) y-10,paint);
-        }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        thread=new Thread(this);
-        isRunning=true;
-        thread.start();
+        drawThread=new DrawMapThread();
+        drawThread.start();
     }
 
     @Override
@@ -221,7 +144,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
      */
     public void onStop(){
         EventBus.getDefault().unregister(this);
-        isRunning=false;
+        drawThread.stopThread();
     }
 
     /**
@@ -229,7 +152,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
      * @param list
      */
     private void maxOrmin(List<BaseCmd.notifyLidarPts.Position> list){
-        //long startTime=System.currentTimeMillis();
+        long startTime=System.currentTimeMillis();
         if (list!=null){
             int listSize=list.size();
             for (int i=0;i<listSize;i++){
@@ -254,8 +177,6 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
             }
         }
         long endTime=System.currentTimeMillis();
-        //Logger.e("------计算耗时："+(endTime-startTime));
-
     }
 
     /**
@@ -265,10 +186,196 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
         return (float)(180/Math.PI*angle);
     }
 
-    @Override
-    public void run() {
-        while (isRunning){
-            doDraw();
+
+    /**
+     * 绘制图像的线程
+     */
+    public class DrawMapThread extends Thread{
+        public DrawMapThread(){
+            isRunning=true;
+        }
+
+        public void stopThread(){
+            isRunning=false;
+            boolean workIsNotFinish=true;
+            while (workIsNotFinish){
+                try {
+                    drawThread.join();   //保证run方法执行完毕
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                workIsNotFinish=false;
+            }
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            while (isRunning){
+                doDraw();
+            }
         }
     }
+
+
+
+    /**
+     * 用于计算的线程
+     *
+     */
+    public class CalculateThread extends Thread{
+
+        public CalculateThread() {
+
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            while (isRunning){
+                int ptsSize=ptsEntityList.size();
+                for (int i=0;i<ptsSize;i++){
+                    NotifyLidarPtsEntity notifyLidarPtsEntity=new NotifyLidarPtsEntity();
+                    float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
+                    float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
+                    List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(i).getPositionList();
+                    List<BaseCmd.notifyLidarPts.Position> positions1=new ArrayList<>();
+                    int pSize=positions.size();
+                    for (int j=0;j<pSize;j++){
+                        float ptX=(float)(-positions.get(j).getPtY()*ratio+measureWidth/2);
+                        float ptY=(float)(-positions.get(j).getPtX()*ratio+measureHeight/2);
+                        BaseCmd.notifyLidarPts.Position position=BaseCmd.notifyLidarPts.Position.newBuilder()
+                                .setPtX(ptX)
+                                .setPtY(ptY)
+                                .build();
+                        positions1.add(position);
+                    }
+                    notifyLidarPtsEntity.setPosX(x);
+                    notifyLidarPtsEntity.setPosY(y);
+                    notifyLidarPtsEntity.setPositionList(positions1);
+                    //ptsSwitchs.add(notifyLidarPtsEntity);
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * 绘制
+     */
+    private void doDraw(){
+        Canvas canvas=null;
+        try {
+            canvas=holder.lockCanvas();
+            if (canvas!=null){
+                long startTime1=System.currentTimeMillis();
+                drawMap(canvas);
+                drawPath(canvas);
+                drawPoint(canvas);
+                long endTime1=System.currentTimeMillis();
+                Logger.e("------绘制耗时："+(endTime1-startTime1));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (canvas!=null)
+                holder.unlockCanvasAndPost(canvas);
+        }
+    }
+
+
+
+    /**
+     * 实时绘制地图
+     * @param canvas
+     */
+    private void drawMap(Canvas canvas){
+        int ptsSize=ptsEntityList.size();
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        canvas.drawPaint(paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        canvas.drawColor(Color.parseColor("#101112"));
+        for (int i=0;i<ptsSize;i++){
+            float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
+            float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
+            List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(i).getPositionList();
+            int pSize=positions.size();
+            for (int j=0;j<pSize;j++){
+                float ptX=(float)(-positions.get(j).getPtY()*ratio+measureWidth/2);
+                float ptY=(float)(-positions.get(j).getPtX()*ratio+measureHeight/2);
+                canvas.drawLine(x,y,ptX,ptY,paint);
+                canvas.drawPoint(ptX,ptY,pointPaint);
+                if (i==ptsSize-1){
+                    canvas.drawLine(x,y,ptX,ptY,lastFrame);
+                }
+            }
+        }
+        posXSwitch=(int)(-posY*ratio+measureWidth/2);
+        posYSwitch=(int)(-posX*ratio+measureHeight/2);
+        matrix.setRotate(-angle);
+        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
+        canvas.drawBitmap(directionBitmap1,posXSwitch-30,posYSwitch-30,paint);
+
+    }
+
+    /**
+     * 绘制行走路线
+     */
+    private void drawPath(Canvas canvas){
+        int ptsSize=ptsEntityList.size();
+        if (ptsSize>1){
+            for (int i=0;i<ptsSize;i++){
+                    float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
+                    float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
+                    float y1=(float)((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
+                    float x1=(float)((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
+                     canvas.drawLine(x,y,x1,y1,pathPaint);
+            }
+        }
+    }
+
+   /* private void drawRadar(Canvas canvas){
+        int pSize=ptsSwitchs.size();
+        if (pSize>0){
+            List<BaseCmd.notifyLidarPts.Position> positions=ptsSwitchs.get(pSize-1).getPositionList();
+            float y=ptsSwitchs.get(pSize-1).getPosY();
+            float x=ptsSwitchs.get(pSize-1).getPosX();
+            if (positions!=null){
+                int size=positions.size();
+                Path path=new Path();
+                for (int i=0;i<positions.size();i++){
+                    if (size>1&i<=i-2){
+                        float ptX=positions.get(i).getPtX();
+                        float ptY=positions.get(i).getPtY();
+                        if (i==0){
+                            path.moveTo(ptX,ptY);
+                        }else {
+                            path.lineTo(ptX,ptY);
+                        }
+                    }
+                }
+                path.close();
+                canvas.drawPath(path,lastFrame);
+            }
+        }
+    }*/
+
+    /**
+     * 添加采集过程中的目标点
+     * @param canvas
+     */
+    private void drawPoint(Canvas canvas){
+        int pts=poiPoints.size();
+        for (int i=0;i<pts;i++){
+            float y=(float)((-poiPoints.get(i).getX())*ratio+measureHeight/2);
+            float x=(float)((-poiPoints.get(i).getY())*ratio+measureWidth/2);
+            canvas.drawBitmap(poiBitmap,(int) x-10,(int) y-10,paint);
+        }
+    }
+
+
+
+
+
 }

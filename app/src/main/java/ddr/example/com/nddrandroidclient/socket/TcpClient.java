@@ -16,6 +16,8 @@ import com.xuhao.didi.socket.client.sdk.client.OkSocketOptions;
 import com.xuhao.didi.socket.client.sdk.client.action.SocketActionAdapter;
 import com.xuhao.didi.socket.client.sdk.client.connection.IConnectionManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
@@ -115,7 +118,8 @@ public class TcpClient extends BaseSocketConnection {
             Activity activity=ActivityStackManager.getInstance().getTopActivity();
             Logger.e("--------:"+activity.getLocalClassName());
             if (activity.getLocalClassName().contains("LoginActivity")){
-                showToast(activity,"连接成功",Toast.LENGTH_SHORT);
+                //showToast(activity,"连接成功",Toast.LENGTH_SHORT);
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
             }
             sendHeartBeat();
             if (waitDialog.isShowing()){
@@ -146,7 +150,8 @@ public class TcpClient extends BaseSocketConnection {
             Activity activity=ActivityStackManager.getInstance().getTopActivity();
             if (activity!=null){
                 if (activity.getLocalClassName().contains("LoginActivity")){
-                    showToast(activity,"连接已断开，请重现连接",Toast.LENGTH_LONG);
+                    //showToast(activity,"连接已断开，请重现连接",Toast.LENGTH_LONG);
+                    disConnect();
                 }else {
                     Logger.e("-------断开连接的页面："+activity.getLocalClassName());
                     showDialog(activity );
@@ -191,6 +196,7 @@ public class TcpClient extends BaseSocketConnection {
                 fragmentActivity.postDelayed(()->{
                     if (waitDialog.isShowing()){
                         fragmentActivity.toast("网络无法连接，请退出重连！");
+                        fragmentActivity.finish();
                     }
                 },6000);
             }
@@ -552,12 +558,14 @@ public class TcpClient extends BaseSocketConnection {
                         .setPt(spacePointEx)
                         .setRotationangle(pathPoints.get(j).getRotationAngle())
                         .setTypeValue(pathPoints.get(j).getPointType())
+                        .setPtName(ByteString.copyFromUtf8(pathPoints.get(j).getName()))
                         .build();
                 pathLintPtItems.add(path_lint_pt_item);
             }
             DDRVLNMap.path_line_itemEx path_line_itemEx=DDRVLNMap.path_line_itemEx.newBuilder()
                     .setName(ByteString.copyFromUtf8(pathLine.getName()))
                     .setModeValue(pathLine.getPathModel())
+                    .setTypeValue(pathLine.getPathType())
                     .setVelocity(pathLine.getVelocity())
                     .setConfig(path_line_config)
                     .setVelocity(pathLine.getVelocity())
@@ -565,8 +573,10 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }
+        Logger.e("----------路径数量:"+pathLineItemExes.size());
         DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
                 .addAllPathLineData(pathLineItemExes)
+
                 .build();
         /**********************************************保存到服务的任务数据***************************************/
         List<DDRVLNMap.task_itemEx> taskItemExes=new ArrayList<>();
@@ -651,6 +661,35 @@ public class TcpClient extends BaseSocketConnection {
                 .setPathSet(ddrMapPathDataEx)
                 .build();
         tcpClient.sendData(null,reqDDRVLNMapEx1);
+    }
+
+    /**
+     * 修改当前地图的模式
+     * @param modeType
+     */
+    public void saveDataToServer(int modeType){
+        MapFileStatus mapFileStatus=MapFileStatus.getInstance();
+        DDRVLNMap.reqDDRVLNMapEx currentDDRVLNMap=mapFileStatus.getCurrentMapEx();
+        DDRVLNMap.DDRMapBaseData baseData=DDRVLNMap.DDRMapBaseData.newBuilder()
+                .setAbNaviTypeValue(modeType)
+                .setName(currentDDRVLNMap.getBasedata().getName())
+                .setDescription(currentDDRVLNMap.getBasedata().getDescription())
+                .setAffinedata(currentDDRVLNMap.getBasedata().getAffinedata())
+                .setColPointData(currentDDRVLNMap.getBasedata().getColPointData())
+                .setRecTime(currentDDRVLNMap.getBasedata().getRecTime())
+                .setRecUserName(currentDDRVLNMap.getBasedata().getRecUserName())
+                .setWaittime(currentDDRVLNMap.getBasedata().getWaittime())
+                .setTargetPtName(currentDDRVLNMap.getBasedata().getTargetPtName())
+                .build();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(baseData)
+                .setSpacedata(currentDDRVLNMap.getSpacedata())
+                .setTargetPtdata(currentDDRVLNMap.getTargetPtdata())
+                .addAllTaskSet(currentDDRVLNMap.getTaskSetList())
+                .setPathSet(currentDDRVLNMap.getPathSet())
+                .build();
+        tcpClient.sendData(null,reqDDRVLNMapEx);
+        Logger.e("----modeType:"+modeType+"----name:"+currentDDRVLNMap.getBasedata().getName().toStringUtf8());
     }
 
     /**

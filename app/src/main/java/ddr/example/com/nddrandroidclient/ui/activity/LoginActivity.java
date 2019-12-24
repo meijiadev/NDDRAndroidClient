@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -38,6 +39,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
@@ -81,6 +83,7 @@ public  class LoginActivity extends DDRActivity  {
 
     public UdpClient udpClient;
     private int port=28888;
+    private BaseDialog waitDialog;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDate(MessageEvent messageEvent){
@@ -100,7 +103,15 @@ public  class LoginActivity extends DDRActivity  {
                 editor.putString("account", accountName);
                 editor.putString("password", passwordName);
                 editor.commit();
-                startActivity(HomeActivity.class);
+                postDelayed(()->{
+                    if (waitDialog!=null&&waitDialog.isShowing()){
+                        waitDialog.dismiss();
+                    }
+                    startActivity(HomeActivity.class);
+                },1500);
+                break;
+            case tcpConnected:
+                tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
                 break;
         }
     }
@@ -138,11 +149,23 @@ public  class LoginActivity extends DDRActivity  {
             case R.id.login_in:
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
-                if (tcpClient.isConnected()){
-                    doLogin(accountName,passwordName);
-                    Logger.e("登录");
-                } else {
-                    toast("服务器尚未连接，无法登录");
+                if (!robot_id.getText().toString().isEmpty()){
+                    if (accountName.equals("")&passwordName.equals("")){
+                        toast("用户名和密码不能为空");
+                    }else {
+                        tcpClient.creatConnect(robot_id.getText().toString(),tcpPort);
+                        waitDialog=new WaitDialog.Builder(this)
+                                .setMessage("登陆中...")
+                                .show();
+                        postDelayed(()->{
+                            if (waitDialog.isShowing()){
+                                toast("登陆失败，请检查网络后重新登陆");
+                                waitDialog.dismiss();
+                            }
+                        },5000);
+                    }
+                }else {
+                    toast("请先选择机器人IP");
                 }
                 break;
             case R.id.layout_robot:
@@ -178,9 +201,6 @@ public  class LoginActivity extends DDRActivity  {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Logger.e("点击子项");
                 String ip=robotList.get(position);
-                tcpClient.disConnect();     //在切换服务器时，要先关闭当前服务器再连接新的服务器
-                Logger.e("----连接");
-                tcpClient.creatConnect(ip,tcpPort);
                 robot_id.setText(ip);
                 layoutRobotList.setVisibility(View.GONE);
                 loginIn.setVisibility(View.VISIBLE);
@@ -188,19 +208,6 @@ public  class LoginActivity extends DDRActivity  {
         });
     }
 
-    /**
-     * 登陆操作
-     * @param accountName
-     * @param passwordName
-     */
-    private void doLogin(String accountName,String passwordName){
-        if (accountName.equals("")&passwordName.equals("")){
-            toast("用户名和密码不能为空");
-        }else {
-            tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
-            Logger.e("登录局域网服务器");
-        }
-    }
 
     @Override
     protected void onRestart() {
@@ -228,6 +235,5 @@ public  class LoginActivity extends DDRActivity  {
     public boolean statusBarDarkFont() {
         return false;
     }
-
 
 }

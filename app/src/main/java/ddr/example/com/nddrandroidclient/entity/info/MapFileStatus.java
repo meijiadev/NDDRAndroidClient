@@ -88,7 +88,7 @@ public class MapFileStatus {
         space_items=reqDDRVLNMapEx.getSpacedata().getSpaceSetList();
         if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
            currentMapEx=reqDDRVLNMapEx;
-            Logger.e("返回信息为当前地图");
+            Logger.e("返回信息为当前地图"+mapName);
             cTargetPoints.clear();
             cPathLines.clear();
             cTaskModes.clear();
@@ -107,7 +107,7 @@ public class MapFileStatus {
                 List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
                 for (int j = 0; j < path_lint_pt_items.size(); j++) {
                     PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
-                    pathPoint.setName("路径点-" + j);
+                    pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                     pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                     pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
                     pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
@@ -118,6 +118,7 @@ public class MapFileStatus {
                 pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
                 pathLine.setPathPoints(pathPoints);
                 pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
+                pathLine.setPathType(pathLineItemExes.get(i).getTypeValue());
                 pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
                 cPathLines.add(pathLine);
             }
@@ -181,7 +182,7 @@ public class MapFileStatus {
             List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
             for (int j = 0; j < path_lint_pt_items.size(); j++) {
                 PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
-                pathPoint.setName("路径点-" + j);
+                pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                 pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                 pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
                 pathPoint.setPointType(path_lint_pt_items.get(j).getTypeValue());
@@ -192,10 +193,11 @@ public class MapFileStatus {
             pathLine.setName(pathLineItemExes.get(i).getName().toStringUtf8());
             pathLine.setPathPoints(pathPoints);
             pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
+            pathLine.setPathType(pathLineItemExes.get(i).getTypeValue());
             pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
             pathLines.add(pathLine);
         }
-        Logger.e("-------------任务的数量："+taskItemExes.size());
+        //Logger.e("-------------任务的数量："+taskItemExes.size());
         for (int i = 0; i < taskItemExes.size(); i++) {
             List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
             List<BaseMode> baseModes = new ArrayList<>();

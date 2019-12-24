@@ -10,9 +10,10 @@
         android:layout_weight="1"
         android:text="目标点-1"
         android:textColor="@color/white"
+
         android:textSize="11sp"
         android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="28dp"
         />
     <ImageView
         android:id="@+id/iv_select"

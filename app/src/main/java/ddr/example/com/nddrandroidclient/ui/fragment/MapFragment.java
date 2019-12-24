@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -149,6 +150,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     DDREditText etToward;
     @BindView(R.id.layout_edit)
     RelativeLayout layoutEdit;
+    @BindView(R.id.revamp_point)
+    TextView revampPoint;             //修改充点电
     /**path路径的子项查看和再编辑*/
     @BindView(R.id.path_detail_layout)
     RelativeLayout pathDetailLayout;
@@ -305,37 +308,46 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     @SuppressLint("ResourceAsColor")
-    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete,R.id.bt_batch_delete,R.id.tv_delete_all, R.id.save_point, R.id.tv_path,
+    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete,R.id.bt_batch_delete,R.id.tv_delete_all, R.id.save_point,R.id.revamp_point, R.id.tv_path,
             R.id.spinner_mode,R.id.bt_add_action, R.id.save_path, R.id.tv_task,R.id.tv_target_spread,R.id.tv_path_spread,R.id.bt_next,R.id.bt_back,R.id.bt_save,R.id.tv_edit_map,R.id.tv_025m,R.id.tv_05m,R.id.tv_1m,R.id.tv_2m})
     public void onViewClicked(View view)  {
         switch (view.getId()) {
             case R.id.bt_create_map:
-                new InputDialog.Builder(getAttachActivity())
-                        .setTitle("采集地图")
-                        .setHint("输入地图名称")
-                        .setListener(new InputDialog.OnListener() {
-                            @Override
-                            public void onConfirm(BaseDialog dialog, String content) {
-                                if (!content.isEmpty()){
-                                    content=content.replaceAll(" ","");
-                                    String name="OneRoute_"+content;
-                                    BaseCmd.reqCmdStartActionMode reqCmdStartActionMode=BaseCmd.reqCmdStartActionMode.newBuilder()
-                                            .setMode(BaseCmd.eCmdActionMode.eRec)
-                                            .setRouteName(ByteString.copyFromUtf8(name))
-                                            .build();
-                                    tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eLSMSlamNavigation),reqCmdStartActionMode);
-                                    Intent intent=new Intent(getAttachActivity(),CollectingActivity.class);
-                                    intent.putExtra("CollectName",name);
-                                    startActivity(intent);
-                                }else {
-                                    toast("请输入地图名字");
+                if (NotifyBaseStatusEx.getInstance().getMode()==2){
+                    Intent intent=new Intent(getAttachActivity(),CollectingActivity.class);
+                    startActivity(intent);
+                }else {
+                    new InputDialog.Builder(getAttachActivity())
+                            .setTitle("采集地图")
+                            .setHint("输入地图名称")
+                            .setListener(new InputDialog.OnListener() {
+                                @Override
+                                public void onConfirm(BaseDialog dialog, String content) {
+                                    if (!content.isEmpty()){
+                                        content=content.replaceAll(" ","");
+                                        String name="OneRoute_"+content;
+                                        if (!mapFileStatus.getMapNames().contains(name)){
+                                            BaseCmd.reqCmdStartActionMode reqCmdStartActionMode=BaseCmd.reqCmdStartActionMode.newBuilder()
+                                                    .setMode(BaseCmd.eCmdActionMode.eRec)
+                                                    .setRouteName(ByteString.copyFromUtf8(name))
+                                                    .build();
+                                            tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eLSMSlamNavigation),reqCmdStartActionMode);
+                                            Intent intent=new Intent(getAttachActivity(),CollectingActivity.class);
+                                            intent.putExtra("CollectName",name);
+                                            startActivity(intent);
+                                        }else {
+                                            toast("名字重复，请重新输入");
+                                        }
+                                    }else {
+                                        toast("请输入地图名字");
+                                    }
                                 }
-                            }
-                            @Override
-                            public void onCancel(BaseDialog dialog) {
+                                @Override
+                                public void onCancel(BaseDialog dialog) {
 
-                            }
-                        }).show();
+                                }
+                            }).show();
+                }
                 break;
             case R.id.bt_batch_delete:
                 if (isShowSelected) {              //是否显示批量选择
@@ -566,7 +578,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         taskName=taskName.replaceAll(".task","");
                         etTaskName.setText(taskName);
                         taskModes.get(mPosition).setSelected(true);
-                        taskAdapter.setNewData(taskModes);
                         try {
                             initSelectRecycler(0);
                         } catch (IOException e) {
@@ -576,6 +587,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         }
                         zoomMap.invalidate();
                     }
+                    taskAdapter.setNewData(taskModes);
                 }else {
                     setIconDefault();
                     leftDetailLayout.setVisibility(View.GONE);
@@ -790,6 +802,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         selectPathAdapter.setNewData(null);
                     }
                 }
+                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                 break;
             case R.id.tv_edit_map:
                 Intent intent=new Intent(getAttachActivity(),MapEditActivity.class);
@@ -958,7 +971,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         bitmapPath=mapInfos.get(position).getBitmap();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
         dialog = new WaitDialog.Builder(getAttachActivity())
-                .setMessage("加载地图信息中")
+                .setMessage("加载"+mapName+"地图信息中")
                 .show();
         FileInputStream fis = null;
         try {
@@ -990,6 +1003,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
         }, 5000);
     }
+
+    private String switchMapName;
 
     /**
      * 点击地图右上角设置弹出弹窗
@@ -1043,9 +1058,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                   }
                   break;
               case R.id.tv_switch:
+                  Logger.e("------------"+NotifyBaseStatusEx.getInstance().getMode());
                   if (NotifyBaseStatusEx.getInstance().getMode()==1){
-                      Logger.e("-----把地图切换到："+mapInfos.get(position).getMapName());
-                      tcpClient.reqRunControlEx(mapInfos.get(position).getMapName());
+                      switchMapName=mapInfos.get(position).getMapName();
+                      Logger.e("-----把地图切换到："+switchMapName);
+                      tcpClient.reqRunControlEx(switchMapName);
                       waitDialog=new WaitDialog.Builder(getAttachActivity())
                               .setMessage("正在切换中")
                               .show();
@@ -1483,23 +1500,27 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 targetPoints.addAll(targetPoints1);
                 targetPointAdapter.setNewData(targetPoints);
                 tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
+                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                 break;
             case updatePaths:
                 List<PathLine> pathLines1= (List<PathLine>) messageEvent.getData();
                 pathLines.addAll(pathLines1);
                 pathAdapter.setNewData(pathLines);
                 tvPath.setText("路径"+"("+pathLines.size()+")");
+                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                 break;
             case updateRevamp:
                 Logger.e("更新数据");
-                tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
+                //tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 break;
             case updateMapList:
-                transformMapInfo(mapFileStatus.getMapInfos());
-                mapAdapter.setNewData(mapInfos);
                 if (waitDialog.isShowing()){
                     waitDialog.dismiss();
                 }
+                getAttachActivity().postDelayed(()->{
+                    transformMapInfo(mapFileStatus.getMapInfos());
+                    mapAdapter.setNewData(mapInfos);
+                    },500);
                 break;
             case mapOperationalSucceed:
                 if (waitDialog.isShowing()){
@@ -1508,18 +1529,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case switchMapSucceed:
-                if (waitDialog!=null){
-                    if (waitDialog.isShowing()) {
-                        Logger.e("切换地图");
-                        getAttachActivity().postDelayed(() -> {
+                Logger.e("切换地图");
+                tcpClient.requestFile();
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(switchMapName));
+                if (waitDialog!=null) {
+                    getAttachActivity().postDelayed(() -> {
+                        if (waitDialog.isShowing()) {
                             waitDialog.dismiss();
-                            transformMapInfo(mapFileStatus.getMapInfos());
-                            mapAdapter.setNewData(mapInfos);
-                        }, 300);
-                    }
-                }else {
-                    transformMapInfo(mapFileStatus.getMapInfos());
-                    mapAdapter.setNewData(mapInfos);
+                        }
+                    }, 300);
                 }
                 break;
 

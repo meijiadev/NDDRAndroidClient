@@ -364,7 +364,13 @@ public class MessageRoute {
             {
                 byte[]bbodyE=new byte[bbodylen+5];
                 if (Encrypt.Txt_Encrypt(bbody,bbodylen,bbodyE,bbodyE.length)){
-                    System.arraycopy(bbodyE,0,bytes,12+bheadE.length,bbodyE.length);
+                    try {
+                        System.arraycopy(bbodyE,0,bytes,12+bheadE.length,bbodyE.length);
+                    }catch (ArrayIndexOutOfBoundsException a){
+                        a.printStackTrace();
+                        Logger.e("----------数组越界");
+                        return null;
+                    }
                 }else {
                     Logger.e("Txt_Encrypt Error");
                     return null;
