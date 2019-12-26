@@ -122,9 +122,12 @@ public class TcpClient extends BaseSocketConnection {
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
             }
             sendHeartBeat();
-            if (waitDialog.isShowing()){
-                waitDialog.dismiss();
+            if (waitDialog!=null){
+                if (waitDialog.isShowing()){
+                    waitDialog.dismiss();
+                }
             }
+
         }
 
         /**
