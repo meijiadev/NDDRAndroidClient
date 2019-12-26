@@ -58,7 +58,6 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
     private SurfaceHolder holder;
     public boolean isRunning=false;
     private DrawMapThread drawThread;          //绘制线程
-    private CalculateThread calculateThread;  //计算线程
 
     private Paint paint,lastFrame,pathPaint,pointPaint,bitmapPaint;
 
@@ -170,9 +169,9 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
                 ratio=1;
             }else {
                 if (measureWidth>measureHeight){
-                    ratio=measureWidth/(xy)/2*0.98;
+                    ratio=measureWidth/(xy)/2*1;
                 }else {
-                    ratio=measureHeight/(xy)/2*0.98;
+                    ratio=measureHeight/(xy)/2*1;
                 }
             }
         }
@@ -220,48 +219,6 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
 
 
     /**
-     * 用于计算的线程
-     *
-     */
-    public class CalculateThread extends Thread{
-
-        public CalculateThread() {
-
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            while (isRunning){
-                int ptsSize=ptsEntityList.size();
-                for (int i=0;i<ptsSize;i++){
-                    NotifyLidarPtsEntity notifyLidarPtsEntity=new NotifyLidarPtsEntity();
-                    float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
-                    float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
-                    List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(i).getPositionList();
-                    List<BaseCmd.notifyLidarPts.Position> positions1=new ArrayList<>();
-                    int pSize=positions.size();
-                    for (int j=0;j<pSize;j++){
-                        float ptX=(float)(-positions.get(j).getPtY()*ratio+measureWidth/2);
-                        float ptY=(float)(-positions.get(j).getPtX()*ratio+measureHeight/2);
-                        BaseCmd.notifyLidarPts.Position position=BaseCmd.notifyLidarPts.Position.newBuilder()
-                                .setPtX(ptX)
-                                .setPtY(ptY)
-                                .build();
-                        positions1.add(position);
-                    }
-                    notifyLidarPtsEntity.setPosX(x);
-                    notifyLidarPtsEntity.setPosY(y);
-                    notifyLidarPtsEntity.setPositionList(positions1);
-                    //ptsSwitchs.add(notifyLidarPtsEntity);
-                }
-
-            }
-
-        }
-    }
-
-    /**
      * 绘制
      */
     private void doDraw(){
@@ -271,8 +228,8 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
             if (canvas!=null){
                 long startTime1=System.currentTimeMillis();
                 drawMap(canvas);
-                drawPath(canvas);
                 drawPoint(canvas);
+                drawPath(canvas);
                 long endTime1=System.currentTimeMillis();
                 Logger.e("------绘制耗时："+(endTime1-startTime1));
             }
@@ -330,7 +287,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
                     float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
                     float y1=(float)((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
                     float x1=(float)((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
-                     canvas.drawLine(x,y,x1,y1,pathPaint);
+                    canvas.drawLine(x,y,x1,y1,pathPaint);
             }
         }
     }
@@ -370,7 +327,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
         for (int i=0;i<pts;i++){
             float y=(float)((-poiPoints.get(i).getX())*ratio+measureHeight/2);
             float x=(float)((-poiPoints.get(i).getY())*ratio+measureWidth/2);
-            canvas.drawBitmap(poiBitmap,(int) x-10,(int) y-10,paint);
+            canvas.drawBitmap(poiBitmap,(int) x-10,(int) y-10,pathPaint);
         }
     }
 

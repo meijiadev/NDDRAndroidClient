@@ -25,7 +25,6 @@ import java.util.TimerTask;
 
 import DDRCommProto.BaseCmd;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
@@ -37,6 +36,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
+
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView2;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
@@ -167,6 +167,7 @@ public class CollectingActivity extends DDRActivity {
     @Override
     public void onLeftClick(View v) {
         quitCollect();
+        //collecting.unRegister();
         collecting.onStop();
         finish();
     }
@@ -177,8 +178,8 @@ public class CollectingActivity extends DDRActivity {
         exitModel();
         processBar.setVisibility(View.VISIBLE);
         setAnimation(processBar, 20, 3000);
-        //collecting.unRegister();
-        collecting.onStop();
+       // collecting.unRegister();
+       collecting.onStop();
 
     }
 

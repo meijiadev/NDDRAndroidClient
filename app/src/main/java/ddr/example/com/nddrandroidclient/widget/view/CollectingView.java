@@ -55,7 +55,7 @@ public class CollectingView extends GLContinuousView {
     private double ratio=1;         //地图比例
 
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.POSTING)
     public void upDate(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case receivePointCloud:
@@ -187,7 +187,7 @@ public class CollectingView extends GLContinuousView {
      * @param list
      */
     private void maxOrmin(List<BaseCmd.notifyLidarPts.Position> list){
-       //long startTime=System.currentTimeMillis();
+       long startTime=System.currentTimeMillis();
        if (list!=null){
            int listSize=list.size();
            for (int i=0;i<listSize;i++){
@@ -212,7 +212,7 @@ public class CollectingView extends GLContinuousView {
            }
        }
        long endTime=System.currentTimeMillis();
-       //Logger.e("------计算耗时："+(endTime-startTime));
+       Logger.e("------计算耗时："+(endTime-startTime));
 
     }
 

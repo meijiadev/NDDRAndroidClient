@@ -103,12 +103,13 @@ public  class LoginActivity extends DDRActivity  {
                 editor.putString("account", accountName);
                 editor.putString("password", passwordName);
                 editor.commit();
+                Logger.e("登陆成功");
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
                     startActivity(HomeActivity.class);
-                },1500);
+                },1000);
                 break;
             case tcpConnected:
                 tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));

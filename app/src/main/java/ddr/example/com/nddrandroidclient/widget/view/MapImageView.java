@@ -329,8 +329,8 @@ public class MapImageView extends GLView {
             if (positionList!=null){
                 int size =positionList.size();
                 for (int i=0;i<size;i++){
-                    float x= (float) (r00*positionList.get(i).getPtX()+r01*positionList.get(i).getPtY()+t0)+mRectDst.left;
-                    float y=(float)(r10*positionList.get(i).getPtX()+r11*positionList.get(i).getPtY()+t1)+mRectDst.top;
+                    float x= (float) (r00*positionList.get(i).getPtX()+r01*positionList.get(i).getPtY()+t0)/scale+mRectDst.left;
+                    float y=(float)(r10*positionList.get(i).getPtX()+r11*positionList.get(i).getPtY()+t1)/scale+mRectDst.top;
                     canvasGL.drawLine(posX+mRectDst.left,posY+mRectDst.top,x,y,radarPaint);
                 }
                 matrix.setRotate(-angle);
@@ -349,8 +349,8 @@ public class MapImageView extends GLView {
      * @return
      */
     public XyEntity toXorY(float x, float y){
-        float x1=(float)( r00*x+r01*y+t0);
-        float y1=(float) (r10*x+r11*y+t1);
+        float x1=(float)( r00*x+r01*y+t0)/scale;
+        float y1=(float) (r10*x+r11*y+t1)/scale;
         return new XyEntity(x1,y1);
     }
 
@@ -363,8 +363,8 @@ public class MapImageView extends GLView {
         float x=notifyBaseStatusEx.getPosX();
         float y=notifyBaseStatusEx.getPosY();
         radian=notifyBaseStatusEx.getPosDirection();
-        posX=(int) (r00*x+r01*y+t0);
-        posY=(int) (r10*x+r11*y+t1);
+        posX=(int) ((r00*x+r01*y+t0)/scale);
+        posY=(int) ((r10*x+r11*y+t1)/scale);
         angle=radianToangle(radian);
     }
 
