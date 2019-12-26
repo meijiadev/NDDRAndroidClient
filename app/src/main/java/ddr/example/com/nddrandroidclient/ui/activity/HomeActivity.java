@@ -221,7 +221,19 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("---------setCurrentItem");
                 break;
             case R.id.tv_quit:
-                onBack();
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否退出")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                onBack();
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
+
                 break;
             case R.id.tv_shutdown:
                 new InputDialog.Builder(this).setEditVisibility(View.GONE).setConfirm("关机").setCancel("重启").setListener(new InputDialog.OnListener() {

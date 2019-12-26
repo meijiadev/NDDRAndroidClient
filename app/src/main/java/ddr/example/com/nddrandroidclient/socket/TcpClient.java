@@ -128,6 +128,7 @@ public class TcpClient extends BaseSocketConnection {
                     waitDialog.dismiss();
                 }
             }
+
         }
 
         /**

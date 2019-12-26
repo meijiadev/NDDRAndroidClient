@@ -34,6 +34,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
 
@@ -166,21 +167,43 @@ public class CollectingActivity extends DDRActivity {
 
     @Override
     public void onLeftClick(View v) {
-        quitCollect();
         //collecting.unRegister();
-        collecting.onStop();
-        finish();
-    }
+        new InputDialog.Builder(getActivity())
+                .setTitle("是否退出采集")
+                .setEditVisibility(View.GONE)
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        quitCollect();
+                        collecting.onStop();
+                        finish();
+                    }
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                    }
+                }).show();
 
+    }
 
     @Override
     public void onRightClick(View v) {
-        exitModel();
-        processBar.setVisibility(View.VISIBLE);
-        setAnimation(processBar, 20, 3000);
        // collecting.unRegister();
-       collecting.onStop();
-
+        new InputDialog.Builder(getActivity())
+                .setTitle("是否保存当前采集")
+                .setEditVisibility(View.GONE)
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        exitModel();
+                        processBar.setVisibility(View.VISIBLE);
+                        setAnimation(processBar, 20, 3000);
+                        //collecting.unRegister();
+                        collecting.onStop();
+                    }
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                    }
+                }).show();
     }
 
     /**

@@ -364,32 +364,43 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case R.id.tv_delete_all:
-                List<DDRVLNMap.reqMapOperational.OptItem> optItems=null;
-                for (int i=0;i<mapInfos.size();i++){
-                    if (mapInfos.get(i).isSelected()){
-                        optItems=new ArrayList<>();
-                        DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
-                                .setTypeValue(1)
-                                .setSourceName(ByteString.copyFromUtf8(mapInfos.get(i).getMapName()))
-                                .build();
-                        optItems.add(optItem);
-                    }
-                }
-                if (optItems!=null){
-                    for (MapInfo mapInfo:mapInfos){
-                        mapInfo.setSelected(false);
-                    }
-                    btBatch.setBackgroundResource(R.drawable.bt_bg__map);
-                    tvDeleteAll.setVisibility(View.GONE);
-                    isShowSelected = false;
-                    mapAdapter.showSelected(false);
-                    tcpClient.reqMapOperational(optItems);
-                    waitDialog=new WaitDialog.Builder(getAttachActivity())
-                            .setMessage("正在删除...")
-                            .show();
-                }else {
-                    toast("请先选择要删除的图片");
-                }
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否删除所选")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                List<DDRVLNMap.reqMapOperational.OptItem> optItems=null;
+                                for (int i=0;i<mapInfos.size();i++){
+                                    if (mapInfos.get(i).isSelected()){
+                                        optItems=new ArrayList<>();
+                                        DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                                                .setTypeValue(1)
+                                                .setSourceName(ByteString.copyFromUtf8(mapInfos.get(i).getMapName()))
+                                                .build();
+                                        optItems.add(optItem);
+                                    }
+                                }
+                                if (optItems!=null){
+                                    for (MapInfo mapInfo:mapInfos){
+                                        mapInfo.setSelected(false);
+                                    }
+                                    btBatch.setBackgroundResource(R.drawable.bt_bg__map);
+                                    tvDeleteAll.setVisibility(View.GONE);
+                                    isShowSelected = false;
+                                    mapAdapter.showSelected(false);
+                                    tcpClient.reqMapOperational(optItems);
+                                    waitDialog=new WaitDialog.Builder(getAttachActivity())
+                                            .setMessage("正在删除...")
+                                            .show();
+                                }else {
+                                    toast("请先选择要删除的图片");
+                                }
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
                 break;
             case R.id.iv_back:
                 mapDetailLayout.setVisibility(View.GONE);
@@ -1060,45 +1071,67 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                   break;
               case R.id.tv_switch:
                   Logger.e("------------"+NotifyBaseStatusEx.getInstance().getMode());
-                  if (NotifyBaseStatusEx.getInstance().getMode()==1){
-                      switchMapName=mapInfos.get(position).getMapName();
-                      Logger.e("-----把地图切换到："+switchMapName);
-                      tcpClient.reqRunControlEx(switchMapName);
-                      waitDialog=new WaitDialog.Builder(getAttachActivity())
-                              .setMessage("正在切换中")
-                              .show();
-                      getAttachActivity().postDelayed(() -> {
-                          if (waitDialog.isShowing()) {
-                              waitDialog.dismiss();
-                              toast("切换失败！");
-                          }
-                      }, 5000);
+                  new InputDialog.Builder(getActivity())
+                          .setTitle("是否切换地图")
+                          .setEditVisibility(View.GONE)
+                          .setListener(new InputDialog.OnListener() {
+                              @Override
+                              public void onConfirm(BaseDialog dialog, String content) {
+                                  if (NotifyBaseStatusEx.getInstance().getMode()==1){
+                                      switchMapName=mapInfos.get(position).getMapName();
+                                      Logger.e("-----把地图切换到："+switchMapName);
+                                      tcpClient.reqRunControlEx(switchMapName);
+                                      waitDialog=new WaitDialog.Builder(getAttachActivity())
+                                              .setMessage("正在切换中")
+                                              .show();
+                                      getAttachActivity().postDelayed(() -> {
+                                          if (waitDialog.isShowing()) {
+                                              waitDialog.dismiss();
+                                              toast("切换失败！");
+                                          }
+                                      }, 5000);
 
-                  }else {
-                      toast("非待命模式无法切换地图");
-                  }
+                                  }else {
+                                      toast("非待命模式无法切换地图");
+                                  }
+                              }
+                              @Override
+                              public void onCancel(BaseDialog dialog) {
+                              }
+                          }).show();
                   break;
               case R.id.tv_recover:
-                  if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
-                      toast("当前地图正在使用中，无法修改");
-                  }else {
-                      List<DDRVLNMap.reqMapOperational.OptItem> optItems1=new ArrayList<>();
-                      DDRVLNMap.reqMapOperational.OptItem optItem1=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
-                              .setTypeValue(2)
-                              .setSourceName(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()))
-                              .build();
-                      optItems1.add(optItem1);
-                      tcpClient.reqMapOperational(optItems1);
-                      waitDialog=new WaitDialog.Builder(getAttachActivity())
-                              .setMessage("正在修改中")
-                              .show();
-                      getAttachActivity().postDelayed(() -> {
-                          if (waitDialog.isShowing()) {
-                              waitDialog.dismiss();
-                              toast("修改失败！");
-                          }
-                      }, 4000);
-                  }
+                  new InputDialog.Builder(getActivity())
+                          .setTitle("是否恢复")
+                          .setEditVisibility(View.GONE)
+                          .setListener(new InputDialog.OnListener() {
+                              @Override
+                              public void onConfirm(BaseDialog dialog, String content) {
+                                  if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
+                                      toast("当前地图正在使用中，无法修改");
+                                  }else {
+                                      List<DDRVLNMap.reqMapOperational.OptItem> optItems1=new ArrayList<>();
+                                      DDRVLNMap.reqMapOperational.OptItem optItem1=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                                              .setTypeValue(2)
+                                              .setSourceName(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()))
+                                              .build();
+                                      optItems1.add(optItem1);
+                                      tcpClient.reqMapOperational(optItems1);
+                                      waitDialog=new WaitDialog.Builder(getAttachActivity())
+                                              .setMessage("正在修改中")
+                                              .show();
+                                      getAttachActivity().postDelayed(() -> {
+                                          if (waitDialog.isShowing()) {
+                                              waitDialog.dismiss();
+                                              toast("修改失败！");
+                                          }
+                                      }, 4000);
+                                  }
+                              }
+                              @Override
+                              public void onCancel(BaseDialog dialog) {
+                              }
+                          }).show();
                   break;
               case R.id.tv_delete:
                   if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
