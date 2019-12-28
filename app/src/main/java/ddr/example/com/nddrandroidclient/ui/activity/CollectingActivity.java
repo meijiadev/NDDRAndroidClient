@@ -25,7 +25,6 @@ import java.util.TimerTask;
 
 import DDRCommProto.BaseCmd;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
@@ -38,6 +37,7 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
+
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView2;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
@@ -167,6 +167,7 @@ public class CollectingActivity extends DDRActivity {
 
     @Override
     public void onLeftClick(View v) {
+        //collecting.unRegister();
         new InputDialog.Builder(getActivity())
                 .setTitle("是否退出采集")
                 .setEditVisibility(View.GONE)
@@ -181,11 +182,12 @@ public class CollectingActivity extends DDRActivity {
                     public void onCancel(BaseDialog dialog) {
                     }
                 }).show();
-    }
 
+    }
 
     @Override
     public void onRightClick(View v) {
+       // collecting.unRegister();
         new InputDialog.Builder(getActivity())
                 .setTitle("是否保存当前采集")
                 .setEditVisibility(View.GONE)

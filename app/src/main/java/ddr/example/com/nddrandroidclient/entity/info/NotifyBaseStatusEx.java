@@ -3,7 +3,6 @@ package ddr.example.com.nddrandroidclient.entity.info;
 public class NotifyBaseStatusEx {
     public static NotifyBaseStatusEx notifyBaseStatusEx;
 
-
     public static NotifyBaseStatusEx getInstance(){
         if (notifyBaseStatusEx==null){
             synchronized (NotifyBaseStatusEx.class){

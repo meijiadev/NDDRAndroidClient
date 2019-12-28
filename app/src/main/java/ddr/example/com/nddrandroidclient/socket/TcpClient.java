@@ -15,6 +15,7 @@ import com.xuhao.didi.socket.client.sdk.client.ConnectionInfo;
 import com.xuhao.didi.socket.client.sdk.client.OkSocketOptions;
 import com.xuhao.didi.socket.client.sdk.client.action.SocketActionAdapter;
 import com.xuhao.didi.socket.client.sdk.client.connection.IConnectionManager;
+import com.yhao.floatwindow.IFloatWindow;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -118,7 +119,7 @@ public class TcpClient extends BaseSocketConnection {
             Activity activity=ActivityStackManager.getInstance().getTopActivity();
             Logger.e("--------:"+activity.getLocalClassName());
             if (activity.getLocalClassName().contains("LoginActivity")){
-                //showToast(activity,"连接成功",Toast.LENGTH_SHORT);
+                showToast(activity,"连接成功",Toast.LENGTH_SHORT);
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
             }
             sendHeartBeat();

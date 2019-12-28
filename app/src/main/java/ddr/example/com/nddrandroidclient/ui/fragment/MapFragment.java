@@ -63,6 +63,7 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.ActionAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.BaseModeAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
@@ -1162,6 +1163,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                   break;
               case R.id.tv_detail:
                   intoMapDetail(position);
+                  /*bitmapPath=mapInfos.get(position).getBitmap();
+                  Intent intent=new Intent(getAttachActivity(),RelocationActivity.class);
+                  intent.putExtra("currentBitmap",bitmapPath);
+                  startActivity(intent);*/
                   break;
           }
         };
@@ -1269,7 +1274,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
      * 任务Recycler的点击事件
      */
     public void onTaskItemClick(){
-        
         taskAdapter.setOnItemClickListener((adapter, view, position) -> {
             mPosition=position;
             for (TaskMode taskMode:taskModes){
@@ -1490,54 +1494,57 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     public void update(MessageEvent messageEvent)  {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-                if (dialog.isShowing()) {
-                    getAttachActivity().postDelayed(() -> {
-                        try {
-                            targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
-                            pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
-                            taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        Logger.e("----------:" + taskModes.size());
-                        if (targetPoints.size() > 0) {
-                            etPointName.setText(targetPoints.get(0).getName());
-                            etX.setText(targetPoints.get(0).getX());
-                            etY.setText(targetPoints.get(0).getY());
-                            etToward.setText(targetPoints.get(0).getTheta());
-                            targetPoints.get(0).setSelected(true);
-                            PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
-                            if (targetPoints.get(0).getName().equals("初始点")){
-                                layoutEdit.setVisibility(View.GONE);
-                            }else {
-                                layoutEdit.setVisibility(View.VISIBLE);
+                if (dialog!=null){
+                    if (dialog.isShowing()) {
+                        getAttachActivity().postDelayed(() -> {
+                            try {
+                                targetPoints=ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                                pathLines=ListTool.deepCopy(mapFileStatus.getPathLines());
+                                taskModes=ListTool.deepCopy(mapFileStatus.getTaskModes());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
                             }
-                        }else {
-                            etPointName.setText("无目标点");
-                            etX.setText(0);
-                            etY.setText(0);
-                            etToward.setText(0);
-                        }
-                        tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
-                        tvPath.setText("路径"+"("+pathLines.size()+")");
-                        tvTask.setText("任务"+"("+taskModes.size()+")");
-                        dialog.dismiss();
-                        mapLayout.setVisibility(View.GONE);
-                        mapDetailLayout.setVisibility(View.VISIBLE);
-                        leftDetailLayout.setVisibility(View.VISIBLE);
-                        pointDetailLayout.setVisibility(View.VISIBLE);
-                        pathDetailLayout.setVisibility(View.GONE);
-                        taskDetailLayout.setVisibility(View.GONE);
-                        targetPointAdapter.setNewData(targetPoints);
-                        recyclerDetail.setAdapter(targetPointAdapter);
-                        setIconDefault();
-                        setIconDefault1();
-                        tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
-                        tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
-                        zoomMap.setImageBitmap(lookBitmap);
-                    }, 800);
+                            Logger.e("----------:" + taskModes.size());
+                            if (targetPoints.size() > 0) {
+                                etPointName.setText(targetPoints.get(0).getName());
+                                etX.setText(targetPoints.get(0).getX());
+                                etY.setText(targetPoints.get(0).getY());
+                                etToward.setText(targetPoints.get(0).getTheta());
+                                targetPoints.get(0).setSelected(true);
+                                PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
+                                if (targetPoints.get(0).getName().equals("初始点")){
+                                    layoutEdit.setVisibility(View.GONE);
+                                }else {
+                                    layoutEdit.setVisibility(View.VISIBLE);
+                                }
+                            }else {
+                                etPointName.setText("无目标点");
+                                etX.setText(0);
+                                etY.setText(0);
+                                etToward.setText(0);
+                            }
+                            tvTargetPoint.setText("目标点"+"("+targetPoints.size()+")");
+                            tvPath.setText("路径"+"("+pathLines.size()+")");
+                            tvTask.setText("任务"+"("+taskModes.size()+")");
+                            dialog.dismiss();
+                            mapLayout.setVisibility(View.GONE);
+                            mapDetailLayout.setVisibility(View.VISIBLE);
+                            leftDetailLayout.setVisibility(View.VISIBLE);
+                            pointDetailLayout.setVisibility(View.VISIBLE);
+                            pathDetailLayout.setVisibility(View.GONE);
+                            taskDetailLayout.setVisibility(View.GONE);
+                            targetPointAdapter.setNewData(targetPoints);
+                            recyclerDetail.setAdapter(targetPointAdapter);
+                            setIconDefault();
+                            setIconDefault1();
+                            tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue),null,null,null);
+                            tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
+                            zoomMap.setImageBitmap(lookBitmap);
+                        }, 800);
+                    }
+
                 }
                 break;
             case updatePoints:
@@ -1559,8 +1566,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 //tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 break;
             case updateMapList:
-                if (waitDialog.isShowing()){
-                    waitDialog.dismiss();
+                if (waitDialog!=null){
+                    if (waitDialog.isShowing()){
+                        waitDialog.dismiss();
+                    }
                 }
                 getAttachActivity().postDelayed(()->{
                     transformMapInfo(mapFileStatus.getMapInfos());
@@ -1568,9 +1577,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     },500);
                 break;
             case mapOperationalSucceed:
-                if (waitDialog.isShowing()){
-                    tcpClient.requestFile();
-                    waitDialog.dismiss();
+                if (waitDialog!=null){
+                    if (waitDialog.isShowing()){
+                        tcpClient.requestFile();
+                        waitDialog.dismiss();
+                    }
                 }
                 break;
             case switchMapSucceed:
