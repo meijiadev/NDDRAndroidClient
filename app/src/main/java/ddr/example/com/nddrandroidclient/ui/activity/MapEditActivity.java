@@ -462,15 +462,29 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case R.id.bt_delete_wall:
-                    int position=LineView.getInstance(this).selectPosition;
-                    if (position!=-1){
-                        List<DDRVLNMap.space_pointEx> space_pointExes=new ArrayList<>();
-                        spaceItems.get(position).setLines(space_pointExes);
-                        LineView.getInstance(this).selectPosition=-1;
-                        zmap.invalidate();
-                    }else {
-                        toast("请先选择要删除的虚拟墙哦");
-                    }
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否删除")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                int position=LineView.getInstance(getApplication()).selectPosition;
+                                if (position!=-1){
+                                    List<DDRVLNMap.space_pointEx> space_pointExes=new ArrayList<>();
+                                    spaceItems.get(position).setLines(space_pointExes);
+                                    LineView.getInstance(getApplication()).selectPosition=-1;
+                                    zmap.invalidate();
+                                }else {
+                                    toast("请先选择要删除的虚拟墙哦");
+                                }
+                            }
+
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+
+                            }
+                        }).show();
+
                 break;
 
 
