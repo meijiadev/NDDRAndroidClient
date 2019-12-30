@@ -36,7 +36,7 @@ public class DDRTextView extends TextView {
         /**路径的模式**/
         map.put(64,"动态避障");
         map.put(65,"静态避障");
-        map.put(66,"延边模式");
+       /* map.put(66,"延边模式");*/
     }
 
 

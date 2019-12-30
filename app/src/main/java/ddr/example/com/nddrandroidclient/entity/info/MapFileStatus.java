@@ -239,7 +239,6 @@ public class MapFileStatus {
             spaceItems.add(spaceItem);
         }
 
-
     }
 
     public DDRVLNMap.reqDDRVLNMapEx getReqDDRVLNMapEx() {
