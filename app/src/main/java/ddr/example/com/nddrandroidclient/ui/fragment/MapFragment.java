@@ -1146,20 +1146,33 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                           }).show();
                   break;
               case R.id.tv_delete:
-                  if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
-                      toast("当前地图正在使用中，无法删除");
-                  }else {
-                      List<DDRVLNMap.reqMapOperational.OptItem> optItems2=new ArrayList<>();
-                      DDRVLNMap.reqMapOperational.OptItem optItem2=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
-                              .setTypeValue(1)
-                              .setSourceName(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()))
-                              .build();
-                      optItems2.add(optItem2);
-                      tcpClient.reqMapOperational(optItems2);
-                      waitDialog=new WaitDialog.Builder(getAttachActivity())
-                              .setMessage("正在删除...")
-                              .show();
-                  }
+                  new InputDialog.Builder(getActivity())
+                          .setTitle("是否删除")
+                          .setEditVisibility(View.GONE)
+                          .setListener(new InputDialog.OnListener() {
+                              @Override
+                              public void onConfirm(BaseDialog dialog, String content) {
+                                  if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapInfos.get(position).getMapName())){
+                                      toast("当前地图正在使用中，无法删除");
+                                  }else {
+                                      List<DDRVLNMap.reqMapOperational.OptItem> optItems2=new ArrayList<>();
+                                      DDRVLNMap.reqMapOperational.OptItem optItem2=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                                              .setTypeValue(1)
+                                              .setSourceName(ByteString.copyFromUtf8(mapInfos.get(position).getMapName()))
+                                              .build();
+                                      optItems2.add(optItem2);
+                                      tcpClient.reqMapOperational(optItems2);
+                                      waitDialog=new WaitDialog.Builder(getAttachActivity())
+                                              .setMessage("正在删除...")
+                                              .show();
+                                  }
+                              }
+
+                              @Override
+                              public void onCancel(BaseDialog dialog) {
+
+                              }
+                          }).show();
                   break;
               case R.id.tv_detail:
                   intoMapDetail(position);
