@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -726,95 +727,106 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case R.id.tv_delete:
-                if (pointDetailLayout.getVisibility()==View.VISIBLE){                   //删除目标点
-                    if (targetPoints.size()>0){
-                        if (mPosition<targetPoints.size()){
-                            targetPoints.remove(mPosition);
-                            targetPointAdapter.setNewData(targetPoints);
-                            if (targetPoints.size()==0){
-                                etPointName.setText("无目标点");
-                                etX.setText(0);
-                                etY.setText(0);
-                                etToward.setText(0);
-                            }else {
-                                etPointName.setText(targetPoints.get(0).getName());
-                                etX.setText(targetPoints.get(0).getX());
-                                etY.setText(targetPoints.get(0).getY());
-                                etToward.setText(targetPoints.get(0).getTheta());
-                            }
-                            PointView.getInstance(getAttachActivity()).setPoint(null);
-                            zoomMap.invalidate();
-                        }else {
-                            toast("请先选择一个目标点再删除");
-                        }
-                    }else {
-                        toast("无目标点");
-                        etPointName.setText("无目标点");
-                        etX.setText(0);
-                        etY.setText(0);
-                        etToward.setText(0);
-                    }
-                }else if (pathDetailLayout.getVisibility()==View.VISIBLE){           //删除路径
-                    if (pathLines.size()>0){
-                        if (mPosition<pathLines.size()){
-                            pathLines.remove(mPosition);
-                            pathAdapter.setNewData(pathLines);
-                            if (pathLines.size()==0){
-                                etPathName.setText("无路径");
-                                tv_Spinner.setValueText(0);
-                                etSpeed.setText(0);
-                                tvConfig.setText("");
-                            }else {
-                                etPathName.setText(pathLines.get(0).getName());
-                                tv_Spinner.setValueText(pathLines.get(0).getPathModel());
-                                etSpeed.setText(pathLines.get(0).getVelocity());
-                                tvConfig.setText(pathLines.get(0).getConfig());
-                                actionAdapter.setNewData(selectActionList(pathLines.get(0).getPathPoints()));
-                            }
-                            LineView.getInstance(getAttachActivity()).setPoints(null);
-                            zoomMap.invalidate();
-                        }else {
-                            toast("请先选择路径再删除");
-                        }
-                    }else {
-                        toast("无路径");
-                        etPathName.setText("无路径");
-                        tv_Spinner.setValueText(0);
-                        etSpeed.setText(0);
-                        tvConfig.setText("");
-                    }
-                }else if (taskDetailLayout.getVisibility()==View.VISIBLE){         //删除任务
-                    if (taskModes.size()>0){
-                        if (mPosition<taskModes.size()){
-                            taskModes.remove(mPosition);
-                            taskAdapter.setNewData(taskModes);
-                            if (taskModes.size()==0){
-                                etTaskName.setText("无任务");
-                                selectPointAdapter.setNewData(null);
-                                selectPathAdapter.setNewData(null);
-                            }else {
-                                String taskName=taskModes.get(0).getName();
-                                taskName=taskName.replaceAll("DDRTask_","");
-                                taskName=taskName.replaceAll(".task","");
-                                etTaskName.setText(taskName);
-                                try {
-                                    initSelectRecycler(0);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否删除")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                if (pointDetailLayout.getVisibility()==View.VISIBLE){                   //删除目标点
+                                    if (targetPoints.size()>0){
+                                        if (mPosition<targetPoints.size()){
+                                            targetPoints.remove(mPosition);
+                                            targetPointAdapter.setNewData(targetPoints);
+                                            if (targetPoints.size()==0){
+                                                etPointName.setText("无目标点");
+                                                etX.setText(0);
+                                                etY.setText(0);
+                                                etToward.setText(0);
+                                            }else {
+                                                etPointName.setText(targetPoints.get(0).getName());
+                                                etX.setText(targetPoints.get(0).getX());
+                                                etY.setText(targetPoints.get(0).getY());
+                                                etToward.setText(targetPoints.get(0).getTheta());
+                                            }
+                                            PointView.getInstance(getAttachActivity()).setPoint(null);
+                                            zoomMap.invalidate();
+                                        }else {
+                                            toast("请先选择一个目标点再删除");
+                                        }
+                                    }else {
+                                        toast("无目标点");
+                                        etPointName.setText("无目标点");
+                                        etX.setText(0);
+                                        etY.setText(0);
+                                        etToward.setText(0);
+                                    }
+                                }else if (pathDetailLayout.getVisibility()==View.VISIBLE){           //删除路径
+                                    if (pathLines.size()>0){
+                                        if (mPosition<pathLines.size()){
+                                            pathLines.remove(mPosition);
+                                            pathAdapter.setNewData(pathLines);
+                                            if (pathLines.size()==0){
+                                                etPathName.setText("无路径");
+                                                tv_Spinner.setValueText(0);
+                                                etSpeed.setText(0);
+                                                tvConfig.setText("");
+                                            }else {
+                                                etPathName.setText(pathLines.get(0).getName());
+                                                tv_Spinner.setValueText(pathLines.get(0).getPathModel());
+                                                etSpeed.setText(pathLines.get(0).getVelocity());
+                                                tvConfig.setText(pathLines.get(0).getConfig());
+                                                actionAdapter.setNewData(selectActionList(pathLines.get(0).getPathPoints()));
+                                            }
+                                            LineView.getInstance(getAttachActivity()).setPoints(null);
+                                            zoomMap.invalidate();
+                                        }else {
+                                            toast("请先选择路径再删除");
+                                        }
+                                    }else {
+                                        toast("无路径");
+                                        etPathName.setText("无路径");
+                                        tv_Spinner.setValueText(0);
+                                        etSpeed.setText(0);
+                                        tvConfig.setText("");
+                                    }
+                                }else if (taskDetailLayout.getVisibility()==View.VISIBLE){         //删除任务
+                                    if (taskModes.size()>0){
+                                        if (mPosition<taskModes.size()){
+                                            taskModes.remove(mPosition);
+                                            taskAdapter.setNewData(taskModes);
+                                            if (taskModes.size()==0){
+                                                etTaskName.setText("无任务");
+                                                selectPointAdapter.setNewData(null);
+                                                selectPathAdapter.setNewData(null);
+                                            }else {
+                                                String taskName=taskModes.get(0).getName();
+                                                taskName=taskName.replaceAll("DDRTask_","");
+                                                taskName=taskName.replaceAll(".task","");
+                                                etTaskName.setText(taskName);
+                                                try {
+                                                    initSelectRecycler(0);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (ClassNotFoundException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }else {
+                                            toast("请先选择任务再删除");
+                                        }
+                                    }else {
+                                        etTaskName.setText("无任务");
+                                        selectPointAdapter.setNewData(null);
+                                        selectPathAdapter.setNewData(null);
+                                    }
                                 }
+                                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                             }
-                        }else {
-                            toast("请先选择任务再删除");
-                        }
-                    }else {
-                        etTaskName.setText("无任务");
-                        selectPointAdapter.setNewData(null);
-                        selectPathAdapter.setNewData(null);
-                    }
-                }
-                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
                 break;
             case R.id.tv_edit_map:
                 Intent intent=new Intent(getAttachActivity(),MapEditActivity.class);

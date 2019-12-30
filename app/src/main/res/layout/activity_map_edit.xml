@@ -4,21 +4,21 @@
     android:layout_height="match_parent"
     android:background="#101112"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <com.hjq.bar.TitleBar
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="#101112"
-        app:leftIcon="@mipmap/iv_back"
-        app:leftTitle="新建目标点"
         app:leftColor="@color/white"
+        app:leftIcon="@mipmap/iv_back"
         app:leftSize="16sp"
-        app:rightTitle="退出  "
-        app:rightColor="@color/white"
+        app:leftTitle="新建目标点"
         app:lineColor="#262728"
         app:lineSize="1dp"
-        >
-    </com.hjq.bar.TitleBar>
+        app:rightColor="@color/white"
+        app:rightTitle="退出  "></com.hjq.bar.TitleBar>
+
     <LinearLayout
         android:id="@+id/second_title"
         android:layout_width="match_parent"
@@ -131,12 +131,12 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             />
+
         <ddr.example.com.nddrandroidclient.widget.view.ZoomImageView
             android:id="@+id/zmap"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            />
+            android:layout_height="match_parent" />
+
         <ImageView
             android:id="@+id/iv_center"
             android:layout_width="wrap_content"
