@@ -135,7 +135,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private CustomPopuWindow customPopWindow;
     //private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
-    private List<TaskMode> taskModeList =new ArrayList<>();
     private int modeType;
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -199,16 +198,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @Override
     protected void onRestart() {
         super.onRestart();
-        taskModeList=mapFileStatus.getcTaskModes();
     }
 
     @Override
     protected void initData() {
-        tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
+        tcpClient= TcpClient.getInstance(getAttachActivity(), ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
-        taskModeList=mapFileStatus.getcTaskModes();
         taskName = notifyBaseStatusEx.getCurrpath();
         if (taskName!=null && !taskName.equals("PathError")){
             String showName=taskName.replaceAll("DDRTask_","");
@@ -567,7 +564,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
             case 2:
                 //标记点列表点击事件
-                targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
                     float x=targetPoints.get(position).getX();
                     float y=targetPoints.get(position).getY();
                     float theta=targetPoints.get(position).getTheta();

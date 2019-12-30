@@ -42,14 +42,14 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
     private NotifyLidarPtsEntity notifyLidarPtsEntity1;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
     //private List<NotifyLidarPtsEntity> ptsSwitchs=new ArrayList<>(); //经过坐标转化之后的点云列表（可以直接绘制到画布上的）
-    private int posXSwitch,posYSwitch;                             //坐标转换之后的坐标
+    private float posXSwitch,posYSwitch;                             //坐标转换之后的坐标
     private List<XyEntity>poiPoints=new ArrayList<>();
     private float posX,posY;
     private float radian;
     private float angle;
     private float minX=0,minY=0,maxX=0,maxY=0;  //雷达扫到的最大坐标和最小坐标
-    private double ratio=1;         //地图比例
-    private double oldRatio=1;
+    private float ratio=1;         //地图比例
+    private float oldRatio=1;
     private int measureWidth, measureHeight;
     private Bitmap directionBitmap,directionBitmap1;
     private Bitmap poiBitmap;
@@ -268,8 +268,8 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
                 }
             }
         }
-        posXSwitch=(int)(-posY*ratio+measureWidth/2);
-        posYSwitch=(int)(-posX*ratio+measureHeight/2);
+        posXSwitch=(-posY*ratio+measureWidth/2);
+        posYSwitch=(-posX*ratio+measureHeight/2);
         matrix.setRotate(-angle);
         directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
         canvas.drawBitmap(directionBitmap1,posXSwitch-30,posYSwitch-30,paint);

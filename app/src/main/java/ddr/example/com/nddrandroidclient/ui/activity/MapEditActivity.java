@@ -155,7 +155,7 @@ public class MapEditActivity extends DDRActivity {
     @Override
     protected void initView() {
         super.initView();
-        tcpClient = TcpClient.getInstance(getApplicationContext(), ClientMessageDispatcher.getInstance());
+        tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
         initSeekBar();
         initRockerView();
         initTimer();
@@ -1031,6 +1031,8 @@ public class MapEditActivity extends DDRActivity {
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePoints, newPoints));
         }else if (titleLayout.getLeftTitle().equals("新建路径")){
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePaths,newPaths));
+        }else {
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateVirtualWall));
         }
     }
 

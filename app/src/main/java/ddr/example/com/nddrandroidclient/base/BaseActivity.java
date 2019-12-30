@@ -44,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initState(this);
-        context=getApplicationContext();
+        context=getApplicationContext();            //使用Application的防止内存泄漏
         initActivity();
     }
 

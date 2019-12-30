@@ -47,7 +47,7 @@ public class ZoomImageView extends View {
     private float movedDistanceY;//记录手指在纵坐标方向上的移动距离
     private float totalTranslateX;//记录图片在矩阵上的横向偏移值 图片左上角顶点相当于画布的X坐标
     private float totalTranslateY;//记录图片在矩阵上的纵向偏移值 图片左上角顶点相当于画布的Y坐标
-    private float totalRatio;//记录图片在矩阵上的总缩放比例
+    public float totalRatio;//记录图片在矩阵上的总缩放比例
     private float scaledRatio;//记录手指移动的距离所造成的缩放比例
     private float initRatio;//记录图片初始化时的缩放比例
     private double lastFingerDis;//记录上次两指之间的距离

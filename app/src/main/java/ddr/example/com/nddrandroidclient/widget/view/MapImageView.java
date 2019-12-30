@@ -76,7 +76,7 @@ public class MapImageView extends GLView {
     private float radian,angle;                /**经过矩阵变换后的坐标（相对于图片，单位是像素)**/
     private int posX,posY;
 
-    private float scale;
+    private float scale=1;
     private boolean waitData=false;           //是否需要等待数据
     private String taskName;
     private boolean isStartRadar=false;       //是否雷达开始绘制
@@ -220,6 +220,7 @@ public class MapImageView extends GLView {
             mRectSrc.bottom=bitmapHeight;
             if (bitmapWidth<width&bitmapHeight<height){
                 setZOrderOnTop(true);
+                scale=1;
             }else if (bitmapWidth>width&&bitmapHeight>height){
                 setZOrderOnTop(false);
                 scale=Math.max((float) bitmapWidth/width,(float) bitmapHeight/height);

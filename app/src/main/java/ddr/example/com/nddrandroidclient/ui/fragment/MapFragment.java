@@ -300,7 +300,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         modeList=new ArrayList<>();
         modeList.add(map.get(64));
         modeList.add(map.get(65));
-        modeList.add(map.get(66));
+        /*modeList.add(map.get(66));*/
         stringAdapter=new StringAdapter(R.layout.item_path_mode,modeList);
         onModeItemClick();
         /*************************************************************/
@@ -1574,9 +1574,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 tvPath.setText("路径"+"("+pathLines.size()+")");
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
                 break;
+            case updateVirtualWall:
+                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
+                break;
             case updateRevamp:
                 Logger.e("更新数据");
-                //tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 break;
             case updateMapList:
                 if (waitDialog!=null){

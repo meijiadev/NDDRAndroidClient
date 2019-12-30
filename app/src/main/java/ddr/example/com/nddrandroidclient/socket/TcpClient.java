@@ -77,7 +77,7 @@ public class TcpClient extends BaseSocketConnection {
     }
 
     private TcpClient(Context context, BaseMessageDispatcher baseMessageDispatcher) {
-        this.context=context;
+        this.context=context.getApplicationContext();         //使用Application的context
         m_MessageRoute=new MessageRoute(context,this,baseMessageDispatcher);
     }
 
@@ -116,12 +116,8 @@ public class TcpClient extends BaseSocketConnection {
         @Override
         public void onSocketConnectionSuccess(ConnectionInfo info, String action) {
             setConnected(true);
-            Activity activity=ActivityStackManager.getInstance().getTopActivity();
-            Logger.e("--------:"+activity.getLocalClassName());
-            if (activity.getLocalClassName().contains("LoginActivity")){
-                showToast(activity,"连接成功",Toast.LENGTH_SHORT);
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
-            }
+            Logger.e("--------连接成功");
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
             sendHeartBeat();
             if (waitDialog!=null){
                 if (waitDialog.isShowing()){
@@ -511,6 +507,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             taskItemExes.add(task_itemEx);
         }
+        Logger.e("保存到服务端的任务size:"+taskItemExes.size());
         DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
                 .setBasedata(reqDDRVLNMapEx.getBasedata())
                 .setSpacedata(reqDDRVLNMapEx.getSpacedata())
@@ -544,6 +541,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.DDRMapTargetPointData targetPointData=DDRVLNMap.DDRMapTargetPointData.newBuilder()
                 .addAllTargetPt(targetPtItems)
                 .build();
+        Logger.e("保存到服务端的目标点size:"+targetPtItems.size());
 
         /****************************保存到服务的路径数据**********************************************/
         List<DDRVLNMap.path_line_itemEx> pathLineItemExes=new ArrayList<>();
@@ -577,7 +575,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }
-        Logger.e("----------路径数量:"+pathLineItemExes.size());
+        Logger.e("----------路径size:"+pathLineItemExes.size());
         DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
                 .addAllPathLineData(pathLineItemExes)
 
@@ -623,7 +621,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             taskItemExes.add(task_itemEx);
         }
-        Logger.e("-------------保存到服务端的任务:"+taskItemExes.size());
+        Logger.e("-------------保存到服务端的任务size:"+taskItemExes.size());
         /***************************************保存到服务的空间信息******************************************/
         List<DDRVLNMap.space_item> space_items=new ArrayList<>();           //接收到的空间数据
         List<SpaceItem> spaceItems=MapFileStatus.getInstance().getSpaceItems();

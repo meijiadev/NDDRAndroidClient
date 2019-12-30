@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -18,9 +19,8 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
-import ddr.example.com.nddrandroidclient.other.Logger;
-import ddr.example.com.nddrandroidclient.widget.view.CollectingView2;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView3;
+import ddr.example.com.nddrandroidclient.widget.view.CollectingView4;
 
 /**
  * time : 2019/12/25
@@ -32,22 +32,24 @@ public class CollectMapLayout extends FrameLayout {
     private NotifyLidarPtsEntity notifyLidarPtsEntity1;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
     private List<XyEntity>poiPoints=new ArrayList<>();
-    //private List<NotifyLidarPtsEntity> ptsSwitchs=new ArrayList<>(); //经过坐标转化之后的点云列表（可以直接绘制到画布上的）
     private float posX,posY;
     private float radian;
     private float angle;
     private float minX=0,minY=0,maxX=0,maxY=0;  //雷达扫到的最大坐标和最小坐标
-    private double ratio=1;         //地图比例
+    private float ratio=1;         //地图比例
     private int measureWidth, measureHeight;
 
-    private CollectingView2 collectingView2;
+    private CollectingView4 collectingView4;
     private CollectingView3 collectingView3;
+    private boolean isStartDraw=false;        //是否开始绘制
+
     /**
      * 弧度转角度
      */
     public float radianToangle(float angle){
         return (float)(180/Math.PI*angle);
     }
+
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void upDate(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
@@ -63,6 +65,13 @@ public class CollectMapLayout extends FrameLayout {
                     notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
                     ptsEntityList.add(notifyLidarPtsEntity1);
                     maxOrmin(notifyLidarPtsEntity.getPositionList());
+                    if (!isStartDraw){
+                        collectingView4.startThread();
+                        collectingView3.startThread();
+                    }
+                    collectingView4.setData(ptsEntityList,poiPoints,ratio);
+                    collectingView3.setData(ptsEntityList,ratio,angle);
+                    isStartDraw=true;
                 }
                 break;
             case addPoiPoint:
@@ -105,17 +114,20 @@ public class CollectMapLayout extends FrameLayout {
     public CollectMapLayout(@NonNull Context context) {
         super(context);
         mContext=context;
+        generateView();
     }
 
     public CollectMapLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext=context;
+        generateView();
+        EventBus.getDefault().register(this);
     }
 
     private void generateView(){
-        collectingView2=new CollectingView2(mContext);
+        collectingView4=new CollectingView4(mContext);
         collectingView3=new CollectingView3(mContext);
-        this.addView(collectingView2,measureWidth,measureHeight);
+        this.addView(collectingView4,measureWidth,measureHeight);
         this.addView(collectingView3,measureWidth,measureHeight);
     }
 
@@ -143,6 +155,16 @@ public class CollectMapLayout extends FrameLayout {
                 measureHeight = 1000;
             }
             setMeasuredDimension(measureWidth, measureHeight);
+    }
+
+
+
+    /**
+     * 停止绘制
+     */
+    public void onStopDraw(){
+        collectingView3.onStop();
+        collectingView4.onStop();
     }
 
 }
