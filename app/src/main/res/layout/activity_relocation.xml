@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#101112"
     >
+    <!--android:background="#101112"-->
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
@@ -29,6 +31,7 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/map_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title_layout"
@@ -46,12 +49,74 @@
         </ddr.example.com.nddrandroidclient.widget.layout.ZoomLayout>
         <ddr.example.com.nddrandroidclient.widget.view.RobotLocationView
             android:id="@+id/robot_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             />
 
     </RelativeLayout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="提示：请通过挪动地匹匹配雷达扫描形状确定机器人当前位置"
+        android:layout_below="@id/title_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        />
+  <!--  <TextView
+        android:id="@+id/tv_robot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:text="机器人当前位置："
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/text"
+        android:layout_marginLeft="50dp"
+        />
+    <TextView
+        android:id="@+id/tv_robot_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:layout_toRightOf="@id/tv_robot"
+        android:textSize="14dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"/>-->
+
+
+    <TextView
+        android:id="@+id/tv_finish"
+        android:background="@mipmap/finish_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="22dp"
+        android:layout_marginRight="30dp"
+        android:text="完成"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:gravity="center_horizontal"
+        android:paddingTop="39.5dp"
+        />
+    <TextView
+        android:id="@+id/tv_look"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="点击查看机器人位姿"
+        android:layout_below="@id/title_layout"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/white"
+        android:background="@drawable/button_shape_blue"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        />
 
 
 </RelativeLayout>

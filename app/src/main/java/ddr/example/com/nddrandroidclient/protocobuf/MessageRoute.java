@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import DDRCommProto.BaseCmd;
+import DDRModuleProto.DDRModuleCmd;
 import androidx.annotation.RequiresApi;
 import ddr.example.com.nddrandroidclient.other.Encrypt;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -53,6 +54,9 @@ public class MessageRoute {
         }else if (className.contains("DDRVLNMap")){
             String sType=className.replaceAll("class DDRVLNMapProto.DDRVLNMap\\$","DDRVLNMapProto.");
             return sType;
+        }else if (className.contains("DDRModuleCmd")){
+            String sType=className.replaceAll("class DDRModuleProto.DDRModuleCmd\\$","DDRModuleProto.");
+            return sType;
         }
         return null;
     }
@@ -63,6 +67,9 @@ public class MessageRoute {
             return className;
         }else if (typeName.contains("DDRVLNMapProto")){
             String className=typeName.replaceAll("DDRVLNMapProto\\.","class DDRVLNMapProto.DDRVLNMap\\$");
+            return className;
+        }else if (typeName.contains("DDRModuleProto")){
+            String className=typeName.replaceAll("DDRModuleProto\\.","class DDRModuleProto.DDRModuleCmd\\$");
             return className;
         }
         return null;

@@ -7,9 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.util.AttributeSet;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
@@ -39,6 +41,11 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
     private int mBackColor=Color.TRANSPARENT;       //背景色透明
     public CollectingView3(Context context) {
         super(context);
+        init();
+    }
+
+    public CollectingView3(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init();
     }
 
@@ -97,7 +104,9 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
      * 停止绘制
      */
     public void onStop(){
-        drawRobotThread.stopThread();
+        if (drawRobotThread!=null){
+            drawRobotThread.stopThread();
+        }
     }
 
 
@@ -127,10 +136,12 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         public void run() {
             super.run();
             while (isRunning){
+                long startTime=System.currentTimeMillis();
                 Canvas canvas=null;
                 try {
                     canvas=holder.lockCanvas();
                     if (canvas!=null){
+                        //drawRadar(canvas);
                         drawRobot(canvas);
                     }
                 }catch (Exception e){
@@ -140,6 +151,16 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                         holder.unlockCanvasAndPost(canvas);
                     }
                 }
+                long endTime=System.currentTimeMillis();
+                long time=endTime-startTime;
+                if (time<200){
+                    try {
+                        Thread.sleep(200-time);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Logger.e("------机器人当前位置绘制耗时："+time);
             }
         }
     }
@@ -157,17 +178,21 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         float y= (-posX*ratio+measureHeight/2);
         List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(size-1).getPositionList();
         int pSize=positions.size();
+        Path path=new Path();
+        path.moveTo(x,y);
         for (int j=0;j<pSize;j++){
             float ptX=(-positions.get(j).getPtY()*ratio+measureWidth/2);
             float ptY=(-positions.get(j).getPtX()*ratio+measureHeight/2);
-            canvas.drawLine(x,y,ptX,ptY,lastFrame);
-
+            path.lineTo(ptX,ptY);
+            //canvas.drawLine(x,y,ptX,ptY,lastFrame);
         }
+        path.close();
+        canvas.drawPath(path,lastFrame);
         matrix.setRotate(-angle);
         directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
         canvas.drawBitmap(directionBitmap1,x-30,y-30,paint);
-
     }
+
 
 
 

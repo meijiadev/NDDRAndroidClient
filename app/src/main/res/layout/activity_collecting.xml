@@ -18,8 +18,26 @@
         >
     </com.hjq.bar.TitleBar>
 
-    <ddr.example.com.nddrandroidclient.widget.view.CollectingView2
+   <!-- <ddr.example.com.nddrandroidclient.widget.view.CollectingView2
         android:id="@+id/collecting"
+        android:layout_width="1000px"
+        android:layout_height="1000px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />-->
+    <ddr.example.com.nddrandroidclient.widget.view.CollectingView4
+        android:id="@+id/collect4"
+        android:layout_width="1000px"
+        android:layout_height="1000px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <ddr.example.com.nddrandroidclient.widget.view.CollectingView3
+        android:id="@+id/collect3"
         android:layout_width="1000px"
         android:layout_height="1000px"
         app:layout_constraintStart_toStartOf="parent"

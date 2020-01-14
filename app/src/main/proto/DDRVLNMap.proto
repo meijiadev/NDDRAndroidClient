@@ -348,6 +348,8 @@ message DDRTaskComplete_line_item
 	float velocity = 4; // 速度
 	ePathItemMode mode = 5; // 路径模式
 	path_line_config config = 6; // 配置文件
+	bool bStartFromSeg0 = 7; // false-不从第一段开始。 true-会从第一段开始
+	bool bNoCornerSmoothing = 8; // false-行走时会画弧形 true-不会画弧形，会原地旋转
 }
 
 message DDRTaskComplete_arc_item
@@ -521,6 +523,8 @@ message path_line_itemEx
 	ePathItemMode mode = 4; // 路径模式
 	path_line_config config = 5; // 配置文件
 	path_line_itemEx_Type type = 6;
+	bool bStartFromSeg0 = 7; // false-不从第一段开始。 true-会从第一段开始  默认为false
+	bool bNoCornerSmoothing = 8; // false-行走时会画弧形 true-不会画弧形，会原地旋转  默认为false
 }
 
 message path_elementEx

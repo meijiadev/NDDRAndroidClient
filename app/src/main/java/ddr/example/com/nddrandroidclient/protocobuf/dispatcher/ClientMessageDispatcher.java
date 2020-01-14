@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.protocobuf.dispatcher;
 
 import DDRCommProto.BaseCmd;
+import DDRModuleProto.DDRModuleCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -9,6 +10,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyEnvInfoProce
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdRelocProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdSetWorkPathProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapExProcess;
 
@@ -19,6 +21,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionPr
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspLoginProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspMapOperationalProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspObstacleInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunControlExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.ServerInformationProcessor;
 
@@ -79,6 +82,12 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         DDRVLNMap.rspRunControlEx rspRunControlEx=DDRVLNMap.rspRunControlEx.newBuilder().build();
         m_ProcessorMap.put(rspRunControlEx.getClass().toString(),new RspRunControlExProcessor());
+
+        DDRModuleCmd.rspObstacleInfo rspObstacleInfo=DDRModuleCmd.rspObstacleInfo.newBuilder().build();
+        m_ProcessorMap.put(rspObstacleInfo.getClass().toString(),new RspObstacleInfoProcessor());
+
+        BaseCmd.rspCmdReloc rspCmdReloc=BaseCmd.rspCmdReloc.newBuilder().build();
+        m_ProcessorMap.put(rspCmdReloc.getClass().toString(),new RspCmdRelocProcessor());
 
 
     }

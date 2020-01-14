@@ -288,6 +288,35 @@ message rspCmdEndActionMode{
 	bytes route_name = 3;
 }
 
+// 20191230 add from reloc +++
+enum eCmdRelocType{
+	eCmdRelocTypeNormal = 0;
+	eCmdRelocTypeRect = 1;
+	eCmdRelocTypePos = 2;
+}
+
+
+message reqCmdReloc{
+	bytes route_name = 1; // 可以为空，上位机自己去读取runControl设置的地图名
+	eCmdRelocType type = 2;
+	
+	// 以下是给画框重定位用的  单位都是米
+	float rectTop = 3;
+	float rectLeft = 4;
+	float rectBottom = 5;
+	float rectRight = 6;
+	
+	// 以下是根据位置重定位 单位是米 米 弧度
+	float PosX0 = 7;
+	float PosY0 = 8;
+	float PosTh0 = 9;
+}
+
+message rspCmdReloc{
+	eCmdRspType type = 1;
+}
+
+// 20191230 add from reloc ---
 
 // 运行特定任务，由SDK或者AIService触发，这时一般是要处于终止全局任务状态
 message reqRunSpecificTask{
@@ -560,6 +589,7 @@ message notifyBaseStatusEx{
 	bool bLocated = 19; // 当前是否有定位
 	int32 currOAMode = 20; // 获取当前路段动态/静态避障模式  0 - 静态; 1 - 动态; -1 - 未处于运行状态
 	eTaskWorkMode taskmode = 21; 
+	eException robotexception = 22; // 异常状态
 }
 
 // Environmental sensor info

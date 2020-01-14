@@ -348,12 +348,16 @@ public class MapEditActivity extends DDRActivity {
                 if (titleLayout.getLeftTitle().toString().equals("新建目标点")) {
                     Logger.e("--------?");
                     new InputDialog.Builder(this).setTitle("添加目标名")
-                            .setHint("请输入")
+                            .setHint("目标点-"+targetPoints.size())
                             .setListener(new InputDialog.OnListener() {
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {
                                     TargetPoint targetPoint = new TargetPoint(2);
-                                    targetPoint.setName(content);
+                                    if (!content.isEmpty()){
+                                        targetPoint.setName(content);
+                                    }else {
+                                        targetPoint.setName("目标点-"+targetPoints.size());
+                                    }
                                     if (!isFreeHand){
                                         targetPoint.setX(notifyBaseStatusEx.getPosX());
                                         targetPoint.setY(notifyBaseStatusEx.getPosY());
@@ -389,8 +393,7 @@ public class MapEditActivity extends DDRActivity {
                     pathPoint.setY(zmap.getTargetPoint().getY());
                     pathPoint.setX(zmap.getTargetPoint().getX());
                     pathPoints.add(pathPoint);
-                    LineView.getInstance(getApplication()).
-                            setPoints(pathPoints);
+                    LineView.getInstance(getApplication()).setPoints(pathPoints);
                     zmap.invalidate();
                 }else {
                     addVirtualWall();

@@ -46,7 +46,7 @@ public class CollectMapLayout extends FrameLayout {
     /**
      * 弧度转角度
      */
-    public float radianToangle(float angle){
+    private float radianToangle(float angle){
         return (float)(180/Math.PI*angle);
     }
 
@@ -120,6 +120,7 @@ public class CollectMapLayout extends FrameLayout {
     public CollectMapLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext=context;
+        notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         generateView();
         EventBus.getDefault().register(this);
     }
@@ -160,7 +161,7 @@ public class CollectMapLayout extends FrameLayout {
 
 
     /**
-     * 停止绘制
+     * 停止绘制 （耗时方法，耗时时间取决于当前一帧的绘制时间）
      */
     public void onStopDraw(){
         collectingView3.onStop();

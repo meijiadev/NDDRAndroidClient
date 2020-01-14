@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.other.Logger;
+
 /**
  * time：2019/12/25
  * desc: 对图片进行绘制加工
@@ -17,7 +20,7 @@ import android.widget.ImageView;
 @SuppressLint("AppCompatCustomView")
 public class MapEditView extends ImageView {
     private Paint paint;
-    private float x,y;
+    public float x,y;
     public MapEditView(Context context) {
         super(context);
         paint=new Paint();
@@ -39,11 +42,23 @@ public class MapEditView extends ImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawPoint(x,y,paint);
+    }
+
+    /**
+     * 返回地图中心处的坐标
+     * @return
+     */
+    public XyEntity getCenterCoordinate(){
+        XyEntity xyEntity=new XyEntity(x,y);
+       return xyEntity;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        x=event.getX();
+        y=event.getY();
+        Logger.e("onTouchEvent -x："+x+"----y:"+y);
         return super.onTouchEvent(event);
     }
 

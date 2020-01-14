@@ -4,9 +4,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.greenrobot.eventbus.EventBus;
+
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
@@ -49,8 +54,9 @@ public class ZoomLayout extends RelativeLayout {
         setClickable(true);
     }
 
-
-
+    public float getScale() {
+        return scale;
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -80,12 +86,6 @@ public class ZoomLayout extends RelativeLayout {
                     translationX = translationX + event.getRawX() - actionX;
                     translationY = translationY + event.getRawY() - actionY;
                     Logger.e("平移的距离-------x:"+translationX+"---y:"+translationY);
-                    //Log.e("画布相对于父布局的位置：","x:"+getX()+"--y:"+getY());
-                    int w=getChildAt(0).getWidth();
-                    int h=getChildAt(0).getHeight();
-                    float x=getChildAt(0).getX();
-                    float y=getChildAt(0).getY();
-                    //Log.e("-------","onDraw"+w+";"+h+"---x:"+x+"----y:"+y);
                     setTranslationX(translationX);
                     setTranslationY(translationY);
                     actionX = event.getRawX();
@@ -167,6 +167,8 @@ public class ZoomLayout extends RelativeLayout {
             setScaleX(scale);
             setScaleY(scale);
             setRotation(rotation);
+
         }
     }
+
 }

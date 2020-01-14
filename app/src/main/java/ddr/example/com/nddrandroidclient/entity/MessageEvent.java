@@ -33,6 +33,9 @@ public class MessageEvent {
         mapOperationalSucceed,  //地图操作成功
         switchMapSucceed,       //切换地图成功
 
+        receiveObstacleInfo,  //接收机器人当前位置的障碍物信息
+        enterRelocationMode,  //重新进入重定位模式
+
 
     }
 

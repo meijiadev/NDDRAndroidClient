@@ -1028,7 +1028,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         }, 5000);
     }
 
-    private String switchMapName;
+    private String switchMapName,switchBitmapPath;
 
     /**
      * 点击地图右上角设置弹出弹窗
@@ -1091,6 +1091,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                               public void onConfirm(BaseDialog dialog, String content) {
                                   if (NotifyBaseStatusEx.getInstance().getMode()==1){
                                       switchMapName=mapInfos.get(position).getMapName();
+                                      switchBitmapPath=mapInfos.get(position).getBitmap();
                                       Logger.e("-----把地图切换到："+switchMapName);
                                       tcpClient.reqRunControlEx(switchMapName);
                                       waitDialog=new WaitDialog.Builder(getAttachActivity())
@@ -1163,10 +1164,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                   break;
               case R.id.tv_detail:
                   intoMapDetail(position);
-                  /*bitmapPath=mapInfos.get(position).getBitmap();
-                  Intent intent=new Intent(getAttachActivity(),RelocationActivity.class);
-                  intent.putExtra("currentBitmap",bitmapPath);
-                  startActivity(intent);*/
+
                   break;
           }
         };
@@ -1489,7 +1487,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapInfos = infoList;
     }
 
-
+    private BaseDialog waitDialog2;
+    private NotifyBaseStatusEx notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent)  {
         switch (messageEvent.getType()) {
@@ -1595,9 +1594,49 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         if (waitDialog.isShowing()) {
                             waitDialog.dismiss();
                         }
-                    }, 300);
+                    }, 200);
+                }
+                getAttachActivity().postDelayed(()->{
+                    waitDialog2=new WaitDialog.Builder(getAttachActivity())
+                            .setMessage("正在自动定位中可能需要1~3分钟，请稍后...")
+
+                            .show();
+                },600);
+
+                break;
+            case updateBaseStatus:
+                //Logger.e("-------------当前状态:"+notifyBaseStatusEx.getExceptionValue());
+                if (waitDialog2!=null&&waitDialog2.isShowing()){
+                if (!notifyBaseStatusEx.isHaveLocation()){
+                    Logger.e("自动定位失败");
+                    new InputDialog.Builder(getAttachActivity())
+                            .setEditVisibility(View.GONE)
+                            .setTitle("自动定位失败，是否进入手动定位")
+                            .setConfirm("是")
+                            .setCancel("否")
+                            .setCanceledOnTouchOutside(false)    // 是否可以点击外部取消弹窗
+                            .setListener(new InputDialog.OnListener() {
+                                @Override
+                                public void onConfirm(BaseDialog dialog, String content) {
+                                    Intent intent=new Intent(getAttachActivity(),RelocationActivity.class);
+                                    intent.putExtra("currentBitmap",switchBitmapPath);
+                                    intent.putExtra("currentMapName",switchMapName);
+                                    startActivity(intent);
+                                }
+                                @Override
+                                public void onCancel(BaseDialog dialog) {
+
+                                }
+                            }).show();
+                    waitDialog2.dismiss();
+                    notifyBaseStatusEx.setHaveLocation(true);
+                }else if (notifyBaseStatusEx.isLocationed()){
+                    toast("定位成功！");
+                    waitDialog2.dismiss();
+                }
                 }
                 break;
+
 
 
         }

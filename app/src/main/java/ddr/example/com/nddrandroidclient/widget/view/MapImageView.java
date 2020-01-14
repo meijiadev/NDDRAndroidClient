@@ -1,6 +1,5 @@
 package ddr.example.com.nddrandroidclient.widget.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +11,6 @@ import android.util.AttributeSet;
 
 import com.chillingvan.canvasgl.ICanvasGL;
 import com.chillingvan.canvasgl.glcanvas.GLPaint;
-import com.chillingvan.canvasgl.glview.GLContinuousView;
 import com.chillingvan.canvasgl.glview.GLView;
 import com.google.protobuf.ByteString;
 

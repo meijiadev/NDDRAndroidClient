@@ -31,6 +31,7 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     private float ratio=1;         //地图比例
     private List<XyEntity>poiPoints=new ArrayList<>();
     private Bitmap poiBitmap;
+
     public CollectingView4(Context context) {
         super(context);
         init();
@@ -41,7 +42,6 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
         init();
 
     }
-
     /**
      * 初始化相关参数对象
      */
@@ -98,6 +98,7 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
      * 停止绘制
      */
     public void onStop(){
+        if (drawThread!=null)
         drawThread.stopThread();
     }
 
@@ -130,9 +131,12 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
                 try {
                     canvas=holder.lockCanvas();
                     if (canvas!=null){
+                        long startTime=System.currentTimeMillis();
                        drawMap(canvas);
                        drawPath(canvas);
                        drawPoint(canvas);
+                       long endTime=System.currentTimeMillis();
+                       //Logger.e("------地图绘制耗时："+(endTime-startTime));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -145,7 +149,12 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
+    /**
+     * 绘制激光地图
+     * @param canvas
+     */
     private void drawMap(Canvas canvas){
+
         int ptsSize=ptsEntityList.size();
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         canvas.drawPaint(paint);
@@ -171,12 +180,18 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     private void drawPath(Canvas canvas){
         int ptsSize=ptsEntityList.size();
         if (ptsSize>1){
-            for (int i=0;i<ptsSize;i++){
-                float y=(float)((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
-                float x=(float)((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
-                float y1=(float)((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
-                float x1=(float)((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
-                canvas.drawLine(x,y,x1,y1,pathPaint);
+            try {
+                for (int i=0;i<ptsSize;i++){
+                    if (i<ptsSize-2){
+                        float y=((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
+                        float x=((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
+                        float y1=((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
+                        float x1=((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
+                        canvas.drawLine(x,y,x1,y1,pathPaint);
+                    }
+                }
+            }catch ( IndexOutOfBoundsException e){
+                e.printStackTrace();
             }
         }
     }
@@ -188,8 +203,8 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     private void drawPoint(Canvas canvas){
         int pts=poiPoints.size();
         for (int i=0;i<pts;i++){
-            float y=(float)((-poiPoints.get(i).getX())*ratio+measureHeight/2);
-            float x=(float)((-poiPoints.get(i).getY())*ratio+measureWidth/2);
+            float y=((-poiPoints.get(i).getX())*ratio+measureHeight/2);
+            float x=((-poiPoints.get(i).getY())*ratio+measureWidth/2);
             canvas.drawBitmap(poiBitmap,(int) x-10,(int) y-10,pathPaint);
         }
     }
