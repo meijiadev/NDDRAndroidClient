@@ -188,7 +188,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                 break;
             case receiveObstacleInfo:
                 obstacleInfos= (List<DDRModuleCmd.rspObstacleInfo.ObstacleInfo>) mainUpDate.getData();
-                Logger.e("--------接收雷达数据");
+                //Logger.e("--------接收雷达数据");
                 break;
         }
     }

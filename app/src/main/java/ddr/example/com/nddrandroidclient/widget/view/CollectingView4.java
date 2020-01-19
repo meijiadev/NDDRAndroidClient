@@ -127,22 +127,30 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
         public void run() {
             super.run();
             while (isRunning){
+                long startTime=System.currentTimeMillis();
                 Canvas canvas=null;
                 try {
                     canvas=holder.lockCanvas();
                     if (canvas!=null){
-                        long startTime=System.currentTimeMillis();
                        drawMap(canvas);
                        drawPath(canvas);
                        drawPoint(canvas);
-                       long endTime=System.currentTimeMillis();
-                       //Logger.e("------地图绘制耗时："+(endTime-startTime));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                 }finally {
                     if (canvas!=null){
                         holder.unlockCanvasAndPost(canvas);
+                    }
+                }
+                long endTime=System.currentTimeMillis();
+                Logger.e("------地图绘制耗时："+(endTime-startTime));
+                long time=endTime-startTime;
+                if (time<300){
+                    try {
+                        Thread.sleep(300-time);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -154,7 +162,6 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
      * @param canvas
      */
     private void drawMap(Canvas canvas){
-
         int ptsSize=ptsEntityList.size();
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         canvas.drawPaint(paint);

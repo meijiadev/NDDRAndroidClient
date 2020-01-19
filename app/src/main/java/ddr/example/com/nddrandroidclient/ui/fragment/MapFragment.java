@@ -1646,6 +1646,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }else if (notifyBaseStatusEx.isLocationed()){
                     toast("定位成功！");
                     waitDialog2.dismiss();
+                }else {
+                    notifyBaseStatusEx.setHaveLocation(true);
                 }
                 }
                 break;

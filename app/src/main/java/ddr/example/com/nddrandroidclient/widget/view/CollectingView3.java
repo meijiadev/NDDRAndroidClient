@@ -153,9 +153,9 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                 }
                 long endTime=System.currentTimeMillis();
                 long time=endTime-startTime;
-                if (time<200){
+                if (time<300){
                     try {
-                        Thread.sleep(200-time);
+                        Thread.sleep(300-time);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

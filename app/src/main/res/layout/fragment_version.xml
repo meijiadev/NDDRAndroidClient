@@ -15,19 +15,20 @@
             android:background="#262728"
             android:layout_marginLeft="407dp"
             android:layout_marginTop="92dp"/>
+       <!-- android:src="@mipmap/versionlogo"-->
         <ImageView
             android:layout_width="226dp"
             android:layout_height="127dp"
-            android:src="@mipmap/versionlogo"
             android:layout_marginTop="196dp"
             android:layout_marginLeft="84dp"
             android:id="@+id/iv_icon_set"
             />
+        <!--android:text="大道智创客户端版本"-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:id="@+id/tv_bb"
-            android:text="大道智创客户端版本"
+            android:text="安卓客户端版本"
             android:textSize="16sp"
             android:textColor="#ffffff"
             android:layout_marginTop="90dp"

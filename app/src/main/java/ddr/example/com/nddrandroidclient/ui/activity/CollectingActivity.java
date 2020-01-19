@@ -127,7 +127,6 @@ public class CollectingActivity extends DDRActivity {
                                 addPoi.setVisibility(View.VISIBLE);
                                 break;
                             case 7:
-                                setTitle("地图生成中...");
                                 if (!iscreatingMap) {
                                     setAnimation(processBar, 70, 4000);
                                     iscreatingMap = true;
@@ -149,6 +148,7 @@ public class CollectingActivity extends DDRActivity {
                         }
                     }else if (notifyBaseStatusEx.getMode() == 1){
                         if (iscreatingMap&&!haveCtrated){
+
                             try {
                                 tcpClient.reqRunControlEx(collectName);       //切换地图
                             }catch (Exception e){
@@ -205,7 +205,6 @@ public class CollectingActivity extends DDRActivity {
 
     @Override
     public void onLeftClick(View v) {
-        //collecting.unRegister();
         new InputDialog.Builder(getActivity())
                 .setTitle("是否退出采集")
                 .setEditVisibility(View.GONE)
@@ -213,8 +212,6 @@ public class CollectingActivity extends DDRActivity {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
                         quitCollect();
-                       //collecting.onStop();
-                        //collectMapLayout.onStopDraw();
                         stopDraw();
                         finish();
                     }
@@ -529,7 +526,7 @@ public class CollectingActivity extends DDRActivity {
         return false;
     }
 
-    @Subscribe(threadMode = ThreadMode.POSTING)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void upDateDrawMap(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
             case receivePointCloud:
