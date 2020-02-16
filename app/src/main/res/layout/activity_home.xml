@@ -12,10 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#101112">
+        <!--大道智创客户端-->
         <TextView
             android:layout_width="136dp"
             android:layout_height="22.5dp"
-            android:text="大道智创客户端"
+            android:text=""
             android:textSize="16dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"

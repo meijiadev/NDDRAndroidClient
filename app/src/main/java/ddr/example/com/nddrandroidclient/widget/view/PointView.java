@@ -52,7 +52,7 @@ public class PointView {
     private Matrix matrix=new Matrix();
     private Bitmap directionBitmap,directionBitmap1;
     private Bitmap targetBitmap,targetBitmap1;
-
+    private Bitmap beginBitmap,chargeBitmap;        //初始点、充点电
 
     /**
      * 设置需要显示的点列表
@@ -125,6 +125,8 @@ public class PointView {
         autoBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.auto_default);
         directionBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.direction);
         targetBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.target_point);
+        beginBitmap=BitmapFactory.decodeResource(context.getResources(),R.mipmap.begin_point);
+        chargeBitmap=BitmapFactory.decodeResource(context.getResources(),R.mipmap.charge_point);
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
         EventBus.getDefault().register(this);
     }

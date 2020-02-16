@@ -164,7 +164,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
             if (maxY<posY) maxY=posY;
             if (minX>posX) minX=posX;
             if (minY>posY) minY=posY;
-            float xy=Math.max(Math.max(maxX,Math.abs(minX)),Math.max(maxY,Math.abs(minY)));
+            float xy=Math.max(Math.max(Math.abs(maxX),Math.abs(minX)),Math.max(Math.abs(maxY),Math.abs(minY)));
             if (xy<=0){
                 ratio=1;
             }else {

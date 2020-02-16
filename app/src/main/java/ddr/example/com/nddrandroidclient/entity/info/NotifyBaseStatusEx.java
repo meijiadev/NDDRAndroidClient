@@ -1,5 +1,10 @@
 package ddr.example.com.nddrandroidclient.entity.info;
 
+import ddr.example.com.nddrandroidclient.other.Logger;
+
+/**
+ * 接收基础信息
+ */
 public class NotifyBaseStatusEx {
     public static NotifyBaseStatusEx notifyBaseStatusEx;
 
@@ -25,10 +30,19 @@ public class NotifyBaseStatusEx {
     private float posDirection;
     private float posLinespeed;
     private float currspeed;
-    private int eSelfCalibStatus;
-    private boolean chargingStatus;
-    private int taskCount;
-    private int taskDuration;
+    private int eSelfCalibStatus;    // 充电子状态
+    private boolean chargingStatus;    // true - 充电中
+    private int taskCount;           // 任务次数
+    private int taskDuration;         //任务时长，单位秒
+    private boolean isHaveLocation=true;  //是否有定位  假设有定位（其实并不一定有）
+    private boolean isFinishCollect;
+    /**
+     * 异常状态  1：内存错误 ， 2：试图采集的地图名已存在 ，3：采集模式下文件IO错误，4：自动模式选择的地图不存在，5：自动模式重定位失败，
+     *          6：自动模式下文件IO错误，7：自动模式下路径规划模块异常 , 8:自动模式下避障模块异常
+     */
+    private int exceptionValue;
+    private boolean isLocationed;      //当前是否有定位
+
 
     public boolean isChargingStatus() {
         return chargingStatus;
@@ -84,6 +98,9 @@ public class NotifyBaseStatusEx {
 
     public void setSonMode(int sonMode) {
         this.sonMode = sonMode;
+        if (sonMode==8){
+            setFinishCollect(true);
+        }
     }
 
     public int getStopStat() {
@@ -158,8 +175,43 @@ public class NotifyBaseStatusEx {
         this.chargingStatus = chargingStatus;
     }
 
+    public void setExceptionValue(int exceptionValue) {
+        this.exceptionValue = exceptionValue;
+        if (exceptionValue==5){
+            setHaveLocation(false);
+            Logger.e("定位不成功！");
+        }
+    }
+
+    public int getExceptionValue() {
+        return exceptionValue;
+    }
+
+    public void setLocationed(boolean locationed) {
+        isLocationed = locationed;
+    }
+
+    public boolean isLocationed() {
+        return isLocationed;
+    }
+
     public void setNull(){
         notifyBaseStatusEx=null;
     }
 
+    public void setHaveLocation(boolean haveLocation) {
+        isHaveLocation = haveLocation;
+    }
+
+    public boolean isHaveLocation() {
+        return isHaveLocation;
+    }
+
+    public void setFinishCollect(boolean finishCollect) {
+        isFinishCollect = finishCollect;
+    }
+
+    public boolean isFinishCollect() {
+        return isFinishCollect;
+    }
 }

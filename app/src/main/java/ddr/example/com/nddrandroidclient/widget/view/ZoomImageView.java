@@ -132,6 +132,7 @@ public class ZoomImageView extends View {
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
+
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerCount() == 1) {
                     // 只有单指按在屏幕上移动时，为拖动状态

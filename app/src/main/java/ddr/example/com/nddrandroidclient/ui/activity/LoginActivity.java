@@ -103,7 +103,7 @@ public  class LoginActivity extends DDRActivity  {
                 editor.putString("account", accountName);
                 editor.putString("password", passwordName);
                 editor.commit();
-                Logger.e("登陆成功");
+                Logger.e("登录成功");
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
                         waitDialog.dismiss();
@@ -156,11 +156,11 @@ public  class LoginActivity extends DDRActivity  {
                     }else {
                         tcpClient.creatConnect(robot_id.getText().toString(),tcpPort);
                         waitDialog=new WaitDialog.Builder(this)
-                                .setMessage("登陆中...")
+                                .setMessage("登录中...")
                                 .show();
                         postDelayed(()->{
                             if (waitDialog.isShowing()){
-                                toast("登陆失败，请检查网络后重新登陆");
+                                toast("登录失败，请检查网络后重新登录");
                                 waitDialog.dismiss();
                             }
                         },5000);

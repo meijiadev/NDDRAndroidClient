@@ -120,7 +120,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#101112"
         android:layout_below="@id/second_title"
         android:layout_toRightOf="@id/recycler_target"
         >
@@ -135,7 +134,8 @@
         <ddr.example.com.nddrandroidclient.widget.view.ZoomImageView
             android:id="@+id/zmap"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/iv_center"

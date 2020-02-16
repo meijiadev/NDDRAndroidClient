@@ -20,6 +20,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,16 +33,22 @@ import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
+import ddr.example.com.nddrandroidclient.widget.layout.CollectMapLayout;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
 
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView2;
+import ddr.example.com.nddrandroidclient.widget.view.CollectingView3;
+import ddr.example.com.nddrandroidclient.widget.view.CollectingView4;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
+import static ddr.example.com.nddrandroidclient.entity.MessageEvent.Type.receivePointCloud;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
 
@@ -50,8 +58,14 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
  */
 public class CollectingActivity extends DDRActivity {
 
-    @BindView(R.id.collecting)
-    CollectingView2 collecting;
+   /* @BindView(R.id.collecting)
+    CollectingView2 collecting;*/
+  /*  @BindView(R.id.collect_layout)
+    CollectMapLayout collectMapLayout;*/
+    @BindView(R.id.collect4)
+    CollectingView4 collectingView4;
+    @BindView(R.id.collect3)
+    CollectingView3 collectingView3;
     @BindView(R.id.process_bar)
     NumberProgressBar processBar;
     @BindView(R.id.tv_speed)
@@ -78,11 +92,22 @@ public class CollectingActivity extends DDRActivity {
     private boolean haveCtrated = false;         //是否地图生成完成
     private String collectName;                  //采集的地图名
     private BaseDialog waitDialog;
+
+    private NotifyLidarPtsEntity notifyLidarPtsEntity;
+    private NotifyLidarPtsEntity notifyLidarPtsEntity1;
+    private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
+    private List<XyEntity>poiPoints=new ArrayList<>();                   //兴趣点列表 采集中生成
+    private float posX,posY;        //机器人当前位置
+    private float radian;           // 机器人当前朝向 单位弧度
+    private float angle;            // 机器人当前朝向 弧度转换后的角度
+    private float minX=0,minY=0,maxX=0,maxY=0;  //雷达扫到的最大坐标和最小坐标
+    private float ratio=1;         //地图比例
+    private int measureWidth=1000, measureHeight=1000;
+    private boolean isStartDraw=false;        //是否开始绘制
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
-
                 Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
                 if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
                     setTitle("正在自标定中...");
@@ -102,7 +127,6 @@ public class CollectingActivity extends DDRActivity {
                                 addPoi.setVisibility(View.VISIBLE);
                                 break;
                             case 7:
-                                setTitle("地图生成中...");
                                 if (!iscreatingMap) {
                                     setAnimation(processBar, 70, 4000);
                                     iscreatingMap = true;
@@ -118,17 +142,30 @@ public class CollectingActivity extends DDRActivity {
                                     }
                                     setAnimation(processBar, 100, 3000);
                                     finish();
-                                    
+                                    haveCtrated=true;
                                 }
                                 break;
+                        }
+                    }else if (notifyBaseStatusEx.getMode() == 1){
+                        if (iscreatingMap&&!haveCtrated){
+
+                            try {
+                                tcpClient.reqRunControlEx(collectName);       //切换地图
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            setAnimation(processBar, 100, 3000);
+                            finish();
+                            haveCtrated=true;
                         }
                     }
 
                 }
                 break;
-
         }
     }
+
+
 
     @Override
     protected int getLayoutId() {
@@ -151,6 +188,7 @@ public class CollectingActivity extends DDRActivity {
         collectName=getIntent().getStringExtra("CollectName");
         Logger.e("-----采集的地图名");
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
+        notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         processBar.setMax(100);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
@@ -167,7 +205,6 @@ public class CollectingActivity extends DDRActivity {
 
     @Override
     public void onLeftClick(View v) {
-        //collecting.unRegister();
         new InputDialog.Builder(getActivity())
                 .setTitle("是否退出采集")
                 .setEditVisibility(View.GONE)
@@ -175,7 +212,7 @@ public class CollectingActivity extends DDRActivity {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
                         quitCollect();
-                        collecting.onStop();
+                        stopDraw();
                         finish();
                     }
                     @Override
@@ -198,7 +235,8 @@ public class CollectingActivity extends DDRActivity {
                         processBar.setVisibility(View.VISIBLE);
                         setAnimation(processBar, 20, 3000);
                         //collecting.unRegister();
-                        collecting.onStop();
+                        ///collecting.onStop();
+                        stopDraw();
                     }
                     @Override
                     public void onCancel(BaseDialog dialog) {
@@ -247,6 +285,7 @@ public class CollectingActivity extends DDRActivity {
         BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
         tcpClient.sendData(null,reqAddPathPointWhileCollecting);
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
+        poiPoints.add(new XyEntity(posX,posY));
         toast("标记成功");
 
     }
@@ -487,6 +526,76 @@ public class CollectingActivity extends DDRActivity {
         return false;
     }
 
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void upDateDrawMap(MessageEvent mainUpDate){
+        switch (mainUpDate.getType()){
+            case receivePointCloud:
+                if (NotifyBaseStatusEx.getInstance().getSonMode()==6){
+                    posX=notifyLidarPtsEntity.getPosX();
+                    posY=notifyLidarPtsEntity.getPosY();
+                    radian=notifyLidarPtsEntity.getPosdirection();
+                    angle=radianToangle(radian);
+                    notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
+                    notifyLidarPtsEntity1.setPosX(notifyLidarPtsEntity.getPosX());
+                    notifyLidarPtsEntity1.setPosY(notifyLidarPtsEntity.getPosY());
+                    notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
+                    ptsEntityList.add(notifyLidarPtsEntity1);
+                    maxOrmin(notifyLidarPtsEntity.getPositionList());
+                    if (!isStartDraw){
+                        collectingView4.startThread();
+                        collectingView3.startThread();
+                    }
+                    collectingView4.setData(ptsEntityList,poiPoints,ratio);
+                    collectingView3.setData(ptsEntityList,ratio,angle);
+                    isStartDraw=true;
+                }
+                break;
+        }
+    }
+    /**
+     * 弧度转角度
+     */
+    private float radianToangle(float angle){
+        return (float)(180/Math.PI*angle);
+    }
+    /**
+     * 计算缩放比例
+     * @param list
+     */
+    private void maxOrmin(List<BaseCmd.notifyLidarPts.Position> list){
+        long startTime=System.currentTimeMillis();
+        if (list!=null){
+            int listSize=list.size();
+            for (int i=0;i<listSize;i++){
+                if (maxX<list.get(i).getPtX()) maxX=list.get(i).getPtX();
+                if (maxY<list.get(i).getPtY()) maxY=list.get(i).getPtY();
+                if (minX>list.get(i).getPtX()) minX=list.get(i).getPtX();
+                if (minY>list.get(i).getPtY()) minY=list.get(i).getPtY();
+            }
+            if (maxX<posX) maxX=posX;
+            if (maxY<posY) maxY=posY;
+            if (minX>posX) minX=posX;
+            if (minY>posY) minY=posY;
+            float xy=Math.max(Math.max(maxX,Math.abs(minX)),Math.max(maxY,Math.abs(minY)));
+            if (xy<=0){
+                ratio=1;
+            }else {
+                if (measureWidth>measureHeight){
+                    ratio=measureWidth/(xy)/2*1;
+                }else {
+                    ratio=measureHeight/(xy)/2*1;
+                }
+            }
+        }
+        long endTime=System.currentTimeMillis();
+    }
 
+    /**
+     * 停止绘制
+     */
+    public void stopDraw(){
+        collectingView4.onStop();
+        collectingView3.onStop();
+    }
 
 }
