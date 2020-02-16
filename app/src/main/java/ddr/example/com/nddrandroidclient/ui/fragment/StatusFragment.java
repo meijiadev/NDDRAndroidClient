@@ -217,9 +217,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 
         for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
             groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
-            Logger.e("group列数"+groupList.size());
+//            Logger.e("group列数"+groupList.size());
         }
-        Logger.e("task列表"+groupList.size());
+//        Logger.e("task列表"+groupList.size());
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
     }
@@ -388,17 +388,18 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 float y= (float) 1.0;
                 new InputDialog.Builder(getAttachActivity())
                         .setEditVisibility(View.GONE)
-                        .setTitle("是否恢复任务")
+                        .setTitle("确认本次送料完成")
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 mapImageView.clearDraw();
                                 goPointLet(x,y,theat,ByteString.copyFromUtf8("one"),ByteString.copyFromUtf8(mapName),2);
+                                tv_restart_point.setVisibility(View.GONE);
                             }
 
                             @Override
                             public void onCancel(BaseDialog dialog) {
-                                toast("取消恢复任务");
+                                toast("取消");
                             }
                         }).show();
 
@@ -576,6 +577,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                                 @Override
                                                 public void onConfirm(BaseDialog dialog, String content) {
                                                     goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName),1);
+                                                    tv_restart_point.setVisibility(View.VISIBLE);
                                                     for (int i=0;i<targetPoints.size();i++){
                                                         targetPoints.get(i).setSelected(false);
                                                     }
