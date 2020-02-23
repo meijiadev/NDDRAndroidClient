@@ -281,12 +281,13 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="18dp"
-            android:text="恢复"
+            android:text="完成"
             android:textSize="14dp"
             android:textColor="#ffffff"
             android:layout_marginTop="380dp"
             android:layout_marginLeft="160dp"
             android:gravity="center"
+            android:visibility="gone"
             android:id="@+id/tv_restart_point"
             />
         <ddr.example.com.nddrandroidclient.widget.view.CircleBarView

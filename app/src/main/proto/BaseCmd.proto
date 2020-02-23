@@ -1022,6 +1022,33 @@ message rspConfigOperational{
 	repeated configData data = 2;
 }
 
+// 以下为针对传感器配置的
+enum eSensorConfigItemOptType
+{
+	eSensorConfigOptTypeError = 0; // 让有效值从1开始，便于保存
+	eSensorConfigOptTypeGetData = 1; // 获取数据
+	eSensorConfigOptTypeResumeData = 2;  // 恢复默认值
+	eSensorConfigOptTypeSetData = 3; // 设置数据
+	eSensorConfigOptTypeDisableAll = 4; // 失能
+	eSensorConfigOptTypeEnableAll = 5; // 使能
+}
+
+message sensorConfigItem{
+	bytes key = 1;
+	bytes dynamicOATriggerDist = 2; // 动态触发距离
+	bytes staticOATriggerDist = 3; // 静态触发距离
+}
+
+message reqSensorConfigOperational{
+	eSensorConfigItemOptType type = 1;
+	repeated sensorConfigItem data = 2;
+}
+
+message rspSensorConfigOperational{
+	eCmdRspType type = 1;
+	repeated sensorConfigItem data = 2;
+}
+
 /*
 // 客户端获取所有的配置文件
 message reqGetAllConfig{

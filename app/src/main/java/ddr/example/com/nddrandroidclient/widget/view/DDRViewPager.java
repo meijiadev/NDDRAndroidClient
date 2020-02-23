@@ -74,4 +74,8 @@ public class DDRViewPager extends ViewPager {
         return adapter != null ? adapter.getCount() : 0;
     }
 
+    @Override
+    public int getCurrentItem() {
+        return super.getCurrentItem();
+    }
 }
