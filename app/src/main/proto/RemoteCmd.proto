@@ -24,6 +24,7 @@ message reqRegisteLS
 {
 	string udid = 1;
 	string name = 2;
+	eCltType type = 3;
 }
 message rspRegisteLS
 {
@@ -39,6 +40,7 @@ message reqRemoteLogin
 }
 message rspRemoteLogin
 {
+
 	message LSEntity
 	{
 		string udid = 1;
@@ -62,20 +64,24 @@ message rspRemoteLogin
 message reqSelectLS
 {
 	string udid = 1;
+	string name = 2;
 }
 message rspSelectLS
 {
 	string udid = 1;
-	string error = 2;
+	string name = 2;
+	string error = 3;
 }
 message reqUnselectLS
 {
 	string udid = 1;
+	string name = 2;
 }
 message rspUnselectLS
 {
 	string udid = 1;
-	string error = 2;
+	string name = 2;
+	string error = 3;
 }
 
 //-----------------------------------------------------------------------------------------------------------------Remote Server]]]]]]]]]]]]]]]]]]]]]]]]]]]

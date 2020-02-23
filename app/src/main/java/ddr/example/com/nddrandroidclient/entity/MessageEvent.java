@@ -11,7 +11,10 @@ public class MessageEvent {
         updateIPList,          //更新IP列表
         updatePort,           // 更新端口号
         tcpConnected,         //tcp已连接
+        receiveServerList,        //获取到地区服务信息
         LoginSuccess,        //登陆成功
+        wanLoginSuccess,     //广域网登陆成功
+        connectedToRobot,    //连接上机器人
         updateMapList,      //获取地图列表
         updateBaseStatus,  //获取基础信息
         updateDDRVLNMap,  // 更新地图信息
@@ -19,6 +22,7 @@ public class MessageEvent {
         addPoiPoint,   //采集过程中添加点
         updateVersion, //获取版本信息
         receivePointCloud,    //接收点云
+        receiveVisionPoints,   //接收视觉点云
         switchTaskSuccess,   //
 
         addNewPoint,    //添加目标点
@@ -35,6 +39,11 @@ public class MessageEvent {
 
         receiveObstacleInfo,  //接收机器人当前位置的障碍物信息
         enterRelocationMode,  //重新进入重定位模式
+
+        notifyMapGenerateProgress,  //接受地图生成的进度
+        updateDetectionLoopStatus,   //接受回环检测结果
+
+        touchSelectPoint,            //触摸选中目标点
 
 
     }

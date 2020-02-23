@@ -3,11 +3,13 @@ package ddr.example.com.nddrandroidclient.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -109,9 +111,21 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_switch_mode)
     TextView tv_switch_mode;
 
+    @BindView(R.id.left_layout)
+    RelativeLayout leftLayout;                //非充电状态下的左侧布局
+    @BindView(R.id.charging_layout)
+    RelativeLayout chargingLayout;             //充电模式下的左侧布局
+    @BindView(R.id.iv_charge)
+    ImageView ivCharge;                       //充电状态的图标  附带动画效果
+    @BindView(R.id.bt_exit_charge)
+    Button btExitCharge;                      //退出充电模式
+
+
+
 
     private Animation hideAnimation;  //布局隐藏时的动画
     private Animation showAnimation;  // 布局显示时的动画效果
+    private AnimationDrawable chargeAnimation;
 
     private NotifyEnvInfo notifyEnvInfo;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -186,6 +200,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         statusSwitchButton.setOnStatusListener(this);
         hideAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_hide);
         showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
+        chargeAnimation= (AnimationDrawable) ivCharge.getBackground();
         taskCheckAdapter=new StringAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
         @SuppressLint("WrongConstant")
@@ -284,12 +299,25 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
-
-
+        //Logger.e("------------是否在充电："+notifyBaseStatusEx.isChargingStatus());
         if(notifyBaseStatusEx.isChargingStatus()) {
             iv_cd_xs.setImageResource(R.mipmap.cd_green);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#54E361"));
+            if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
+                chargingLayout.setVisibility(View.VISIBLE);
+                leftLayout.setVisibility(View.GONE);
+                if (!chargeAnimation.isRunning()){
+                    chargeAnimation.start();
+                }
+            }
         }else {
+            if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式 
+                chargingLayout.setVisibility(View.GONE);
+                leftLayout.setVisibility(View.VISIBLE);
+                if (chargeAnimation.isRunning()){
+                    chargeAnimation.stop();                           // 如果动画正在运行 则停止
+                }
+            }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
         }

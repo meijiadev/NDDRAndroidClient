@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.protocobuf.dispatcher;
 
 import DDRCommProto.BaseCmd;
+import DDRCommProto.RemoteCmd;
 import DDRModuleProto.DDRModuleCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -8,6 +9,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyBaseStatusExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyEnvInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyMapGenStatProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdRelocProcessor;
@@ -16,13 +18,17 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapExProc
 
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdStartActionModelProcessor;
 
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDetecLoopProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspLoginProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspMapOperationalProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspObstacleInfoProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRemoteLoginProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRemoteServerListProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunControlExProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSelectLSProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.ServerInformationProcessor;
 
 
@@ -46,6 +52,15 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.bcLSAddr bcLSAddr=BaseCmd.bcLSAddr.newBuilder().build();
         m_ProcessorMap.put(bcLSAddr.getClass().toString(),new ServerInformationProcessor());
+
+        RemoteCmd.rspRemoteServerList rspRemoteServerList=RemoteCmd.rspRemoteServerList.newBuilder().build();
+        m_ProcessorMap.put(rspRemoteServerList.getClass().toString(),new RspRemoteServerListProcessor());
+
+        RemoteCmd.rspRemoteLogin rspRemoteLogin=RemoteCmd.rspRemoteLogin.newBuilder().build();
+        m_ProcessorMap.put(rspRemoteLogin.getClass().toString(),new RspRemoteLoginProcessor());
+
+        RemoteCmd.rspSelectLS rspSelectLS=RemoteCmd.rspSelectLS.newBuilder().build();
+        m_ProcessorMap.put(rspSelectLS.getClass().toString(),new RspSelectLSProcessor());
 
 
         BaseCmd.rspCmdMove rspCmdMove=BaseCmd.rspCmdMove.newBuilder().build();
@@ -88,6 +103,12 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.rspCmdReloc rspCmdReloc=BaseCmd.rspCmdReloc.newBuilder().build();
         m_ProcessorMap.put(rspCmdReloc.getClass().toString(),new RspCmdRelocProcessor());
+
+        BaseCmd.notifyMapGenStat mapGenStat=BaseCmd.notifyMapGenStat.newBuilder().build();
+        m_ProcessorMap.put(mapGenStat.getClass().toString(),new NotifyMapGenStatProcessor());
+
+        BaseCmd.rspDetectLoop rspDetectLoop=BaseCmd.rspDetectLoop.newBuilder().build();
+        m_ProcessorMap.put(rspDetectLoop.getClass().toString(),new RspDetecLoopProcessor());
 
 
     }

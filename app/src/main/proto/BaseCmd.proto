@@ -981,13 +981,20 @@ message rspRenameMap{
 	eCmdRspType type = 1;
 }
 
-// 以下为配置文件相关
-
+// 20200210 以下为配置文件相关  ++++++++++
 enum eConfigItemType
 {
 	eConfigTypeError = 0; // 让有效值从1开始，便于保存
 	eConfigTypeCore = 1;
 	eConfigTypeLogic = 2; 
+}
+
+enum eConfigItemOptType
+{
+	eConfigOptTypeError = 0; // 让有效值从1开始，便于保存
+	eConfigOptTypeGetData = 1; // 获取数据
+	eConfigOptTypeResumeData = 2;  // 恢复默认值
+	eConfigOptTypeSetData = 3; // 设置数据
 }
 
 // 配置文件
@@ -999,11 +1006,23 @@ message configItem{
 	bytes alias = 5;
 }
 
+// 单个配置项
 message configData{
 	eConfigItemType type = 1;
-	repeated configItem data = 2;
+	configItem data = 2;
 }
 
+message reqConfigOperational{
+	eConfigItemOptType type = 1; // 为eConfigTypeError时，表示将两种类型的配置文件都发送
+	repeated configData data = 2;
+}
+
+message rspConfigOperational{
+	eCmdRspType type = 1;
+	repeated configData data = 2;
+}
+
+/*
 // 客户端获取所有的配置文件
 message reqGetAllConfig{
 	eConfigItemType type = 1; // 为eConfigTypeError时，表示将两种类型的配置文件都发送
@@ -1021,6 +1040,66 @@ message reqSetConfig{
 message rspSetConfig{
 	eCmdRspType type = 1;
 }
+*/
+// 20200210 以上为配置文件相关  -----------
+
+// 20200210 以下为请求回环检测相关  ++++++++++
+// 请求回环检测
+message reqDetectLoop{
+	bytes resver = 1;
+}
+
+// 通知回环的结果
+// 0 - 回环已存在;
+// 1 - 新采集基准构成回环; 2 - 距离太近不需要检测回环;
+// -1 - 没有检测到回环; -2 - 检测错误;
+message rspDetectLoop{
+	eCmdRspType type = 1;
+	int32 loopStat = 2;
+	
+}
+// 20200210 以上为请求回环检测相关  ----------
+
+// 20200210 以下为生成地图进度相关  ++++++++++
+message notifyMapGenStat{
+	float progCB = 1; // [0.0 - 1.0]
+}
+// 20200210 以上为生成地图进度相关  ----------
+
+// 20200210 以下为请求硬件自检相关  ++++++++++
+message reqHardwareCheck{
+	bytes param = 1;
+}
+
+message rspHardwareCheck{
+	eCmdRspType type = 1;
+}
+
+message notifyHardwareStat{
+	
+	// 各硬件类型
+	enum HardwareType{
+		en_HardwareTypeEmb = 0;  // 嵌入式
+		en_HardwareType2DLidar = 1; // 2D雷达模块
+		en_HardwareTypeCamera = 2; // 相机
+	}
+	
+	// 硬件状态码  0表示正常，后续可能会新增不同的状态码
+	enum HardwareStat{
+		en_HardwareStatOk = 0;  // 正常
+		en_HardwareStatInitError = 1;
+	}
+	
+	message HardwareStatItem
+	{
+		bytes date = 1; // 时间 eg: 2019-09-28 14:30:20
+		HardwareType type = 2; // 类型
+		HardwareStat stat = 3; // 状态
+	}
+	repeated HardwareStatItem data = 1;
+}
+// 20200210 以上为请求硬件自检相关  -----------
+
 
 // 获取地图数据
 message reqClientGetMapInfo{
@@ -1090,6 +1169,20 @@ message rspUse2DLiderReset{
 
 // 上位机上报的点云数据
 message notifyLidarPts{
+	message Position
+	{
+		float pt_x = 1;
+		float pt_y = 2;
+		float pt_z = 3;
+	}
+	repeated Position ptsData = 1;
+	float posx = 2;  // 机器人位置x
+	float posy = 3;  // 机器人位置y
+	float posdirection = 4; // 机器人朝向
+}
+
+// 上位机上报的视觉点云数据
+message notifyVisionPts{
 	message Position
 	{
 		float pt_x = 1;

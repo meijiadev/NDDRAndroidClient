@@ -10,18 +10,18 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Logger;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * time ：2019/11/13
@@ -31,6 +31,7 @@ public class PointView {
     public static PointView pointView;
     private List<TargetPoint> targetPoints;
     private List<TargetPoint> targetPoints1;
+    private List<TargetPoint> selectPoints;
     private Paint pointPaint,textPaint;
     private TargetPoint targetPoint;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -53,6 +54,8 @@ public class PointView {
     private Bitmap directionBitmap,directionBitmap1;
     private Bitmap targetBitmap,targetBitmap1;
     private Bitmap beginBitmap,chargeBitmap;        //初始点、充点电
+    private boolean isCheckPoint;                   //是否通过点击选择目标点
+
 
     /**
      * 设置需要显示的点列表
@@ -83,6 +86,22 @@ public class PointView {
      */
     public void setPoint(TargetPoint targetPoint){
         this.targetPoint=targetPoint;
+    }
+
+    /**
+     * 是否可以通过点击选择目标点组建成路径
+     * @param isCheckPoint
+     */
+    public void setIsTouch(boolean isCheckPoint){
+        this.isCheckPoint=isCheckPoint;
+    }
+
+    /**
+     * 用于点击的目标点列表
+     * @param selectPoints
+     */
+    public void set2TouchPoints(List<TargetPoint> selectPoints){
+        this.selectPoints=selectPoints;
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -133,7 +152,6 @@ public class PointView {
 
 
     public void drawPoint(Canvas canvas,ZoomImageView zoomImageView){
-
         if (targetPoints!=null){
             for (int i=0;i<targetPoints.size();i++){
                 if (targetPoints.get(i).isInTask()){
@@ -193,6 +211,47 @@ public class PointView {
             canvas.drawBitmap(directionBitmap1,(int)xyEntity.getX()-30,(int)xyEntity.getY()-30,pointPaint);
         }
 
+        if (selectPoints != null) {
+            for (int i=0;i<selectPoints.size();i++){
+                    XyEntity xyEntity=zoomImageView.toXorY(selectPoints.get(i).getX(),selectPoints.get(i).getY());
+                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    int x= (int) xyEntity.getX();
+                    int y= (int) xyEntity.getY();
+                    mRectSrc=new Rect(0,0,40,40);
+                    mRectDst=new Rect(x-20,y-20,x+20,y+20);
+                    matrix.setRotate(-selectPoints.get(i).getTheta());
+                    targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+                    canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+                    canvas.drawText(selectPoints.get(i).getName(),x,y+15,textPaint);
+            }
+        }
+
+    }
+
+
+    /**
+     * 点击区域的坐标
+     * @param x
+     * @param y
+     */
+    public void onClick(ZoomImageView zoomImageView,float x,float y){
+        if (isCheckPoint){
+            if (selectPoints!=null){
+                for (int i=0;i<selectPoints.size();i++){
+                    TargetPoint targetPoint=selectPoints.get(i);
+                    XyEntity xyEntity1=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());
+                    xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                    float x1=xyEntity1.getX(); float y1=xyEntity1.getY();
+                    double L=Math.sqrt(Math.pow(x1-x,2)+Math.pow(y1-y,2));
+                    if (L<15){
+                        Logger.e("点击选中点："+targetPoint.getName());
+                        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchSelectPoint,i));
+                        zoomImageView.invalidate();
+                    }
+                }
+            }
+
+        }
     }
 
 
@@ -207,6 +266,7 @@ public class PointView {
         targetPoints=null;
         targetPoint=null;
         targetPoints1=null;
+        selectPoints=null;
         isRuning=false;
         pathPoint=null;
     }

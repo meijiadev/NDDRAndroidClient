@@ -33,7 +33,7 @@
         </activity>
         <!--登录页面-->
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.LoginActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             ></activity>
 
         <!-- 崩溃界面 -->
@@ -47,6 +47,8 @@
         <activity android:name=".ui.activity.MapEditActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".ui.activity.RelocationActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.activity.MapSettingActivity"
             android:screenOrientation="landscape"/>
     </application>
 

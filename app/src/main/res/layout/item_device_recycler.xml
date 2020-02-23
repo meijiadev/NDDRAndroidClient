@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="186dp"
+    android:layout_height="76dp"
+    android:background="@drawable/item_device_bg_black"
+    android:id="@+id/device_layout"
+    >
+    <ImageView
+        android:id="@+id/iv_device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/iv_device"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        />
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前设备-1"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:layout_toRightOf="@id/iv_device"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="13dp"
+        />
+    <TextView
+        android:id="@+id/tv_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未连接"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:layout_toRightOf="@id/iv_device"
+        android:layout_below="@id/tv_device_name"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="13dp"
+        />
+
+</RelativeLayout>

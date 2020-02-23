@@ -40,15 +40,10 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
-import ddr.example.com.nddrandroidclient.widget.layout.CollectMapLayout;
-import ddr.example.com.nddrandroidclient.widget.view.CollectingView;
-
-import ddr.example.com.nddrandroidclient.widget.view.CollectingView2;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView3;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView4;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
-import static ddr.example.com.nddrandroidclient.entity.MessageEvent.Type.receivePointCloud;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
 
@@ -80,6 +75,8 @@ public class CollectingActivity extends DDRActivity {
     RockerView myRocker;
     @BindView(R.id.my_rocker_zy)
     RockerView myRockerZy;
+    @BindView(R.id.tv_detection)
+    TextView tvDetection;                   //回环检测
 
     private float lineSpeed, palstance;  //线速度 ，角速度
     private double maxSpeed = 0.4;       //设置的最大速度
@@ -88,8 +85,8 @@ public class CollectingActivity extends DDRActivity {
     private TcpClient tcpClient;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private boolean iscreatingMap = false;       //是否正在生成地图
-    private boolean haveCtrated = false;         //是否地图生成完成
+    /*private boolean iscreatingMap = false;       //是否正在生成地图
+    private boolean haveCtrated = false;         //是否地图生成完成*/
     private String collectName;                  //采集的地图名
     private BaseDialog waitDialog;
 
@@ -126,41 +123,44 @@ public class CollectingActivity extends DDRActivity {
                                 myRocker.setVisibility(View.VISIBLE);
                                 addPoi.setVisibility(View.VISIBLE);
                                 break;
-                            case 7:
-                                if (!iscreatingMap) {
-                                    setAnimation(processBar, 70, 4000);
-                                    iscreatingMap = true;
-                                }
-                                break;
-                            case 8:
-                                setTitle("建图完成");
-                                if (!haveCtrated) {
-                                    try {
-                                        tcpClient.reqRunControlEx(collectName);       //切换地图
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                    }
-                                    setAnimation(processBar, 100, 3000);
-                                    finish();
-                                    haveCtrated=true;
-                                }
-                                break;
-                        }
-                    }else if (notifyBaseStatusEx.getMode() == 1){
-                        if (iscreatingMap&&!haveCtrated){
-
-                            try {
-                                tcpClient.reqRunControlEx(collectName);       //切换地图
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            setAnimation(processBar, 100, 3000);
-                            finish();
-                            haveCtrated=true;
                         }
                     }
 
                 }
+                break;
+            case notifyMapGenerateProgress:
+                float progress= (float) mainUpDate.getData();
+                setAnimation(processBar,(int) (progress*100),100);
+                if (progress==1.0f){
+                    setTitle("建图完成");
+                    try {
+                        tcpClient.reqRunControlEx(collectName);       //切换地图
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    finish();
+                }
+                break;
+            case updateDetectionLoopStatus:
+                int loopStatus= (int) mainUpDate.getData();
+                switch (loopStatus){
+                    case -2:                    // 检测错误
+                        toast("检测错误，请重新检测");
+                        break;
+                    case -1:                   // 没有检测到回环
+                        toast("没有检测到回环");
+                        break;
+                    case 0:                   // 回环已存在
+                        toast("回环已存在");
+                        break;
+                    case 1:                  // 新采集基准构成回环
+                        toast("新采集基准构成回环");
+                        break;
+                    case 2:                 //  距离太近不需要检测回环
+                        toast("距离太近不需要检测回环");
+                        break;
+                }
+
                 break;
         }
     }
@@ -280,13 +280,23 @@ public class CollectingActivity extends DDRActivity {
         });
     }
 
-    @OnClick(R.id.add_poi)
-    public void onViewClicked() {
-        BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
-        tcpClient.sendData(null,reqAddPathPointWhileCollecting);
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
-        poiPoints.add(new XyEntity(posX,posY));
-        toast("标记成功");
+    @OnClick({R.id.add_poi,R.id.tv_detection})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.add_poi:
+                BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
+                tcpClient.sendData(null,reqAddPathPointWhileCollecting);
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
+                poiPoints.add(new XyEntity(posX,posY));
+                toast("标记成功");
+                break;
+            case R.id.tv_detection:
+                BaseCmd.reqDetectLoop reqDetectLoop=BaseCmd.reqDetectLoop.newBuilder()
+                        .build();
+                tcpClient.sendData(null,reqDetectLoop);
+                break;
+        }
+
 
     }
 
@@ -321,6 +331,7 @@ public class CollectingActivity extends DDRActivity {
      * 设置进度条的 进度和动画效果
      *
      * @param view
+     *
      * @param mProgressBar
      */
     private void setAnimation(final NumberProgressBar view, final int mProgressBar, int time) {

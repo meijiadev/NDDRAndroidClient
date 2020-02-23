@@ -118,10 +118,11 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.bt_delete_wall)
     Button btDeleteWall;
 
-    @BindView(R.id.recycler_target)
-    RecyclerView recyclerTarget;        // 勾选目标点组建路径 ,目标点列表
+  /*  @BindView(R.id.recycler_target)
+    RecyclerView recyclerTarget;        // 勾选目标点组建路径 ,目标点列表*/
     @BindView(R.id.tv_selected_point)
     TextView tvSelectedPoint;          // 是否显示目标点列表
+    private boolean checkablePoint=false;    //是否勾选目标点建路径
 
     private boolean ishaveChecked = false;
     private SharedPreferences sharedPreferences;
@@ -137,7 +138,8 @@ public class MapEditActivity extends DDRActivity {
     private List<PathLine.PathPoint> pathPoints=new ArrayList<>();
     private List<TargetPoint> targetPoints,selectPoints;
     private List<PathLine> pathLines;                 // 显示在界面上的路径列表
-    private TargetPointAdapter targetPointAdapter,selectPointAdapter;
+    private TargetPointAdapter targetPointAdapter;
+    // private TargetPointAdapter selectPointAdapter;    勾选目标点形成路径的列表适配器
     private PathAdapter pathAdapter;
     private StringAdapter editTypeAdapter,graphTypeAdapter;           //编辑类型 、图形类型适配器
     private List<String> editTypes=new ArrayList<>();
@@ -161,13 +163,13 @@ public class MapEditActivity extends DDRActivity {
         initTimer();
         setFixedSpeed();
         targetPointAdapter = new TargetPointAdapter(R.layout.item_show_recycler);
-        selectPointAdapter=new TargetPointAdapter(R.layout.item_point_to_path);
+        //selectPointAdapter=new TargetPointAdapter(R.layout.item_point_to_path);
         pathAdapter = new PathAdapter(R.layout.item_show_recycler);
         editTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
         graphTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerTarget.setLayoutManager(layoutManager);
-        recyclerTarget.setAdapter(selectPointAdapter);
+        //recyclerTarget.setLayoutManager(layoutManager);
+        //recyclerTarget.setAdapter(selectPointAdapter);
         GridLayerView.getInstance(zmap).onDestroy();
     }
 
@@ -203,14 +205,14 @@ public class MapEditActivity extends DDRActivity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        selectPointAdapter.setNewData(selectPoints);
+       // selectPointAdapter.setNewData(selectPoints);
         editTypes.add("虚拟墙");
         graphTypes.add("直线");
         graphTypes.add("圆");
         graphTypes.add("多边形");
         initType(type);
         onShowItemClick();
-        onItemSelectClick();
+        //onItemSelectClick();
 
     }
 
@@ -315,8 +317,9 @@ public class MapEditActivity extends DDRActivity {
                     tvMarkCurrent.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.checkedwg), null);
                 }
                 break;
+            /*** 勾选目标点建路径**/
             case R.id.tv_selected_point:
-                if (recyclerTarget.getVisibility()==View.VISIBLE){
+               /* if (recyclerTarget.getVisibility()==View.VISIBLE){
                     pathPoints.clear();
                     LineView.getInstance(getApplication()).
                             setPoints(pathPoints);
@@ -340,7 +343,31 @@ public class MapEditActivity extends DDRActivity {
                 for (TargetPoint targetPoint:selectPoints){
                     targetPoint.setMultiple(false);
                 }
-                selectPointAdapter.setNewData(selectPoints);
+                selectPointAdapter.setNewData(selectPoints);*/
+                //selectPointAdapter.setNewData(selectPoints);
+                if (!checkablePoint){
+                    checkablePoint=true;
+                    tvAddPath.setVisibility(View.GONE);
+                    tvDeletePoint.setVisibility(View.GONE);
+                    ivCenter.setVisibility(View.GONE);
+                    PointView.getInstance(context).set2TouchPoints(selectPoints);
+                    PointView.getInstance(context).setIsTouch(checkablePoint);
+                    tvSelectedPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.checkedwg), null);
+                    zmap.invalidate();
+                }else {
+                    checkablePoint=false;
+                    PointView.getInstance(context).set2TouchPoints(null);
+                    PointView.getInstance(context).setIsTouch(checkablePoint);
+                    zmap.invalidate();
+                    tvAddPath.setVisibility(View.VISIBLE);
+                    tvDeletePoint.setVisibility(View.VISIBLE);
+                    ivCenter.setVisibility(View.VISIBLE);
+                    tvSelectedPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.nocheckedwg), null);
+                }
+                pathPoints.clear();
+                for (TargetPoint targetPoint:selectPoints){
+                    targetPoint.setMultiple(false);
+                }
                 break;
             case R.id.fixed_speed:
                 break;
@@ -422,7 +449,7 @@ public class MapEditActivity extends DDRActivity {
                                     if (!content.isEmpty()){
                                         PathLine pathLine=new PathLine();
                                         pathLine.setName(content);
-                                        if (recyclerTarget.getVisibility()!=View.VISIBLE){
+                                        if (!checkablePoint){
                                             for (int i=0;i<pathPoints.size();i++){
                                                 pathPoints.get(i).setName(content+"_"+i);
                                             }
@@ -447,7 +474,7 @@ public class MapEditActivity extends DDRActivity {
                                         for (TargetPoint targetPoint:selectPoints){
                                             targetPoint.setMultiple(false);
                                         }
-                                        selectPointAdapter.setNewData(selectPoints);
+                                        //selectPointAdapter.setNewData(selectPoints);
                                         toast("保存成功!");
                                     }else {
                                         toast("请先输入名称");
@@ -727,9 +754,9 @@ public class MapEditActivity extends DDRActivity {
     /***************************************************end*************************************************************/
 
 
-    /**
+   /* *//**
      * 点击勾选目标点组建路径
-     */
+     *//*
     private void onItemSelectClick(){
         selectPointAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (selectPoints.get(position).isMultiple()){
@@ -756,7 +783,7 @@ public class MapEditActivity extends DDRActivity {
                 selectPointAdapter.setNewData(selectPoints);
             }
         });
-    }
+    }*/
 
     @SuppressLint("NewApi")
     private void initSeekBar() {
@@ -997,6 +1024,31 @@ public class MapEditActivity extends DDRActivity {
         switch (messageEvent.getType()){
             case updateBaseStatus:
                 if (isRuning){
+                    zmap.invalidate();
+                }
+                break;
+            case touchSelectPoint:
+                int position= (int) messageEvent.getData();
+                if (selectPoints.get(position).isMultiple()){
+                    selectPoints.get(position).setMultiple(false);
+                    for (int i=0;i<pathPoints.size();i++){
+                        if (selectPoints.get(position).getName().equals(pathPoints.get(i).getName())){
+                            pathPoints.remove(i);
+                            LineView.getInstance(getApplication()).
+                                    setPoints(pathPoints);
+                            zmap.invalidate();
+                        }
+                    }
+
+                }else {
+                    selectPoints.get(position).setMultiple(true);
+                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                    pathPoint.setName(selectPoints.get(position).getName());
+                    pathPoint.setY(selectPoints.get(position).getY());
+                    pathPoint.setX(selectPoints.get(position).getX());
+                    pathPoints.add(pathPoint);
+                    LineView.getInstance(getApplication()).
+                            setPoints(pathPoints);
                     zmap.invalidate();
                 }
                 break;

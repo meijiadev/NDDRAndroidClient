@@ -111,7 +111,6 @@ public class CollectingView extends GLContinuousView {
 
     @Override
     protected void onGLDraw(ICanvasGL canvas) {
-        //long startTime=
         drawMap(canvas);
         drawPath(canvas);
         drawPoint(canvas);

@@ -63,8 +63,13 @@ public class MessageRoute {
 
     public static String protoTypeName2JavaClassName(String typeName){
         if (typeName.contains("DDRCommProto")){
-            String className=typeName.replaceAll("DDRCommProto\\.","class DDRCommProto.BaseCmd\\$");
-            return className;
+            if (typeName.contains("Remote")|typeName.contains("rspSelectLS")){
+                String className=typeName.replaceAll("DDRCommProto\\.","class DDRCommProto.RemoteCmd\\$");
+                return className;
+            }else {
+                String className=typeName.replaceAll("DDRCommProto\\.","class DDRCommProto.BaseCmd\\$");
+                return className;
+            }
         }else if (typeName.contains("DDRVLNMapProto")){
             String className=typeName.replaceAll("DDRVLNMapProto\\.","class DDRVLNMapProto.DDRVLNMap\\$");
             return className;
@@ -102,53 +107,53 @@ public class MessageRoute {
      * @return
      * @throws IOException
      */
-     public  void parse() {
-         if (parseThread==null){
-             parseThread=new Thread(new Runnable() {
-                 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                 @Override
-                 public void run() {
-                     while (true){
-                         switch (where){
-                             case 0x00:
-                                 try {
-                                     parsePbhState();
-                                 } catch (UnsupportedEncodingException e) {
-                                     e.printStackTrace();
-                                 } catch (InvalidProtocolBufferException e) {
-                                     e.printStackTrace();
-                                 }
-                                 break;
-                             case 0x01:
-                                 parsePbhState2();
-                                 break;
-                             case 0x02:
-                                 try {
-                                     parseLengthState();
-                                 } catch (InvalidProtocolBufferException e) {
-                                     e.printStackTrace();
-                                 }
-                                 break;
-                             case 0x03:
-                                 try {
-                                     parseHeadState();
-                                 } catch (InvalidProtocolBufferException e) {
-                                     e.printStackTrace();
-                                 }
-                                 break;
-                             case 0x04:
-                                 try {
-                                     parseBodyState();
-                                 } catch (InvalidProtocolBufferException e) {
-                                     e.printStackTrace();
-                                 }
-                                 break;
-                         }
-                     }
-                 }
-             });
-             parseThread.start();
-         }
+    public  void parse() {
+        if (parseThread==null){
+            parseThread=new Thread(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void run() {
+                    while (true){
+                        switch (where){
+                            case 0x00:
+                                try {
+                                    parsePbhState();
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            case 0x01:
+                                parsePbhState2();
+                                break;
+                            case 0x02:
+                                try {
+                                    parseLengthState();
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            case 0x03:
+                                try {
+                                    parseHeadState();
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            case 0x04:
+                                try {
+                                    parseBodyState();
+                                } catch (InvalidProtocolBufferException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                        }
+                    }
+                }
+            });
+            parseThread.start();
+        }
 
     }
 
@@ -178,12 +183,13 @@ public class MessageRoute {
                 if (Encrypt.Txt_Decrypt(bbodyData,bbodyData.length,bbodyDataDE,bbodyDataDE.length)){
                     bodyDataMsg=parseDynamic(headData.getBodyType(),bbodyDataDE);
                     processReceive(headData,bodyDataMsg);
+                    // Logger.e("------");
                 }else {
                     Logger.e("Txt_Decrypt Error");
                     processReceive(null,null);
                 }
             }else {
-               // Logger.e("bodyDataMsg:"+headData.getBodyType());
+                Logger.e("bodyDataMsg:"+headData.getBodyType());
                 bodyDataMsg=parseDynamic(headData.getBodyType(),null);
                 processReceive(headData,bodyDataMsg);
             }
@@ -200,24 +206,24 @@ public class MessageRoute {
      * @throws UnsupportedEncodingException
      * @throws InvalidProtocolBufferException
      */
-   @SuppressLint("NewApi")
-   private void parsePbhState() throws UnsupportedEncodingException, InvalidProtocolBufferException {
-         if (streamBuffer.arrayDeque.size()>=4){
-             head=streamBuffer.peekData(4);
-             String shead=new String(head,"UTF-8");
-             //Logger.e(shead);
-             if (shead.equals(headString)){
-                 //Logger.e("------验证成功");
-                 streamBuffer.pollData(4);
-                 parseLengthState();
-             }else {
-                 where=0x01;
-                 Logger.e("验证失败");
-             }
-         }else {
-             where=0x00;
-         }
-   }
+    @SuppressLint("NewApi")
+    private void parsePbhState() throws UnsupportedEncodingException, InvalidProtocolBufferException {
+        if (streamBuffer.arrayDeque.size()>=4){
+            head=streamBuffer.peekData(4);
+            String shead=new String(head,"UTF-8");
+            //Logger.e(shead);
+            if (shead.equals(headString)){
+                //Logger.e("------验证成功");
+                streamBuffer.pollData(4);
+                parseLengthState();
+            }else {
+                where=0x01;
+                Logger.e("验证失败");
+            }
+        }else {
+            where=0x00;
+        }
+    }
 
     /**
      * 如果验证失败 则丢掉第一个字节 再取四个进行比较 直到遇到对的头部
@@ -225,58 +231,58 @@ public class MessageRoute {
      * @throws UnsupportedEncodingException
      * @throws InvalidProtocolBufferException
      */
-   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-   private void parsePbhState2(){
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void parsePbhState2(){
         streamBuffer.poll();
         where=0x00;
-   }
+    }
 
-   public int totallen;
+    public int totallen;
 
     /**
      * 验证信息长度
      * @throws InvalidProtocolBufferException
      */
-   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-   private void parseLengthState() throws InvalidProtocolBufferException {
-         //Logger.e("-------可读长度:"+streamBuffer.arrayDeque.size());
-         if (streamBuffer.arrayDeque.size()>=4){
-             btotallen=streamBuffer.pollData(4);
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void parseLengthState() throws InvalidProtocolBufferException {
+        //Logger.e("-------可读长度:"+streamBuffer.arrayDeque.size());
+        if (streamBuffer.arrayDeque.size()>=4){
+            btotallen=streamBuffer.pollData(4);
             /* for (int i=0;i<btotallen.length;i++){
                  Logger.e("-----"+i+":"+btotallen[i]);
              }*/
-             totallen=bytesToIntLittle(btotallen,0);  //获取总长度信息
-             if (totallen>0){
-                 parseHeadState();
-             }else {
-                 where=0x00;
-             }
-             //Logger.e("---可读长度，信息长度"+streamBuffer.arrayDeque.size()+";"+totallen);
-         }else {
-             where=0x02;
-         }
-   }
+            totallen=bytesToIntLittle(btotallen,0);  //获取总长度信息
+            if (totallen>0){
+                parseHeadState();
+            }else {
+                where=0x00;
+            }
+            //Logger.e("---可读长度，信息长度"+streamBuffer.arrayDeque.size()+";"+totallen);
+        }else {
+            where=0x02;
+        }
+    }
 
     public int headlen;
-   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-   private void parseHeadState() throws InvalidProtocolBufferException {
-       //Logger.e("-------av:"+streamBuffer.arrayDeque.size());
-         if (streamBuffer.arrayDeque.size()>=4){
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void parseHeadState() throws InvalidProtocolBufferException {
+        //Logger.e("-------av:"+streamBuffer.arrayDeque.size());
+        if (streamBuffer.arrayDeque.size()>=4){
             // Logger.e("验证头部信息");
-             bheadlen=streamBuffer.pollData(4);
-             headlen=bytesToIntLittle(bheadlen,0);     //获取头部长度信息
-             if (headlen>0){
-                 parseBodyState();
-             }else {
-                 where=0x00;
-             }
-         }else {
-             where=0x03;
-         }
-   }
+            bheadlen=streamBuffer.pollData(4);
+            headlen=bytesToIntLittle(bheadlen,0);     //获取头部长度信息
+            if (headlen>0){
+                parseBodyState();
+            }else {
+                where=0x00;
+            }
+        }else {
+            where=0x03;
+        }
+    }
 
-   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-   private void parseBodyState() throws InvalidProtocolBufferException {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void parseBodyState() throws InvalidProtocolBufferException {
         if (streamBuffer.arrayDeque.size()>=totallen-8){
             byte[] bheadData=streamBuffer.pollData(headlen);
             byte[] bbodyData=streamBuffer.pollData(totallen-headlen-8);
@@ -321,7 +327,7 @@ public class MessageRoute {
         }else {
             where=0x04;
         }
-   }
+    }
 
 
 
@@ -333,20 +339,20 @@ public class MessageRoute {
     public  byte[] serialize(BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg){
         byte[]bbody=msg.toByteArray();
         String stype=msg.getClass().toString();
-        //Logger.e("未转换的stype:"+stype);
+        // Logger.e("未转换的stype:"+stype);
         stype=javaClass2ProtoTypeName(stype);
-        //Logger.e("转换后的stype:"+stype);
+        // Logger.e("转换后的stype:"+stype);
         int bbodylen=bbody.length;
         BaseCmd.CommonHeader headData;
         if (commonHeader!=null){
-             headData=BaseCmd.CommonHeader.newBuilder().setBodyType(stype)
-                     .setFromCltType(commonHeader.getFromCltType())
-                     .setToCltType(commonHeader.getToCltType())
-                     .addFlowDirection(commonHeader.getFlowDirection(0))
-                     .setGuid(commonHeader.getGuid())
-                     .build();      //设置头部类型
+            headData=BaseCmd.CommonHeader.newBuilder().setBodyType(stype)
+                    .setFromCltType(commonHeader.getFromCltType())
+                    .setToCltType(commonHeader.getToCltType())
+                    .addFlowDirection(commonHeader.getFlowDirection(0))
+                    .setGuid(commonHeader.getGuid())
+                    .build();      //设置头部类型
         }else{
-             headData=BaseCmd.CommonHeader.newBuilder().setBodyType(stype). build();      //设置头部类型
+            headData=BaseCmd.CommonHeader.newBuilder().setBodyType(stype). build();      //设置头部类型
         }
         byte[]bshead=headString.getBytes();  //头部标识
         byte[] bhead=headData.toByteArray();//头部信息
@@ -483,6 +489,8 @@ public class MessageRoute {
                 | ((src[offset + 3] & 0xFF) << 24));
         return value;
     }
+
+
 
 
 

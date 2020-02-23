@@ -106,7 +106,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * 延迟执行
      */

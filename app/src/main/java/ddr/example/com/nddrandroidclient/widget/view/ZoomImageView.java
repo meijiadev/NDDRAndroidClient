@@ -64,7 +64,6 @@ public class ZoomImageView extends View {
     public double t1=410.973;
 
 
-
     /**
      * ZoomImageView构造函数，将当前操作状态设为STATUS_INIT。
      * @param context
@@ -205,6 +204,7 @@ public class ZoomImageView extends View {
                 lastXMove = -1;
                 lastYMove = -1;
                 LineView.getInstance(context).onClick(this,event.getX(),event.getY());
+                PointView.getInstance(context).onClick(this,event.getX(),event.getY());
                 break;
             default:
                 break;
