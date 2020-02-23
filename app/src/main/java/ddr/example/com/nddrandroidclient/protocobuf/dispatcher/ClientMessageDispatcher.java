@@ -7,6 +7,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyBaseStatusExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyEnvInfoProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyHardStateProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
@@ -17,6 +18,8 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapExProc
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdStartActionModelProcessor;
 
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetParameterProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSensorProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspLoginProcessor;
@@ -89,6 +92,13 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
         BaseCmd.rspCmdReloc rspCmdReloc=BaseCmd.rspCmdReloc.newBuilder().build();
         m_ProcessorMap.put(rspCmdReloc.getClass().toString(),new RspCmdRelocProcessor());
 
+        BaseCmd.rspConfigOperational rspConfigOperational=BaseCmd.rspConfigOperational.newBuilder().build();
+        m_ProcessorMap.put(rspConfigOperational.getClass().toString(),new RspGetParameterProcessor());
 
+        BaseCmd.notifyHardwareStat notifyHardwareStat=BaseCmd.notifyHardwareStat.newBuilder().build();
+        m_ProcessorMap.put(notifyHardwareStat.getClass().toString(),new NotifyHardStateProcessor());
+
+        BaseCmd.rspSensorConfigOperational rspSensorConfigOperational=BaseCmd.rspSensorConfigOperational.newBuilder().build();
+        m_ProcessorMap.put(rspSensorConfigOperational.getClass().toString(),new RspGetSensorProcessor());
     }
 }

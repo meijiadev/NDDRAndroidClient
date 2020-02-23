@@ -20,6 +20,9 @@ public class MessageEvent {
         updateVersion, //获取版本信息
         receivePointCloud,    //接收点云
         switchTaskSuccess,   //
+        updataParameter,//获取参数
+        updataHardState,//获取自检参数
+        updataSenesor,//获取传感器参数
 
         addNewPoint,    //添加目标点
         addNewPath,     //添加路径

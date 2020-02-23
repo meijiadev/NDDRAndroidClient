@@ -14,7 +14,11 @@ import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.AutoChargingSet;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.EditManagerSet;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.HelpFeedbackSet;
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.NaParameterSet;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.RobotTestSet;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.SensorSet;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 
 /**
@@ -50,13 +54,17 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(NaParameterSet.newInstance());
         mPagerAdapter.addFragment(AutoChargingSet.newInstance());
+        mPagerAdapter.addFragment(SensorSet.newInstance());
+        mPagerAdapter.addFragment(RobotTestSet.newInstance());
+        mPagerAdapter.addFragment(EditManagerSet.newInstance());
+        mPagerAdapter.addFragment(HelpFeedbackSet.newInstance());
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         viewPager.addOnPageChangeListener(this);
         viewPager.setCurrentItem(0);
     }
 
-    @OnClick({R.id.tv_naParam,R.id.tv_autoCharging})
+    @OnClick({R.id.tv_naParam,R.id.tv_autoCharging,R.id.tv_sensorSet,R.id.tv_robotTest,R.id.tv_editionManager,R.id.tv_helpFeedback})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.tv_naParam:
@@ -66,6 +74,18 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
             case R.id.tv_autoCharging:
                 viewPager.setCurrentItem(1);
                 Logger.e("页数"+viewPager.getCurrentItem());
+                break;
+            case R.id.tv_sensorSet:
+                viewPager.setCurrentItem(2); //传感器配置
+                break;
+            case R.id.tv_robotTest:
+                viewPager.setCurrentItem(3);//机器检测
+                break;
+            case R.id.tv_editionManager:
+                viewPager.setCurrentItem(4); //版本管理
+                break;
+            case R.id.tv_helpFeedback:
+                viewPager.setCurrentItem(5); //帮助与反馈
                 break;
         }
     }
