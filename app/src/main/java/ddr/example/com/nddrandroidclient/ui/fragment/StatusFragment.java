@@ -108,8 +108,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_restart_point)
     TextView tv_restart_point;
 
-    @BindView(R.id.tv_switch_mode)
-    TextView tv_switch_mode;
+   /* @BindView(R.id.tv_switch_mode)
+    TextView tv_switch_mode;*/
 
     @BindView(R.id.left_layout)
     RelativeLayout leftLayout;                //非充电状态下的左侧布局
@@ -172,15 +172,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
-                    modeType=mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue();
-                    Logger.e("---------模式:"+modeType);
-                    if (modeType==1){
-                        tv_switch_mode.setText("自主巡线模式");
-                    }else if (modeType==2){
-                        tv_switch_mode.setText("自主导航模式");
-                    }else{
-                        tv_switch_mode.setText("无当前运行地图");
-                    }
+
                 }
                 break;
         }
@@ -365,7 +357,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point,R.id.tv_switch_mode})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -432,7 +424,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         }).show();
 
                 break;
-            case R.id.tv_switch_mode:
+          /*  case R.id.tv_switch_mode:
                 new SwitchModeDialog.Builder(getAttachActivity())
                         .setModeType(modeType)
                         .setGravity(Gravity.CENTER)
@@ -451,7 +443,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                             }
                         }).show();
-                break;
+                break;*/
         }
     }
 

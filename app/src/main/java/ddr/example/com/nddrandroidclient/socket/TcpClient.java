@@ -668,30 +668,31 @@ public class TcpClient extends BaseSocketConnection {
     /**
      * 修改当前地图的模式
      * @param modeType
+     * @param pointName  待机点设置
      */
-    public void saveDataToServer(int modeType){
+    public void saveDataToServer(int modeType,String pointName){
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-        DDRVLNMap.reqDDRVLNMapEx currentDDRVLNMap=mapFileStatus.getCurrentMapEx();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
         DDRVLNMap.DDRMapBaseData baseData=DDRVLNMap.DDRMapBaseData.newBuilder()
                 .setAbNaviTypeValue(modeType)
-                .setName(currentDDRVLNMap.getBasedata().getName())
-                .setDescription(currentDDRVLNMap.getBasedata().getDescription())
-                .setAffinedata(currentDDRVLNMap.getBasedata().getAffinedata())
-                .setColPointData(currentDDRVLNMap.getBasedata().getColPointData())
-                .setRecTime(currentDDRVLNMap.getBasedata().getRecTime())
-                .setRecUserName(currentDDRVLNMap.getBasedata().getRecUserName())
-                .setWaittime(currentDDRVLNMap.getBasedata().getWaittime())
-                .setTargetPtName(currentDDRVLNMap.getBasedata().getTargetPtName())
+                .setName(reqDDRVLNMapEx.getBasedata().getName())
+                .setDescription(reqDDRVLNMapEx.getBasedata().getDescription())
+                .setAffinedata(reqDDRVLNMapEx.getBasedata().getAffinedata())
+                .setColPointData(reqDDRVLNMapEx.getBasedata().getColPointData())
+                .setRecTime(reqDDRVLNMapEx.getBasedata().getRecTime())
+                .setRecUserName(reqDDRVLNMapEx.getBasedata().getRecUserName())
+                .setWaittime(reqDDRVLNMapEx.getBasedata().getWaittime())
+                .setTargetPtName(reqDDRVLNMapEx.getBasedata().getTargetPtName())
                 .build();
-        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
                 .setBasedata(baseData)
-                .setSpacedata(currentDDRVLNMap.getSpacedata())
-                .setTargetPtdata(currentDDRVLNMap.getTargetPtdata())
-                .addAllTaskSet(currentDDRVLNMap.getTaskSetList())
-                .setPathSet(currentDDRVLNMap.getPathSet())
+                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setTargetPtdata(reqDDRVLNMapEx.getTargetPtdata())
+                .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
+                .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(null,reqDDRVLNMapEx);
-        Logger.e("----modeType:"+modeType+"----name:"+currentDDRVLNMap.getBasedata().getName().toStringUtf8());
+        tcpClient.sendData(null,reqDDRVLNMapEx1);
+        Logger.e("----modeType:"+modeType+"----name:"+reqDDRVLNMapEx.getBasedata().getName().toStringUtf8());
     }
 
     /**

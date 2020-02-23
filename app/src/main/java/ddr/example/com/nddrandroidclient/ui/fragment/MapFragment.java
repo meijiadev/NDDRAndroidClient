@@ -984,6 +984,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
             }
         }));
+        mapAdapter.setOnItemChildClickListener(((adapter, view, position) -> {
+            showMapSettingWindow(view.findViewById(R.id.iv_more),position);
+        }));
 
         //长按地图列表子项
         mapAdapter.setOnItemLongClickListener(((adapter, view, position) -> {

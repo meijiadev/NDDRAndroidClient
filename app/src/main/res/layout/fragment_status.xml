@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-        <TextView
+      <!--  <TextView
             android:id="@+id/tv_switch_mode"
             android:layout_width="172.5dp"
             android:layout_height="29dp"
@@ -50,7 +50,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             android:gravity="center_vertical"
-            />
+            />-->
 
         <RelativeLayout
             android:id="@+id/shrink_layout"

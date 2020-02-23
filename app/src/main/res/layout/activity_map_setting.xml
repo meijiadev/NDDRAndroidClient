@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#101112"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     >
     <RelativeLayout
         android:id="@+id/layout_title"
@@ -61,6 +63,12 @@
         android:layout_toRightOf="@id/tv_map_name"
         android:layout_marginLeft="32dp"
         android:background="@drawable/bt_bg__map"
+        android:textSize="13sp"
+        android:textColor="@color/white"
+        android:text="map1"
+        android:gravity="center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         />
     <View
         android:layout_width="384dp"
@@ -84,7 +92,7 @@
         android:layout_below="@id/layout_title"
         />
     <TextView
-        android:id="@+id/tv_switch_mode"
+        android:id="@+id/tv_switch_point"
         android:layout_width="172.5dp"
         android:layout_height="29dp"
         android:background="@drawable/bt_bg_mode"
