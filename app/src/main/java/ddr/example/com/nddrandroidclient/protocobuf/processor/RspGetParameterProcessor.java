@@ -29,6 +29,7 @@ public class RspGetParameterProcessor extends BaseProcessor{
         List<BaseCmd.configData> configDataList=rspConfigOperational.getDataList();
         parameters= Parameters.getInstance();
         parameterList=new ArrayList<>();
+        Logger.e("接受数量"+configDataList.size());
         for (int i=0;i<configDataList.size();i++){
             Logger.e("key"+configDataList.get(1).getData().getKey());
             Parameter parameter=new Parameter();

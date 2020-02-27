@@ -79,8 +79,8 @@ public class AutoChargingSet extends DDRLazyFragment {
         tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
-        getNaparmeter();
         parameters=Parameters.getInstance();
+        getNaparmeter(1);
         getChosseStatus();
     }
 
@@ -95,8 +95,27 @@ public class AutoChargingSet extends DDRLazyFragment {
     }
 
     //获取导航参数
-    private void getNaparmeter(){
+    private void getNaparmeter(int type){
+        Logger.e("-------------获取");
+        BaseCmd.eConfigItemOptType eConfigItemOptType;
+        switch (type){
+            case 0:
+                eConfigItemOptType=BaseCmd.eConfigItemOptType.eConfigOptTypeError;//全部
+                break;
+            case 1:
+                eConfigItemOptType=BaseCmd.eConfigItemOptType.eConfigOptTypeGetData;//获取数据
+                break;
+            case 2:
+                eConfigItemOptType=BaseCmd.eConfigItemOptType.eConfigOptTypeResumeData;//恢复数据
+                break;
+            case 3:
+                eConfigItemOptType=BaseCmd.eConfigItemOptType.eConfigOptTypeSetData;//设置数据
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
         BaseCmd.reqConfigOperational reqConfigOperational = BaseCmd.reqConfigOperational.newBuilder()
+                .setType(eConfigItemOptType)
                 .build();
         BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
                 .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)

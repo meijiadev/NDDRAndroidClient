@@ -567,6 +567,13 @@ enum eTaskWorkMode
 	eTaskWorkRunResumeTask = 5; // 处于任务中的恢复中
 }
 
+enum eChargingType
+{
+	eChargingTypeError = 0;
+	eChargingTypeAuto = 1; // 自动充电
+	eChargingTypeManual = 2; // 手动充电
+}
+
 message notifyBaseStatusEx{
 	eNavRobotMode mode = 1;
 	eNavRobotSubMode sonmode =2;
@@ -582,7 +589,7 @@ message notifyBaseStatusEx{
 	float posangulauspeed = 12;
 	bytes robotid = 13;
 	bool chargingStatus = 14; // true - 充电中
-	int32 chargingSubStatus = 15; // 充电子状态
+	int32 chargingSubStatus = 15; // 充电子状态。0-空闲，1-正在寻找充电桩，2-正在充电，3-正在返回起始位置，[0-3表示自动充电时的各个状态]
 	eAUTOMOVINGSTATUS automovingstatus = 16; // 自动模式细节
 	int32 taskCount = 17; // 任务次数
 	int32 taskDuration = 18; // 任务时长，单位秒
@@ -590,6 +597,7 @@ message notifyBaseStatusEx{
 	int32 currOAMode = 20; // 获取当前路段动态/静态避障模式  0 - 静态; 1 - 动态; -1 - 未处于运行状态
 	eTaskWorkMode taskmode = 21; 
 	eException robotexception = 22; // 异常状态
+	eChargingType chargingType = 23; // 充电类型
 }
 
 // Environmental sensor info
@@ -1106,15 +1114,17 @@ message notifyHardwareStat{
 	
 	// 各硬件类型
 	enum HardwareType{
-		en_HardwareTypeEmb = 0;  // 嵌入式
-		en_HardwareType2DLidar = 1; // 2D雷达模块
-		en_HardwareTypeCamera = 2; // 相机
+		en_HardwareTypeError = 0;
+		en_HardwareTypeEmb = 1;  // 嵌入式
+		en_HardwareType2DLidar = 2; // 2D雷达模块
+		en_HardwareTypeCamera = 3; // 相机
 	}
 	
 	// 硬件状态码  0表示正常，后续可能会新增不同的状态码
 	enum HardwareStat{
-		en_HardwareStatOk = 0;  // 正常
-		en_HardwareStatInitError = 1;
+		en_HardwareStatError = 0;  // 保留用的
+		en_HardwareStatOk = 1;  // 正常
+		en_HardwareStatInitError = 2; // 异常
 	}
 	
 	message HardwareStatItem
