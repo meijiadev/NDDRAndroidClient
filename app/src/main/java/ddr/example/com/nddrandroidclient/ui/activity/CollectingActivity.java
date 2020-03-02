@@ -125,20 +125,28 @@ public class CollectingActivity extends DDRActivity {
                                 break;
                         }
                     }
-
                 }
                 break;
             case notifyMapGenerateProgress:
                 float progress= (float) mainUpDate.getData();
                 setAnimation(processBar,(int) (progress*100),100);
                 if (progress==1.0f){
+                   /* postDelayed(()->{
+                        setTitle("建图完成");
+                        finish();
+                        try {
+                            tcpClient.reqRunControlEx(collectName);       //切换地图
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    },1000);   */                                 // 延迟一秒
                     setTitle("建图完成");
+                    finish();
                     try {
                         tcpClient.reqRunControlEx(collectName);       //切换地图
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-                    finish();
                 }
                 break;
             case updateDetectionLoopStatus:
@@ -233,9 +241,6 @@ public class CollectingActivity extends DDRActivity {
                     public void onConfirm(BaseDialog dialog, String content) {
                         exitModel();
                         processBar.setVisibility(View.VISIBLE);
-                        setAnimation(processBar, 20, 3000);
-                        //collecting.unRegister();
-                        ///collecting.onStop();
                         stopDraw();
                     }
                     @Override

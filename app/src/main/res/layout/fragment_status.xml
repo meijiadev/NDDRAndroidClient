@@ -400,6 +400,17 @@
             android:background="@drawable/charge_animation"
             android:layout_centerHorizontal="true"
             />
+        <TextView
+            android:id="@+id/tv_electric_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="190dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:text="50%"
+            android:textStyle="bold"
+            />
         <Button
             android:id="@+id/bt_exit_charge"
             android:layout_width="120dp"

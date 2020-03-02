@@ -117,6 +117,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RelativeLayout chargingLayout;             //充电模式下的左侧布局
     @BindView(R.id.iv_charge)
     ImageView ivCharge;                       //充电状态的图标  附带动画效果
+    @BindView(R.id.tv_electric_quantity)
+    TextView tvElectricQuantity;              //电池电量充电时的
     @BindView(R.id.bt_exit_charge)
     Button btExitCharge;                      //退出充电模式
 
@@ -295,6 +297,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         if(notifyBaseStatusEx.isChargingStatus()) {
             iv_cd_xs.setImageResource(R.mipmap.cd_green);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#54E361"));
+            tvElectricQuantity.setText(String.valueOf(batteryNum)+"%");
             if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
                 chargingLayout.setVisibility(View.VISIBLE);
                 leftLayout.setVisibility(View.GONE);

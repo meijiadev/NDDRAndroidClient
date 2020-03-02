@@ -24,7 +24,6 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -32,7 +31,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
+
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 
@@ -69,7 +68,7 @@ public class MapSettingActivity extends DDRActivity {
 
     private MapFileStatus mapFileStatus;
     private TcpClient tcpClient;
-    private BaseDialog waitDialog;
+    private BaseDialog waitDialog,waitDialog1;
 
     @Override
     protected int getLayoutId() {
@@ -89,7 +88,7 @@ public class MapSettingActivity extends DDRActivity {
     }
 
 
-    @OnClick({R.id.tv_title, R.id.tv_recover, R.id.tv_navigation, R.id.tv_line_patrol, R.id.tv_cancel, R.id.tv_confirm,R.id.tv_switch_point})
+    @OnClick({R.id.tv_title, R.id.tv_recover, R.id.tv_navigation, R.id.tv_line_patrol, R.id.tv_cancel, R.id.tv_confirm,R.id.tv_switch_point,R.id.tv_static_mode,R.id.tv_dynamic_mode})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_title:
@@ -132,6 +131,16 @@ public class MapSettingActivity extends DDRActivity {
             case R.id.tv_switch_point:
                 showListPopupWindow(tvSwitchPoint);
                 break;
+            case R.id.tv_static_mode:
+                abMode=65;
+                tvStaticMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
+                tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
+                break;
+            case R.id.tv_dynamic_mode:
+                abMode=64;
+                tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
+                tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
+                break;
             case R.id.tv_navigation:
                 tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
                 tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
@@ -145,10 +154,20 @@ public class MapSettingActivity extends DDRActivity {
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
             case R.id.tv_cancel:
-
+                finish();
                 break;
             case R.id.tv_confirm:
-                tcpClient.saveDataToServer(modeType,tvSwitchPoint.getText().toString().trim());
+                waitDialog1=new WaitDialog.Builder(this)
+                        .setMessage("正在保存...")
+                        .show();
+                postDelayed(() -> {
+                    if (waitDialog1.isShowing()) {
+                        waitDialog1.dismiss();
+                        toast("保存失败！");
+                    }
+                }, 4000);
+                abSpeed= Float.parseFloat(etABSpeed.getText().toString());
+                tcpClient.saveDataToServer(modeType,tvSwitchPoint.getText().toString().trim(),abMode,abSpeed);
                 break;
         }
     }
@@ -183,13 +202,16 @@ public class MapSettingActivity extends DDRActivity {
 
     private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
     private DDRVLNMap.DDRMapBaseData ddrMapBaseData;
-    private String mapName;
+    private String mapName="";
     private int modeType;
+    private float abSpeed;           //ab点速度
+    private int abMode;              //ab点模式
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
+                mapFileStatus=MapFileStatus.getInstance();
                 reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
                 ddrMapBaseData=reqDDRVLNMapEx.getBasedata();
                 mapName=ddrMapBaseData.getName().toStringUtf8();
@@ -197,6 +219,9 @@ public class MapSettingActivity extends DDRActivity {
                 targetPoints=mapFileStatus.getTargetPoints();
                 etMapName.setText(mapName);
                 tvSwitchPoint.setText(ddrMapBaseData.getTargetPtName().toStringUtf8());
+                abSpeed=ddrMapBaseData.getAbPathSpeed();
+                Logger.e("ab点速度："+abSpeed);
+                abMode=ddrMapBaseData.getAbPathModeValue();
                 if (modeType==1){
                     tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
                     tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
@@ -204,6 +229,22 @@ public class MapSettingActivity extends DDRActivity {
                     tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
                     tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
                 }
+                etABSpeed.setText(String.valueOf(abSpeed));
+                if (abMode==64){
+                    tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
+                    tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
+                }else if (abMode==65){
+                    tvStaticMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
+                    tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
+                }
+                postDelayed(()->{
+                    if (waitDialog1!=null){
+                        if (waitDialog1.isShowing()){
+                            waitDialog1.dismiss();
+                            toast("保存成功");
+                        }
+                    }
+                },1500);
                 break;
             case mapOperationalSucceed:
                 if (waitDialog!=null){

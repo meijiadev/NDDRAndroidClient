@@ -372,17 +372,18 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                List<DDRVLNMap.reqMapOperational.OptItem> optItems=null;
+                                List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();;
                                 for (int i=0;i<mapInfos.size();i++){
                                     if (mapInfos.get(i).isSelected()){
-                                        optItems=new ArrayList<>();
                                         DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
                                                 .setTypeValue(1)
                                                 .setSourceName(ByteString.copyFromUtf8(mapInfos.get(i).getMapName()))
                                                 .build();
                                         optItems.add(optItem);
+                                        Logger.e("-------要删除的地图名："+mapInfos.get(i).getMapName());
                                     }
                                 }
+                                Logger.e("-----要删除的文件数："+optItems.size());
                                 if (optItems!=null){
                                     for (MapInfo mapInfo:mapInfos){
                                         mapInfo.setSelected(false);
@@ -391,6 +392,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                     tvDeleteAll.setVisibility(View.GONE);
                                     isShowSelected = false;
                                     mapAdapter.showSelected(false);
+                                    Logger.e("-----要删除的文件数："+optItems.size());
                                     tcpClient.reqMapOperational(optItems);
                                     waitDialog=new WaitDialog.Builder(getAttachActivity())
                                             .setMessage("正在删除...")
@@ -1628,7 +1630,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case switchMapSucceed:
                 Logger.e("切换地图");
                 tcpClient.requestFile();
-                tcpClient.getMapInfo(ByteString.copyFromUtf8(switchMapName));
+                if (switchMapName!=null){
+                    tcpClient.getMapInfo(ByteString.copyFromUtf8(switchMapName));
+                }else {
+                    tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                }
                 if (waitDialog!=null) {
                     getAttachActivity().postDelayed(() -> {
                         if (waitDialog.isShowing()) {
@@ -1639,13 +1645,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 getAttachActivity().postDelayed(()->{
                     waitDialog2=new WaitDialog.Builder(getAttachActivity())
                             .setMessage("正在自动定位中可能需要1~3分钟，请稍后...")
-
                             .show();
                 },600);
-
                 break;
             case updateBaseStatus:
-                //Logger.e("-------------当前状态:"+notifyBaseStatusEx.getExceptionValue());
                 if (waitDialog2!=null&&waitDialog2.isShowing()){
                 if (!notifyBaseStatusEx.isHaveLocation()){
                     Logger.e("自动定位失败");

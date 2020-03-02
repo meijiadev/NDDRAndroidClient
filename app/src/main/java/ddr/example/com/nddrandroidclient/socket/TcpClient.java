@@ -37,11 +37,11 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
-
 
 /**
  * 基于OkSocket库的TCP客户端
@@ -365,7 +365,7 @@ public class TcpClient extends BaseSocketConnection {
         //final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
         BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
                 .build();
-        tcpClient.sendData(null,reqClientGetMapInfo);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqClientGetMapInfo);
         Logger.e("请求文件中....");
     }
 
@@ -515,7 +515,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(taskItemExes)
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(null,reqDDRVLNMapEx1);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqDDRVLNMapEx1);
 
     }
 
@@ -662,7 +662,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(taskItemExes)
                 .setPathSet(ddrMapPathDataEx)
                 .build();
-        tcpClient.sendData(null,reqDDRVLNMapEx1);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqDDRVLNMapEx1);
     }
 
     /**
@@ -670,7 +670,7 @@ public class TcpClient extends BaseSocketConnection {
      * @param modeType
      * @param pointName  待机点设置
      */
-    public void saveDataToServer(int modeType,String pointName){
+    public void saveDataToServer(int modeType,String pointName,int abMode,float abSpeed){
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
         DDRVLNMap.DDRMapBaseData baseData=DDRVLNMap.DDRMapBaseData.newBuilder()
@@ -682,7 +682,9 @@ public class TcpClient extends BaseSocketConnection {
                 .setRecTime(reqDDRVLNMapEx.getBasedata().getRecTime())
                 .setRecUserName(reqDDRVLNMapEx.getBasedata().getRecUserName())
                 .setWaittime(reqDDRVLNMapEx.getBasedata().getWaittime())
-                .setTargetPtName(reqDDRVLNMapEx.getBasedata().getTargetPtName())
+                .setTargetPtName(ByteString.copyFromUtf8(pointName))
+                .setAbPathModeValue(abMode)
+                .setAbPathSpeed(abSpeed)
                 .build();
         DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
                 .setBasedata(baseData)
@@ -691,8 +693,8 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(null,reqDDRVLNMapEx1);
-        Logger.e("----modeType:"+modeType+"----name:"+reqDDRVLNMapEx.getBasedata().getName().toStringUtf8());
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqDDRVLNMapEx1);
+        Logger.e("----modeType:"+modeType+"----name:"+reqDDRVLNMapEx.getBasedata().getName().toStringUtf8()+"ab点速度："+abSpeed);
     }
 
     /**
@@ -733,7 +735,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(null,reqDDRVLNMapEx1);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqDDRVLNMapEx1);
     }
 
 
@@ -744,7 +746,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.reqMapOperational reqMapOperational=DDRVLNMap.reqMapOperational.newBuilder()
                 .addAllOptSet(optItems)
                 .build();
-        tcpClient.sendData(null,reqMapOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqMapOperational);
     }
 
     /**
@@ -755,7 +757,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.reqRunControlEx reqRunControlEx=DDRVLNMap.reqRunControlEx.newBuilder()
                 .setOnerouteName(ByteString.copyFromUtf8(mapName))
                 .build();
-        tcpClient.sendData(null,reqRunControlEx);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqRunControlEx);
     }
 
 
@@ -767,7 +769,7 @@ public class TcpClient extends BaseSocketConnection {
         BaseCmd.reqCmdIPC reqCmdIPC=BaseCmd.reqCmdIPC.newBuilder()
                 .setMode(eCmdIPCMode)
                 .build();
-        tcpClient.sendData(null,reqCmdIPC);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqCmdIPC);
     }
 
 
