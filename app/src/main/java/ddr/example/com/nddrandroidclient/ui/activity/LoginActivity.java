@@ -136,7 +136,7 @@ public  class LoginActivity extends DDRActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_in:
-//                startActivity(HomeActivity.class);//临时调试
+                startActivity(HomeActivity.class);//临时调试
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
                 if (accountName.equals("")&passwordName.equals("")){
