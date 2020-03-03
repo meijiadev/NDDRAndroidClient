@@ -14,6 +14,18 @@
         android:gravity="center"
         />
     <TextView
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:text="保存"
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:background="@drawable/bg_task_cz"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="24dp"
+        android:id="@+id/tv_save_sensor"/>
+    <TextView
         android:layout_width="748dp"
         android:layout_height="1dp"
         android:background="#262728"
@@ -76,6 +88,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="96.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs1"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -108,6 +121,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="281.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs2"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -140,6 +154,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="466.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs3"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -172,6 +187,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="651.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs4"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -204,6 +220,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="96.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs5"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -236,6 +253,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="281.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs6"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -268,6 +286,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="466.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs7"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -300,6 +319,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="651.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs8"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -332,6 +352,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="96.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs9"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -364,6 +385,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="281.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs10"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -396,6 +418,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="466.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs11"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -428,6 +451,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="651.5dp"
+        android:gravity="center"
         android:id="@+id/ed_cs12"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -479,6 +503,7 @@
         android:layout_marginLeft="614dp"
         android:layout_marginTop="23dp"
         android:background="@drawable/bg_task_cz"
+        android:gravity="center"
         android:textColor="#ffffff"
         android:textSize="12sp" />
 

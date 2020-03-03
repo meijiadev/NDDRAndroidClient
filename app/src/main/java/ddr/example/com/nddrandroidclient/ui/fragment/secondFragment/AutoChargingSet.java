@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.view.View;
@@ -43,9 +44,9 @@ public class AutoChargingSet extends DDRLazyFragment {
     private Parameter parameter;
     private Parameters parameters;
     private List<Parameter> parameterList=new ArrayList<>();
-    private String triggerAutoKey="MR_Params.RECHARGING_BATT_LO_PER";
-    private String outAutoKey="MR_Params.RECHARGING_BATT_HI_PER";
-    private String swithAutoKey="Common_Params.AUTO_ENTER_RECHARGING";
+    private String triggerAutoKey="MR_Params.RECHARGING_BATT_LO_PER";//自动充电下限
+    private String outAutoKey="MR_Params.RECHARGING_BATT_HI_PER";//自动充电上限
+    private String swithAutoKey="Common_Params.AUTO_ENTER_RECHARGING"; //自动充电开关
     private String autoValue="1";
 
     public static AutoChargingSet newInstance(){
@@ -129,15 +130,21 @@ public class AutoChargingSet extends DDRLazyFragment {
         parameterList=parameters.getParameterList();
         for (int i=0;i<parameterList.size();i++){
             if(parameterList.get(i).getKey().contains(triggerAutoKey)){
-                ed_trigger_auto.setText(parameterList.get(i).getdValue());
+                int trigger_auto=Integer.parseInt(parameterList.get(i).getValue())/100;
+                ed_trigger_auto.setText(String.valueOf(trigger_auto));
             }
             if(parameterList.get(i).getKey().contains(outAutoKey)){
-                ed_out_auto.setText(parameterList.get(i).getdValue());
+                int out_auto=Integer.parseInt(parameterList.get(i).getValue())/100;
+                Logger.e("电量值"+out_auto);
+                ed_out_auto.setText(String.valueOf(out_auto));
             }
             if(parameterList.get(i).getKey().contains(swithAutoKey)){
-                if (parameterList.get(i).getValue().equals("1")){
+                Logger.e("充电值"+parameterList.get(i).getValue());
+                if (parameterList.get(i).getdValue().equals("1")){
+                    Logger.e("开启充电-----");
                     slideButton.setChecked(true);
                 }else {
+                    Logger.e("关闭充电-----");
                     slideButton.setChecked(false);
                 }
             }

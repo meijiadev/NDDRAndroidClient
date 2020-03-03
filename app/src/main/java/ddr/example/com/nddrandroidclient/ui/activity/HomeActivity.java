@@ -4,6 +4,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -112,6 +113,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private RockerView myRockerZy;
     private TextView tvSpeed;
     private ImageView iv_quit_yk;
+    private TextView tv_xsu;//线速度
+    private TextView tv_jsu;//角速度
+    private String xsu;
+    private String jsu;
     private boolean ishaveChecked = false;
 
 
@@ -125,9 +130,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         switch (messageEvent.getType()) {
             case updateBaseStatus:
                 if (notifyBaseStatusEx != null) {
+                    DecimalFormat df = new DecimalFormat("0");
+                    DecimalFormat format = new DecimalFormat("0.00");
                     currentMap = notifyBaseStatusEx.getCurroute();
                     currentTask = notifyBaseStatusEx.getCurrpath();
+                    xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
+                    jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
+                    if(tv_xsu!=null && tv_jsu!=null){
+                        tv_xsu.setText("线速度："+xsu+" m/s");
+                        tv_jsu.setText("角速度："+jsu+" 弧度/秒");
+                    }
                 }
+
                 break;
             case updateMapList:
                 Logger.e("-------------updateMapList");
@@ -432,6 +446,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         myRockerZy=contentView.findViewById(R.id.my_rocker_zy_control);
         tvSpeed=contentView.findViewById(R.id.tv_speed_control);
         iv_quit_yk=contentView.findViewById(R.id.iv_quit_yk);
+        tv_xsu=contentView.findViewById(R.id.robot_xsu);//线速度
+        tv_jsu=contentView.findViewById(R.id.robot_jsu);//角速度
         initSeekBar();
         initRockerView();
         initTimer();
