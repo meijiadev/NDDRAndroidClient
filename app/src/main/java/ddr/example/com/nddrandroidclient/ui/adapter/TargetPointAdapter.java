@@ -86,6 +86,9 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                             .setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
                 }
                 break;
+            case R.layout.item_recycle_task_check:
+                helper.setText(R.id.item_recycle_t_chenck,item.getName());
+                break;
 
         }
 

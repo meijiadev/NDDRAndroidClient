@@ -262,7 +262,8 @@ message DDRMapBaseData
 	int32 waittime = 7; // 单位为秒
 	bytes targetPtName = 8; // 目标点名字  表示在多少秒内没操作，就回到这个目标点
 	eABNaviType abNaviType = 9;
-	
+	float abPathSpeed = 10; // AB点时的速度
+	ePathItemMode abPathMode = 11; // AB点时的模式
 }
 
 // 每个OneRoute有一个DDRMapPathData，每个DDRMapPathData保存成一个文件。这里类似于存放的是Task拼图中的所有元素

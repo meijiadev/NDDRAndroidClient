@@ -3,11 +3,13 @@ package ddr.example.com.nddrandroidclient.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -106,12 +108,26 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_restart_point)
     TextView tv_restart_point;
 
-    @BindView(R.id.tv_switch_mode)
-    TextView tv_switch_mode;
+   /* @BindView(R.id.tv_switch_mode)
+    TextView tv_switch_mode;*/
+
+    @BindView(R.id.left_layout)
+    RelativeLayout leftLayout;                //非充电状态下的左侧布局
+    @BindView(R.id.charging_layout)
+    RelativeLayout chargingLayout;             //充电模式下的左侧布局
+    @BindView(R.id.iv_charge)
+    ImageView ivCharge;                       //充电状态的图标  附带动画效果
+    @BindView(R.id.tv_electric_quantity)
+    TextView tvElectricQuantity;              //电池电量充电时的
+    @BindView(R.id.bt_exit_charge)
+    Button btExitCharge;                      //退出充电模式
+
+
 
 
     private Animation hideAnimation;  //布局隐藏时的动画
     private Animation showAnimation;  // 布局显示时的动画效果
+    private AnimationDrawable chargeAnimation;
 
     private NotifyEnvInfo notifyEnvInfo;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -158,15 +174,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
-                    modeType=mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue();
-                    Logger.e("---------模式:"+modeType);
-                    if (modeType==1){
-                        tv_switch_mode.setText("自主巡线模式");
-                    }else if (modeType==2){
-                        tv_switch_mode.setText("自主导航模式");
-                    }else{
-                        tv_switch_mode.setText("无当前运行地图");
-                    }
+
                 }
                 break;
         }
@@ -186,6 +194,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         statusSwitchButton.setOnStatusListener(this);
         hideAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_hide);
         showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
+        chargeAnimation= (AnimationDrawable) ivCharge.getBackground();
         taskCheckAdapter=new StringAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
         @SuppressLint("WrongConstant")
@@ -284,12 +293,26 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
-
-
+        //Logger.e("------------是否在充电："+notifyBaseStatusEx.isChargingStatus());
         if(notifyBaseStatusEx.isChargingStatus()) {
             iv_cd_xs.setImageResource(R.mipmap.cd_green);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#54E361"));
+            tvElectricQuantity.setText(String.valueOf(batteryNum)+"%");
+            if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
+                chargingLayout.setVisibility(View.VISIBLE);
+                leftLayout.setVisibility(View.GONE);
+                if (!chargeAnimation.isRunning()){
+                    chargeAnimation.start();
+                }
+            }
         }else {
+            if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式 
+                chargingLayout.setVisibility(View.GONE);
+                leftLayout.setVisibility(View.VISIBLE);
+                if (chargeAnimation.isRunning()){
+                    chargeAnimation.stop();                           // 如果动画正在运行 则停止
+                }
+            }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
         }
@@ -337,7 +360,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point,R.id.tv_switch_mode})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -404,7 +427,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         }).show();
 
                 break;
-            case R.id.tv_switch_mode:
+          /*  case R.id.tv_switch_mode:
                 new SwitchModeDialog.Builder(getAttachActivity())
                         .setModeType(modeType)
                         .setGravity(Gravity.CENTER)
@@ -423,7 +446,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                             }
                         }).show();
-                break;
+                break;*/
         }
     }
 

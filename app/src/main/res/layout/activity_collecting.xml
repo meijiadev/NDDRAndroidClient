@@ -17,6 +17,21 @@
         app:rightColor="@color/white"
         >
     </com.hjq.bar.TitleBar>
+    <!--回环检测-->
+    <TextView
+        android:id="@+id/tv_detection"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:text="回环检测"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/tv_mode_selected_bg"
+        android:layout_marginTop="15dp"
+        />
 
    <!-- <ddr.example.com.nddrandroidclient.widget.view.CollectingView2
         android:id="@+id/collecting"

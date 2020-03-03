@@ -10,25 +10,27 @@
         android:layout_height="wrap_content"
         android:src="@drawable/front_triangle_shape"
         android:layout_marginLeft="100dp"
-
         />
     <RelativeLayout
         android:layout_width="122dp"
-        android:layout_height="190dp"
+        android:layout_height="130dp"
         android:layout_marginTop="13dp"
         android:background="@drawable/management_window_shape"
         >
+
         <TextView
-            android:id="@+id/tv_rename"
+            android:id="@+id/tv_detail"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:gravity="center_vertical"
             android:paddingLeft="13.5dp"
-            android:text="   修改名称"
+            android:text="查看详情"
             android:textSize="12sp"
             android:textColor="@color/white"
             android:drawableLeft="@mipmap/iv_rename"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="18dp"
+            android:drawablePadding="10dp"
+
             />
         <TextView
             android:id="@+id/tv_switch"
@@ -37,51 +39,29 @@
             android:paddingLeft="13.5dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
-            android:text="   切换地图"
+            android:text="切换地图"
             android:textSize="12sp"
             android:textColor="@color/white"
-            android:layout_below="@id/tv_rename"
+            android:layout_below="@id/tv_detail"
             android:drawableLeft="@mipmap/iv_switch"
+            android:drawablePadding="10dp"
             />
+
         <TextView
-            android:id="@+id/tv_recover"
+            android:id="@+id/tv_setting"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="   原图恢复"
             android:paddingLeft="13.5dp"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:text="地图设置"
             android:textSize="12sp"
             android:textColor="@color/white"
             android:layout_below="@id/tv_switch"
-            android:drawableLeft="@mipmap/iv_recover"
-            android:gravity="center_vertical"
-            />
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="   删除地图"
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            android:layout_below="@id/tv_recover"
-            android:drawableLeft="@mipmap/iv_delete"
-            android:paddingLeft="13.5dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
-            />
-        <TextView
-            android:id="@+id/tv_detail"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="13.5dp"
-            android:text="   查看详情"
-            android:textSize="12sp"
-            android:textColor="@color/white"
             android:drawableLeft="@mipmap/iv_rename"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/tv_delete"
+            android:drawablePadding="10dp"
             />
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -174,7 +174,9 @@ public class NaParameterSet extends DDRLazyFragment{
         }
     }
 
-    //获取导航参数
+    /**
+     * 获取导航参数
+     */
     private void getNaparmeter(int type){
         Logger.e("-------------获取");
         BaseCmd.eConfigItemOptType eConfigItemOptType;

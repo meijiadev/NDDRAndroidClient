@@ -7,26 +7,14 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yhao.floatwindow.FloatWindow;
-import com.yhao.floatwindow.MoveType;
-import com.yhao.floatwindow.PermissionListener;
-import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
@@ -38,69 +26,55 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
-import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
-import ddr.example.com.nddrandroidclient.widget.view.FloatView;
+
 
 /**
  *    time   : 2019/10/26
  *    desc   : 登录页
  */
-public  class LoginActivity extends DDRActivity  {
+public  class LoginActivity extends DDRActivity {
     @BindView(R.id.account)
     EditText account;
     @BindView(R.id.password)
     EditText password;
     @BindView(R.id.login_in)
     Button loginIn;
-    @BindView(R.id.layout_robot)
-    RelativeLayout layoutRobot;
-    @BindView(R.id.robot_id)
-    TextView robot_id;
-    @BindView(R.id.iv_robot)
-    ImageView iv_robot;
+
     @BindView(R.id.layout_account)
     RelativeLayout layout_account;
     @BindView(R.id.layout_password)
     RelativeLayout layout_password;
-    @BindView(R.id.recycle_robotId)
-    RecyclerView recycleRobotId;
-    @BindView(R.id.layout_robot_list)
-    RelativeLayout layoutRobotList;
-    @BindView(R.id.tv_cancel)
-    TextView tvCancel;
-    @BindView(R.id.tv_rb)
-    TextView tv_rb;
+    @BindView(R.id.tv_lan)
+    TextView tv_lan;        //局域网
+    @BindView(R.id.tv_wan)
+    TextView tv_wan;        //广域网
 
-    private StringAdapter robotIdAdapter;
     public  int tcpPort = 0;
     private String accountName = "", passwordName = "";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
     public TcpClient tcpClient;
-    public  List<String> robotList=new ArrayList<>();
 
     public UdpClient udpClient;
-    private int port=28888;
     private BaseDialog waitDialog;
+    private static final String LAN_IP="192.168.0.95";    //局域网IP
+    private int port=28888;
+    private boolean hasReceiveBroadcast=false;            //是否接收到广播
+    private boolean isLan=true;                                //是否是局域网  默认局域网登录
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDate(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateIPList:
-                String ip= (String) messageEvent.getData();
-                if (!robotList.contains(ip)){
-                    robotList.add(ip);
-                    robotIdAdapter.setNewData(robotList);
-                }
+                hasReceiveBroadcast=true;
                 break;
             case updatePort:
                 tcpPort= (int) messageEvent.getData();
                 break;
             case LoginSuccess:
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
-                editor.putString("account", accountName);
                 editor.putString("password", passwordName);
                 editor.commit();
                 Logger.e("登录成功");
@@ -111,9 +85,28 @@ public  class LoginActivity extends DDRActivity  {
                     startActivity(HomeActivity.class);
                 },1000);
                 break;
-            case tcpConnected:
-                tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
+            case wanLoginSuccess:
+                UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
+                editor.putString("password", passwordName);
+                editor.commit();
+                Logger.e("广域网登录成功");
+                postDelayed(()->{
+                    if (waitDialog!=null&&waitDialog.isShowing()){
+                        waitDialog.dismiss();
+                    }
+                    startActivity(DeviceSelectActivity.class);
+                },1000);
                 break;
+            case tcpConnected:
+                if (isLan){
+                    Logger.e("-----连接成功，开始登录");
+                    tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
+                }else {
+                    Logger.e("-----广域网连接成功，开始登录");
+                    tcpClient.sendData(null,CmdSchedule.remoteLogin(accountName,passwordName));
+                }
+                break;
+
         }
     }
 
@@ -125,59 +118,73 @@ public  class LoginActivity extends DDRActivity  {
     @SuppressLint("WrongConstant")
     @Override
     protected void initView() {
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        robotIdAdapter=new StringAdapter(R.layout.item_recycle_robot_id,robotList);
-        recycleRobotId.setLayoutManager(linearLayoutManager);
-        recycleRobotId.setAdapter(robotIdAdapter);
-        onItemClick();
+
+
     }
 
     @Override
     protected void initData() {
         receiveBroadcast();
-        robotList.clear();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
-        account.setText(sharedPreferences.getString("account", ""));
         password.setText(sharedPreferences.getString("password", ""));
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+
     }
 
-    @OnClick({R.id.login_in,  R.id.layout_robot,R.id.tv_cancel})
+    @OnClick({R.id.login_in,R.id.tv_lan,R.id.tv_wan})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_in:
 //                startActivity(HomeActivity.class);//临时调试
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
-                if (!robot_id.getText().toString().isEmpty()){
-                    if (accountName.equals("")&passwordName.equals("")){
-                        toast("用户名和密码不能为空");
-                    }else {
-                        tcpClient.creatConnect(robot_id.getText().toString(),tcpPort);
+                if (accountName.equals("")&passwordName.equals("")){
+                    toast("用户名和密码不能为空");
+                }else {
+                    if (isLan){                                   //局域网登录
+                        if (hasReceiveBroadcast){
+                            tcpClient.creatConnect(LAN_IP,tcpPort);
+                            waitDialog=new WaitDialog.Builder(this)
+                                    .setMessage("登录中...")
+                                    .show();
+                            postDelayed(()->{
+                                if (waitDialog.isShowing()){
+                                    toast("登录失败，请检查网络后重新登录");
+                                    waitDialog.dismiss();
+                                }
+                                },5000);
+                        }else {
+                            toast("无法连接，请检查机器人服务是否正常开启！");
+                        }
+                    }else {                                     //广域网登录
+                        if (tcpClient.isConnected())
+                            tcpClient.disConnect();
+                        tcpClient.creatConnect(CmdSchedule.broadcastServerIP,CmdSchedule.broadcastServerPort);      //连接地方服务器
                         waitDialog=new WaitDialog.Builder(this)
-                                .setMessage("登录中...")
-                                .show();
+                                    .setMessage("登录中...")
+                                    .show();
                         postDelayed(()->{
                             if (waitDialog.isShowing()){
                                 toast("登录失败，请检查网络后重新登录");
                                 waitDialog.dismiss();
                             }
-                        },5000);
+                            },5000);
                     }
-                }else {
-                    toast("请先选择机器人IP");
                 }
                 break;
-            case R.id.layout_robot:
-                layoutRobotList.setVisibility(View.VISIBLE);
-                loginIn.setVisibility(View.INVISIBLE);
+            case R.id.tv_lan:
+                isLan=true;
+                tcpClient.disConnect();
+                tv_lan.setBackgroundResource(R.mipmap.left_blue_bg);
+                tv_wan.setBackgroundResource(R.mipmap.right_black_bg);
                 break;
-            case R.id.tv_cancel:
-                layoutRobotList.setVisibility(View.GONE);
-                loginIn.setVisibility(View.VISIBLE);
+            case R.id.tv_wan:
+                tv_lan.setBackgroundResource(R.mipmap.left_black_bg);
+                tv_wan.setBackgroundResource(R.mipmap.right_blue_bg);
+                isLan=false;
                 break;
+
         }
     }
 
@@ -194,21 +201,6 @@ public  class LoginActivity extends DDRActivity  {
         }
     }
 
-    /**
-     * 子项点击事件
-     */
-    private void onItemClick(){
-        robotIdAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Logger.e("点击子项");
-                String ip=robotList.get(position);
-                robot_id.setText(ip);
-                layoutRobotList.setVisibility(View.GONE);
-                loginIn.setVisibility(View.VISIBLE);
-            }
-        });
-    }
 
 
     @Override

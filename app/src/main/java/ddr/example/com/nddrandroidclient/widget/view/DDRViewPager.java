@@ -65,7 +65,7 @@ public class DDRViewPager extends ViewPager {
             // 如果当前是中间页，只有相邻页才会有动画
             smoothScroll = Math.abs(currentItem - item) == 1;
         }
-        Logger.e("---------setCurrentItem");
+        //Logger.e("---------setCurrentItem");
         super.setCurrentItem(item, smoothScroll);
     }
 
