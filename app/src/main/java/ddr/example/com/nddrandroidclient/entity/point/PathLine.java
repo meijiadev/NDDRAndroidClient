@@ -80,7 +80,7 @@ public class PathLine extends BaseMode implements Serializable {
      * 路径的组成点
      */
     public class PathPoint implements Serializable{
-        private String name;          //自动生成的路径点名字
+        private String name="";          //自动生成的路径点名字
         private float x;
         private float y;
         private int pointType=8;  // 点的类型 动作属性 8:普通路径点

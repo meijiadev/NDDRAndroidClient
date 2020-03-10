@@ -528,7 +528,7 @@
                         android:textSize="10sp"
                         android:layout_toRightOf="@id/et_speed"
                         android:layout_alignBottom="@id/et_speed"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         />
                     <TextView
                         android:id="@+id/tv_action_recycler"
