@@ -268,7 +268,7 @@ public class ZoomImageView extends View {
     public XyEntity coordinate2View(float x,float y){
         float cx=x*totalRatio+totalTranslateX;
         float cy=y*totalRatio+totalTranslateY;
-        Logger.e("-----像素坐标："+cx+";"+cy);
+       // Logger.e("-----像素坐标："+cx+";"+cy);
         return new XyEntity(cx,cy);
     }
 

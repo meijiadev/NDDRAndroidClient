@@ -208,8 +208,8 @@ public class MapEditActivity extends DDRActivity {
        // selectPointAdapter.setNewData(selectPoints);
         editTypes.add("虚拟墙");
         graphTypes.add("直线");
-        graphTypes.add("圆");
-        graphTypes.add("多边形");
+        //graphTypes.add("圆");
+        //graphTypes.add("多边形");
         initType(type);
         onShowItemClick();
         //onItemSelectClick();
@@ -622,6 +622,7 @@ public class MapEditActivity extends DDRActivity {
                 .showAsDropDown(view, 0, 0);
         showRecycler = contentView.findViewById(R.id.show_Recycler);
         tv_all_selected=contentView.findViewById(R.id.tv_all_select);
+        if(type!=0&&type!=1){ tv_all_selected.setVisibility(View.GONE); }
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
         switch (type){

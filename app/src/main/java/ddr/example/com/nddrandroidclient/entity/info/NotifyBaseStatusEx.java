@@ -36,6 +36,7 @@ public class NotifyBaseStatusEx {
     private int taskDuration;         //任务时长，单位秒
     private boolean isHaveLocation=true;  //是否有定位  假设有定位（其实并不一定有）
     private boolean isFinishCollect;
+    private int chargingType;             //  1:自动充电 2：手动充电
     /**
      * 异常状态  1：内存错误 ， 2：试图采集的地图名已存在 ，3：采集模式下文件IO错误，4：自动模式选择的地图不存在，5：自动模式重定位失败，
      *          6：自动模式下文件IO错误，7：自动模式下路径规划模块异常 , 8:自动模式下避障模块异常
@@ -43,6 +44,14 @@ public class NotifyBaseStatusEx {
     private int exceptionValue;
     private boolean isLocationed;      //当前是否有定位
 
+
+    public int getChargingType() {
+        return chargingType;
+    }
+
+    public void setChargingType(int chargingType) {
+        this.chargingType = chargingType;
+    }
 
     public boolean isChargingStatus() {
         return chargingStatus;

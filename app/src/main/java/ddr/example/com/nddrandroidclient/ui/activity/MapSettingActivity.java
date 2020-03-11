@@ -97,7 +97,7 @@ public class MapSettingActivity extends DDRActivity {
                 break;
             case R.id.tv_recover:
                 new InputDialog.Builder(this)
-                        .setTitle("是否恢复")
+                        .setTitle("将清空全部地图数据，确认操作？")
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override

@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/iv_password"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="10dp"
                 android:background="@null"
                 android:hint="密码"
                 android:textColor="@color/fontColor"

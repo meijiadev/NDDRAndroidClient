@@ -293,6 +293,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
+        switch (notifyBaseStatusEx.getChargingType()){
+            case 1:
+                btExitCharge.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                btExitCharge.setVisibility(View.GONE);
+                break;
+        }
         //Logger.e("------------是否在充电："+notifyBaseStatusEx.isChargingStatus());
         if(notifyBaseStatusEx.isChargingStatus()) {
             iv_cd_xs.setImageResource(R.mipmap.cd_green);

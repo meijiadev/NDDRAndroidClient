@@ -3,7 +3,9 @@
     android:orientation="horizontal"
     android:layout_width="105.5dp"
     android:layout_height="24dp"
-    android:background="@drawable/et_xy_bg">
+    android:background="@drawable/et_xy_bg"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
     <ImageView
         android:id="@+id/iv_reduce"
         android:layout_width="27dp"

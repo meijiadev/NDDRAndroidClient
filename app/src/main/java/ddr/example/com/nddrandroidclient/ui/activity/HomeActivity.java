@@ -147,6 +147,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 showControlPopupWindow();
                 break;
         }
+
     }
 
     @Override

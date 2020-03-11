@@ -106,7 +106,6 @@ public  class LoginActivity extends DDRActivity {
                     tcpClient.sendData(null,CmdSchedule.remoteLogin(accountName,passwordName));
                 }
                 break;
-
         }
     }
 
