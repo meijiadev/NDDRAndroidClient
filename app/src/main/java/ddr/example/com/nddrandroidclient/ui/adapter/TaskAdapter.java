@@ -76,6 +76,7 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
             case R.layout.item_recycle_tasklist:
                  gridImageView=helper.getView(R.id.iv_check);
                  ddrEditText=helper.getView(R.id.task_num_check);
+                 ddrEditText.setViewType(1);
                  et_content=ddrEditText.et_content;
                  tv_task_status=helper.getView(R.id.tv_task_status);
                  tv_task_time=helper.getView(R.id.tv_task_time);

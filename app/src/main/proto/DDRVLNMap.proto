@@ -648,9 +648,24 @@ message reqRunSpecificPoint
 	
 }
 
+enum enRspRunSpecificPointType
+{
+	// 这两种是正常
+	en_RunSpecificPtOk = 0; // 成功
+	en_RunSpecificPtAddTask = 1; // 成功，会添加到任务队列中
+	
+	// 以下均为异常
+	en_RunSpecificUnknowError = 2; // 未知错误
+	en_RunSpecificPtCurrNoLocated = 3; // 当前没有定位
+	en_RunSpecificPtGenPathFailed = 4; // 生成路径失败
+	en_RunSpecificPtInSelfCalib = 5; // 当前处于自标定，后续可能会消失	
+}
+
 message rspRunSpecificPoint
 {
 	DDRCommProto.eCmdRspType type = 1;
+	enRspRunSpecificPointType errorCode = 2;
+	reqRunSpecificPoint clientdata = 3;
 }
 
 // 任务操作.
@@ -676,6 +691,7 @@ message reqTaskOperational
 message rspTaskOperational
 {
 	DDRCommProto.eCmdRspType type = 1;
+	reqTaskOperational clientdata = 2; 
 }
 
 message RobotLiveTime

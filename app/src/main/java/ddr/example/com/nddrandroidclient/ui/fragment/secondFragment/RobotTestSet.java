@@ -11,6 +11,7 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.NotifyHardState;
+import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 
@@ -80,6 +81,9 @@ public class RobotTestSet extends DDRLazyFragment {
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         notifyHardState=NotifyHardState.getInstance();
         postHardState();
+        getHardState(1);
+        getHardState(2);
+        getHardState(3);
 
     }
     @OnClick({R.id.tv_qr_test,R.id.tv_rgbd_test,R.id.tv_ld_test,R.id.tv_dj_test,R.id.tv_photo_test,R.id.tv_xrgbd_test,R.id.one_test})
@@ -87,24 +91,24 @@ public class RobotTestSet extends DDRLazyFragment {
         postHardState();
         switch (view.getId()){
             case R.id.one_test://一键自检
-                getHardState(0);
                 getHardState(1);
                 getHardState(2);
+                getHardState(3);
                 break;
             case R.id.tv_dj_test://电机
                 break;
             case R.id.tv_ld_test://雷达
-                getHardState(1);
+                getHardState(2);
                 break;
             case R.id.tv_photo_test://摄像头
-                getHardState(2);
+                getHardState(3);
                 break;
             case R.id.tv_rgbd_test://上RGBD
                 break;
             case R.id.tv_xrgbd_test://下RGBD
                 break;
             case R.id.tv_qr_test://嵌入式
-                getHardState(0);
+                getHardState(1);
                 break;
         }
     }
@@ -131,29 +135,41 @@ public class RobotTestSet extends DDRLazyFragment {
         for (int i=0;i<notifyHardState.getHardwareStatItemList().size();i++){
             if (type==notifyHardState.getHardwareStatItemList().get(i).getTypeValue()){
                 switch (type){
-                    case 0://嵌入式
-                        if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==0){
+                    case 1://嵌入式
+                        if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==1){
                             tv_qr_state.setText("正常");
+                            tv_qr_test.setBackgroundResource(R.drawable.status_button);
                         }else {
+                            tv_qr_test.setBackgroundResource(R.drawable.robot_test_bg);
                             tv_qr_state.setText("异常");
                         }
-                        tv_qr_time.setText(notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
+                        tv_qr_test.setText("自检完成");
+                        Logger.e("时间"+notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
+                        tv_qr_time.setText(notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8().substring(0,16).replace("-"," "));
                         break;
-                    case 1://激光雷达
-                        if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==0){
+                    case 2://激光雷达
+                        if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==1){
                             tv_ld_state.setText("正常");
+                            tv_ld_test.setBackgroundResource(R.drawable.status_button);
                         }else {
                             tv_ld_state.setText("异常");
+                            tv_ld_test.setBackgroundResource(R.drawable.robot_test_bg);
                         }
-                        tv_ld_time.setText(notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
+                        tv_ld_test.setText("自检完成");
+                        Logger.e("时间"+notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
+                        tv_ld_time.setText(notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8().substring(0,16).replace("-"," "));
                         break;
-                    case 2://摄像头
-                        if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==0){
+                    case 3://摄像头
+                        if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==1){
                             tv_photo_state.setText("正常");
+                            tv_photo_test.setBackgroundResource(R.drawable.status_button);
                         }else {
                             tv_photo_state.setText("异常");
+                            tv_photo_test.setBackgroundResource(R.drawable.robot_test_bg);
                         }
-                        tv_photo_time.setText(notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
+                        tv_photo_test.setText("自检完成");
+                        Logger.e("时间"+notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
+                        tv_photo_time.setText(notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8().substring(0,16).replace("-"," "));
                         break;
                 }
             }

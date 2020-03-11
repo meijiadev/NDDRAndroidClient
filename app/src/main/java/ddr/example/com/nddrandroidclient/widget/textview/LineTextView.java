@@ -20,6 +20,7 @@ import ddr.example.com.nddrandroidclient.R;
 public class LineTextView extends TextView {
     private int measureWidth, measureHeight;    //控件的宽高
     private boolean isSelected=false;
+    private boolean isStitle=false;
     private Paint linePaint;
 
     public LineTextView(Context context) {
@@ -38,10 +39,19 @@ public class LineTextView extends TextView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (isSelected){
-            canvas.drawLine(0,measureHeight-5,measureWidth,measureHeight-5,linePaint);
+            if (isStitle){
+                canvas.drawLine(measureWidth-5,0,measureWidth-5,measureHeight,linePaint);
+            }else {
+                canvas.drawLine(0,measureHeight-5,measureWidth,measureHeight-5,linePaint);
+            }
             setTextColor(Color.parseColor("#0399ff"));
         }else {
-            setTextColor(Color.WHITE);
+            if (isStitle){
+                setTextColor(Color.parseColor("#99ffffff"));
+            }else {
+                setTextColor(Color.WHITE);
+            }
+
         }
     }
 
@@ -74,6 +84,10 @@ public class LineTextView extends TextView {
 
     public void isChecked(boolean isSelected){
         this.isSelected=isSelected;
+        invalidate();
+    }
+    public void isStitle(boolean isStitle){
+        this.isStitle=isStitle;
         invalidate();
     }
 

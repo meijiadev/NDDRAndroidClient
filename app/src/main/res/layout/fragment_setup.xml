@@ -6,65 +6,77 @@
         android:layout_width="116dp"
         android:layout_height="match_parent">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#262728"
+            android:layout_marginLeft="113dp"
+            />
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
             android:text="导航参数"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:id="@+id/tv_naParam"
             android:textColor="#99ffffff"
+            android:gravity="center"
             android:layout_marginTop="60dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
             android:text="自动充电"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:layout_alignTop="@id/tv_naParam"
             android:layout_marginTop="55dp"
             android:textColor="#99ffffff"
+            android:gravity="center"
             android:id="@+id/tv_autoCharging"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
             android:text="传感器配置"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="55dp"
             android:textColor="#99ffffff"
+            android:gravity="center"
             android:layout_alignTop="@id/tv_autoCharging"
             android:id="@+id/tv_sensorSet"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="机器检测"
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
+            android:text="硬件检测"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="55dp"
             android:textColor="#99ffffff"
+            android:gravity="center"
             android:layout_alignTop="@id/tv_sensorSet"
             android:id="@+id/tv_robotTest"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="版本管理"
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
+            android:text="关于我们"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="55dp"
             android:textColor="#99ffffff"
+            android:gravity="center"
             android:layout_alignTop="@id/tv_robotTest"
             android:id="@+id/tv_editionManager"
         />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
             android:text="帮助与反馈"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="55dp"
             android:textColor="#99ffffff"
+            android:gravity="center"
             android:layout_alignTop="@id/tv_editionManager"
             android:id="@+id/tv_helpFeedback"
             />

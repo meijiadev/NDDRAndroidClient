@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.location.LocationManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 
@@ -37,6 +38,8 @@ public class AutoChargingSet extends DDRLazyFragment {
     EditText ed_trigger_auto;
     @BindView(R.id.ed_out_auto)
     EditText ed_out_auto;
+    @BindView(R.id.tv_save_auto_char)
+    TextView tv_save_auto_char;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -70,7 +73,7 @@ public class AutoChargingSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),
+                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#0399ff"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
 
     }
@@ -85,12 +88,20 @@ public class AutoChargingSet extends DDRLazyFragment {
         getChosseStatus();
     }
 
-    @OnClick({R.id.slideButton})
+    @OnClick({R.id.slideButton,R.id.tv_save_auto_char})
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.slideButton:
                 getChosseStatus();
                 postNaparmeter(ByteString.copyFromUtf8(swithAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
+                break;
+            case R.id.tv_save_auto_char:
+                int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
+                int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
+                postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
+                postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
+                getNaparmeter(1);
+                toast("保存成功");
                 break;
         }
     }
@@ -140,7 +151,7 @@ public class AutoChargingSet extends DDRLazyFragment {
             }
             if(parameterList.get(i).getKey().contains(swithAutoKey)){
                 Logger.e("充电值"+parameterList.get(i).getValue());
-                if (parameterList.get(i).getdValue().equals("1")){
+                if (parameterList.get(i).getValue().equals("1")){
                     Logger.e("开启充电-----");
                     slideButton.setChecked(true);
                 }else {

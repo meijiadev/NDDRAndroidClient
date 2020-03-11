@@ -100,6 +100,7 @@ public class NaParameterSet extends DDRLazyFragment{
                 postNaparmeter(ByteString.copyFromUtf8(bzDistanceKey),ByteString.copyFromUtf8(String.valueOf(bz_dis)),1,3);
                 postNaparmeter(ByteString.copyFromUtf8(bzStopKey),ByteString.copyFromUtf8(String.valueOf(bz_st)),1,3);
                 getNaparmeter(1);
+                toast("保存成功");
                 break;
         }
     }

@@ -240,7 +240,6 @@
             android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:textColor="#ffffff"
-            android:hint="待命中"
             android:textSize="14dp"
             android:layout_below="@id/tv_work_statue"
             android:id="@+id/tv_task_num"/>
@@ -287,7 +286,7 @@
             android:layout_marginTop="380dp"
             android:layout_marginLeft="160dp"
             android:gravity="center"
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/tv_restart_point"
             />
         <ddr.example.com.nddrandroidclient.widget.view.CircleBarView

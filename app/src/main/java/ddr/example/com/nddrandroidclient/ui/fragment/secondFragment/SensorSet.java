@@ -90,101 +90,8 @@ public class SensorSet extends DDRLazyFragment {
                 postNaparmeter(ByteString.copyFromUtf8(sensorKey),ByteString.copyFromUtf8(autoValue),2,3);
                 break;
             case R.id.tv_save_sensor:
-                List<Sensor> sensorList1=new ArrayList<>();
-                for (int i=0;i<sensorList.size();i++){
-                    Sensor sensor1=new Sensor();
-                    switch (i){
-                        case 0:
-                            if (ed_cs1.getText()!=null){
-                                sensor1.setKey(String.valueOf(1));
-                                sensor1.setStaticdistance(ed_cs1.getText().toString());
-                            }
-                            break;
-                        case 1:
-                            if (ed_cs2.getText()!=null){
-                                sensor1.setKey(String.valueOf(2));
-                                sensor1.setStaticdistance(ed_cs2.getText().toString());
-                            }
-                            break;
-                        case 2:
-                            if (ed_cs3.getText()!=null){
-                                sensor1.setKey(String.valueOf(3));
-                                sensor1.setStaticdistance(ed_cs3.getText().toString());
-                            }
-                            break;
-                        case 3:
-                            if (ed_cs4.getText()!=null){
-                                sensor1.setKey(String.valueOf(4));
-                                sensor1.setStaticdistance(ed_cs4.getText().toString());
-                            }
-                            break;
-                        case 4:
-                            if (ed_cs5.getText()!=null){
-                                sensor1.setKey(String.valueOf(5));
-                                sensor1.setStaticdistance(ed_cs5.getText().toString());
-                            }
-                            break;
-                        case 5:
-                            if (ed_cs6.getText()!=null){
-                                sensor1.setKey(String.valueOf(6));
-                                Logger.e("上传数值"+ed_cs6.getText().toString());
-                                sensor1.setStaticdistance(ed_cs6.getText().toString());
-                            }
-                            break;
-                        case 6:
-                            if (ed_cs7.getText()!=null){
-                                sensor1.setKey(String.valueOf(7));
-                                sensor1.setStaticdistance(ed_cs7.getText().toString());
-                            }
-                            break;
-                        case 7:
-                            if (ed_cs8.getText()!=null){
-                                sensor1.setKey(String.valueOf(8));
-                                sensor1.setStaticdistance(ed_cs8.getText().toString());
-                            }
-
-                            break;
-                        case 8:
-                            if (ed_cs9.getText()!=null){
-                                sensor1.setKey(String.valueOf(9));
-                                sensor1.setStaticdistance(ed_cs9.getText().toString());
-                            }
-                            break;
-                        case 9:
-                            if (ed_cs10.getText()!=null){
-                                sensor1.setKey(String.valueOf(10));
-                                sensor1.setStaticdistance(ed_cs10.getText().toString());
-                            }
-                            break;
-                        case 10:
-                            if (ed_cs11.getText()!=null){
-                                sensor1.setKey(String.valueOf(11));
-                                sensor1.setStaticdistance(ed_cs11.getText().toString());
-                            }
-                            break;
-                        case 11:
-                            if (ed_cs12.getText()!=null){
-                                sensor1.setKey(String.valueOf(12));
-                                sensor1.setStaticdistance(ed_cs12.getText().toString());
-                            }
-
-                            break;
-                    }
-                    sensorList1.add(sensor1);
-                }
-                Logger.e("提交数量"+sensorList1.size());
-                List<BaseCmd.sensorConfigItem> sensorConfigItemList=new ArrayList<>();
-                for (int i=0;i<sensorList1.size();i++){
-                    BaseCmd.sensorConfigItem sensorConfigItem=BaseCmd.sensorConfigItem.newBuilder()
-                            .setKey(ByteString.copyFromUtf8(sensorList1.get(i).getKey()))
-                            .setStaticOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getStaticdistance()))
-                            .build();
-
-                    sensorConfigItemList.add(sensorConfigItem);
-                }
-                postSensorParam(sensorConfigItemList,3);
-                getNaparmeter();
-                getSensorParam();
+                postAndGet();
+                toast("保存成功");
                 break;
         }
     }
@@ -198,7 +105,7 @@ public class SensorSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),
+                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#0399ff"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
     }
 
@@ -335,7 +242,7 @@ public class SensorSet extends DDRLazyFragment {
         parameterList=parameters.getParameterList();
         for (int i=0;i<parameterList.size();i++){
             if(parameterList.get(i).getKey().contains(sensorKey)){
-                if (parameterList.get(i).getdValue().equals("1")){
+                if (parameterList.get(i).getValue().equals("1")){
                     slideButton.setChecked(true);
                 }else {
                     slideButton.setChecked(false);
@@ -397,6 +304,109 @@ public class SensorSet extends DDRLazyFragment {
                 .build();
         tcpClient.sendData(null,reqConfigOperational);
 
+    }
+
+    /**
+     * 提交时解析
+     */
+    private void postAndGet(){
+        List<Sensor> sensorList1=new ArrayList<>();
+        for (int i=0;i<sensorList.size();i++){
+            Sensor sensor1=new Sensor();
+            switch (i){
+                case 0:
+                    if (ed_cs1.getText()!=null){
+                        sensor1.setKey(String.valueOf(1));
+                        sensor1.setStaticdistance(ed_cs1.getText().toString());
+                    }
+                    break;
+                case 1:
+                    if (ed_cs2.getText()!=null){
+                        sensor1.setKey(String.valueOf(2));
+                        sensor1.setStaticdistance(ed_cs2.getText().toString());
+                    }
+                    break;
+                case 2:
+                    if (ed_cs3.getText()!=null){
+                        sensor1.setKey(String.valueOf(3));
+                        sensor1.setStaticdistance(ed_cs3.getText().toString());
+                    }
+                    break;
+                case 3:
+                    if (ed_cs4.getText()!=null){
+                        sensor1.setKey(String.valueOf(4));
+                        sensor1.setStaticdistance(ed_cs4.getText().toString());
+                    }
+                    break;
+                case 4:
+                    if (ed_cs5.getText()!=null){
+                        sensor1.setKey(String.valueOf(5));
+                        sensor1.setStaticdistance(ed_cs5.getText().toString());
+                    }
+                    break;
+                case 5:
+                    if (ed_cs6.getText()!=null){
+                        sensor1.setKey(String.valueOf(6));
+                        Logger.e("上传数值"+ed_cs6.getText().toString());
+                        sensor1.setStaticdistance(ed_cs6.getText().toString());
+                    }
+                    break;
+                case 6:
+                    if (ed_cs7.getText()!=null){
+                        sensor1.setKey(String.valueOf(7));
+                        sensor1.setStaticdistance(ed_cs7.getText().toString());
+                    }
+                    break;
+                case 7:
+                    if (ed_cs8.getText()!=null){
+                        sensor1.setKey(String.valueOf(8));
+                        sensor1.setStaticdistance(ed_cs8.getText().toString());
+                    }
+
+                    break;
+                case 8:
+                    if (ed_cs9.getText()!=null){
+                        sensor1.setKey(String.valueOf(9));
+                        sensor1.setStaticdistance(ed_cs9.getText().toString());
+                    }
+                    break;
+                case 9:
+                    if (ed_cs10.getText()!=null){
+                        sensor1.setKey(String.valueOf(10));
+                        sensor1.setStaticdistance(ed_cs10.getText().toString());
+                    }
+                    break;
+                case 10:
+                    if (ed_cs11.getText()!=null){
+                        sensor1.setKey(String.valueOf(11));
+                        sensor1.setStaticdistance(ed_cs11.getText().toString());
+                    }
+                    break;
+                case 11:
+                    if (ed_cs12.getText()!=null){
+                        sensor1.setKey(String.valueOf(12));
+                        sensor1.setStaticdistance(ed_cs12.getText().toString());
+                    }
+
+                    break;
+            }
+            sensorList1.add(sensor1);
+        }
+        Logger.e("提交数量"+sensorList1.size());
+        List<BaseCmd.sensorConfigItem> sensorConfigItemList=new ArrayList<>();
+        for (int i=0;i<sensorList1.size();i++){
+            BaseCmd.sensorConfigItem sensorConfigItem=BaseCmd.sensorConfigItem.newBuilder()
+                    .setKey(ByteString.copyFromUtf8(sensorList1.get(i).getKey()))
+                    .setStaticOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getStaticdistance()))
+                    .build();
+
+            sensorConfigItemList.add(sensorConfigItem);
+        }
+        postSensorParam(sensorConfigItemList,3);
+        int imu=(int)Float.parseFloat(ed_imu.getText().toString());
+        postNaparmeter(ByteString.copyFromUtf8(imuKey),ByteString.copyFromUtf8(String.valueOf(imu)),2,3);
+        getNaparmeter();
+        getSensorParam();
     }
 
     //获取选择的状态

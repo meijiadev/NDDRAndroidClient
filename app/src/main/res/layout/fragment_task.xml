@@ -43,12 +43,12 @@
                 android:layout_marginLeft="16dp"
                 android:id="@+id/tv_run_check"
                 android:layout_centerVertical="true"
+                android:singleLine="false"
                 />
             <TextView
                 android:layout_width="60dp"
                 android:layout_height="18dp"
-                android:layout_toRightOf="@+id/tv_run_check"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="116dp"
                 android:id="@+id/tv_task_name1"
                 android:textSize="12sp"
                 android:textColor="#eaf1f5"
@@ -56,13 +56,14 @@
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 />
+<!--            android:layout_toRightOf="@+id/tv_run_check"-->
             <TextView
                 android:layout_width="60dp"
                 android:layout_height="18dp"
                 android:background="#161718"
                 android:layout_toRightOf="@+id/tv_task_name1"
                 android:id="@+id/tv_run_time1"
-                android:layout_marginLeft="117dp"
+                android:layout_marginLeft="117.5dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="执行时段"
@@ -97,7 +98,7 @@
                 android:layout_width="60dp"
                 android:layout_height="18dp"
                 android:layout_toRightOf="@id/tv_task_status"
-                android:layout_marginLeft="100dp"
+                android:layout_marginLeft="89dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:textSize="12sp"

@@ -89,6 +89,8 @@
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="96.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs1"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -122,6 +124,8 @@
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="281.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs2"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -155,6 +159,8 @@
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="466.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs3"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -188,6 +194,8 @@
         android:layout_marginTop="24.5dp"
         android:layout_marginLeft="651.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs4"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -221,6 +229,8 @@
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="96.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs5"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -254,6 +264,8 @@
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="281.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs6"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -287,6 +299,8 @@
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="466.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs7"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -320,6 +334,8 @@
         android:layout_marginTop="76.5dp"
         android:layout_marginLeft="651.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs8"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -353,6 +369,8 @@
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="96.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs9"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -386,6 +404,8 @@
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="281.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs10"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -419,6 +439,8 @@
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="466.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs11"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -452,6 +474,8 @@
         android:layout_marginTop="128.5dp"
         android:layout_marginLeft="651.5dp"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:id="@+id/ed_cs12"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -504,24 +528,26 @@
         android:layout_marginTop="23dp"
         android:background="@drawable/bg_task_cz"
         android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
         android:textColor="#ffffff"
         android:textSize="12sp" />
 
     <TextView
         android:layout_width="13dp"
         android:layout_height="24dp"
-        android:text="°"
+        android:text="℃"
         android:textColor="#ffffff"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginLeft="682dp"
         android:layout_marginTop="29.5dp"
         android:gravity="center"
         />
     <TextView
-        android:layout_width="242dp"
+        android:layout_width="190dp"
         android:layout_height="24dp"
-        android:text="（静态模式下触发超声波自动运动会停止）"
+        android:text="（建议比实际环境温度高5-10℃）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_thirdBack"

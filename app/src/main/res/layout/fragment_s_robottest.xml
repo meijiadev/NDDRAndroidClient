@@ -8,9 +8,32 @@
         android:layout_height="24dp"
         android:textSize="12sp"
         android:textColor="#ffffff"
-        android:text="机器检测"
+        android:text="硬件名称"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="48dp"
+        android:gravity="center|left"
+        android:id="@+id/tv_yj_name"
+        />
+    <TextView
+        android:layout_width="51.5dp"
+        android:layout_height="24dp"
+        android:layout_toRightOf="@+id/tv_yj_name"
+        android:layout_marginLeft="147dp"
+        android:layout_marginTop="24dp"
+        android:text="自检结果"
+        android:textSize="12sp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        />
+    <TextView
+        android:layout_width="99.5dp"
+        android:layout_height="24dp"
+        android:layout_toRightOf="@+id/tv_yj_name"
+        android:layout_marginLeft="346dp"
+        android:layout_marginTop="24dp"
+        android:text="自检时间"
+        android:textSize="12sp"
+        android:textColor="#ffffff"
         android:gravity="center"
         />
     <TextView
@@ -22,7 +45,7 @@
         android:text="一键自检"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/one_test"/>
     <TextView
         android:layout_width="748dp"
@@ -41,7 +64,7 @@
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
-        android:gravity="center"
+        android:gravity="center|left"
         />
     <TextView
         android:layout_width="25.5dp"
@@ -77,7 +100,7 @@
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/tv_dj_test"/>
     <TextView
         android:layout_width="748dp"
@@ -96,7 +119,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
-        android:gravity="center"
+        android:gravity="center|left"
         />
     <TextView
         android:layout_width="25.5dp"
@@ -132,7 +155,7 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/tv_photo_test"/>
     <TextView
         android:layout_width="748dp"
@@ -151,7 +174,7 @@
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
-        android:gravity="center"
+        android:gravity="center|left"
         />
     <TextView
         android:layout_width="25.5dp"
@@ -187,7 +210,7 @@
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/tv_ld_test"/>
     <TextView
         android:layout_width="748dp"
@@ -206,7 +229,7 @@
         android:layout_alignTop="@id/tv_fourBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
-        android:gravity="center"
+        android:gravity="center|left"
         />
     <TextView
         android:layout_width="25.5dp"
@@ -242,7 +265,7 @@
         android:layout_alignTop="@id/tv_fourBack"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/tv_rgbd_test"/>
     <TextView
         android:layout_width="748dp"
@@ -261,7 +284,7 @@
         android:layout_alignTop="@id/tv_fiveBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
-        android:gravity="center"
+        android:gravity="center|left"
         />
     <TextView
         android:layout_width="25.5dp"
@@ -297,7 +320,7 @@
         android:layout_alignTop="@id/tv_fiveBack"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/tv_xrgbd_test"/>
     <TextView
         android:layout_width="748dp"
@@ -316,7 +339,7 @@
         android:layout_alignTop="@id/tv_sixBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
-        android:gravity="center"
+        android:gravity="center|left"
         />
     <TextView
         android:layout_width="25.5dp"
@@ -352,7 +375,7 @@
         android:layout_alignTop="@id/tv_sixBack"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="702dp"
-        android:background="@drawable/version"
+        android:background="@drawable/textview_button_top"
         android:id="@+id/tv_qr_test"/>
 
 </RelativeLayout>

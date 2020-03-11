@@ -105,10 +105,11 @@ public class SlideButton extends View {
      * @param circleCheckedColor   内部小圆被选中的颜色
      * @param circleNoCheckedColor 内部小圆未被选中的颜色
      */
-    public void setSmallCircleModel(int strokeLineColor, int strokeSolidColor, int circleCheckedColor, int circleNoCheckedColor) {
+    public void setSmallCircleModel(int strokeLineColor, int strokeSolidColor, int strokeCheckedSolidColor, int circleCheckedColor, int circleNoCheckedColor) {
         isBigCircle = false;
         strokeLineColor_int = strokeLineColor;
         strokeNoCheckedSolidColor_int = strokeSolidColor;
+        strokeCheckedSolidColor_int = strokeCheckedSolidColor;
         circleChecked_int = circleCheckedColor;
         circleNoCheckedColor_int = circleNoCheckedColor;
         invalidate();
@@ -248,7 +249,7 @@ public class SlideButton extends View {
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
 
-        if (isBigCircle && isChecked) {
+        if (isChecked) {
             mPaint.setColor(strokeCheckedSolidColor_int);
         } else {
             mPaint.setColor(strokeNoCheckedSolidColor_int);
@@ -276,7 +277,7 @@ public class SlideButton extends View {
         } else {
             mPaint.setColor(circleNoCheckedColor_int);
         }
-        canvas.drawCircle(circle_x, centerY, circleRadiusNew, mPaint);
+
 
         if (isBigCircle) {
             Logger.e("---画大圆的边");
@@ -286,6 +287,19 @@ public class SlideButton extends View {
             mPaint.setStrokeWidth(circleStrokeWidth);
             canvas.drawCircle(circle_x, centerY, circleRadiusNew, mPaint);
         }
+        canvas.drawCircle(circle_x, centerY, circleRadiusNew, mPaint);
+        Paint tpaint=new Paint();
+        tpaint.setColor(Color.parseColor("#49c265"));
+        tpaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        tpaint.setStrokeWidth(1);
+        tpaint.setTextSize(28);
+        if (isChecked){
+            canvas.drawText("开",circle_x-14, centerY+10,tpaint);
+        }else {
+            tpaint.setColor(Color.parseColor("#999999"));
+            canvas.drawText("关",circle_x-14, centerY+10,tpaint);
+        }
+
     }
 
     @Override

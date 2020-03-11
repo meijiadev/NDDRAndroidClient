@@ -16,6 +16,13 @@
             android:id="@+id/iv_icon_set"
             android:src="@mipmap/versionlogo"
             />
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="389dp"
+            android:background="#262728"
+            android:layout_marginLeft="363dp"
+            android:layout_marginTop="76.5dp"
+            />
         <!--android:text="大道智创客户端版本"-->
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +56,7 @@
             android:layout_marginLeft="462dp"
             />
         <RelativeLayout
-            android:layout_width="400dp"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="244dp"
             android:layout_marginLeft="462dp"
@@ -58,7 +65,7 @@
 
             <TextView
                 android:id="@+id/tv_type1"
-                android:layout_width="100dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="模块"
@@ -66,7 +73,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="85dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_version1"
                 android:layout_toRightOf="@id/tv_type1"
@@ -76,19 +83,20 @@
                 android:textColor="#ffffff"
                 />
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_data1"
                 android:layout_toRightOf="@id/tv_version1"
                 android:text="版本更新时间"
-                android:gravity="center"
+                android:gravity="center|left"
+                android:paddingLeft="30dp"
                 android:textSize="16sp"
                 android:textColor="#ffffff"
                 />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="400dp"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:id="@+id/computer_type_recycle"
             android:textSize="11sp"
