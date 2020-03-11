@@ -41,6 +41,8 @@ public class MapFileStatus {
 
     private DDRVLNMap.affine_mat affine_mat;                          //地图的矩阵
 
+    public int AllCount=0; //定时任务总次数
+
     /**
      * 单例模式，用于保存地图相关信息
      * @return
@@ -146,6 +148,7 @@ public class MapFileStatus {
                 taskMode.setEndMin(taskItemExes.get(i).getTimeSet().getEndMin());
                 taskMode.setType(taskItemExes.get(i).getType().getNumber());
                 taskMode.setTaskState(taskItemExes.get(i).getStateValue());
+                AllCount=taskItemExes.get(i).getRunCount();
                 cTaskModes.add(taskMode);
             }
 

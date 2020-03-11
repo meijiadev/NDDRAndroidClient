@@ -24,6 +24,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExP
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetParameterProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSensorProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSysVersionProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetTaskOperational;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspHeartBeatProcess;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspLoginProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspMapOperationalProcessor;
@@ -31,6 +32,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspObstacleInfoPro
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRemoteLoginProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRemoteServerListProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunControlExProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunSpecificPoint;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSelectLSProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.ServerInformationProcessor;
 
@@ -123,5 +125,11 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.rspSensorConfigOperational rspSensorConfigOperational=BaseCmd.rspSensorConfigOperational.newBuilder().build();
         m_ProcessorMap.put(rspSensorConfigOperational.getClass().toString(),new RspGetSensorProcessor());
+
+        DDRVLNMap.rspTaskOperational rspTaskOperational=DDRVLNMap.rspTaskOperational.newBuilder().build();
+        m_ProcessorMap.put(rspTaskOperational.getClass().toString(),new RspGetTaskOperational());
+
+        DDRVLNMap.rspRunSpecificPoint rspRunSpecificPoint=DDRVLNMap.rspRunSpecificPoint.newBuilder().build();
+        m_ProcessorMap.put(rspRunSpecificPoint.getClass().toString(),new RspRunSpecificPoint());
     }
 }

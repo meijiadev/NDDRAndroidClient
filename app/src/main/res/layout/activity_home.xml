@@ -70,19 +70,6 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/hightset_def"
             />
-        <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
-            android:layout_width="83dp"
-            android:layout_height="match_parent"
-            android:id="@+id/typeversion"
-            android:text="版本管理"
-            android:textSize="14dp"
-            android:layout_toRightOf="@id/highset"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="34dp"
-            android:textColor="#ffffff"
-            android:gravity="center"
-            android:drawableLeft="@mipmap/version_def"
-            />
         <TextView
             android:id="@+id/tv_shutdown"
             android:layout_width="50dp"

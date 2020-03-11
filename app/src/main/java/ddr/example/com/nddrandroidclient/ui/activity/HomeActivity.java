@@ -4,6 +4,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -89,8 +90,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     LineTextView tv_taskmanager;
     @BindView(R.id.highset)
     LineTextView tv_highset;
-    @BindView(R.id.typeversion)
-    LineTextView tv_typeversion;
     @BindView(R.id.tv_quit)
     ImageView tv_quit;
 
@@ -112,6 +111,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private RockerView myRockerZy;
     private TextView tvSpeed;
     private ImageView iv_quit_yk;
+    private TextView tv_xsu;//线速度
+    private TextView tv_jsu;//角速度
+    private String xsu;
+    private String jsu;
     private boolean ishaveChecked = false;
 
 
@@ -125,9 +128,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         switch (messageEvent.getType()) {
             case updateBaseStatus:
                 if (notifyBaseStatusEx != null) {
+                    DecimalFormat df = new DecimalFormat("0");
+                    DecimalFormat format = new DecimalFormat("0.00");
                     currentMap = notifyBaseStatusEx.getCurroute();
                     currentTask = notifyBaseStatusEx.getCurrpath();
+                    xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
+                    jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
+                    if(tv_xsu!=null && tv_jsu!=null){
+                        tv_xsu.setText("线速度："+xsu+" m/s");
+                        tv_jsu.setText("角速度："+jsu+" 弧度/秒");
+                    }
                 }
+
                 break;
             case updateMapList:
                 Logger.e("-------------updateMapList");
@@ -201,7 +213,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset, R.id.typeversion, R.id.tv_quit,R.id.tv_shutdown})
+    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.status:
@@ -216,10 +228,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case R.id.highset:
                 vpHomePager.setCurrentItem(3);
-                break;
-            case R.id.typeversion:
-                vpHomePager.setCurrentItem(4);
-                Logger.e("---------setCurrentItem");
                 break;
             case R.id.tv_quit:
                 new InputDialog.Builder(getActivity())
@@ -265,60 +273,40 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_mapmanager.isChecked(false);
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(false);
-                tv_typeversion.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_check), null, null, null);
                 tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
                 tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
                 tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
-                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def), null, null, null);
                 break;
             case 1:
                 tv_status.isChecked(false);
                 tv_mapmanager.isChecked(true);
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(false);
-                tv_typeversion.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
                 tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_check), null, null, null);
                 tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
                 tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
-                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def), null, null, null);
                 break;
             case 2:
                 tv_status.isChecked(false);
                 tv_mapmanager.isChecked(false);
                 tv_highset.isChecked(false);
                 tv_taskmanager.isChecked(true);
-                tv_typeversion.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
                 tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
                 tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
                 tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check), null, null, null);
-                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def), null, null, null);
                 break;
             case 3:
                 tv_status.isChecked(false);
                 tv_mapmanager.isChecked(false);
                 tv_highset.isChecked(true);
                 tv_taskmanager.isChecked(false);
-                tv_typeversion.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
                 tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
                 tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check), null, null, null);
                 tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
-                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_def), null, null, null);
-                break;
-            case 4:
-                tv_status.isChecked(false);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(false);
-                tv_typeversion.isChecked(true);
-                tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
-                tv_typeversion.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.task_check), null, null, null);
                 break;
         }
     }
@@ -433,6 +421,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         myRockerZy=contentView.findViewById(R.id.my_rocker_zy_control);
         tvSpeed=contentView.findViewById(R.id.tv_speed_control);
         iv_quit_yk=contentView.findViewById(R.id.iv_quit_yk);
+        tv_xsu=contentView.findViewById(R.id.robot_xsu);//线速度
+        tv_jsu=contentView.findViewById(R.id.robot_jsu);//角速度
         initSeekBar();
         initRockerView();
         initTimer();

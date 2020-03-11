@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
+import com.yhao.floatwindow.FloatWindow;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -142,7 +143,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private int taskNum;//运行次数
     private int workTimes; //工作时间
     private double taskSpeed; //工作速度
-    private int lsNum; //临时任务次数
+    private int lsNum=1; //临时任务次数
     private List<String> groupList=new ArrayList<>();
     private List<TargetPoint> targetPoints= new ArrayList<>();
     private TargetPointAdapter targetPointAdapter;
@@ -152,12 +153,38 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     //private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
     private int modeType;
+    public String sPoint;
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateBaseStatus:
                 initStatusBar();
+                break;
+            case getSwitchTaskSuccess:
+
+                toast("添加临时任务成功");
+                break;
+            case getSwitchTaskFaild:
+                toast("添加临时任务失败");
+                break;
+            case getSpecifiPoint:
+                toast("添加成功，将前往"+sPoint);
+                break;
+            case getSpecifiPoint1:
+                toast("添加成功，当前任务结束后点击完成将前往"+sPoint);
+                break;
+            case getSpecifiPoint2:
+                toast("发生未知错误");
+                break;
+            case getSpecifiPoint3:
+                toast("当前没有定位");
+                break;
+            case getSpecifiPoint4:
+                toast("生成路径失败");
+                break;
+            case getSpecifiPoint5:
+                toast("当前处于自标定");
                 break;
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
@@ -259,9 +286,25 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             tv_set_go.setText("建立任务步骤：");
         }
         tv_now_device.setText(robotID);
-        tv_task_num.setText(String.valueOf(taskNum)+" 次");
         tv_work_time.setText(String.valueOf(workTimes)+" 分");
         tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
+//        Logger.e("任务模式"+notifyBaseStatusEx.geteTaskMode());
+//        Logger.e("总次数"+mapFileStatus.AllCount);
+        switch (notifyBaseStatusEx.geteTaskMode()){
+            case 1:
+                tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
+                break;
+            case 2:
+                tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
+                break;
+            case 3:
+            case 4:
+            case 5:
+                tv_task_num.setText(" ");
+                break;
+
+
+        }
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
                 tv_work_statue.setText("自标定中");
@@ -425,7 +468,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             public void onConfirm(BaseDialog dialog, String content) {
                                 mapImageView.clearDraw();
                                 goPointLet(x,y,theat,ByteString.copyFromUtf8("one"),ByteString.copyFromUtf8(mapName),2);
-                                tv_restart_point.setVisibility(View.GONE);
+//                                tv_restart_point.setVisibility(View.GONE);
                             }
 
                             @Override
@@ -583,6 +626,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                         lsNum=1;
                                     }
                                     addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
+                                    Logger.e("当前临时任务状态"+BaseCmd.eCmdRspType.values().length);
                                 }
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
@@ -614,6 +658,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                                     }
                                                     targetPoints.get(position).setSelected(true);
                                                     targetPointAdapter.setNewData(targetPoints);
+                                                    sPoint=targetPoints.get(position).getName();
                                                 }
 
                                                 @Override
@@ -718,6 +763,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
 
     }
+
 
     @Override
     public void onAnimationStart(Animation animation) {

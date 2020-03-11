@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:background="#101112">
     <TextView
         android:layout_width="76.5dp"
@@ -13,6 +15,18 @@
         android:layout_marginLeft="48dp"
         android:gravity="center"
         />
+    <TextView
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:text="保存"
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:background="@drawable/bg_task_cz"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="24dp"
+        android:id="@+id/tv_save_param"/>
     <TextView
         android:layout_width="748dp"
         android:layout_height="1dp"
@@ -41,6 +55,9 @@
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
         android:id="@+id/ed_bzRadius"
+        android:digits="1234567890"
+        android:maxLength="3"
+        android:gravity="center"
         android:background="@drawable/bg_task_cz"/>
     <TextView
         android:layout_width="19dp"
@@ -91,6 +108,9 @@
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
         android:id="@+id/ed_slowDown"
+        android:digits="1234567890"
+        android:maxLength="4"
+        android:gravity="center"
         android:background="@drawable/bg_task_cz"/>
     <TextView
         android:layout_width="19dp"
@@ -140,6 +160,9 @@
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
+        android:digits="1234567890"
+        android:maxLength="3"
+        android:gravity="center"
         android:id="@+id/ed_bzStop"
         android:background="@drawable/bg_task_cz"/>
     <TextView

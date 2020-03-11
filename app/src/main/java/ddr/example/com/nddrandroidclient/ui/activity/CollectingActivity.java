@@ -52,11 +52,6 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
  * desc:  采集页面
  */
 public class CollectingActivity extends DDRActivity {
-
-   /* @BindView(R.id.collecting)
-    CollectingView2 collecting;*/
-  /*  @BindView(R.id.collect_layout)
-    CollectMapLayout collectMapLayout;*/
     @BindView(R.id.collect4)
     CollectingView4 collectingView4;
     @BindView(R.id.collect3)
@@ -131,15 +126,6 @@ public class CollectingActivity extends DDRActivity {
                 float progress= (float) mainUpDate.getData();
                 setAnimation(processBar,(int) (progress*100),100);
                 if (progress==1.0f){
-                   /* postDelayed(()->{
-                        setTitle("建图完成");
-                        finish();
-                        try {
-                            tcpClient.reqRunControlEx(collectName);       //切换地图
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    },1000);   */                                 // 延迟一秒
                     setTitle("建图完成");
                     finish();
                     try {
@@ -172,8 +158,6 @@ public class CollectingActivity extends DDRActivity {
                 break;
         }
     }
-
-
 
     @Override
     protected int getLayoutId() {

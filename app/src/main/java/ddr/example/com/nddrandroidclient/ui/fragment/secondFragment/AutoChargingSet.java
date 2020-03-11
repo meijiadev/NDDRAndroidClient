@@ -1,9 +1,11 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 
@@ -36,6 +38,8 @@ public class AutoChargingSet extends DDRLazyFragment {
     EditText ed_trigger_auto;
     @BindView(R.id.ed_out_auto)
     EditText ed_out_auto;
+    @BindView(R.id.tv_save_auto_char)
+    TextView tv_save_auto_char;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -43,9 +47,9 @@ public class AutoChargingSet extends DDRLazyFragment {
     private Parameter parameter;
     private Parameters parameters;
     private List<Parameter> parameterList=new ArrayList<>();
-    private String triggerAutoKey="MR_Params.RECHARGING_BATT_LO_PER";
-    private String outAutoKey="MR_Params.RECHARGING_BATT_HI_PER";
-    private String swithAutoKey="Common_Params.AUTO_ENTER_RECHARGING";
+    private String triggerAutoKey="MR_Params.RECHARGING_BATT_LO_PER";//自动充电下限
+    private String outAutoKey="MR_Params.RECHARGING_BATT_HI_PER";//自动充电上限
+    private String swithAutoKey="Common_Params.AUTO_ENTER_RECHARGING"; //自动充电开关
     private String autoValue="1";
 
     public static AutoChargingSet newInstance(){
@@ -69,7 +73,7 @@ public class AutoChargingSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),
+                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#0399ff"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
 
     }
@@ -84,12 +88,20 @@ public class AutoChargingSet extends DDRLazyFragment {
         getChosseStatus();
     }
 
-    @OnClick({R.id.slideButton})
+    @OnClick({R.id.slideButton,R.id.tv_save_auto_char})
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.slideButton:
                 getChosseStatus();
                 postNaparmeter(ByteString.copyFromUtf8(swithAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
+                break;
+            case R.id.tv_save_auto_char:
+                int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
+                int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
+                postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
+                postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
+                getNaparmeter(1);
+                toast("保存成功");
                 break;
         }
     }
@@ -129,15 +141,21 @@ public class AutoChargingSet extends DDRLazyFragment {
         parameterList=parameters.getParameterList();
         for (int i=0;i<parameterList.size();i++){
             if(parameterList.get(i).getKey().contains(triggerAutoKey)){
-                ed_trigger_auto.setText(parameterList.get(i).getdValue());
+                int trigger_auto=Integer.parseInt(parameterList.get(i).getValue())/100;
+                ed_trigger_auto.setText(String.valueOf(trigger_auto));
             }
             if(parameterList.get(i).getKey().contains(outAutoKey)){
-                ed_out_auto.setText(parameterList.get(i).getdValue());
+                int out_auto=Integer.parseInt(parameterList.get(i).getValue())/100;
+                Logger.e("电量值"+out_auto);
+                ed_out_auto.setText(String.valueOf(out_auto));
             }
             if(parameterList.get(i).getKey().contains(swithAutoKey)){
+                Logger.e("充电值"+parameterList.get(i).getValue());
                 if (parameterList.get(i).getValue().equals("1")){
+                    Logger.e("开启充电-----");
                     slideButton.setChecked(true);
                 }else {
+                    Logger.e("关闭充电-----");
                     slideButton.setChecked(false);
                 }
             }

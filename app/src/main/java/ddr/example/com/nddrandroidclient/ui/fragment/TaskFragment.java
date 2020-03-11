@@ -78,8 +78,8 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
 //                Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
-//                taskModeList=mapFileStatus.getcTaskModes();
-//                taskAdapter.setNewData(taskModeList);
+                taskModeList=mapFileStatus.getcTaskModes();
+                taskAdapter.setNewData(taskModeList);
                 break;
         }
     }
@@ -114,7 +114,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         try {
             taskModeList=ListTool.deepCopy(mapFileStatus.getcTaskModes());
             taskAdapter.setNewData(taskModeList);
-            submissionTask();
+//            submissionTask();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -216,6 +216,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 submissionTask();
+                                toast("保存成功");
                         }
 
                             @Override
@@ -302,6 +303,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     /**
      * 上传任务列表
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void submissionTask(){
         taskModeList.sort(Comparator.comparing(TaskMode::getType).reversed().thenComparing(TaskMode::getEndHour).thenComparing(TaskMode::getEndMin));
         taskAdapter.setNewData(taskModeList);

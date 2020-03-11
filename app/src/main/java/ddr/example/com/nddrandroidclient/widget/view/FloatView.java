@@ -37,10 +37,9 @@ public class FloatView extends View  {
     private Bitmap JTBitmap;   //急停
     private Bitmap YKBitmap;   //遥控
     private Bitmap SBBitmap;   //手柄
-    private Bitmap CDBitmap;   //充电
     private Paint mPaint;
     private  int DEFAULT_WIDTH=74;         //单位都是像素
-    private  int DEFAULT_HEIGHT=373;
+    private  int DEFAULT_HEIGHT=300;
     private OnFloatViewListener onFloatViewListener;
     private int oldStopStat,oldCharging;           // oldCharging :如果为0默认不在充电 为1 表示在充电状态
 
@@ -73,7 +72,6 @@ public class FloatView extends View  {
         bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.float_bg);
         YKBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.yk_def);
         JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
-        CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
         SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
     }
 
@@ -97,18 +95,6 @@ public class FloatView extends View  {
                 SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
                 break;
         }
-        if(notifyBaseStatusEx.isChargingStatus()) {
-            CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_check);
-            if (oldCharging==0){
-                oldCharging=1;
-                invalidate();
-            }
-        }else {
-            CDBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.chongd_def);
-            if (oldCharging==1){
-                invalidate();     //刷新界面 重绘view
-            }
-        }
         if (oldStopStat!=notifyBaseStatusEx.getStopStat()){
             invalidate();
             oldStopStat=notifyBaseStatusEx.getStopStat();
@@ -130,10 +116,9 @@ public class FloatView extends View  {
         super.onDraw(canvas);
         canvas.drawBitmap(bgBitmap,0,0,mPaint);
         canvas.drawBitmap(JTBitmap,13,18,mPaint);
-        canvas.drawBitmap(CDBitmap,13,100,mPaint);
-        canvas.drawBitmap(SBBitmap,13,178,mPaint);
-        canvas.drawLine(16,256,59,256,mPaint);
-        canvas.drawBitmap(YKBitmap,13,291,mPaint);
+        canvas.drawBitmap(SBBitmap,13,88,mPaint);
+        canvas.drawLine(16,158,59,158,mPaint);
+        canvas.drawBitmap(YKBitmap,13,178,mPaint);
     }
 
 
@@ -150,7 +135,7 @@ public class FloatView extends View  {
                 float x=event.getX();
                 float y=event.getY();
                 Logger.e("------点击");
-                if (x>10&&y>260&&onFloatViewListener!=null){
+                if (x>10&&y>150&&onFloatViewListener!=null){
                     onFloatViewListener.onClickBottom();
                     invalidate();
                 }

@@ -7,22 +7,22 @@
         android:layout_height="34dp"
         android:textColor="#ffffff"
         android:textSize="16sp"
-        android:layout_marginLeft="29dp"
+        android:layout_marginLeft="19dp"
         android:layout_marginTop="10dp"
         android:id="@+id/iv_check"
         />
     <TextView
         android:layout_width="122dp"
         android:layout_height="34dp"
-        android:layout_toRightOf="@+id/iv_check"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="85dp"
         android:id="@+id/tv_map_list"
         android:textSize="12sp"
         android:textColor="#eaf1f5"
         android:text="地图列表-1"
         android:gravity="center"
         />
+<!--    android:layout_toRightOf="@+id/iv_check"-->
 
     <TextView
         android:layout_width="175dp"
@@ -59,7 +59,7 @@
         android:layout_height="34dp"
         android:layout_toRightOf="@id/tv_task_time"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="63dp"
         android:id="@+id/task_num_check"
         android:gravity="center"/>
     <TextView
@@ -81,7 +81,7 @@
         android:textSize="12sp"
         android:gravity="center"
         android:layout_toRightOf="@id/tv_task_status"
-        android:layout_marginLeft="55dp"
+        android:layout_marginLeft="55.5dp"
         android:id="@+id/tv_task_pause"
         android:background="@drawable/bg_task_cz"
         />

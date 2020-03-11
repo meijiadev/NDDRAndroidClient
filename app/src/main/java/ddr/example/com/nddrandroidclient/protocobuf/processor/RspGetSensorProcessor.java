@@ -17,23 +17,25 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 public class RspGetSensorProcessor extends BaseProcessor{
     private Sensors sensors;
-    private List<Sensor> sensorList=new ArrayList<>();
+    private List<Sensor> sensorList;
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         BaseCmd.rspSensorConfigOperational rspSensorConfigOperational= (BaseCmd.rspSensorConfigOperational) msg;
         List<BaseCmd.sensorConfigItem> sensorConfigItems=rspSensorConfigOperational.getDataList();
         sensors=Sensors.getInstance();
+        sensorList=new ArrayList<>();
+        Logger.e("实际数量"+sensorConfigItems.size());
         for (int i=0;i<sensorConfigItems.size();i++){
             Sensor sensor=new Sensor();
             sensor.setKey(sensorConfigItems.get(i).getKey().toStringUtf8());
             sensor.setDydistance(sensorConfigItems.get(i).getDynamicOATriggerDist().toStringUtf8());
             sensor.setStaticdistance(sensorConfigItems.get(i).getStaticOATriggerDist().toStringUtf8());
             sensorList.add(sensor);
-            Logger.e("数量"+sensorList.size());
             sensors.setSensorList(sensorList);
-            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataSenesor));
         }
+        Logger.e("数量"+sensorList.size());
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataSenesor));
 
     }
 }

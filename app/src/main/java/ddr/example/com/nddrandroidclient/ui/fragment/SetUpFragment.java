@@ -19,6 +19,7 @@ import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.HelpFeedback
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.NaParameterSet;
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.RobotTestSet;
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.SensorSet;
+import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 
 /**
@@ -29,9 +30,18 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
     @BindView(R.id.vp_home_pager)
     DDRViewPager viewPager;
     @BindView(R.id.tv_naParam)
-    TextView tv_naParam;
+    LineTextView tv_naParam;
     @BindView(R.id.tv_autoCharging)
-    TextView tv_autoCharging;
+    LineTextView tv_autoCharging;
+    @BindView(R.id.tv_sensorSet)
+    LineTextView tv_sensorSet;
+    @BindView(R.id.tv_robotTest)
+    LineTextView tv_robotTest;
+    @BindView(R.id.tv_editionManager)
+    LineTextView tv_editionManager;
+    @BindView(R.id.tv_helpFeedback)
+    LineTextView tv_helpFeedback;
+
 
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
 
@@ -46,11 +56,6 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
 
     @Override
     protected void initView() {
-
-    }
-
-    @Override
-    protected void initData() {
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(NaParameterSet.newInstance());
         mPagerAdapter.addFragment(AutoChargingSet.newInstance());
@@ -62,6 +67,12 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
         viewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         viewPager.addOnPageChangeListener(this);
         viewPager.setCurrentItem(0);
+        isChecked();
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @OnClick({R.id.tv_naParam,R.id.tv_autoCharging,R.id.tv_sensorSet,R.id.tv_robotTest,R.id.tv_editionManager,R.id.tv_helpFeedback})
@@ -87,6 +98,70 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
             case R.id.tv_helpFeedback:
                 viewPager.setCurrentItem(5); //帮助与反馈
                 break;
+        }
+        isChecked();
+    }
+
+    /**
+     * 判断哪个页面是否被选中
+     */
+    protected void isChecked() {
+        tv_naParam.isStitle(true);
+        tv_autoCharging.isStitle(true);
+        tv_sensorSet.isStitle(true);
+        tv_robotTest.isStitle(true);
+        tv_editionManager.isStitle(true);
+        tv_helpFeedback.isStitle(true);
+        switch (viewPager.getCurrentItem()){
+            case 0:
+                tv_naParam.isChecked(true);
+                tv_autoCharging.isChecked(false);
+                tv_sensorSet.isChecked(false);
+                tv_robotTest.isChecked(false);
+                tv_editionManager.isChecked(false);
+                tv_helpFeedback.isChecked(false);
+                break;
+            case 1:
+                tv_naParam.isChecked(false);
+                tv_autoCharging.isChecked(true);
+                tv_sensorSet.isChecked(false);
+                tv_robotTest.isChecked(false);
+                tv_editionManager.isChecked(false);
+                tv_helpFeedback.isChecked(false);
+                break;
+            case 2:
+                tv_naParam.isChecked(false);
+                tv_autoCharging.isChecked(false);
+                tv_sensorSet.isChecked(true);
+                tv_robotTest.isChecked(false);
+                tv_editionManager.isChecked(false);
+                tv_helpFeedback.isChecked(false);
+                break;
+            case 3:
+                tv_naParam.isChecked(false);
+                tv_autoCharging.isChecked(false);
+                tv_sensorSet.isChecked(false);
+                tv_robotTest.isChecked(true);
+                tv_editionManager.isChecked(false);
+                tv_helpFeedback.isChecked(false);
+                break;
+            case 4:
+                tv_naParam.isChecked(false);
+                tv_autoCharging.isChecked(false);
+                tv_sensorSet.isChecked(false);
+                tv_robotTest.isChecked(false);
+                tv_editionManager.isChecked(true);
+                tv_helpFeedback.isChecked(false);
+                break;
+            case 5:
+                tv_naParam.isChecked(false);
+                tv_autoCharging.isChecked(false);
+                tv_sensorSet.isChecked(false);
+                tv_robotTest.isChecked(false);
+                tv_editionManager.isChecked(false);
+                tv_helpFeedback.isChecked(true);
+                break;
+
         }
     }
 
@@ -115,6 +190,7 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
 
     @Override
     public void onPageSelected(int position) {
+        isChecked();
 
     }
 

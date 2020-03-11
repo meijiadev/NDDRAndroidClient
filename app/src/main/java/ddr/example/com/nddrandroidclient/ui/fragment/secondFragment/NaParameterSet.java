@@ -37,6 +37,8 @@ public class NaParameterSet extends DDRLazyFragment{
     EditText ed_slowDown;
     @BindView(R.id.tv_restartDefault)
     TextView tv_restartDefault;
+    @BindView(R.id.tv_save_param)
+    TextView tv_save_param;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -81,13 +83,24 @@ public class NaParameterSet extends DDRLazyFragment{
         parameters=Parameters.getInstance();
         getNaparmeter(1);
     }
-    @OnClick ({R.id.tv_restartDefault})
+    @OnClick ({R.id.tv_restartDefault,R.id.tv_save_param})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.tv_restartDefault:
                 postNaparmeter(ByteString.copyFromUtf8(bzRadiusKey),ByteString.copyFromUtf8("30"),1,2);
                 postNaparmeter(ByteString.copyFromUtf8(bzDistanceKey),ByteString.copyFromUtf8("30"),1,2);
                 postNaparmeter(ByteString.copyFromUtf8(bzStopKey),ByteString.copyFromUtf8("30"),1,2);
+                getNaparmeter(1);
+                break;
+            case R.id.tv_save_param:
+                float bz_ra=Float.parseFloat(ed_bzRadius.getText().toString())/100;//半径
+                float bz_dis=Float.parseFloat(ed_slowDown.getText().toString())/100;//减速距离
+                float bz_st=Float.parseFloat(ed_bzStop.getText().toString())/100;//停止距离
+                postNaparmeter(ByteString.copyFromUtf8(bzRadiusKey),ByteString.copyFromUtf8(String.valueOf(bz_ra)),1,3);
+                postNaparmeter(ByteString.copyFromUtf8(bzDistanceKey),ByteString.copyFromUtf8(String.valueOf(bz_dis)),1,3);
+                postNaparmeter(ByteString.copyFromUtf8(bzStopKey),ByteString.copyFromUtf8(String.valueOf(bz_st)),1,3);
+                getNaparmeter(1);
+                toast("保存成功");
                 break;
         }
     }
@@ -147,13 +160,16 @@ public class NaParameterSet extends DDRLazyFragment{
         Logger.e("数量"+parameterList.size());
         for (int i=0;i<parameterList.size();i++){
             if(parameterList.get(i).getKey().contains(bzRadiusKey)){
-                ed_bzRadius.setText(parameterList.get(i).getdValue());
+                int bz_ra=(int)(Float.parseFloat(parameterList.get(i).getValue())*100);
+                ed_bzRadius.setText(String.valueOf(bz_ra));
             }
             if(parameterList.get(i).getKey().contains(bzDistanceKey)){
-                ed_slowDown.setText(parameterList.get(i).getdValue());
+                int bz_sl=(int)(Float.parseFloat(parameterList.get(i).getValue())*100);
+                ed_slowDown.setText(String.valueOf(bz_sl));
             }
             if(parameterList.get(i).getKey().contains(bzStopKey)){
-                ed_bzStop.setText(parameterList.get(i).getdValue());
+                int bz_st=(int)(Float.parseFloat(parameterList.get(i).getValue())*100);
+                ed_bzStop.setText(String.valueOf(bz_st));
             }
 
         }

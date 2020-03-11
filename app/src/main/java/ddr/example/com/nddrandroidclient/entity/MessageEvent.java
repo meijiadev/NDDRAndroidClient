@@ -48,6 +48,16 @@ public class MessageEvent {
 
         touchSelectPoint,            //触摸选中目标点
 
+        getSwitchTaskSuccess, //获取临时任务结果成功
+        getSwitchTaskFaild,//获取临时任务结果失败
+
+        getSpecifiPoint,//获取点击AB点的结果
+        getSpecifiPoint1,
+        getSpecifiPoint2,
+        getSpecifiPoint3,
+        getSpecifiPoint4,
+        getSpecifiPoint5,
+
 
     }
 

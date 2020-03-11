@@ -598,6 +598,7 @@ message notifyBaseStatusEx{
 	eTaskWorkMode taskmode = 21; 
 	eException robotexception = 22; // 异常状态
 	eChargingType chargingType = 23; // 充电类型
+	int32 temporaryTaskCount = 24; // 记录临时任务总次数
 }
 
 // Environmental sensor info

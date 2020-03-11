@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#101112">
+    android:background="#101112"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
     <TextView
         android:layout_width="76.5dp"
         android:layout_height="24dp"
@@ -14,6 +16,18 @@
         android:gravity="center"
         />
     <TextView
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:text="保存"
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:background="@drawable/bg_task_cz"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="24dp"
+        android:id="@+id/tv_save_auto_char"/>
+    <TextView
         android:layout_width="748dp"
         android:layout_height="1dp"
         android:background="#262728"
@@ -22,11 +36,11 @@
         android:id="@+id/tv_firstBack"
         />
     <TextView
-        android:layout_width="89.5dp"
+        android:layout_width="108.5dp"
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="自动返回充电点"
+        android:text="开启自动返回充电点"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
@@ -76,6 +90,9 @@
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
+        android:digits="1234567890"
+        android:maxLength="2"
+        android:gravity="center"
         android:id="@+id/ed_trigger_auto"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -116,6 +133,9 @@
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
+        android:digits="1234567890"
+        android:maxLength="2"
+        android:gravity="center"
         android:id="@+id/ed_out_auto"
         android:background="@drawable/bg_task_cz"/>
     <TextView
