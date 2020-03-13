@@ -33,10 +33,15 @@
         android:id="@+id/tv_task_time"
         android:layout_marginLeft="29dp"
         android:paddingLeft="18dp"
-        android:paddingTop="6dp"
-        android:drawableRight="@mipmap/set_task_time"
+        android:paddingTop="7dp"
         android:textColor="#eaf1f5"
         />
+    <ImageView
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:src="@mipmap/set_task_time"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="378dp"/>
     <TextView
         android:layout_width="1.5dp"
         android:layout_height="16dp"

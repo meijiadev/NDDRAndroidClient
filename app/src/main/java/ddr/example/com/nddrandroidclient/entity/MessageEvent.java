@@ -57,6 +57,9 @@ public class MessageEvent {
         getSpecifiPoint3,
         getSpecifiPoint4,
         getSpecifiPoint5,
+        getSpecifiPoint6,
+        getSpecifiPoint7,
+
 
 
     }

@@ -4,6 +4,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -92,6 +93,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     LineTextView tv_highset;
     @BindView(R.id.tv_quit)
     ImageView tv_quit;
+    @BindView(R.id.iv_jt_def)
+    ImageView iv_jt_def;
+    @BindView(R.id.iv_yk_def)
+    ImageView iv_yk_def;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -127,19 +132,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateBaseStatus:
-                if (notifyBaseStatusEx != null) {
-                    DecimalFormat df = new DecimalFormat("0");
-                    DecimalFormat format = new DecimalFormat("0.00");
-                    currentMap = notifyBaseStatusEx.getCurroute();
-                    currentTask = notifyBaseStatusEx.getCurrpath();
-                    xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
-                    jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
-                    if(tv_xsu!=null && tv_jsu!=null){
-                        tv_xsu.setText("线速度："+xsu+" m/s");
-                        tv_jsu.setText("角速度："+jsu+" 弧度/秒");
-                    }
-                }
-
+                initStatusBar();
                 break;
             case updateMapList:
                 Logger.e("-------------updateMapList");
@@ -308,6 +301,39 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check), null, null, null);
                 tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
+        }
+    }
+
+    private void initStatusBar() {
+        if (notifyBaseStatusEx != null) {
+            DecimalFormat df = new DecimalFormat("0");
+            DecimalFormat format = new DecimalFormat("0.00");
+            currentMap = notifyBaseStatusEx.getCurroute();
+            currentTask = notifyBaseStatusEx.getCurrpath();
+            xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
+            jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
+            if(tv_xsu!=null && tv_jsu!=null){
+                tv_xsu.setText("线速度："+xsu+" m/s");
+                tv_jsu.setText("角速度："+jsu+" 弧度/秒");
+            }
+            switch (notifyBaseStatusEx.getStopStat()) {
+                case 4:
+                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
+                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    break;
+                case 8:
+                    iv_jt_def.setImageResource(R.mipmap.jt_default);
+                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    break;
+                case 12:
+                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
+                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    break;
+                case 0:
+                    iv_jt_def.setImageResource(R.mipmap.jt_default);
+                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    break;
+            }
         }
     }
 

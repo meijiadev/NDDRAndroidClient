@@ -93,11 +93,11 @@ public class AutoChargingSet extends DDRLazyFragment {
         switch (view.getId()){
             case R.id.slideButton:
                 getChosseStatus();
-                postNaparmeter(ByteString.copyFromUtf8(swithAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
                 break;
             case R.id.tv_save_auto_char:
                 int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
                 int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
+                postNaparmeter(ByteString.copyFromUtf8(swithAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
                 postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
                 postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
                 getNaparmeter(1);

@@ -162,17 +162,16 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 initStatusBar();
                 break;
             case getSwitchTaskSuccess:
-
                 toast("添加临时任务成功");
                 break;
             case getSwitchTaskFaild:
                 toast("添加临时任务失败");
                 break;
             case getSpecifiPoint:
-                toast("添加成功，将前往"+sPoint);
+                toast("开始前往"+sPoint);
                 break;
             case getSpecifiPoint1:
-                toast("添加成功，当前任务结束后点击完成将前往"+sPoint);
+                toast("添加任务成功，等待前往"+sPoint);
                 break;
             case getSpecifiPoint2:
                 toast("发生未知错误");
@@ -186,6 +185,12 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSpecifiPoint5:
                 toast("当前处于自标定");
                 break;
+            case getSpecifiPoint6:
+                toast("完成当前任务，开始下一个任务，如无任务即返回待命点");
+                Logger.e("AB点-----"+sPoint);
+                break;
+            case getSpecifiPoint7:
+                toast("完成当前任务，将前往"+sPoint);
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){

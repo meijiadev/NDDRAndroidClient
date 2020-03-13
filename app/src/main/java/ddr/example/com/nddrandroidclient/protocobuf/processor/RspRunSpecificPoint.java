@@ -17,21 +17,27 @@ public class RspRunSpecificPoint  extends BaseProcessor{
         super.process(context, commonHeader, msg);
         DDRVLNMap.rspRunSpecificPoint rspRunSpecificPoint= (DDRVLNMap.rspRunSpecificPoint) msg;
         switch (rspRunSpecificPoint.getErrorCode()){
-            case en_RunSpecificPtAddTask:
-                Logger.e("添加成功到队列");
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint1));
-                break;
             case en_RunSpecificPtOk:
-                Logger.e("添加成功");
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint));
+                if (rspRunSpecificPoint.getClientdata().getOptType().getNumber()==1){
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint));
+                    Logger.e("添加成功");
+                }else {
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint6));
+                    Logger.e("其它");
+                }
+                break;
+            case en_RunSpecificPtAddTask:
+                if (rspRunSpecificPoint.getClientdata().getOptType().getNumber()==1){
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint1));
+                    Logger.e("添加成功到队列");
+                }else {
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint7));
+                    Logger.e("其它");
+                }
                 break;
             case en_RunSpecificUnknowError:
                 Logger.e("未知错误");
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint2));
-                break;
-            case en_RunSpecificPtInSelfCalib:
-                Logger.e("当前没有定位");
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint5));
                 break;
             case en_RunSpecificPtCurrNoLocated:
                 Logger.e("生成路径失败");
@@ -41,6 +47,11 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                 Logger.e("当前处于自标定");
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint4));
                 break;
+            case en_RunSpecificPtInSelfCalib:
+                Logger.e("当前没有定位");
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint5));
+                break;
+
         }
     }
 }
