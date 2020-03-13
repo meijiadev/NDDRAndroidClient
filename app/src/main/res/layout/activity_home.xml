@@ -70,6 +70,24 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/hightset_def"
             />
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@mipmap/yk_default"
+            android:layout_toLeftOf="@id/tv_shutdown"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:id="@+id/iv_yk_def"
+            />
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@mipmap/jt_default"
+            android:layout_toLeftOf="@id/iv_yk_def"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:id="@+id/iv_jt_def"
+            />
         <TextView
             android:id="@+id/tv_shutdown"
             android:layout_width="50dp"

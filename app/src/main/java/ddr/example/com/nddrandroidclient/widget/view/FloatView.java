@@ -34,14 +34,10 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
  */
 public class FloatView extends View  {
     private Bitmap bgBitmap;   //背景图片
-    private Bitmap JTBitmap;   //急停
-    private Bitmap YKBitmap;   //遥控
-    private Bitmap SBBitmap;   //手柄
     private Paint mPaint;
-    private  int DEFAULT_WIDTH=74;         //单位都是像素
-    private  int DEFAULT_HEIGHT=300;
+    private  int DEFAULT_WIDTH=98;         //单位都是像素
+    private  int DEFAULT_HEIGHT=98;
     private OnFloatViewListener onFloatViewListener;
-    private int oldStopStat,oldCharging;           // oldCharging :如果为0默认不在充电 为1 表示在充电状态
 
     private NotifyBaseStatusEx notifyBaseStatusEx;
     public FloatView(Context context) {
@@ -58,7 +54,6 @@ public class FloatView extends View  {
     public void upDate(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
             case updateBaseStatus:
-                initStatusBar();
                 break;
         }
     }
@@ -69,38 +64,7 @@ public class FloatView extends View  {
         mPaint.setColor(Color.parseColor("#979797"));
         EventBus.getDefault().register(this);
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
-        bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.float_bg);
-        YKBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.yk_def);
-        JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
-        SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
-    }
-
-    private void initStatusBar() {
-        //robotStatusEntity=RobotStatusEntity.getInstance();
-        switch (notifyBaseStatusEx.getStopStat()) {
-            case 4:
-                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_check);
-                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
-                break;
-            case 8:
-                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
-                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_check);
-                break;
-            case 12:
-                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_check);
-                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_check);
-                break;
-            case 0:
-                JTBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.jt_def);
-                SBBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.sb_def);
-                break;
-        }
-        if (oldStopStat!=notifyBaseStatusEx.getStopStat()){
-            invalidate();
-            oldStopStat=notifyBaseStatusEx.getStopStat();
-        }
-
-
+        bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.flow_yk);
     }
 
     /**
@@ -115,10 +79,6 @@ public class FloatView extends View  {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(bgBitmap,0,0,mPaint);
-        canvas.drawBitmap(JTBitmap,13,18,mPaint);
-        canvas.drawBitmap(SBBitmap,13,88,mPaint);
-        canvas.drawLine(16,158,59,158,mPaint);
-        canvas.drawBitmap(YKBitmap,13,178,mPaint);
     }
 
 
@@ -135,7 +95,7 @@ public class FloatView extends View  {
                 float x=event.getX();
                 float y=event.getY();
                 Logger.e("------点击");
-                if (x>10&&y>150&&onFloatViewListener!=null){
+                if (onFloatViewListener!=null){
                     onFloatViewListener.onClickBottom();
                     invalidate();
                 }

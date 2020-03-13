@@ -93,6 +93,7 @@ public class HelpFeedbackSet extends DDRLazyFragment {
     private void onClick(){
         helpBackAdapter.setOnItemChildClickListener(((adapter, view, position) -> {
             tv_answer=recycle_help.getLayoutManager().findViewByPosition(position).findViewById(R.id.tv_answer);
+            iv_help_xia=recycle_help.getLayoutManager().findViewByPosition(position).findViewById(R.id.iv_help_xia);
             switch (view.getId()){
                 case R.id.iv_help_xia:
                     iv_help_xia=(ImageView) view;
@@ -112,6 +113,15 @@ public class HelpFeedbackSet extends DDRLazyFragment {
                     break;
                 case R.id.tv_question:
                     tv_question=(TextView) view;
+                    if (isOpen){
+                        tv_answer.setVisibility(View.GONE);
+                        isOpen=false;
+                        iv_help_xia.setImageResource(R.mipmap.xlright_5);
+                    }else {
+                        tv_answer.setVisibility(View.VISIBLE);
+                        iv_help_xia.setImageResource(R.mipmap.xl_5);
+                        isOpen=true;
+                    }
                     break;
             }
         }));

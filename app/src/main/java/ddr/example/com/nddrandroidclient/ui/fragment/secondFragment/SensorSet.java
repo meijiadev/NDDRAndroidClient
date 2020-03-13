@@ -87,7 +87,6 @@ public class SensorSet extends DDRLazyFragment {
         switch (view.getId()){
             case R.id.slideButton:
                 getChosseStatus();
-                postNaparmeter(ByteString.copyFromUtf8(sensorKey),ByteString.copyFromUtf8(autoValue),2,3);
                 break;
             case R.id.tv_save_sensor:
                 postAndGet();
@@ -404,6 +403,7 @@ public class SensorSet extends DDRLazyFragment {
         }
         postSensorParam(sensorConfigItemList,3);
         int imu=(int)Float.parseFloat(ed_imu.getText().toString());
+        postNaparmeter(ByteString.copyFromUtf8(sensorKey),ByteString.copyFromUtf8(autoValue),2,3);
         postNaparmeter(ByteString.copyFromUtf8(imuKey),ByteString.copyFromUtf8(String.valueOf(imu)),2,3);
         getNaparmeter();
         getSensorParam();

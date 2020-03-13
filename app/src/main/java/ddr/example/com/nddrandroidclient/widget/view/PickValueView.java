@@ -88,7 +88,7 @@ public class PickValueView extends LinearLayout implements NumberPicker.OnValueC
         LinearLayout titleLayout = new LinearLayout(mContext);
         LayoutParams titleParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         titleParams.setMargins(0, 0, 0, dip2px(12));
-        titleLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        titleLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         titleLayout.setOrientation(HORIZONTAL);
         mTitleLeft = new TextView(mContext);
         mTitleMiddle = new TextView(mContext);
