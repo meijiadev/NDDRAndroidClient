@@ -201,7 +201,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
-
+                }else {
+                    tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 }
                 break;
         }

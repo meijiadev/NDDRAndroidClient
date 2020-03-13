@@ -10,6 +10,7 @@ import com.google.protobuf.ByteString;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -167,7 +169,11 @@ public class MapSettingActivity extends DDRActivity {
                     }
                 }, 4000);
                 abSpeed= Float.parseFloat(etABSpeed.getText().toString());
-                tcpClient.saveDataToServer(modeType,tvSwitchPoint.getText().toString().trim(),abMode,abSpeed);
+                String name=tvSwitchPoint.getText().toString().trim();
+                if (name.equals("原地待命")){
+                    name="";
+                }
+                tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
                 break;
         }
     }
@@ -216,9 +222,22 @@ public class MapSettingActivity extends DDRActivity {
                 ddrMapBaseData=reqDDRVLNMapEx.getBasedata();
                 mapName=ddrMapBaseData.getName().toStringUtf8();
                 modeType=ddrMapBaseData.getAbNaviTypeValue();
-                targetPoints=mapFileStatus.getTargetPoints();
+                try {
+                    targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                    TargetPoint targetPoint=new TargetPoint();
+                    targetPoint.setName("原地待命");
+                    targetPoints.add(0,targetPoint);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 etMapName.setText(mapName);
-                tvSwitchPoint.setText(ddrMapBaseData.getTargetPtName().toStringUtf8());
+                String pointName=ddrMapBaseData.getTargetPtName().toStringUtf8();
+                if (pointName.equals("")){
+                    pointName="原地待命";
+                }
+                tvSwitchPoint.setText(pointName);
                 abSpeed=ddrMapBaseData.getAbPathSpeed();
                 Logger.e("ab点速度："+abSpeed);
                 abMode=ddrMapBaseData.getAbPathModeValue();

@@ -405,6 +405,7 @@ public class MapEditActivity extends DDRActivity {
                                         e.printStackTrace();
                                     }
                                     targetPoints.add(targetPoint);
+                                    tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
                                 }
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
@@ -475,6 +476,7 @@ public class MapEditActivity extends DDRActivity {
                                             targetPoint.setMultiple(false);
                                         }
                                         //selectPointAdapter.setNewData(selectPoints);
+                                        tvPath.setText("路径" + "(" + pathLines.size() + ")");
                                         toast("保存成功!");
                                     }else {
                                         toast("请先输入名称");

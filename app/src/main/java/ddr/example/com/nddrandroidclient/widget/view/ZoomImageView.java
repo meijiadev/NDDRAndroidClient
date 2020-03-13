@@ -45,14 +45,14 @@ public class ZoomImageView extends View {
     private float lastYMove = -1;//记录上次手指移动时的纵坐标
     private float movedDistanceX;//记录手指在横坐标方向上的移动距离
     private float movedDistanceY;//记录手指在纵坐标方向上的移动距离
-    private float totalTranslateX;//记录图片在矩阵上的横向偏移值 图片左上角顶点相当于画布的X坐标
-    private float totalTranslateY;//记录图片在矩阵上的纵向偏移值 图片左上角顶点相当于画布的Y坐标
+    private float totalTranslateX=0;//记录图片在矩阵上的横向偏移值 图片左上角顶点相当于画布的X坐标
+    private float totalTranslateY=0;//记录图片在矩阵上的纵向偏移值 图片左上角顶点相当于画布的Y坐标
     public float totalRatio;//记录图片在矩阵上的总缩放比例
     private float scaledRatio;//记录手指移动的距离所造成的缩放比例
     private float initRatio;//记录图片初始化时的缩放比例
-    private double lastFingerDis;//记录上次两指之间的距离
-    private float degree;    //旋转角度
-    private float rotation;      //旋转的角度
+    private double lastFingerDis=0;//记录上次两指之间的距离
+    private float degree=0;    //旋转角度
+    private float rotation=0;      //旋转的角度
 
     private NotifyBaseStatusEx notifyBaseStatusEx;
     public double r00=0;
@@ -96,6 +96,15 @@ public class ZoomImageView extends View {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            totalTranslateX=0;
+            totalTranslateY=0;
+            totalRatio=1;
+            scaledRatio=1;
+            initRatio=1;
+            lastFingerDis=0;
+            degree=0;
+            rotation=0;
+            currentStatus=STATUS_INIT;
             invalidate();
         }
 

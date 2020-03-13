@@ -309,7 +309,6 @@ public class LineView {
         lines=null;
         pathLines1=null;
         selectPosition=-1;
-        spaceItems=null;
     }
 
 

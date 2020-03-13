@@ -199,6 +199,7 @@
             android:id="@+id/tv_work2"
             android:gravity="center"
            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -385,10 +386,10 @@
         android:visibility="gone"
         >
         <TextView
-            android:layout_width="152dp"
+            android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_marginTop="42dp"
-            android:text="正在充电，地盘已关闭运动"
+            android:text="正在充电，底盘已关闭运动"
             android:layout_centerHorizontal="true"
             android:textColor="#66ffffff"
             />
