@@ -185,12 +185,20 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSpecifiPoint5:
                 toast("当前处于自标定");
                 break;
-            case getSpecifiPoint6:
-                toast("完成当前任务，开始下一个任务，如无任务即返回待命点");
-                Logger.e("AB点-----"+sPoint);
-                break;
             case getSpecifiPoint7:
                 toast("完成当前任务，将前往"+sPoint);
+            case getSpecifiPoint8:
+                toast("返回待机点");
+                break;
+            case getSpecifiPoint9:
+                toast("完成当前任务，开始时段任务");
+                break;
+            case getSpecifiPoint10:
+                toast("无任务，原地待命");
+                break;
+            case getSpecifiPoint11:
+                Logger.e("AB点"+sPoint);
+                toast("开始前往"+sPoint);
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){

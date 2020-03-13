@@ -659,6 +659,11 @@ enum enRspRunSpecificPointType
 	en_RunSpecificPtCurrNoLocated = 3; // 当前没有定位
 	en_RunSpecificPtGenPathFailed = 4; // 生成路径失败
 	en_RunSpecificPtInSelfCalib = 5; // 当前处于自标定，后续可能会消失	
+	
+	en_RunSpecificPtResume_GoIdlePt = 6; // 返回待机点
+	en_RunSpecificPtResume_RunTimeTask = 7; // 运行时段任务
+	en_RunSpecificPtResume_StandingBy = 8;  // 原地待命
+	en_RunSpecificPtResume_GoNextPt = 9; // 前往下一个目标点
 }
 
 message rspRunSpecificPoint

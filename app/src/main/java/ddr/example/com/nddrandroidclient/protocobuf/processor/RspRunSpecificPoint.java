@@ -22,7 +22,6 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                     EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint));
                     Logger.e("添加成功");
                 }else {
-                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint6));
                     Logger.e("其它");
                 }
                 break;
@@ -31,7 +30,6 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                     EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint1));
                     Logger.e("添加成功到队列");
                 }else {
-                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint7));
                     Logger.e("其它");
                 }
                 break;
@@ -50,6 +48,22 @@ public class RspRunSpecificPoint  extends BaseProcessor{
             case en_RunSpecificPtInSelfCalib:
                 Logger.e("当前没有定位");
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint5));
+                break;
+            case en_RunSpecificPtResume_GoIdlePt:
+                Logger.e("返回待机点");
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint8));
+                break;
+            case en_RunSpecificPtResume_RunTimeTask:
+                Logger.e("运行时段任务");
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint9));
+                break;
+            case en_RunSpecificPtResume_StandingBy:
+                Logger.e("原地待命");
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint10));
+                break;
+            case en_RunSpecificPtResume_GoNextPt:
+                Logger.e("开始下一个点");
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint11));
                 break;
 
         }
