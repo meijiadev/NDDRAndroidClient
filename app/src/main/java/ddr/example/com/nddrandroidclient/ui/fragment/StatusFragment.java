@@ -185,8 +185,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSpecifiPoint5:
                 toast("当前处于自标定");
                 break;
-            case getSpecifiPoint7:
-                toast("完成当前任务，将前往"+sPoint);
             case getSpecifiPoint8:
                 toast("返回待机点");
                 break;
