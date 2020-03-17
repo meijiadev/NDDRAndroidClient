@@ -19,7 +19,7 @@ public class RspDDRVLNMapExProcess extends BaseProcessor {
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         DDRVLNMap.rspDDRVLNMapEx rspDDRVLNMapEx= (DDRVLNMap.rspDDRVLNMapEx) msg;
-        Logger.e("------保存结果"+rspDDRVLNMapEx.getTypeValue());
+        Logger.e("------修改地图信息之后保存结果:"+rspDDRVLNMapEx.getTypeValue());
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateRevamp));
     }
 }

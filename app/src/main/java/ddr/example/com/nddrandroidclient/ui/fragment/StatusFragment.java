@@ -59,6 +59,8 @@ import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
+import ddr.example.com.nddrandroidclient.widget.view.MapImageView0;
+import ddr.example.com.nddrandroidclient.widget.view.MapImageView1;
 
 /**
  * time: 2019/10/26
@@ -81,7 +83,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_create_map)
     TextView tvCreateMap;
     @BindView(R.id.iv_map)
-    MapImageView mapImageView;
+    MapImageView0 mapImageView;
     @BindView(R.id.tv_now_task)
     TextView tv_now_task;
     @BindView(R.id.tv_now_device)
@@ -212,8 +214,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
-                }else {
-                    tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                 }
                 break;
         }
@@ -243,10 +243,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         onItemClick(2);
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
     @Override
     protected void initData() {
@@ -287,7 +283,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
         String showName=mapName.replaceAll("OneRoute_","");
         tv_now_map.setText(showName);
-//        Logger.e("次数"+taskNum+"时间"+workTimes+"速度"+taskSpeed);
         if (mapName!=null){
             rel_step_description.setVisibility(View.GONE);
             recycle_gopoint.setVisibility(View.VISIBLE);
@@ -300,8 +295,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tv_now_device.setText(robotID);
         tv_work_time.setText(String.valueOf(workTimes)+" 分");
         tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
-//        Logger.e("任务模式"+notifyBaseStatusEx.geteTaskMode());
-//        Logger.e("总次数"+mapFileStatus.AllCount);
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
@@ -791,6 +784,44 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Logger.e("---------statusFragment onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Logger.e("---------statusFragment onResume");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Logger.e("---------statusFragment onRestart");
+    }
+    /**
+     * setUserVisibleHint的使用场景:FragmentPagerAdapter+ViewPager
+     * 这种方式我们还是比较常见的,譬如,谷歌自带的TabLayout控件,此种场景下,当我们切换fragment的时候,会调用setUserVisibleHint方法,
+     * 不会调用onHiddenChanged方法,也不会走fragment的生命周期方法(fragment初始化完成之后,注意这里需要重写viewpager中使用的适配器的方法,让fragment不会被销毁,不然还是会遇到问题)
+     */
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            // 相当于onResume()方法--获取焦点
+            Logger.e("可见");
+
+        }else {
+            // 相当于onpause()方法---失去焦点
+            Logger.e("不可见");
+
+        }
     }
 
     @Override

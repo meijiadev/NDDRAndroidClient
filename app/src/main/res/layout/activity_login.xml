@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#0E0F1A">
+    <!--android:src="@mipmap/logo"-->
     <ImageView
         android:id="@+id/login_log"
         android:layout_width="162dp"
         android:layout_height="53dp"
         android:layout_marginTop="73dp"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/logo"
         />
     <LinearLayout
         android:layout_width="wrap_content"

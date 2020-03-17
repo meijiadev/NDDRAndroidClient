@@ -14,7 +14,6 @@
             android:layout_marginTop="196dp"
             android:layout_marginLeft="64dp"
             android:id="@+id/iv_icon_set"
-            android:src="@mipmap/versionlogo"
             />
         <!--android:text="大道智创客户端版本"-->
         <TextView

@@ -1,32 +1,44 @@
 package ddr.example.com.nddrandroidclient.widget.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.google.protobuf.ByteString;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
+import androidx.annotation.Nullable;
+import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
-import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
-
-/**
- * 图片缩放平移的控件
- */
-public class ZoomImageView extends View {
-    private Context context;
+@SuppressLint("AppCompatCustomView")
+public class MapImageView0 extends ImageView {
+    private String mapName;
     public static final int STATUS_INIT = 1;//常量初始化
     public static final int STATUS_ZOOM_OUT = 2;//图片放大状态常量
     public static final int STATUS_ZOOM_IN = 3;//图片缩小状态常量
@@ -62,18 +74,135 @@ public class ZoomImageView extends View {
     public double r10=-61.6269;
     public double r11=0;
     public double t1=410.973;
+    private TargetPoint targetPoint;         //目标点
+    private MapFileStatus mapFileStatus;
+    private Bitmap targetBitmap,targetBitmap1; //目标点
+    private Bitmap directionBitmap,directionBitmap1;
+    private Bitmap startBitamap,endBitamp;
+    private Paint paint,radarPaint,linePaint1,textPaint;
+
+    private List<DDRVLNMap.targetPtItem> targetPtItems;          // 目标点列表
+    private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 路径列表
+    private List<DDRVLNMap.task_itemEx> taskItemExes;          //  任务列表
+    private List<DDRVLNMap.path_elementEx> pathElementExes;    // 任务列表的元素
+    private List<DDRVLNMap.path_line_itemEx> pathLineItemExesS;  // 路径列表  选中的任务中包含的路径
+    private List<DDRVLNMap.targetPtItem> targetPtItemsS;          // 目标点列表 选中的任务中包含的目标点
+    private List<SpaceItem> spaceItems;
+    private DDRVLNMap.reqDDRVLNMapEx data;
+
+    private List<PathLine> pathLines=new ArrayList<>();   //经过转换坐标的路径
+
+
+    public MapImageView0(Context context) {
+        super(context);
+        init();
+    }
+
+    public MapImageView0(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    /**
+     * 显示将要去的目标点
+     * @param targetPoint
+     */
+    public void setTargetPoint(TargetPoint targetPoint){
+        this.targetPoint=targetPoint;
+    }
 
 
     /**
-     * ZoomImageView构造函数，将当前操作状态设为STATUS_INIT。
-     * @param context
-     * @param attrs
+     * 设置地图
+     * @param mapName
      */
-    public ZoomImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public void setMapBitmap(String mapName){
+        this.mapName=mapName;
+        Logger.e("设置图片");
+        String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(pngPath);
+            Bitmap bitmap = BitmapFactory.decodeStream(fis);
+            setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void setTaskName(String taskName){
+        data=mapFileStatus.getCurrentMapEx();
+        targetPtItems=data.getTargetPtdata().getTargetPtList();
+        pathLineItemExes=data.getPathSet().getPathLineDataList();
+        taskItemExes=data.getTaskSetList();
+        spaceItems=mapFileStatus.getcSpaceItems();
+        pathLineItemExesS=new ArrayList<>();
+        targetPtItemsS=new ArrayList<>();
+        Logger.e("设置任务");
+        try {
+            for (int i=0;i<taskItemExes.size();i++){
+                if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
+                    pathElementExes=taskItemExes.get(i).getPathSetList();
+                }
+            }
+            for (int i=0;i<pathElementExes.size();i++){
+                if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
+                    ByteString lineName=pathElementExes.get(i).getName();
+                    for (int j=0;j<pathLineItemExes.size();j++){
+                        if (lineName.equals(pathLineItemExes.get(j).getName())){
+                            pathLineItemExesS.add(pathLineItemExes.get(j));
+                        }
+                    }
+                }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
+                    ByteString pointName=pathElementExes.get(i).getName();
+                    for (int j=0;j<targetPtItems.size();j++){
+                        if (pointName.equals(targetPtItems.get(j).getPtName())){
+                            targetPtItemsS.add(targetPtItems.get(j));
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        invalidate();
+
+    }
+
+
+    /**
+     * 初始化相关参数控件
+     */
+    private void init() {
         currentStatus = STATUS_INIT;
-        this.context=context;
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
+
+        mapFileStatus=MapFileStatus.getInstance();
+        directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
+        targetBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.action_default);
+        targetBitmap1=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
+        startBitamap=BitmapFactory.decodeResource(getResources(), R.mipmap.start_default);
+        endBitamp=BitmapFactory.decodeResource(getResources(),R.mipmap.end_defalut);
+        paint=new Paint();
+        paint.setColor(Color.GRAY);
+        paint.setStrokeWidth(3);
+        radarPaint=new Paint();
+        radarPaint.setColor(Color.parseColor("#00CED1"));
+        radarPaint.setStrokeWidth(1);
+        linePaint1=new Paint();
+        linePaint1.setStrokeWidth(3);
+        linePaint1.setColor(Color.BLACK);
+        textPaint=new Paint();
+        textPaint.setStrokeWidth(8);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(16);
+
+
+
     }
 
     /**
@@ -86,7 +215,7 @@ public class ZoomImageView extends View {
                 sourceBitmap = bitmap;
                 Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
                 MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-                DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
+                DDRVLNMap.affine_mat affine_mat=mapFileStatus.getCurrentMapEx().getBasedata().getAffinedata();
                 r00=affine_mat.getR11();
                 r01=affine_mat.getR12();
                 t0=affine_mat.getTx();
@@ -114,7 +243,7 @@ public class ZoomImageView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
-          // 分别获取到ZoomImageView的宽度和高度
+            // 分别获取到ZoomImageView的宽度和高度
             width = getWidth();
             height = getHeight();
             Logger.e("----画布的宽高："+width+";"+height);
@@ -195,7 +324,7 @@ public class ZoomImageView extends View {
                         } else if (totalRatio < initRatio) {
                             totalRatio = initRatio;
                         }
-                       // 调用onDraw()方法绘制图片
+                        // 调用onDraw()方法绘制图片
                         invalidate();
                         lastFingerDis = fingerDis;
                     }
@@ -212,8 +341,6 @@ public class ZoomImageView extends View {
                 // 手指离开屏幕时将临时值还原
                 lastXMove = -1;
                 lastYMove = -1;
-                LineView.getInstance(context).onClick(this,event.getX(),event.getY());
-                PointView.getInstance(context).onClick(this,event.getX(),event.getY());
                 break;
             default:
                 break;
@@ -245,29 +372,99 @@ public class ZoomImageView extends View {
             }
         }
         currentStatus=0;
-        PointView.getInstance(context).drawPoint(canvas,this);
-        LineView.getInstance(context).drawLine(canvas,this);
-        GridLayerView.getInstance(this).drawGrid(canvas);
+        drawLine(canvas);
+        onDrawWall(canvas);
+
+
+    }
+    /**
+     *用于裁剪源图像的矩形（可重复使用）。
+     */
+    private Rect mRectSrc=new Rect(0,0,22,22);
+
+    /**
+     * 用于在画布上指定绘图区域的矩形（可重新使用）。
+     */
+    private Rect mRectDst;
+
+    /**
+     * 绘制路径和点
+     */
+    private void drawLine(Canvas canvas){
+        //绘制目标点
+        if (pathLineItemExesS!=null){
+            pathLines=new ArrayList<>();
+            for (int i=0;i<pathLineItemExesS.size();i++){
+                List<PathLine.PathPoint> pathPoints=new ArrayList<>();
+                List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExesS.get(i).getPointSetList();
+                for (int j=0;j<path_lint_pt_items.size();j++){
+                    XyEntity xyEntity=toXorY(path_lint_pt_items.get(j).getPt().getX(),path_lint_pt_items.get(j).getPt().getY());
+                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                    pathPoint.setX(xyEntity.getX());
+                    pathPoint.setY(xyEntity.getY());
+                    pathPoints.add(pathPoint);
+                }
+                PathLine pathLine=new PathLine();
+                pathLine.setPathPoints(pathPoints);
+                pathLines.add(pathLine);
+            }
+            Logger.e("----------路径点数量："+pathLines.size());
+            for (int i=0;i<pathLines.size();i++){
+                List<PathLine.PathPoint>pathPoints=pathLines.get(i).getPathPoints();
+                for (int j=0;j<pathPoints.size();j++){
+                    if (j<pathPoints.size()-1){
+                        XyEntity xyEntity1=toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
+                        xyEntity1=coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        XyEntity xyEntity2=toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                        xyEntity2=coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint);
+                        if (j==0){
+                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                            canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,paint);
+                        }else if (j==pathPoints.size()-2){
+                            mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
+                            canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,paint);
+                        }
+
+                    }
+                }
+            }
+        }
+        if (targetPoint!=null){
+            XyEntity xyEntity=toXorY(targetPoint.getX(),targetPoint.getY());
+            xyEntity=coordinate2View(xyEntity.getX(),xyEntity.getY());
+            int x= (int) xyEntity.getX();
+            int y= (int) xyEntity.getY();
+            matrix.setRotate(-targetPoint.getTheta());
+            Bitmap targetBitmap2=Bitmap.createBitmap(targetBitmap1,0,0,40,40,matrix,true);
+            canvas.drawBitmap(targetBitmap2,x -20,y-20,paint);
+            canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
+        }
+
     }
 
     /**
-     * 获取目标点的坐标
-     * @return
+     * 绘制虚拟墙
      */
-    public XyEntity getGaugePoint(){
-        float x=(width/2-totalTranslateX)/totalRatio;
-        float y=(height/2-totalTranslateY)/totalRatio;
-        return toPathXy(x,y);
+    private void onDrawWall(Canvas canvas){
+        if (spaceItems!=null){
+            for (int i=0;i<spaceItems.size();i++){
+                List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
+                for (int j=0;j<space_pointExes.size();j++){
+                    if (j<space_pointExes.size()-1){
+                        XyEntity xyEntity1=toXorY(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
+                        xyEntity1=coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        XyEntity xyEntity2=toXorY(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
+                        xyEntity2=coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint1);                    }
+                }
+            }
+        }
     }
 
-    /**
-     * 获取中心标签处在地图上的点
-     * @return 返回的是世界坐标
-     */
-    public XyEntity getTargetPoint(){
-        float x=(width/2-totalTranslateX)/totalRatio;           //相对于图片左上角的距离
-        float y=(height/2-totalTranslateY)/totalRatio;
-        return toPathXy(x,y);
+
+    public void clearDraw(){
+        targetPoint=null;
     }
 
     /**
@@ -277,7 +474,7 @@ public class ZoomImageView extends View {
     public XyEntity coordinate2View(float x,float y){
         float cx=x*totalRatio+totalTranslateX;
         float cy=y*totalRatio+totalTranslateY;
-       // Logger.e("-----像素坐标："+cx+";"+cy);
+        // Logger.e("-----像素坐标："+cx+";"+cy);
         return new XyEntity(cx,cy);
     }
 
@@ -321,7 +518,6 @@ public class ZoomImageView extends View {
     private void zoom(Canvas canvas) {
         matrix.reset();
         // 将图片按总缩放比例进行缩放
-         GridLayerView.getInstance(this).setScalePrecision(totalRatio);
         matrix.postScale(totalRatio, totalRatio);
         //Logger.e("-----缩放比例："+totalRatio+";");
         float scaledWidth = sourceBitmap.getWidth() * totalRatio;
@@ -333,7 +529,7 @@ public class ZoomImageView extends View {
             translateX = (width - scaledWidth) / 2f;
         } else {
             translateX = totalTranslateX * scaledRatio + centerPointX * (1 - scaledRatio);
-          // 进行边界检查，保证图片缩放后在水平方向上不会偏移出屏幕
+            // 进行边界检查，保证图片缩放后在水平方向上不会偏移出屏幕
             if (translateX > 0) {
                 translateX = 0;
             } else if (width - translateX > scaledWidth) {
@@ -345,7 +541,7 @@ public class ZoomImageView extends View {
             translateY = (height - scaledHeight) / 2f;
         } else {
             translateY = totalTranslateY * scaledRatio + centerPointY * (1 - scaledRatio);
-        // 进行边界检查，保证图片缩放后在垂直方向上不会偏移出屏幕
+            // 进行边界检查，保证图片缩放后在垂直方向上不会偏移出屏幕
             if (translateY > 0) {
                 translateY = 0;
             } else if (height - translateY > scaledHeight) {
@@ -359,7 +555,7 @@ public class ZoomImageView extends View {
         currentBitmapWidth = scaledWidth;
         currentBitmapHeight = scaledHeight;
         canvas.drawBitmap(sourceBitmap, matrix, null);
-        setRotation(rotation);
+        //setRotation(rotation);
     }
 
     /**
@@ -493,4 +689,7 @@ public class ZoomImageView extends View {
         double radians = Math.atan2(delta_y, delta_x);
         return (float) Math.toDegrees(radians);
     }
+
+
+
 }

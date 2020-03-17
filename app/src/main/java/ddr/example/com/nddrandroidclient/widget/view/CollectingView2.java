@@ -35,7 +35,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * time ：2019/12/13
- * desc : 利用SurfaceView绘制地图
+ * desc : 利用SurfaceView绘制地图(闲置)
  */
 public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callback{
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
@@ -222,16 +222,14 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
      * 绘制
      */
     private void doDraw(){
+        long startTime1=System.currentTimeMillis();
         Canvas canvas=null;
         try {
             canvas=holder.lockCanvas();
             if (canvas!=null){
-                long startTime1=System.currentTimeMillis();
                 drawMap(canvas);
                 drawPoint(canvas);
                 drawPath(canvas);
-                long endTime1=System.currentTimeMillis();
-                Logger.e("------绘制耗时："+(endTime1-startTime1));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -239,6 +237,16 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
             if (canvas!=null)
                 holder.unlockCanvasAndPost(canvas);
         }
+        long endTime1=System.currentTimeMillis();
+        long time=endTime1-startTime1;
+        if (time<300){
+            try {
+                Thread.sleep(300-time);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Logger.e("------绘制耗时："+time);
     }
 
 
@@ -291,32 +299,6 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
             }
         }
     }
-
-   /* private void drawRadar(Canvas canvas){
-        int pSize=ptsSwitchs.size();
-        if (pSize>0){
-            List<BaseCmd.notifyLidarPts.Position> positions=ptsSwitchs.get(pSize-1).getPositionList();
-            float y=ptsSwitchs.get(pSize-1).getPosY();
-            float x=ptsSwitchs.get(pSize-1).getPosX();
-            if (positions!=null){
-                int size=positions.size();
-                Path path=new Path();
-                for (int i=0;i<positions.size();i++){
-                    if (size>1&i<=i-2){
-                        float ptX=positions.get(i).getPtX();
-                        float ptY=positions.get(i).getPtY();
-                        if (i==0){
-                            path.moveTo(ptX,ptY);
-                        }else {
-                            path.lineTo(ptX,ptY);
-                        }
-                    }
-                }
-                path.close();
-                canvas.drawPath(path,lastFrame);
-            }
-        }
-    }*/
 
     /**
      * 添加采集过程中的目标点

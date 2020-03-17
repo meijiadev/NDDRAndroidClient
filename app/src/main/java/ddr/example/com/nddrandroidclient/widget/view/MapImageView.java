@@ -38,7 +38,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 
 /**
- * 放置激光地图的控件
+ * 放置激光地图的控件(闲置)
  */
 public class MapImageView extends GLView {
     private DDRVLNMap.reqDDRVLNMapEx data;
@@ -304,7 +304,6 @@ public class MapImageView extends GLView {
     private void onDrawWall(ICanvasGL canvasGL){
         if (spaceItems!=null){
             for (int i=0;i<spaceItems.size();i++){
-
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){
                     if (j<space_pointExes.size()-1){

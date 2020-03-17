@@ -23,18 +23,6 @@
             android:drawablePadding="17dp"
             android:layout_marginTop="17dp"
             />
-        <TextView
-            android:id="@+id/tv_recover"
-            android:layout_width="90dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:text="原图恢复"
-            android:gravity="center"
-            android:textColor="#ccffffff"
-            android:textSize="10sp"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="14dp"
-            />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -296,34 +284,50 @@
         android:layout_height="1dp"
         android:background="#262728"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="59dp"
+        android:layout_marginBottom="79dp"
         />
 
     <TextView
         android:id="@+id/tv_cancel"
-        android:layout_width="88dp"
-        android:layout_height="32dp"
+        android:layout_width="112dp"
+        android:layout_height="42dp"
         android:text="取消"
         android:textColor="#ffffff"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:gravity="center"
         android:background="@drawable/bt_bg__map"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="196dp"
+        android:layout_marginLeft="180dp"
         android:layout_marginBottom="14dp"
     />
     <TextView
         android:id="@+id/tv_confirm"
-        android:layout_width="88dp"
-        android:layout_height="32dp"
+        android:layout_width="112dp"
+        android:layout_height="42dp"
         android:text="保存"
         android:textColor="#ffffff"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:gravity="center"
         android:background="@drawable/bt_bg__map"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="196dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp" />
+
+    <TextView
+        android:id="@+id/tv_recover"
+        android:layout_width="112dp"
+        android:layout_height="42dp"
+        android:layout_alignParentRight="true"
+        android:text="原图恢复"
+        android:gravity="center"
+        android:textColor="#ccffffff"
+        android:textSize="14sp"
+        android:background="@drawable/bt_bg__map"
+        android:layout_marginRight="180dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        />
+
 
 </RelativeLayout>

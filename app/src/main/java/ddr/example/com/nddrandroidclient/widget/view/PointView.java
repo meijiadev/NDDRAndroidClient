@@ -243,14 +243,13 @@ public class PointView {
                     xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
                     float x1=xyEntity1.getX(); float y1=xyEntity1.getY();
                     double L=Math.sqrt(Math.pow(x1-x,2)+Math.pow(y1-y,2));
-                    if (L<15){
+                    if (L<25){
                         Logger.e("点击选中点："+targetPoint.getName());
                         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchSelectPoint,i));
                         zoomImageView.invalidate();
                     }
                 }
             }
-
         }
     }
 

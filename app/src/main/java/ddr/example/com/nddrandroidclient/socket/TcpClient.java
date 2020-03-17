@@ -90,6 +90,7 @@ public class TcpClient extends BaseSocketConnection {
         info=new ConnectionInfo(ip,port);
         manager=OkSocket.open(info);
         OkSocketOptions.Builder clientOptions=new OkSocketOptions.Builder();
+        clientOptions.setPulseFeedLoseTimes(100);
         clientOptions.setReaderProtocol(new ReaderProtocol());
         manager.option(clientOptions.build());
         socketCallBack=new SocketCallBack();
@@ -317,7 +318,8 @@ public class TcpClient extends BaseSocketConnection {
                 while (isConnected&&manager!=null){
                     try {
                         manager.getPulseManager().setPulseSendable(new PulseData(m_MessageRoute.serialize(null,hb))).pulse();
-                        Thread.sleep(2000);
+                        //Logger.e("发送心跳包");
+                        Thread.sleep(4000);
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }catch (InterruptedException e) {

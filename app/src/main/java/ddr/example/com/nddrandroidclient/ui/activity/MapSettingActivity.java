@@ -70,7 +70,7 @@ public class MapSettingActivity extends DDRActivity {
 
     private MapFileStatus mapFileStatus;
     private TcpClient tcpClient;
-    private BaseDialog waitDialog,waitDialog1;
+    private BaseDialog waitDialog,waitDialog1,waitDialog2;
 
     @Override
     protected int getLayoutId() {
@@ -94,8 +94,34 @@ public class MapSettingActivity extends DDRActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_title:
-                tcpClient.requestFile();
-                finish();
+                new InputDialog.Builder(this)
+                        .setTitle("是否保存本次编辑？")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                waitDialog2=new WaitDialog.Builder(getActivity())
+                                        .setMessage("正在保存...")
+                                        .show();
+                                postDelayed(() -> {
+                                    if (waitDialog2.isShowing()) {
+                                        waitDialog2.dismiss();
+                                        toast("保存失败！");
+                                    }
+                                }, 4000);
+                                abSpeed= Float.parseFloat(etABSpeed.getText().toString());
+                                String name=tvSwitchPoint.getText().toString().trim();
+                                if (name.equals("原地待命")){
+                                    name="";
+                                }
+                                tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                                tcpClient.requestFile();
+                                finish();
+                            }
+                        }).show();
                 break;
             case R.id.tv_recover:
                 new InputDialog.Builder(this)
@@ -262,8 +288,14 @@ public class MapSettingActivity extends DDRActivity {
                             waitDialog1.dismiss();
                             toast("保存成功");
                         }
+                    }else if (waitDialog2!=null){
+                        if (waitDialog2.isShowing()){
+                            waitDialog2.dismiss();
+                            tcpClient.requestFile();
+                            finish();
+                        }
                     }
-                },1500);
+                },1000);
                 break;
             case mapOperationalSucceed:
                 if (waitDialog!=null){
