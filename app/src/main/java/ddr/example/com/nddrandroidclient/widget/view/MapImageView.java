@@ -352,8 +352,6 @@ public class MapImageView extends GLView {
         return new XyEntity(x1,y1);
     }
 
-
-
     /**
      * 实时绘制（将世界坐标经过矩阵变换成图片上的像素坐标)
      */

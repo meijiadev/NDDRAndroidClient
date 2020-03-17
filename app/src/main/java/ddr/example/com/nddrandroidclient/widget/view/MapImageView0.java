@@ -134,6 +134,10 @@ public class MapImageView0 extends ImageView {
     }
 
 
+    /**
+     *设置行走的路径
+     * @param taskName
+     */
     public void setTaskName(String taskName){
         data=mapFileStatus.getCurrentMapEx();
         targetPtItems=data.getTargetPtdata().getTargetPtList();

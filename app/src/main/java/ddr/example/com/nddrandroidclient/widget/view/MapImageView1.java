@@ -47,50 +47,46 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * time: 2020/3/16
  */
 public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback {
-
-
+    private MapImageView0 mapImageView0;
+    private SurfaceHolder holder;
+    //承载点云数据的基类，并保存最新一帧的数据
+    private NotifyLidarPtsEntity notifyLidarPtsEntity;
+    private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
+    private Paint radarPaint,paint;
+    private boolean isStartRadar=false;       //是否雷达开始绘制
+    private Matrix mapMatrix;
+    private Bitmap directionBitmap,directionBitmap1;
 
     public MapImageView1(Context context) {
         super(context);
+        init();
 
     }
-
     public MapImageView1(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
 
     }
 
-    private SurfaceHolder holder;
+    private void setMapImageView0(MapImageView0 mapImageView0){
+        this.mapImageView0=mapImageView0;
+    }
 
-    private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
-
-    private NotifyLidarPtsEntity notifyLidarPtsEntity;
-
-    private Bitmap mapBitmap;
-    private Bitmap targetBitmap,targetBitmap1; //目标点
-    private Bitmap directionBitmap,directionBitmap1;
-    private Paint paint,radarPaint,linePaint1;
-    private NotifyBaseStatusEx notifyBaseStatusEx;
-    private double r00=0;
-    private double r01=-61.5959;
-    private double t0=375.501;
-    private double r10=-61.6269;
-    private double r11=0;
-    private double t1=410.973;
-    private float radian,angle;                /**经过矩阵变换后的坐标（相对于图片，单位是像素)**/
-    private int posX,posY;
-
-    private float scale=1;
-    private boolean waitData=false;           //是否需要等待数据
-    private String taskName;
-    private boolean isStartRadar=false;       //是否雷达开始绘制
-    private String mapName;
-
-    private TargetPoint targetPoint;         //目标点
+    /**
+     * 初始化参数
+     */
+    private void init(){
+        notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
+        radarPaint=new Paint();
+        radarPaint.setStrokeWidth(1);
+        radarPaint.setColor(Color.parseColor("#00CED1"));
+        paint=new Paint();
+        mapMatrix=new Matrix();
+        directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
 
 
+    }
 
-    private Matrix mapMatrix;
 
 
 
@@ -99,28 +95,28 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * 绘制雷达扫到的区域
-     * @param canvasGL
+     * @param canvas
      */
-/*
-    private void drawRadarLine(Canvas canvasGL){
+    private void drawRadarLine(Canvas canvas){
         if (isStartRadar){
             positionList=notifyLidarPtsEntity.getPositionList();
             if (positionList!=null){
                 int size =positionList.size();
+                XyEntity xyEntity1=mapImageView0.toXorY(notifyLidarPtsEntity.getPosX(),notifyLidarPtsEntity.getPosY());
+                xyEntity1=mapImageView0.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
                 for (int i=0;i<size;i++){
-                    float x= (float) (r00*positionList.get(i).getPtX()+r01*positionList.get(i).getPtY()+t0)/scale+mRectDst.left;
-                    float y=(float)(r10*positionList.get(i).getPtX()+r11*positionList.get(i).getPtY()+t1)/scale+mRectDst.top;
-                    canvasGL.drawLine(posX+mRectDst.left,posY+mRectDst.top,x,y,radarPaint);
+                    XyEntity xyEntity=mapImageView0.toXorY(positionList.get(i).getPtX(),positionList.get(i).getPtY());
+                    xyEntity=mapImageView0.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity.getX(),xyEntity.getY(),radarPaint);
                 }
+                float angle=radianToangle(notifyLidarPtsEntity.getPosdirection());
                 mapMatrix.setRotate(-angle);
                 directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,mapMatrix,true);
-                if (mapBitmap!=null){
-                    canvasGL.drawBitmap(directionBitmap1,mRectDst.left+posX-30,mRectDst.top+posY-30,paint);
-                }
+                canvas.drawBitmap(directionBitmap1,xyEntity1.getX()-30,xyEntity1.getY()-30,paint);
+
             }
         }
     }
-*/
 
     /**
      * 绘制
@@ -132,8 +128,7 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
             canvas=holder.lockCanvas();
             if (canvas!=null){
                 canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG));
-                //drawRadarLine(canvas);
-
+                drawRadarLine(canvas);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -144,9 +139,9 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         }
         long endTime=System.currentTimeMillis();
         long time=endTime-startTime;
-        if (time<400){
+        if (time<300){
             try {
-                Thread.sleep(400-time);
+                Thread.sleep(300-time);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -183,35 +178,6 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
     }
 
     /**
-     * 世界坐标——>像素坐标
-     * @param x
-     * @param y
-     * @return
-     */
-    public XyEntity toXorY(float x, float y){
-        float x1=(float)( r00*x+r01*y+t0)/scale;
-        float y1=(float) (r10*x+r11*y+t1)/scale;
-        return new XyEntity(x1,y1);
-    }
-
-
-
-    /**
-     * 实时绘制（将世界坐标经过矩阵变换成图片上的像素坐标)
-     */
-    private void realTimeDraw(){
-        float x=notifyBaseStatusEx.getPosX();
-        float y=notifyBaseStatusEx.getPosY();
-        radian=notifyBaseStatusEx.getPosDirection();
-        posX=(int) ((r00*x+r01*y+t0)/scale);
-        posY=(int) ((r10*x+r11*y+t1)/scale);
-        angle=radianToangle(radian);
-    }
-
-    public void clearDraw(){
-        targetPoint=null;
-    }
-    /**
      * 开始绘制
      */
     public void startThread(){
@@ -229,10 +195,6 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void upDate(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
-            case updateBaseStatus:
-                realTimeDraw();
-                mapName=NotifyBaseStatusEx.getInstance().getCurroute();
-                break;
             case receivePointCloud:
                 isStartRadar=true;
                 break;
