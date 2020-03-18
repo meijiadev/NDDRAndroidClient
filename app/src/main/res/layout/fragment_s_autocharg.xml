@@ -52,7 +52,7 @@
         android:id="@+id/slideButton"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="640dp"/>
+        android:layout_marginLeft="617.5dp"/>
     <TextView
         android:layout_width="408dp"
         android:layout_height="24dp"

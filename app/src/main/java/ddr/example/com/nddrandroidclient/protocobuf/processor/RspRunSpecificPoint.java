@@ -38,15 +38,15 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint2));
                 break;
             case en_RunSpecificPtCurrNoLocated:
-                Logger.e("生成路径失败");
+                Logger.e("当前没有定位");
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint3));
                 break;
             case en_RunSpecificPtGenPathFailed:
-                Logger.e("当前处于自标定");
+                Logger.e("生成路径失败");
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint4));
                 break;
             case en_RunSpecificPtInSelfCalib:
-                Logger.e("当前没有定位");
+                Logger.e("当前处于自标定");
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecifiPoint5));
                 break;
             case en_RunSpecificPtResume_GoIdlePt:
