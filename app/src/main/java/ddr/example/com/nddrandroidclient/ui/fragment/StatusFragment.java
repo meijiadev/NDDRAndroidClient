@@ -253,7 +253,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
-        taskName = notifyBaseStatusEx.getCurrpath();
+
         if (taskName!=null && !taskName.equals("PathError")){
             String showName=taskName.replaceAll("DDRTask_","");
             showName=showName.replaceAll(".task","");
@@ -282,6 +282,15 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         batteryNum=Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
         mapName = notifyBaseStatusEx.getCurroute();
         taskNum=notifyBaseStatusEx.getTaskCount();
+        taskName = notifyBaseStatusEx.getCurrpath();
+        Logger.e("路径名字"+taskName);
+        if (taskName!=null && !taskName.equals("PathError") && taskName.equals("DDRTask_temporary.task")){
+            String showName=taskName.replaceAll("DDRTask_","");
+            showName=showName.replaceAll(".task","");
+            tv_now_task.setText(showName);
+        }else {
+            tv_now_task.setText("无任务");
+        }
         workTimes=Integer.parseInt(df.format( times/h));
         taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
         String showName=mapName.replaceAll("OneRoute_","");

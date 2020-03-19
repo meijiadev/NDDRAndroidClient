@@ -104,7 +104,7 @@ public class SensorSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#0399ff"),
+                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
     }
 

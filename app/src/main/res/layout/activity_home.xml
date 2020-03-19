@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:id="@+id/status"
             android:text="基础状态"
-            android:textSize="14dp"
+            android:textSize="12sp"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/mapmanager"
             android:layout_marginRight="34dp"
@@ -45,13 +45,13 @@
             android:gravity="center"
             android:text="地图管理"
             android:textColor="#ffffff"
-            android:textSize="14dp" />
+            android:textSize="12sp" />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="83dp"
             android:layout_height="match_parent"
             android:id="@+id/taskmanager"
             android:text="任务管理"
-            android:textSize="14dp"
+            android:textSize="12sp"
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
             android:gravity="center"
@@ -61,8 +61,7 @@
             android:layout_height="match_parent"
             android:id="@+id/highset"
             android:text="高级设置"
-
-            android:textSize="14dp"
+            android:textSize="12sp"
             android:layout_toRightOf="@id/taskmanager"
             android:layout_centerInParent="true"
             android:layout_marginLeft="34dp"
