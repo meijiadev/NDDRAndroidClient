@@ -22,7 +22,7 @@
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:gravity="center"
-        android:background="@drawable/bg_task_cz"
+        android:background="@drawable/textview_button_top"
         android:layout_alignParentRight="true"
         android:layout_marginRight="40dp"
         android:layout_marginTop="24dp"
@@ -52,7 +52,7 @@
         android:id="@+id/slideButton"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="640dp"/>
+        android:layout_marginLeft="617.5dp"/>
     <TextView
         android:layout_width="408dp"
         android:layout_height="24dp"

@@ -20,7 +20,7 @@
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:gravity="center"
-        android:background="@drawable/bg_task_cz"
+        android:background="@drawable/textview_button_top"
         android:layout_alignParentRight="true"
         android:layout_marginRight="40dp"
         android:layout_marginTop="24dp"

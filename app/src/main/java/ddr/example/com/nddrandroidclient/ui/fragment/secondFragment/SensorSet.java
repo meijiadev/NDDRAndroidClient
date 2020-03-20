@@ -104,7 +104,7 @@ public class SensorSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#0399ff"),
+                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
     }
 
@@ -317,30 +317,38 @@ public class SensorSet extends DDRLazyFragment {
                     if (ed_cs1.getText()!=null){
                         sensor1.setKey(String.valueOf(1));
                         sensor1.setStaticdistance(ed_cs1.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                        Logger.e("动态"+sensorList.get(i).getDydistance());
+                        Logger.e("静态"+sensorList.get(i).getStaticdistance());
+                        Logger.e("数量"+sensorList.size());
                     }
                     break;
                 case 1:
                     if (ed_cs2.getText()!=null){
                         sensor1.setKey(String.valueOf(2));
                         sensor1.setStaticdistance(ed_cs2.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 2:
                     if (ed_cs3.getText()!=null){
                         sensor1.setKey(String.valueOf(3));
                         sensor1.setStaticdistance(ed_cs3.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 3:
                     if (ed_cs4.getText()!=null){
                         sensor1.setKey(String.valueOf(4));
                         sensor1.setStaticdistance(ed_cs4.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 4:
                     if (ed_cs5.getText()!=null){
                         sensor1.setKey(String.valueOf(5));
                         sensor1.setStaticdistance(ed_cs5.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 5:
@@ -348,18 +356,21 @@ public class SensorSet extends DDRLazyFragment {
                         sensor1.setKey(String.valueOf(6));
                         Logger.e("上传数值"+ed_cs6.getText().toString());
                         sensor1.setStaticdistance(ed_cs6.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 6:
                     if (ed_cs7.getText()!=null){
                         sensor1.setKey(String.valueOf(7));
                         sensor1.setStaticdistance(ed_cs7.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 7:
                     if (ed_cs8.getText()!=null){
                         sensor1.setKey(String.valueOf(8));
                         sensor1.setStaticdistance(ed_cs8.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
 
                     break;
@@ -367,24 +378,28 @@ public class SensorSet extends DDRLazyFragment {
                     if (ed_cs9.getText()!=null){
                         sensor1.setKey(String.valueOf(9));
                         sensor1.setStaticdistance(ed_cs9.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 9:
                     if (ed_cs10.getText()!=null){
                         sensor1.setKey(String.valueOf(10));
                         sensor1.setStaticdistance(ed_cs10.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 10:
                     if (ed_cs11.getText()!=null){
                         sensor1.setKey(String.valueOf(11));
                         sensor1.setStaticdistance(ed_cs11.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 11:
                     if (ed_cs12.getText()!=null){
                         sensor1.setKey(String.valueOf(12));
                         sensor1.setStaticdistance(ed_cs12.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
 
                     break;
@@ -397,6 +412,7 @@ public class SensorSet extends DDRLazyFragment {
             BaseCmd.sensorConfigItem sensorConfigItem=BaseCmd.sensorConfigItem.newBuilder()
                     .setKey(ByteString.copyFromUtf8(sensorList1.get(i).getKey()))
                     .setStaticOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getStaticdistance()))
+                    .setDynamicOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getDydistance()))
                     .build();
 
             sensorConfigItemList.add(sensorConfigItem);
@@ -414,9 +430,9 @@ public class SensorSet extends DDRLazyFragment {
     private void getChosseStatus(){
         boolean isChecked=slideButton.isChecked;
         if (isChecked==true){
-            autoValue="5";
+            autoValue="1";
         }else {
-            autoValue="4";
+            autoValue="0";
         }
         Logger.e("是否选择"+isChecked);
     }

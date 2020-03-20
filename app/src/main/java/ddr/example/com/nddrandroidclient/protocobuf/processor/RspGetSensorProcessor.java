@@ -35,6 +35,7 @@ public class RspGetSensorProcessor extends BaseProcessor{
             sensors.setSensorList(sensorList);
         }
         Logger.e("数量"+sensorList.size());
+        Logger.e("动态"+sensorList.get(1).getDydistance());
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataSenesor));
 
     }
