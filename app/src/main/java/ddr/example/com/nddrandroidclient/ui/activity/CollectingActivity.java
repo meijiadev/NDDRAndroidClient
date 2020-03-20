@@ -65,7 +65,7 @@ public class CollectingActivity extends DDRActivity {
     @BindView(R.id.fixed_speed)
     CheckBox fixedSpeed;
     @BindView(R.id.add_poi)
-    ImageView addPoi;
+    TextView addPoi;
     @BindView(R.id.my_rocker)
     RockerView myRocker;
     @BindView(R.id.my_rocker_zy)
@@ -124,7 +124,7 @@ public class CollectingActivity extends DDRActivity {
                 break;
             case notifyMapGenerateProgress:
                 float progress= (float) mainUpDate.getData();
-                setAnimation(processBar,(int) (progress*100),100);
+                setAnimation(processBar,(int) (progress*100),0);
                 if (progress==1.0f){
                     setTitle("建图完成");
                     finish();

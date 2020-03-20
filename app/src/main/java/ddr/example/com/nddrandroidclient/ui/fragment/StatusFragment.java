@@ -82,8 +82,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     TextView tvTiMap;
     @BindView(R.id.tv_create_map)
     TextView tvCreateMap;
+    //绘制地图+路径
     @BindView(R.id.iv_map)
     MapImageView0 mapImageView;
+    @BindView(R.id.iv_map1)
+    MapImageView1 mapImageView1;
     @BindView(R.id.tv_now_task)
     TextView tv_now_task;
     @BindView(R.id.tv_now_device)
@@ -204,6 +207,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setMapBitmap(mapName);
+                    mapImageView.setTaskName(notifyBaseStatusEx.getCurrpath());
                     tvTiMap.setVisibility(View.GONE);
                     tvCreateMap.setVisibility(View.GONE);
                     groupList = new ArrayList<>();
@@ -258,14 +262,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }else {
             tv_now_task.setText("无任务");
         }
-
         for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
             groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
-//            Logger.e("group列数"+groupList.size());
         }
-//        Logger.e("task列表"+groupList.size());
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
+        mapImageView1.setMapImageView0(mapImageView);
+        mapImageView1.startThread();
     }
 
     /**
@@ -483,26 +486,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         }).show();
 
                 break;
-          /*  case R.id.tv_switch_mode:
-                new SwitchModeDialog.Builder(getAttachActivity())
-                        .setModeType(modeType)
-                        .setGravity(Gravity.CENTER)
-                        .setListener(new SwitchModeDialog.OnListener() {
-                            @Override
-                            public void onConfirm(int type) {
-                                modeType=type;
-                                if (modeType==1){
-                                    tv_switch_mode.setText("自主巡线模式");
-                                }else if (modeType==2){
-                                    tv_switch_mode.setText("自主导航模式");
-                                }else{
-                                    tv_switch_mode.setText("无当前运行地图");
-                                }
-                                tcpClient.saveDataToServer(modeType);
-                                Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
-                            }
-                        }).show();
-                break;*/
         }
     }
 
@@ -816,10 +799,19 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         if (isVisibleToUser){
             // 相当于onResume()方法--获取焦点
             Logger.e("可见");
-
+            if (mapImageView1!=null){
+                if (!mapImageView1.drawThread.isAlive()){
+                    mapImageView1.startThread();
+                }
+            }
         }else {
             // 相当于onpause()方法---失去焦点
             Logger.e("不可见");
+            if (mapImageView1!=null){
+                if (mapImageView1.drawThread.isAlive()){
+                    mapImageView1.onStop();
+                }
+            }
 
         }
     }
@@ -829,6 +821,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         super.onDestroy();
         try {
             statusSwitchButton.onDestroy();
+            mapImageView1.onStop();
         }catch (NullPointerException e){
             e.printStackTrace();
         }

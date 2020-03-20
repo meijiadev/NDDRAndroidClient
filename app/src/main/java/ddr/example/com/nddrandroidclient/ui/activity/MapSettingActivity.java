@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -87,6 +88,9 @@ public class MapSettingActivity extends DDRActivity {
     @Override
     protected void initData() {
         super.initData();
+        Intent intent=getIntent();
+        mapName=intent.getStringExtra("mapName");
+        etMapName.setText(mapName);
     }
 
 
@@ -199,6 +203,15 @@ public class MapSettingActivity extends DDRActivity {
                 if (name.equals("原地待命")){
                     name="";
                 }
+                newMapName=etMapName.getText().toString().trim();
+                List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();
+                DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                        .setTypeValue(3)
+                        .setSourceName(ByteString.copyFromUtf8(mapName))
+                        .setTargetName(ByteString.copyFromUtf8(newMapName))
+                        .build();
+                optItems.add(optItem);
+                tcpClient.reqMapOperational(optItems);
                 tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
                 break;
         }
@@ -235,6 +248,7 @@ public class MapSettingActivity extends DDRActivity {
     private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
     private DDRVLNMap.DDRMapBaseData ddrMapBaseData;
     private String mapName="";
+    private String newMapName;
     private int modeType;
     private float abSpeed;           //ab点速度
     private int abMode;              //ab点模式
@@ -246,7 +260,6 @@ public class MapSettingActivity extends DDRActivity {
                 mapFileStatus=MapFileStatus.getInstance();
                 reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
                 ddrMapBaseData=reqDDRVLNMapEx.getBasedata();
-                mapName=ddrMapBaseData.getName().toStringUtf8();
                 modeType=ddrMapBaseData.getAbNaviTypeValue();
                 try {
                     targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
@@ -258,7 +271,6 @@ public class MapSettingActivity extends DDRActivity {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                etMapName.setText(mapName);
                 String pointName=ddrMapBaseData.getTargetPtName().toStringUtf8();
                 if (pointName.equals("")){
                     pointName="原地待命";
@@ -287,6 +299,8 @@ public class MapSettingActivity extends DDRActivity {
                         if (waitDialog1.isShowing()){
                             waitDialog1.dismiss();
                             toast("保存成功");
+                            tcpClient.requestFile();
+                            finish();
                         }
                     }else if (waitDialog2!=null){
                         if (waitDialog2.isShowing()){
@@ -302,6 +316,9 @@ public class MapSettingActivity extends DDRActivity {
                     if (waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
+                }else {
+                    etMapName.setText(newMapName);
+                    mapName=newMapName;
                 }
                 break;
         }

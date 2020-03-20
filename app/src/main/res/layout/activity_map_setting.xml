@@ -109,9 +109,9 @@
 
     <TextView
         android:id="@+id/tv_a_b_mode"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="AB点运动模式："
+        android:text="目标点呼叫运动模式："
         android:typeface="normal"
         android:textColor="#99ffffff"
         android:textSize="12sp"
@@ -125,7 +125,7 @@
         android:id="@+id/tv_static_mode"
         android:layout_width="82.5dp"
         android:layout_height="34dp"
-        android:text="静态模式"
+        android:text="静态避障"
         android:textColor="#ccffffff"
         android:textSize="12sp"
         android:layout_below="@id/layout_title"
@@ -139,7 +139,7 @@
         android:id="@+id/tv_dynamic_mode"
         android:layout_width="82.5dp"
         android:layout_height="34dp"
-        android:text="动态模式"
+        android:text="动态避障"
         android:textColor="#ccffffff"
         android:textSize="12sp"
         android:layout_below="@id/layout_title"
@@ -162,7 +162,7 @@
     <TextView
         android:layout_width="100dp"
         android:layout_height="24dp"
-        android:text="AB点运动速度："
+        android:text="目标点运动速度："
         android:textColor="#99ffffff"
         android:textSize="12sp"
         android:gravity="left|center_vertical"
@@ -197,7 +197,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="206dp"
         android:layout_below="@id/layout_title"
-        android:layout_marginTop="119dp"
+        android:layout_marginTop="113dp"
         />
     <View
         android:layout_width="384dp"
@@ -214,7 +214,7 @@
         android:layout_below="@id/layout_title"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="205dp"
-        android:text="AB点导航策略（注意：切换自主巡线后，需绘制行驶路径）"
+        android:text="导航策略（注意：切换自主巡线后，需绘制行驶路径）"
         android:textColor="#99ffffff"
         android:textSize="12sp" />
     <View
@@ -308,7 +308,7 @@
         android:textColor="#ffffff"
         android:textSize="14sp"
         android:gravity="center"
-        android:background="@drawable/bt_bg__map"
+        android:background="@drawable/bt_bg_map_blue"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp" />

@@ -318,7 +318,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     @SuppressLint("ResourceAsColor")
-    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete, R.id.bt_batch_delete, R.id.tv_delete_all, R.id.save_point, R.id.revamp_point, R.id.tv_path,
+    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete, R.id.bt_batch_delete, R.id.tv_delete_all,R.id.tv_back_batch, R.id.save_point, R.id.revamp_point, R.id.tv_path,
             R.id.spinner_mode, R.id.bt_add_action, R.id.save_path, R.id.tv_task, R.id.tv_target_spread, R.id.tv_path_spread, R.id.bt_next, R.id.bt_back, R.id.bt_save, R.id.tv_edit_map, R.id.tv_025m, R.id.tv_05m, R.id.tv_1m, R.id.tv_2m})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -408,6 +408,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                     }
                                     btBatch.setBackgroundResource(R.drawable.bt_bg__map);
                                     tvDeleteAll.setVisibility(View.GONE);
+                                    tvBackBatch.setVisibility(View.GONE);
                                     isShowSelected = false;
                                     mapAdapter.showSelected(false);
                                     Logger.e("-----要删除的文件数：" + optItems.size());
@@ -1153,7 +1154,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 case R.id.tv_setting:                     //进入地图管理界面
                     mapName = mapInfos.get(position).getMapName();
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
-                    startActivity(MapSettingActivity.class);
+                    Intent intent=new Intent(getAttachActivity(),MapSettingActivity.class);
+                    intent.putExtra("mapName",mapName);
+                    startActivity(intent);
                     break;
             }
         };
@@ -1571,7 +1574,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             zoomMap.setImageBitmap(lookBitmap);
                         }, 800);
                     }
-
                 }
                 break;
             case updatePoints:

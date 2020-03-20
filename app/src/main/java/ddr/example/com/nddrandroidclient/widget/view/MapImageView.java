@@ -122,6 +122,10 @@ public class MapImageView extends GLView {
 
     }
 
+    /**
+     * 设置行走路径
+     * @param taskName
+     */
     public void setTaskName(String taskName){
         pathLineItemExesS=new ArrayList<>();
         targetPtItemsS=new ArrayList<>();

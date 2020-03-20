@@ -98,7 +98,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="22dp"
         android:layout_marginRight="30dp"
-        android:text="完成"
+        android:text="重定位"
         android:textColor="@color/white"
         android:textSize="9sp"
         android:gravity="center_horizontal"

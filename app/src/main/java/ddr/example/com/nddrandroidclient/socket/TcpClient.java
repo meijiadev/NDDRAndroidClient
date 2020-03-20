@@ -574,6 +574,8 @@ public class TcpClient extends BaseSocketConnection {
                     .setConfig(path_line_config)
                     .setVelocity(pathLine.getVelocity())
                     .addAllPointSet(pathLintPtItems)
+                    .setBStartFromSeg0(pathLine.isbStartFromSeg0())
+                    .setBNoCornerSmoothing(pathLine.isbNoCornerSmoothing())
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }

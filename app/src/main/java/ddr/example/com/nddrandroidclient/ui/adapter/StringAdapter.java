@@ -45,6 +45,7 @@ public class StringAdapter extends BaseAdapter<String> {
                 break;
             case R.layout.item_show_recycler:
                 helper.setText(R.id.tv_show_name,item);
+                helper.setImageResource(R.id.iv_select,R.mipmap.checkedwg);
                 break;
         }
 
