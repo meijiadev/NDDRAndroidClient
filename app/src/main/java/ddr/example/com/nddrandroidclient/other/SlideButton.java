@@ -167,7 +167,12 @@ public class SlideButton extends View {
         mPaint = new Paint();
         mScroller = new Scroller(context);
         view_height_int = dip2px(context, VIEW_HEIGHT);
-        strokeLineColor_int = Color.parseColor(StrokeLineColor);
+        if (isChecked){
+            strokeLineColor_int = Color.parseColor("#49c265");
+        }else {
+            strokeLineColor_int = Color.parseColor(StrokeLineColor);
+        }
+
         strokeNoCheckedSolidColor_int = Color.parseColor(StrokeSolidColor);
         circleStrokeColor_int = Color.parseColor(CircleStrokeColor);
         circleChecked_int = Color.parseColor(CircleCheckedColor);

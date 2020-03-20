@@ -283,7 +283,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         mapName = notifyBaseStatusEx.getCurroute();
         taskNum=notifyBaseStatusEx.getTaskCount();
         taskName = notifyBaseStatusEx.getCurrpath();
-        Logger.e("路径名字"+taskName);
+//        Logger.e("路径名字"+taskName);
         if (taskName!=null && !taskName.equals("PathError") && taskName.equals("DDRTask_temporary.task")){
             String showName=taskName.replaceAll("DDRTask_","");
             showName=showName.replaceAll(".task","");
