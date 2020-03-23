@@ -203,7 +203,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     RecyclerView selectPathRecycler;
 
     @BindView(R.id.sort_layout)         //排序布局
-            RelativeLayout layoutSort;
+    RelativeLayout layoutSort;
     @BindView(R.id.sort_Recycler)
     RecyclerView sortRecycler;
     @BindView(R.id.bt_back)
@@ -433,12 +433,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 mapDetailLayout.setVisibility(View.GONE);
                 mapLayout.setVisibility(View.VISIBLE);
                 mPosition = 0;
-              /*  try {
-                    tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(),targetPoints,pathLines,taskModes);
-                    Logger.e("----------:"+taskModes.size());
-                }catch (NullPointerException e){
-                    e.printStackTrace();
-                }*/
                 PointView.getInstance(getAttachActivity()).clearDraw();
                 LineView.getInstance(getAttachActivity()).clearDraw();
                 GridLayerView.getInstance(zoomMap).onDestroy();
@@ -471,9 +465,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         } else {
                             layoutEdit.setVisibility(View.VISIBLE);
                         }
-                        etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap));
-                        etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap));
-                        etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap));
+                        etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
+                        etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
+                        etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
                         PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(mPosition));
                         zoomMap.invalidate();
                     }
@@ -501,6 +495,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
+                        PointView.getInstance(getContext()).setPoint(targetPoints.get(mPosition));
+                        zoomMap.invalidate();
                         waitDialog1.dismiss();
                     }, 500);
                 } else {
@@ -1049,12 +1045,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
         }));
 
-        //长按地图列表子项
+       /* //长按地图列表子项
         mapAdapter.setOnItemLongClickListener(((adapter, view, position) -> {
             toast("触发长按效果");
             showBatchSelected();
             return true;
-        }));
+        }));*/
     }
 
     /**
@@ -1167,10 +1163,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         contentView.findViewById(R.id.tv_setting).setOnClickListener(listener);
         if (mapIsUsing) {
             tvSwitch.setText("重定位");
+            tvSwitch.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_relocation), null, null, null);
             switchMapName = mapInfos.get(position).getMapName();
             switchBitmapPath = mapInfos.get(position).getBitmap();
         } else {
             tvSwitch.setText("切换地图");
+            tvSwitch.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_switch), null, null, null);
         }
     }
 
@@ -1217,9 +1215,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             } else {
                 layoutEdit.setVisibility(View.VISIBLE);
             }
-            etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap));
-            etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap));
-            etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap));
+            etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
+            etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
+            etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
             for (TargetPoint targetPoint : targetPoints) {
                 targetPoint.setSelected(false);
             }
@@ -1518,6 +1516,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     private BaseDialog waitDialog2;
     private NotifyBaseStatusEx notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
+    private int relocationStatus;
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
@@ -1636,9 +1635,19 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }, 600);
                 break;
             case updateBaseStatus:
-                if (waitDialog2 != null && waitDialog2.isShowing()) {
-                    if (!notifyBaseStatusEx.isHaveLocation()) {
-                        Logger.e("自动定位失败");
+                break;
+            case enterRelocationMode:
+                if (mapIsUsing){
+                    waitDialog2=new WaitDialog.Builder(getActivity())
+                            .setMessage("正在重新定位中可能需要1~3分钟时间...")
+                            .show();
+                    mapIsUsing=false;
+                }
+                break;
+            case updateRelocationStatus:
+                relocationStatus= (int) messageEvent.getData();
+                switch (relocationStatus){
+                    case 0:
                         new InputDialog.Builder(getAttachActivity())
                                 .setEditVisibility(View.GONE)
                                 .setTitle("自动定位失败，是否进入手动定位")
@@ -1659,23 +1668,14 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
                                     }
                                 }).show();
-                        waitDialog2.dismiss();
-                        notifyBaseStatusEx.setHaveLocation(true);
-                    } else if (notifyBaseStatusEx.isLocationed()) {
+                        break;
+                    case 1:
                         toast("定位成功！");
-                        waitDialog2.dismiss();
                         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-                    } else {
-                        notifyBaseStatusEx.setHaveLocation(true);
-                    }
+                        break;
                 }
-                break;
-            case enterRelocationMode:
-                if (mapIsUsing){
-                    waitDialog2=new WaitDialog.Builder(getActivity())
-                            .setMessage("正在重新定位中可能需要1~3分钟时间...")
-                            .show();
-                    mapIsUsing=false;
+                if (waitDialog2!=null&&waitDialog2.isShowing()){
+                    waitDialog2.dismiss();
                 }
                 break;
 

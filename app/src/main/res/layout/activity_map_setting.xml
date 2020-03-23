@@ -229,13 +229,13 @@
     <TextView
         android:id="@+id/tv_navigation"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:drawableLeft="@mipmap/iv_selected_gray"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/nocheckedwg"
         android:text="自主导航模式"
         android:textColor="@color/white"
         android:textSize="12sp"
         android:gravity="center_vertical"
-        android:drawablePadding="19dp"
+        android:drawablePadding="10dp"
         android:layout_below="@id/layout_title"
         android:layout_marginTop="273dp"
         android:layout_marginLeft="48dp"/>
@@ -254,29 +254,30 @@
     <TextView
         android:id="@+id/tv_line_patrol"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="273dp"
         android:layout_below="@id/layout_title"
         android:layout_marginLeft="19dp"
-        android:drawableLeft="@mipmap/iv_selected_blue"
+        android:drawableLeft="@mipmap/checkedwg"
         android:text="自主巡线模式"
         android:textColor="@color/white"
         android:textSize="12sp"
         android:gravity="center_vertical"
-        android:drawablePadding="19dp"
+        android:drawablePadding="10dp"
         android:layout_marginRight="339dp"
         />
     <TextView
         android:layout_width="370dp"
         android:layout_height="24dp"
-        android:text="（规划预设行驶路线，前往目标点时，寻找预设路径的最优路线）"
+        android:text="(规划预设行驶路线，前往目标点时，寻找预设路径的最优路线）"
         android:textColor="#99ffffff"
         android:textSize="12sp"
         android:gravity="right"
         android:layout_below="@id/tv_line_patrol"
         android:layout_alignParentRight="true"
         android:layout_marginRight="75dp"
+        android:layout_marginTop="14dp"
         />
 
     <View

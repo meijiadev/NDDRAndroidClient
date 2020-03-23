@@ -209,6 +209,7 @@ public class RelocationActivity extends DDRActivity {
     }
 
     private BaseDialog waitDialog;
+    private int relocationStatus;      //重定位结果
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
@@ -217,16 +218,18 @@ public class RelocationActivity extends DDRActivity {
                         .setMessage("正在重新定位中可能需要1~3分钟时间...")
                         .show();
                 break;
-            case updateBaseStatus:
-                if (waitDialog!=null&&waitDialog.isShowing()){
-                    if (!notifyBaseStatusEx.isHaveLocation()){
+            case updateRelocationStatus:
+                relocationStatus= (int) messageEvent.getData();
+                switch (relocationStatus){
+                    case 0:
                         toast("重新定位失败，请重新设置机器人位姿");
-                        waitDialog.dismiss();
-                        notifyBaseStatusEx.setHaveLocation(true);
-                    }else if (notifyBaseStatusEx.isLocationed()){
-                        toast("定位成功！");
-                        waitDialog.dismiss();
-                    }
+                        break;
+                    case 1:
+                        toast("定位成功");
+                        break;
+                }
+                if (waitDialog!=null&&waitDialog.isShowing()){
+                    waitDialog.dismiss();
                 }
                 break;
         }

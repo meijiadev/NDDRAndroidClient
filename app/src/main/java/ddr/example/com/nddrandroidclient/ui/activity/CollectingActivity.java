@@ -50,6 +50,7 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
 /**
  * time:  2019/11/5
  * desc:  采集页面
+ * modify time: 2020/3/23
  */
 public class CollectingActivity extends DDRActivity {
     @BindView(R.id.collect4)
@@ -80,8 +81,6 @@ public class CollectingActivity extends DDRActivity {
     private TcpClient tcpClient;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    /*private boolean iscreatingMap = false;       //是否正在生成地图
-    private boolean haveCtrated = false;         //是否地图生成完成*/
     private String collectName;                  //采集的地图名
     private BaseDialog waitDialog;
 
@@ -154,7 +153,6 @@ public class CollectingActivity extends DDRActivity {
                         toast("距离太近不需要检测回环");
                         break;
                 }
-
                 break;
         }
     }
@@ -216,7 +214,6 @@ public class CollectingActivity extends DDRActivity {
 
     @Override
     public void onRightClick(View v) {
-       // collecting.unRegister();
         new InputDialog.Builder(getActivity())
                 .setTitle("是否保存当前采集")
                 .setEditVisibility(View.GONE)

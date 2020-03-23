@@ -110,6 +110,7 @@ public class MapImageView0 extends ImageView {
      */
     public void setTargetPoint(TargetPoint targetPoint){
         this.targetPoint=targetPoint;
+        invalidate();
     }
 
 
@@ -366,7 +367,6 @@ public class MapImageView0 extends ImageView {
                     break;
             }
         }
-        currentStatus=0;
         drawLine(canvas);
         onDrawWall(canvas);
 

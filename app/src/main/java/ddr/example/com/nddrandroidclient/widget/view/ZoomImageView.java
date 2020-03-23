@@ -244,7 +244,6 @@ public class ZoomImageView extends View {
                     break;
             }
         }
-        currentStatus=0;
         PointView.getInstance(context).drawPoint(canvas,this);
         LineView.getInstance(context).drawLine(canvas,this);
         GridLayerView.getInstance(this).drawGrid(canvas);

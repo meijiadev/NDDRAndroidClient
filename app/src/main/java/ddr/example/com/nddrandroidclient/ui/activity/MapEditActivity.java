@@ -654,18 +654,18 @@ public class MapEditActivity extends DDRActivity {
                 showRecycler.setAdapter(targetPointAdapter);
                 targetPointAdapter.setNewData(targetPoints);
                 if (allShowPoint){
-                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
                 }else {
-                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
                 }
                 break;
             case 1:
                 showRecycler.setAdapter(pathAdapter);
                 pathAdapter.setNewData(pathLines);
                 if (allShowPath){
-                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
                 }else {
-                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                    tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
                 }
                 break;
             case 2:
@@ -683,13 +683,13 @@ public class MapEditActivity extends DDRActivity {
                 case 0:
                     if (allShowPoint){
                         allShowPoint=false;
-                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
                         for (TargetPoint targetPoint:targetPoints){
                             targetPoint.setMultiple(false);
                         }
                     }else {
                         allShowPoint=true;
-                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
                         for (TargetPoint targetPoint:targetPoints){
                             targetPoint.setMultiple(true);
                         }
@@ -756,7 +756,7 @@ public class MapEditActivity extends DDRActivity {
         });
 
         editTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            tvTargetPoint.setText(editTypes.get(position));
         });
 
         graphTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -1024,9 +1024,9 @@ public class MapEditActivity extends DDRActivity {
                 break;
             case 3:
                 mapFileStatus = MapFileStatus.getInstance();
-                tvTargetPoint.setText("编辑类型");
+                tvTargetPoint.setText(editTypes.get(0));
                 tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
-                tvPath.setText("图形类型");
+                tvPath.setText(graphTypes.get(0));
                 tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
                 btDeleteWall.setVisibility(View.VISIBLE);
                 ivCenter.setVisibility(View.VISIBLE);

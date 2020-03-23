@@ -86,17 +86,17 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @BindView(R.id.status)
     LineTextView tv_status;
     @BindView(R.id.mapmanager)
-    LineTextView tv_mapmanager;
+    LineTextView tv_mapManager;
     @BindView(R.id.taskmanager)
-    LineTextView tv_taskmanager;
+    LineTextView tv_taskManager;
     @BindView(R.id.highset)
-    LineTextView tv_highset;
+    LineTextView tv_highSet;
     @BindView(R.id.tv_quit)
-    ImageView tv_quit;
+    TextView tv_quit;
     @BindView(R.id.iv_jt_def)
-    ImageView iv_jt_def;
+    TextView iv_jt_def;
     @BindView(R.id.iv_yk_def)
-    ImageView iv_yk_def;
+    TextView iv_yk_def;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -263,43 +263,43 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         switch (vpHomePager.getCurrentItem()) {
             case 0:
                 tv_status.isChecked(true);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(false);
+                tv_mapManager.isChecked(false);
+                tv_highSet.isChecked(false);
+                tv_taskManager.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_check), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
             case 1:
                 tv_status.isChecked(false);
-                tv_mapmanager.isChecked(true);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(false);
+                tv_mapManager.isChecked(true);
+                tv_highSet.isChecked(false);
+                tv_taskManager.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_check), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_check), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
             case 2:
                 tv_status.isChecked(false);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(true);
+                tv_mapManager.isChecked(false);
+                tv_highSet.isChecked(false);
+                tv_taskManager.isChecked(true);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check), null, null, null);
                 break;
             case 3:
                 tv_status.isChecked(false);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(true);
-                tv_taskmanager.isChecked(false);
+                tv_mapManager.isChecked(false);
+                tv_highSet.isChecked(true);
+                tv_taskManager.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
         }
     }
@@ -318,20 +318,28 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
-                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
-                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
+                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_default),null,null);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.white));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;
                 case 8:
-                    iv_jt_def.setImageResource(R.mipmap.jt_default);
-                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_default),null,null);
+                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_nodef),null,null);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.text_gray));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 12:
-                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
-                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
+                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_nodef),null,null);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.white));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 0:
-                    iv_jt_def.setImageResource(R.mipmap.jt_default);
-                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_default),null,null);
+                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_default),null,null);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.text_gray));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;
             }
         }

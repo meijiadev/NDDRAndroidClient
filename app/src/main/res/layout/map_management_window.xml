@@ -58,7 +58,7 @@
             android:textSize="12sp"
             android:textColor="@color/white"
             android:layout_below="@id/tv_switch"
-            android:drawableLeft="@mipmap/iv_rename"
+            android:drawableLeft="@mipmap/iv_setting"
             android:drawablePadding="10dp"
             />
 

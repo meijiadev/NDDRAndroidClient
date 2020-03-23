@@ -105,7 +105,7 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
             canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
             if (isStartRadar){
                 positionList=notifyLidarPtsEntity.getPositionList();
-                Logger.e("-------点云数量："+positionList.size());
+               // Logger.e("-------点云数量："+positionList.size());
                 if (positionList!=null){
                     int size =positionList.size();
                     XyEntity xyEntity1=mapImageView0.toXorY(notifyLidarPtsEntity.getPosX(),notifyLidarPtsEntity.getPosY());

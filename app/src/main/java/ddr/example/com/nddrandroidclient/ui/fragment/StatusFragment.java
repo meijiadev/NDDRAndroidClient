@@ -642,28 +642,28 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     float y=targetPoints.get(position).getY();
                     float theta=targetPoints.get(position).getTheta();
                     mapImageView.setTargetPoint(targetPoints.get(position));
-                                    Logger.e("当前点的名字"+targetPoints.get(position).getName());
-                                    new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
-                                            .setTitle("是否前往"+targetPoints.get(position).getName())
-                                            .setListener(new InputDialog.OnListener() {
-                                                @Override
-                                                public void onConfirm(BaseDialog dialog, String content) {
-                                                    goPointLet(x,y,theta,ByteString.copyFromUtf8(targetPoints.get(position).getName()),ByteString.copyFromUtf8(mapName),1);
-                                                    tv_restart_point.setVisibility(View.VISIBLE);
-                                                    for (int i=0;i<targetPoints.size();i++){
-                                                        targetPoints.get(i).setSelected(false);
-                                                    }
-                                                    targetPoints.get(position).setSelected(true);
-                                                    targetPointAdapter.setNewData(targetPoints);
-                                                    sPoint=targetPoints.get(position).getName();
-                                                }
+                    Logger.e("当前点的名字" + targetPoints.get(position).getName());
+                        new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
+                                .setTitle("是否前往" + targetPoints.get(position).getName())
+                                .setListener(new InputDialog.OnListener() {
+                                    @Override
+                                    public void onConfirm(BaseDialog dialog, String content) {
+                                        goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
+                                        tv_restart_point.setVisibility(View.VISIBLE);
+                                        for (int i = 0; i < targetPoints.size(); i++) {
+                                            targetPoints.get(i).setSelected(false);
+                                        }
+                                        targetPoints.get(position).setSelected(true);
+                                        targetPointAdapter.setNewData(targetPoints);
+                                        sPoint = targetPoints.get(position).getName();
+                                    }
 
-                                                @Override
-                                                public void onCancel(BaseDialog dialog) {
-                                                    toast("取消去目标点");
-                                                }
-                                            })
-                                            .show();
+                                    @Override
+                                    public void onCancel(BaseDialog dialog) {
+                                        toast("取消去目标点");
+                                    }
+                                })
+                                .show();
                 });
                 break;
         }
@@ -810,6 +810,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             Logger.e("可见");
             if (mapImageView1!=null){
                 if (!mapImageView1.drawThread.isAlive()){
+                    mapImageView.invalidate();
                     mapImageView1.startThread();
                 }
             }

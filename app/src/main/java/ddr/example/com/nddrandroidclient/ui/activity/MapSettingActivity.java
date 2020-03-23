@@ -174,14 +174,14 @@ public class MapSettingActivity extends DDRActivity {
                 tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
                 break;
             case R.id.tv_navigation:
-                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 modeType=2;
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
             case R.id.tv_line_patrol:
-                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 modeType=1;
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
