@@ -1,8 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
-import android.content.Intent;
+
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.Parameter;

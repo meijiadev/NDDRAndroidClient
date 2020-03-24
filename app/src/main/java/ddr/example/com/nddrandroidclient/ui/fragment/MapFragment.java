@@ -1045,12 +1045,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
         }));
 
-       /* //长按地图列表子项
-        mapAdapter.setOnItemLongClickListener(((adapter, view, position) -> {
-            toast("触发长按效果");
-            showBatchSelected();
-            return true;
-        }));*/
+
     }
 
     /**
@@ -1089,7 +1084,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 taskDetailLayout.setVisibility(View.GONE);
                 zoomMap.setImageBitmap(lookBitmap);
             }
-        }, 5000);
+        }, 3000);
     }
 
     private String switchMapName, switchBitmapPath;

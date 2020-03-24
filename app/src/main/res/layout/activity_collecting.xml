@@ -145,7 +145,7 @@
         app:layout_constraintHorizontal_bias="1"
         android:layout_marginRight="43dp"
         app:layout_constraintVertical_bias="1"
-        android:text="添加点"
+        android:text="标记点"
         android:textColor="@color/white"
         android:gravity="center_horizontal"
         android:paddingTop="39dp"

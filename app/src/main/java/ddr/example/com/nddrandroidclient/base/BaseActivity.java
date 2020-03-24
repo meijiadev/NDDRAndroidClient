@@ -39,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
     public final Object mHandlerToken = hashCode();
     public Context context;
+    public Runnable mRunnable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (delayMillis<0){
             delayMillis=0;
         }
+        mRunnable=r;
         return postAtTime(r,SystemClock.uptimeMillis() + delayMillis);
      }
 
@@ -134,6 +136,15 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public final boolean postAtTime(Runnable r,long uptimeMillis){
         return HANDLER.postAtTime(r,mHandlerToken,uptimeMillis);
+    }
+
+    /**
+     * 取消延迟任务
+     */
+    public final void cacleDelay(){
+        if (mRunnable!=null){
+            HANDLER.removeCallbacks(mRunnable,mHandlerToken);
+        }
     }
 
     @Override

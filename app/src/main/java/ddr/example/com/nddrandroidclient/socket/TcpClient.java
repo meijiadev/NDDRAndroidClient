@@ -189,7 +189,7 @@ public class TcpClient extends BaseSocketConnection {
          */
         private void showDialog(Activity activity){
             activity.runOnUiThread(()->{
-                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").setCancelable(true).show();
+                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").show();
             });
             if (activity.getLocalClassName().contains("HomeActivity")){
                 HomeActivity fragmentActivity= (HomeActivity) activity;

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.google.protobuf.ByteString;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
@@ -127,11 +128,6 @@ public class CollectingActivity extends DDRActivity {
                 if (progress==1.0f){
                     setTitle("建图完成");
                     finish();
-                    try {
-                        tcpClient.reqRunControlEx(collectName);       //切换地图
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
                 }
                 break;
             case updateDetectionLoopStatus:
@@ -516,6 +512,8 @@ public class CollectingActivity extends DDRActivity {
         editor.commit();
         timer.cancel();
         task.cancel();
+        tcpClient.requestFile();
+        tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
     }
 
     @Override

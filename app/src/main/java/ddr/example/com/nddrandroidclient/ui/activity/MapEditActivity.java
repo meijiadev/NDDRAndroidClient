@@ -415,53 +415,57 @@ public class MapEditActivity extends DDRActivity {
                 break;
             case R.id.save_path:
                 if (activityType==CREATE_PATH){
-                    new InputDialog.Builder(this).setTitle("添加路径名")
-                            .setHint("请输入")
-                            .setListener(new InputDialog.OnListener() {
-                                @Override
-                                public void onConfirm(BaseDialog dialog, String content) {
-                                    if (!content.isEmpty()){
-                                        PathLine pathLine=new PathLine();
-                                        pathLine.setName(content);
-                                        if (!checkablePoint){
-                                            for (int i=0;i<pathPoints.size();i++){
-                                                pathPoints.get(i).setName(content+"_"+i);
+                    if (pathPoints.size()>1){
+                        new InputDialog.Builder(this).setTitle("添加路径名")
+                                .setHint("请输入")
+                                .setListener(new InputDialog.OnListener() {
+                                    @Override
+                                    public void onConfirm(BaseDialog dialog, String content) {
+                                        if (!content.isEmpty()){
+                                            PathLine pathLine=new PathLine();
+                                            pathLine.setName(content);
+                                            if (!checkablePoint){
+                                                for (int i=0;i<pathPoints.size();i++){
+                                                    pathPoints.get(i).setName(content+"_"+i);
+                                                }
+                                                pathLine.setPathType(1);
+                                            }else {
+                                                pathLine.setPathType(2);
                                             }
-                                            pathLine.setPathType(1);
+                                            List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
+                                            try {
+                                                pathPoints1=ListTool.deepCopy(pathPoints);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            } catch (ClassNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            pathLine.setPathPoints(pathPoints1);
+                                            pathLine.setVelocity(0.4f);
+                                            pathLine.setPathModel(64);
+                                            newPaths.add(pathLine);
+                                            pathLines.add(pathLine);
+                                            pathPoints.clear();
+                                            for (TargetPoint targetPoint:selectPoints){
+                                                targetPoint.setMultiple(false);
+                                            }
+                                            //selectPointAdapter.setNewData(selectPoints);
+                                            tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                                            toast("保存成功!");
                                         }else {
-                                            pathLine.setPathType(2);
+                                            toast("请先输入名称");
                                         }
-                                        List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
-                                        try {
-                                            pathPoints1=ListTool.deepCopy(pathPoints);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (ClassNotFoundException e) {
-                                            e.printStackTrace();
-                                        }
-                                        pathLine.setPathPoints(pathPoints1);
-                                        pathLine.setVelocity(0.4f);
-                                        pathLine.setPathModel(64);
-                                        newPaths.add(pathLine);
-                                        pathLines.add(pathLine);
-                                        pathPoints.clear();
-                                        for (TargetPoint targetPoint:selectPoints){
-                                            targetPoint.setMultiple(false);
-                                        }
-                                        //selectPointAdapter.setNewData(selectPoints);
-                                        tvPath.setText("路径" + "(" + pathLines.size() + ")");
-                                        toast("保存成功!");
-                                    }else {
-                                        toast("请先输入名称");
                                     }
-                                }
-                                @Override
-                                public void onCancel(BaseDialog dialog) {
-                                    pathPoints.clear();
-                                    toast("取消添加");
-                                }
-                            })
-                            .show();
+                                    @Override
+                                    public void onCancel(BaseDialog dialog) {
+                                        pathPoints.clear();
+                                        toast("取消添加");
+                                    }
+                                })
+                                .show();
+                    }else {
+                        toast("至少选择两个点组成一条路径");
+                    }
                 }else {
                     saveVirtualWall();
                 }
