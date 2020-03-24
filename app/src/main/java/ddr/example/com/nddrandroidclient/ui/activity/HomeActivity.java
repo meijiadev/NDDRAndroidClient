@@ -4,10 +4,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +15,16 @@ import android.widget.TextView;
 
 
 import com.google.protobuf.ByteString;
-import com.gyf.immersionbar.BarHide;
-import com.hjq.toast.ToastUtils;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
 import com.yhao.floatwindow.FloatWindow;
-import com.yhao.floatwindow.MoveType;
-import com.yhao.floatwindow.PermissionListener;
-import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import DDRCommProto.BaseCmd;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
 import androidx.viewpager.widget.ViewPager;
 
 import java.text.DecimalFormat;
@@ -43,13 +35,11 @@ import butterknife.BindView;
 
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
-import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
@@ -66,11 +56,9 @@ import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
-import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
-import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
@@ -168,7 +156,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         mPagerAdapter.addFragment(MapFragment.newInstance());
         mPagerAdapter.addFragment(TaskFragment.newInstance());
         mPagerAdapter.addFragment(SetUpFragment.newInstance());
-        mPagerAdapter.addFragment(VersionFragment.newInstance());
         vpHomePager.setAdapter(mPagerAdapter);
         //限制页面的数量
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());

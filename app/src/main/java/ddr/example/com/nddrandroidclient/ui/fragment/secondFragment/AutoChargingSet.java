@@ -219,9 +219,16 @@ public class AutoChargingSet extends DDRLazyFragment {
     private void getChosseStatus(){
         boolean isChecked=slideButton.isChecked;
         if (isChecked==true){
+            Logger.e("点击勾中---");
             autoValue="1";
+            ed_out_auto.setFocusable(true);
+            ed_trigger_auto.setFocusable(true);
+            ed_trigger_auto.setFocusableInTouchMode(true);
+            ed_out_auto.setFocusableInTouchMode(true);
         }else {
             autoValue="0";
+            ed_out_auto.setFocusable(false);
+            ed_trigger_auto.setFocusable(false);
         }
         Logger.e("是否选择"+isChecked);
     }
