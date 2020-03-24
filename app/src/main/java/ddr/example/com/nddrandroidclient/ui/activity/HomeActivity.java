@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -91,12 +92,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     LineTextView tv_taskmanager;
     @BindView(R.id.highset)
     LineTextView tv_highset;
+    @BindView(R.id.iv_quit)
+    ImageView iv_quit;
     @BindView(R.id.tv_quit)
-    ImageView tv_quit;
+    TextView tv_quit;
     @BindView(R.id.iv_jt_def)
     ImageView iv_jt_def;
+    @BindView(R.id.tv_jt)
+    TextView tv_jt;
     @BindView(R.id.iv_yk_def)
     ImageView iv_yk_def;
+    @BindView(R.id.tv_yk)
+    TextView tv_yk;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -206,7 +213,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown})
+    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown,R.id.iv_shutdown,R.id.tv_yk,R.id.tv_jt,R.id.iv_quit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.status:
@@ -223,7 +230,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 vpHomePager.setCurrentItem(3);
                 break;
             case R.id.tv_quit:
-                new InputDialog.Builder(getActivity())
+            case R.id.iv_quit:
+                        new InputDialog.Builder(getActivity())
                         .setTitle("是否退出")
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
@@ -238,7 +246,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
                 break;
             case R.id.tv_shutdown:
-                new InputDialog.Builder(this).setEditVisibility(View.GONE).setConfirm("关机").setCancel("重启").setListener(new InputDialog.OnListener() {
+                case R.id.iv_shutdown:
+                new InputDialog.Builder(this).setEditVisibility(View.GONE).setTitle("是否关机").setConfirm("关机").setCancel("重启").setListener(new InputDialog.OnListener() {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
                         tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eShutDown);
@@ -318,20 +327,26 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
-                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
-                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    iv_jt_def.setImageResource(R.mipmap.jt_check);
+                    iv_yk_def.setImageResource(R.mipmap.yk_def);
+                    tv_jt.setTextColor(Color.parseColor("#ffffff"));
+                    tv_yk.setTextColor(Color.parseColor("#4dffffff"));
                     break;
                 case 8:
-                    iv_jt_def.setImageResource(R.mipmap.jt_default);
-                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    iv_jt_def.setImageResource(R.mipmap.jt_def);
+                    iv_yk_def.setImageResource(R.mipmap.yk_check);
+                    tv_jt.setTextColor(Color.parseColor("#ffffff"));
+                    tv_yk.setTextColor(Color.parseColor("#ffffff"));
                     break;
                 case 12:
-                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
-                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    iv_jt_def.setImageResource(R.mipmap.jt_check);
+                    iv_yk_def.setImageResource(R.mipmap.yk_check);
                     break;
                 case 0:
-                    iv_jt_def.setImageResource(R.mipmap.jt_default);
-                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    iv_jt_def.setImageResource(R.mipmap.jt_def);
+                    iv_yk_def.setImageResource(R.mipmap.yk_def);
+                    tv_jt.setTextColor(Color.parseColor("#4dffffff"));
+                    tv_yk.setTextColor(Color.parseColor("#4dffffff"));
                     break;
             }
         }

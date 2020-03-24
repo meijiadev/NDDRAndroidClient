@@ -318,9 +318,6 @@ public class SensorSet extends DDRLazyFragment {
                         sensor1.setKey(String.valueOf(1));
                         sensor1.setStaticdistance(ed_cs1.getText().toString());
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
-                        Logger.e("动态"+sensorList.get(i).getDydistance());
-                        Logger.e("静态"+sensorList.get(i).getStaticdistance());
-                        Logger.e("数量"+sensorList.size());
                     }
                     break;
                 case 1:

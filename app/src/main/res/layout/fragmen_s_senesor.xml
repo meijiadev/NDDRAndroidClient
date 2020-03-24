@@ -52,9 +52,9 @@
         android:layout_marginTop="25dp"
         android:layout_marginLeft="640dp"/>
     <TextView
-        android:layout_width="242dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（静态模式下触发超声波自动运动会停止）"
+        android:text="（静态模式下,触发超声波,机器人会停止运动）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
@@ -490,9 +490,9 @@
         android:gravity="center"
         />
     <TextView
-        android:layout_width="518dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（谨慎修改，请知晓安装位置情况下修改参数超声波数值为0代表该位置超声波功能被关闭）"
+        android:text="（设置前务必知晓安装位置，超声波数值为0表示功能关闭）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
@@ -545,9 +545,9 @@
         android:gravity="center"
         />
     <TextView
-        android:layout_width="190dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（建议比实际环境温度高5-10℃）"
+        android:text="（建议比环境温度高10℃左右）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_thirdBack"

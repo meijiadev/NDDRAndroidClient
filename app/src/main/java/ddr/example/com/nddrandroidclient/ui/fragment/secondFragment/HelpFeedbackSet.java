@@ -1,6 +1,5 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
-import android.view.CollapsibleActionView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.other.HelpAndBack;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.adapter.HelpBackAdapter;
-import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
 
 public class HelpFeedbackSet extends DDRLazyFragment {
     @BindView(R.id.recycle_help)
@@ -29,6 +27,7 @@ public class HelpFeedbackSet extends DDRLazyFragment {
     private HelpBackAdapter helpBackAdapter;
     private HelpAndBack helpAndBack;
     private List<HelpAndBack> helpAndBackList;
+
     public static HelpFeedbackSet newInstance(){return new HelpFeedbackSet();}
 
     @Override
