@@ -331,10 +331,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
-                        tv_work_statue.setText("待命中");
-                        tv_now_task.setClickable(true);
-                        tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
-                        iv_task_xl.setVisibility(View.VISIBLE);
+                        if (taskName.equals("PathError")){
+                            tv_work_statue.setText("待命中");
+                            tv_now_task.setClickable(true);
+                            tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
+                            iv_task_xl.setVisibility(View.VISIBLE);
+                        }else {
+                            tv_work_statue.setText("运动中");
+                        }
                         break;
                     case 3:
                         tv_work_statue.setText("运动中");
@@ -605,6 +609,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             .setTitle("请输入循环次数")
                             .setHint("1")
                             .setConfirm("执行")
+                            .setEditNumAndSize(3)
                             .setListener(new InputDialog.OnListener() {
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {

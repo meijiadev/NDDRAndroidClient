@@ -1,8 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,7 +19,6 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.Parameter;
@@ -31,6 +28,10 @@ import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 
+/**
+ * time: 2020/03/24
+ * desc: 高级设置自动充电界面
+ */
 public class AutoChargingSet extends DDRLazyFragment {
     @BindView(R.id.slideButton)
     SlideButton slideButton;

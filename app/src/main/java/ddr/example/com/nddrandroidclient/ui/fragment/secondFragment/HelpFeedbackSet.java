@@ -18,6 +18,10 @@ import ddr.example.com.nddrandroidclient.entity.other.HelpAndBack;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.adapter.HelpBackAdapter;
 
+/**
+ * time: 2020/03/24
+ * desc: 高级设置帮助与反馈界面
+ */
 public class HelpFeedbackSet extends DDRLazyFragment {
     @BindView(R.id.recycle_help)
     RecyclerView recycle_help;

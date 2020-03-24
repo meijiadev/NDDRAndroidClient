@@ -34,6 +34,10 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.NaparamAdapter;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 
+/**
+ * time: 2020/03/24
+ * desc: 高级设置导航参数界面
+ */
 public class NaParameterSet extends DDRLazyFragment{
 
     @BindView(R.id.tv_restartDefault)
