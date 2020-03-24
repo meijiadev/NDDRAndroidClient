@@ -77,7 +77,7 @@ public final class InputDialog {
          * @return
          */
         public Builder setEditNumAndSize(int num){
-            mInputView.setKeyListener(DigitsKeyListener.getInstance("123456789"));
+            mInputView.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
             mInputView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(num)});
             return this;
         }
