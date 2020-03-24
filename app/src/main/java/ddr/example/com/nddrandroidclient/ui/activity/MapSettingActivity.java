@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import com.google.protobuf.ByteString;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -68,7 +71,7 @@ public class MapSettingActivity extends DDRActivity {
 
     private MapFileStatus mapFileStatus;
     private TcpClient tcpClient;
-    private BaseDialog waitDialog,waitDialog1;
+    private BaseDialog waitDialog,waitDialog1,waitDialog2;
 
     @Override
     protected int getLayoutId() {
@@ -85,6 +88,9 @@ public class MapSettingActivity extends DDRActivity {
     @Override
     protected void initData() {
         super.initData();
+        Intent intent=getIntent();
+        mapName=intent.getStringExtra("mapName");
+        etMapName.setText(mapName);
     }
 
 
@@ -92,8 +98,34 @@ public class MapSettingActivity extends DDRActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_title:
-                tcpClient.requestFile();
-                finish();
+                new InputDialog.Builder(this)
+                        .setTitle("是否保存本次编辑？")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                waitDialog2=new WaitDialog.Builder(getActivity())
+                                        .setMessage("正在保存...")
+                                        .show();
+                                postDelayed(() -> {
+                                    if (waitDialog2.isShowing()) {
+                                        waitDialog2.dismiss();
+                                        toast("保存失败！");
+                                    }
+                                }, 4000);
+                                abSpeed= Float.parseFloat(etABSpeed.getText().toString());
+                                String name=tvSwitchPoint.getText().toString().trim();
+                                if (name.equals("原地待命")){
+                                    name="";
+                                }
+                                tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                                tcpClient.requestFile();
+                                finish();
+                            }
+                        }).show();
                 break;
             case R.id.tv_recover:
                 new InputDialog.Builder(this)
@@ -142,14 +174,14 @@ public class MapSettingActivity extends DDRActivity {
                 tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
                 break;
             case R.id.tv_navigation:
-                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 modeType=2;
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
             case R.id.tv_line_patrol:
-                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 modeType=1;
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
@@ -167,7 +199,20 @@ public class MapSettingActivity extends DDRActivity {
                     }
                 }, 4000);
                 abSpeed= Float.parseFloat(etABSpeed.getText().toString());
-                tcpClient.saveDataToServer(modeType,tvSwitchPoint.getText().toString().trim(),abMode,abSpeed);
+                String name=tvSwitchPoint.getText().toString().trim();
+                if (name.equals("原地待命")){
+                    name="";
+                }
+                newMapName=etMapName.getText().toString().trim();
+                List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();
+                DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                        .setTypeValue(3)
+                        .setSourceName(ByteString.copyFromUtf8(mapName))
+                        .setTargetName(ByteString.copyFromUtf8(newMapName))
+                        .build();
+                optItems.add(optItem);
+                tcpClient.reqMapOperational(optItems);
+                tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
                 break;
         }
     }
@@ -203,6 +248,7 @@ public class MapSettingActivity extends DDRActivity {
     private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
     private DDRVLNMap.DDRMapBaseData ddrMapBaseData;
     private String mapName="";
+    private String newMapName;
     private int modeType;
     private float abSpeed;           //ab点速度
     private int abMode;              //ab点模式
@@ -214,11 +260,22 @@ public class MapSettingActivity extends DDRActivity {
                 mapFileStatus=MapFileStatus.getInstance();
                 reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
                 ddrMapBaseData=reqDDRVLNMapEx.getBasedata();
-                mapName=ddrMapBaseData.getName().toStringUtf8();
                 modeType=ddrMapBaseData.getAbNaviTypeValue();
-                targetPoints=mapFileStatus.getTargetPoints();
-                etMapName.setText(mapName);
-                tvSwitchPoint.setText(ddrMapBaseData.getTargetPtName().toStringUtf8());
+                try {
+                    targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                    TargetPoint targetPoint=new TargetPoint();
+                    targetPoint.setName("原地待命");
+                    targetPoints.add(0,targetPoint);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String pointName=ddrMapBaseData.getTargetPtName().toStringUtf8();
+                if (pointName.equals("")){
+                    pointName="原地待命";
+                }
+                tvSwitchPoint.setText(pointName);
                 abSpeed=ddrMapBaseData.getAbPathSpeed();
                 Logger.e("ab点速度："+abSpeed);
                 abMode=ddrMapBaseData.getAbPathModeValue();
@@ -242,15 +299,26 @@ public class MapSettingActivity extends DDRActivity {
                         if (waitDialog1.isShowing()){
                             waitDialog1.dismiss();
                             toast("保存成功");
+                            tcpClient.requestFile();
+                            finish();
+                        }
+                    }else if (waitDialog2!=null){
+                        if (waitDialog2.isShowing()){
+                            waitDialog2.dismiss();
+                            tcpClient.requestFile();
+                            finish();
                         }
                     }
-                },1500);
+                },1000);
                 break;
             case mapOperationalSucceed:
                 if (waitDialog!=null){
                     if (waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
+                }else {
+                    etMapName.setText(newMapName);
+                    mapName=newMapName;
                 }
                 break;
         }

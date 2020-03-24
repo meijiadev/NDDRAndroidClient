@@ -90,6 +90,7 @@ public class TcpClient extends BaseSocketConnection {
         info=new ConnectionInfo(ip,port);
         manager=OkSocket.open(info);
         OkSocketOptions.Builder clientOptions=new OkSocketOptions.Builder();
+        clientOptions.setPulseFeedLoseTimes(100);
         clientOptions.setReaderProtocol(new ReaderProtocol());
         manager.option(clientOptions.build());
         socketCallBack=new SocketCallBack();
@@ -124,7 +125,6 @@ public class TcpClient extends BaseSocketConnection {
                     waitDialog.dismiss();
                 }
             }
-
         }
 
         /**
@@ -317,7 +317,8 @@ public class TcpClient extends BaseSocketConnection {
                 while (isConnected&&manager!=null){
                     try {
                         manager.getPulseManager().setPulseSendable(new PulseData(m_MessageRoute.serialize(null,hb))).pulse();
-                        Thread.sleep(2000);
+                        //Logger.e("发送心跳包");
+                        Thread.sleep(4000);
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }catch (InterruptedException e) {
@@ -572,6 +573,8 @@ public class TcpClient extends BaseSocketConnection {
                     .setConfig(path_line_config)
                     .setVelocity(pathLine.getVelocity())
                     .addAllPointSet(pathLintPtItems)
+                    .setBStartFromSeg0(pathLine.isbStartFromSeg0())
+                    .setBNoCornerSmoothing(pathLine.isbNoCornerSmoothing())
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }

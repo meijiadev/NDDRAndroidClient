@@ -151,16 +151,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                         holder.unlockCanvasAndPost(canvas);
                     }
                 }
-                long endTime=System.currentTimeMillis();
-                long time=endTime-startTime;
-                if (time<300){
-                    try {
-                        Thread.sleep(300-time);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Logger.e("------机器人当前位置绘制耗时："+time);
+
             }
         }
     }

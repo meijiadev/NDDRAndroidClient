@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
         super(layoutResId, data);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void convert(@NonNull BaseViewHolder helper,TargetPoint item) {
         super.convert(helper, item);
@@ -70,11 +72,12 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 break;
             case R.layout.item_show_recycler:
                 if (item.isMultiple()){
-                    helper.setText(R.id.tv_show_name,item.getName())
-                    .setImageResource(R.id.iv_select,R.mipmap.checkedwg);
+                    helper.setText(R.id.tv_show_name,item.getName()).setTextColor(R.id.tv_show_name,Color.parseColor("#FFFFFFFF"))
+                    .setImageResource(R.id.iv_select,R.mipmap.item_show);
                 }else {
                     helper.setText(R.id.tv_show_name,item.getName())
-                            .setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
+                            .setTextColor(R.id.tv_show_name,Color.parseColor("#66ffffff"))
+                            .setImageResource(R.id.iv_select,R.mipmap.item_hide);
                 }
                 break;
             case R.layout.item_point_to_path:

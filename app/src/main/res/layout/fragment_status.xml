@@ -7,7 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="366dp"
-        android:background="#101112">
+        android:background="#101112"
+        >
+        <!--android:background="#101112"-->
         <TextView
             android:layout_width="140dp"
             android:layout_height="24dp"
@@ -30,10 +32,17 @@
             android:layout_toRightOf="@id/tv_ti_map"
             android:layout_alignBaseline="@id/tv_ti_map"
             />
-        <ddr.example.com.nddrandroidclient.widget.view.MapImageView
+        <ddr.example.com.nddrandroidclient.widget.view.MapImageView0
             android:id="@+id/iv_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+        <ddr.example.com.nddrandroidclient.widget.view.MapImageView1
+            android:id="@+id/iv_map1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             />
       <!--  <TextView
             android:id="@+id/tv_switch_mode"
@@ -199,6 +208,7 @@
             android:id="@+id/tv_work2"
             android:gravity="center"
            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -385,10 +395,10 @@
         android:visibility="gone"
         >
         <TextView
-            android:layout_width="152dp"
+            android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_marginTop="42dp"
-            android:text="正在充电，地盘已关闭运动"
+            android:text="正在充电，底盘已关闭运动"
             android:layout_centerHorizontal="true"
             android:textColor="#66ffffff"
             />

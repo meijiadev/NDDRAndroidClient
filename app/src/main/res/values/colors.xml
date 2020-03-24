@@ -15,7 +15,7 @@
     <color name="textunclick">#4dd1d1d1</color>
     <color name="line">#26ffffff</color>
     <color name="fontColor">#aeaeae</color>
-    <color name="button_bg_blue">#02B5F8</color>
+    <color name="button_bg_blue">#0399ff</color>
     <color name="button_bg_gray">@android:color/darker_gray</color>
     <color name="button_stroke_gray">#979797</color>
     <color name="list_line_gray">#55979797</color>
@@ -39,6 +39,9 @@
 
     <!-- 白色 -->
     <color name="white">#FFFFFFFF</color>
+    <color name="text_gray">#4dffffff</color>
+    <color name="text_select">#FFFFFFFF</color>
+    <color name="text_default">#66ffffff</color>
     <color name="white95">#F2FFFFFF</color>
     <color name="white90">#E6FFFFFF</color>
     <color name="white85">#D9FFFFFF</color>

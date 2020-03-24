@@ -38,7 +38,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 
 /**
- * 放置激光地图的控件
+ * 放置激光地图的控件(闲置)
  */
 public class MapImageView extends GLView {
     private DDRVLNMap.reqDDRVLNMapEx data;
@@ -122,6 +122,10 @@ public class MapImageView extends GLView {
 
     }
 
+    /**
+     * 设置行走路径
+     * @param taskName
+     */
     public void setTaskName(String taskName){
         pathLineItemExesS=new ArrayList<>();
         targetPtItemsS=new ArrayList<>();
@@ -304,7 +308,6 @@ public class MapImageView extends GLView {
     private void onDrawWall(ICanvasGL canvasGL){
         if (spaceItems!=null){
             for (int i=0;i<spaceItems.size();i++){
-
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){
                     if (j<space_pointExes.size()-1){
@@ -352,8 +355,6 @@ public class MapImageView extends GLView {
         float y1=(float) (r10*x+r11*y+t1)/scale;
         return new XyEntity(x1,y1);
     }
-
-
 
     /**
      * 实时绘制（将世界坐标经过矩阵变换成图片上的像素坐标)

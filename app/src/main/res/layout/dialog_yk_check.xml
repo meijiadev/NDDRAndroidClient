@@ -68,7 +68,7 @@
                 app:rsb_indicator_drawable="@drawable/seekbar_indicator_bg"
                 app:rsb_thumb_width="13dp"
                 app:rsb_thumb_height="21dp"
-                android:background="#232434"
+                android:background="@drawable/seekbar_bg"
                 app:rsb_mode="single"
                 app:rsb_min="0"
                 app:rsb_max="1"

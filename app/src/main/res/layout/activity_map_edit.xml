@@ -5,19 +5,6 @@
     android:background="#101112"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.hjq.bar.TitleBar
-        android:id="@+id/title_layout"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="#101112"
-        app:leftColor="@color/white"
-        app:leftIcon="@mipmap/iv_back"
-        app:leftSize="16sp"
-        app:leftTitle="新建目标点"
-        app:lineColor="#262728"
-        app:lineSize="1dp"
-        app:rightColor="@color/white"
-        app:rightTitle="退出  "></com.hjq.bar.TitleBar>
 
     <LinearLayout
         android:id="@+id/second_title"
@@ -25,29 +12,72 @@
         android:layout_height="44dp"
         android:layout_below="@id/title_layout"
         android:background="#161718">
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/iv_back"
+            android:layout_marginLeft="24dp"
+            />
         <TextView
             android:id="@+id/tv_target_point"
             android:layout_width="110dp"
             android:layout_height="match_parent"
             android:text="目标点 (0)"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
-            android:layout_marginLeft="80dp"
-            android:gravity="center"
+            android:layout_marginLeft="45dp"
+            android:gravity="center_vertical"
             android:drawableLeft="@mipmap/iv_target_gray"
+            android:drawablePadding="5dp"
             />
+
         <TextView
             android:id="@+id/tv_path"
             android:layout_width="110dp"
             android:layout_height="match_parent"
             android:text="路径 (0)"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
-            android:gravity="center"
-            android:layout_marginLeft="44dp"
+            android:gravity="center_vertical"
+            android:drawablePadding="5dp"
             android:drawableLeft="@mipmap/iv_path_gray"
+            />
+
+        <TextView
+            android:id="@+id/tv_mark_current"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="标记机器人当前位置"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@mipmap/nocheckedwg"
+            android:paddingRight="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:visibility="gone"
+            android:layout_marginLeft="30dp"
+            />
+        <TextView
+            android:id="@+id/tv_selected_point"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="点击选择目标点建路径"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@mipmap/nocheckedwg"
+            android:paddingRight="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_marginLeft="30dp"
+            android:visibility="gone"
             />
 
         <TextView
@@ -57,7 +87,7 @@
             android:textSize="11sp"
             android:textColor="@color/white"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="315dp"
+            android:layout_marginLeft="140dp"
             />
         <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
             android:id="@+id/tv_025m"
@@ -65,7 +95,8 @@
             android:layout_height="wrap_content"
             android:text="0.25m"
             android:textColor="#ccffffff"
-            android:textSize="11sp"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:drawableLeft="@mipmap/nocheckedwg"
             android:drawablePadding="6dp"
@@ -77,11 +108,12 @@
             android:layout_height="wrap_content"
             android:text="0.5m"
             android:textColor="#ccffffff"
-            android:textSize="11sp"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:drawableLeft="@mipmap/nocheckedwg"
             android:drawablePadding="6dp"
-            android:layout_marginLeft="28dp"
+            android:layout_marginLeft="8dp"
             />
         <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
             android:id="@+id/tv_1m"
@@ -89,11 +121,12 @@
             android:layout_height="wrap_content"
             android:text="1m"
             android:textColor="#ccffffff"
-            android:textSize="11sp"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:drawableLeft="@mipmap/nocheckedwg"
             android:drawablePadding="6dp"
-            android:layout_marginLeft="28dp"
+            android:layout_marginLeft="8dp"
             />
 
         <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
@@ -102,11 +135,12 @@
             android:layout_height="wrap_content"
             android:text="2m"
             android:textColor="#ccffffff"
-            android:textSize="11sp"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:drawableLeft="@mipmap/nocheckedwg"
             android:drawablePadding="6dp"
-            android:layout_marginLeft="28dp"
+            android:layout_marginLeft="8dp"
             />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
@@ -148,40 +182,6 @@
             />
 
     </RelativeLayout>
-    <TextView
-        android:id="@+id/tv_mark_current"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:text="标记机器人当前位置"
-        android:textColor="@color/white"
-        android:textSize="11sp"
-        android:gravity="center"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/second_title"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:drawableRight="@mipmap/nocheckedwg"
-        android:paddingRight="@dimen/dp_10"
-        android:drawablePadding="@dimen/dp_10"
-        android:visibility="gone"
-        />
-    <TextView
-        android:id="@+id/tv_selected_point"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="勾选目标点建路径"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/second_title"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:drawableRight="@mipmap/nocheckedwg"
-        android:paddingRight="@dimen/dp_10"
-        android:drawablePadding="@dimen/dp_10"
-        android:visibility="gone"
-        />
 
 
 
@@ -224,7 +224,7 @@
             app:rsb_indicator_drawable="@drawable/seekbar_indicator_bg"
             app:rsb_thumb_width="13dp"
             app:rsb_thumb_height="21dp"
-            android:background="#232434"
+            android:background="@drawable/seekbar_bg"
             app:rsb_mode="single"
             app:rsb_min="0"
             app:rsb_max="1"
@@ -241,7 +241,7 @@
             />
     </LinearLayout>
 
-    <ImageView
+  <!--  <ImageView
         android:id="@+id/add_poi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -250,7 +250,15 @@
         android:layout_marginRight="40dp"
         android:layout_above="@id/my_rocker_zy"
         android:visibility="gone"
-        />
+        />-->
+   <!-- <TextView
+        android:id="@+id/add_poi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_above="@id/my_rocker_zy"
+        android:visibility="gone"/>-->
 
     <ddr.example.com.nddrandroidclient.widget.view.RockerView
         android:id="@+id/my_rocker"

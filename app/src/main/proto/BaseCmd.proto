@@ -612,6 +612,18 @@ message notifyEnvInfo{
 	int32 tray = 7; // 低8位表示上面那一对，8-15位表示下面一对传感器。 0-被遮挡。 1-没被遮挡
 	float nuclear = 8; // 核辐射
 	float dangerousgas = 9; // 危险气体
+	bool antiCollision1 = 10; // 防碰撞1
+	bool antiCollision2 = 11; // 防碰撞2
+	bool antiCollision3 = 12; // 防碰撞3
+	bool antiCollision4 = 13; // 防碰撞4
+	bool fallProtection = 14; // 防跌落
+	bool resetState = 15; // 复位状态 0-复位  1-未复位
+}
+
+// 通知重定位状态。收到这个表示重定位结束了。
+message notifyRelocStatus
+{
+	int32 status = 1; // 0-重定位失败  1-重定位成功
 }
 
 //ObsStatus

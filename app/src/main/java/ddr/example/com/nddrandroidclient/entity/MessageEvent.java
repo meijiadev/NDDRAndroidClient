@@ -42,6 +42,7 @@ public class MessageEvent {
 
         receiveObstacleInfo,  //接收机器人当前位置的障碍物信息
         enterRelocationMode,  //重新进入重定位模式
+        updateRelocationStatus,  //接受重定位结果
 
         notifyMapGenerateProgress,  //接受地图生成的进度
         updateDetectionLoopStatus,   //接受回环检测结果
@@ -75,6 +76,7 @@ public class MessageEvent {
         this.type=type;
         this.data=object;
     }
+
 
     public Type getType() {
         return type;

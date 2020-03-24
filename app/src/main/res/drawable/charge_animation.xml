@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false">
-    <item android:drawable="@mipmap/charge_0" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_4" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_9" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_12" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_4" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_5" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_6" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_7" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_8" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_9" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_10" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_11" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_12" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_13" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_14" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_15" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_16" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_17" android:duration="100"/>
-    <item android:drawable="@mipmap/charge_18" android:duration="100"/>
+    <item android:drawable="@mipmap/charge_0" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_3" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_5" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_7" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_9" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_11" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_13" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_15" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_17" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_19" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_21" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_23" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_25" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_27" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_29" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_31" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_33" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_35" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_37" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_39" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_41" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_43" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_45" android:duration="120"/>
+    <item android:drawable="@mipmap/charge_47" android:duration="120"/>
 
 </animation-list>

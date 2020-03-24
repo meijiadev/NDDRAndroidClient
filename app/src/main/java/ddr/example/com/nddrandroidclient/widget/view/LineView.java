@@ -132,20 +132,26 @@ public class LineView {
                     List<PathLine.PathPoint> pathPoints=pathLines.get(i).getPathPoints();
                     if (pathPoints.size()>1){
                         for (int j=0;j<pathPoints.size();j++){
-                            if (j<pathPoints.size()-1){
+                            if (pathPoints.size()>1){
                                 XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                                 xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                                XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                                xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                                if (j<pathPoints.size()-1){
+                                    XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                                }
                                 if (j==0){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
                                     canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
-                                }else if (j==pathPoints.size()-2){
-                                    mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
+                                    canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                                }else if (j==pathPoints.size()-1){
+                                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
                                     canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                                }else {
+                                    canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
+                                    canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }
-
                             }
                         }
                     }
@@ -157,27 +163,30 @@ public class LineView {
             for (int i=0;i<pathLines1.size();i++){
                 if (pathLines1.get(i).isMultiple()){
                     List<PathLine.PathPoint> pathPoints=pathLines1.get(i).getPathPoints();
-                    if (pathPoints.size()>1){
                         for (int j=0;j<pathPoints.size();j++){
-                            if (j<pathPoints.size()-1){
+                            if (pathPoints.size()>1){
                                 XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                                 xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                                XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                                xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                                if (j<pathPoints.size()-1){
+                                    XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                                }
                                 if (j==0){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
                                     canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
-                                }else if (j==pathPoints.size()-2){
-                                    mRectDst=new Rect((int)xyEntity2.getX()-11,(int)xyEntity2.getY()-11,(int)xyEntity2.getX()+11,(int)xyEntity2.getY()+11);
+                                    canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                                }else if (j==pathPoints.size()-1){
+                                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
                                     canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }else {
-
+                                    canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
+                                    canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }
-
                             }
                         }
-                    }
+
                 }
             }
 
@@ -309,7 +318,6 @@ public class LineView {
         lines=null;
         pathLines1=null;
         selectPosition=-1;
-        spaceItems=null;
     }
 
 

@@ -12,10 +12,10 @@
         >
         <ImageView
             android:id="@+id/iv_select"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="3dp"
             android:visibility="gone"
             android:background="@mipmap/nocheckedwg"
             />

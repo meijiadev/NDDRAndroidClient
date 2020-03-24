@@ -2,6 +2,7 @@ package ddr.example.com.nddrandroidclient.widget.edit;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
 
 import com.hjq.toast.ToastUtils;
@@ -24,10 +25,16 @@ public class MyEditTextChangeListener implements TextWatcher {
     private ZoomImageView zoomImageView;
     private PointView pointView;
     private int editType;
+    private DDREditText editTextX,editTextY,editTextC;
 
 
-    public MyEditTextChangeListener( int type,PointView pointView, TargetPoint targetPoint, ZoomImageView zoomImageView) {
+
+
+    public MyEditTextChangeListener( int type,PointView pointView, TargetPoint targetPoint, ZoomImageView zoomImageView,DDREditText editTextX,DDREditText editTextY,DDREditText editTextC) {
         this.pointView=pointView;
+        this.editTextX=editTextX;
+        this.editTextY=editTextY;
+        this.editTextC=editTextC;
         targetPoint1.setName(targetPoint.getName());
         targetPoint1.setX(targetPoint.getX());
         targetPoint1.setY(targetPoint.getY());
@@ -65,6 +72,8 @@ public class MyEditTextChangeListener implements TextWatcher {
                 try {
                     float x=Float.valueOf(s.toString());
                     targetPoint1.setX(x);
+                    targetPoint1.setY(editTextY.getFloatText());
+                    targetPoint1.setTheta(editTextC.getIntegerText());
                     pointView.setPoint(targetPoint1);
                     zoomImageView.invalidate();
                 }catch (Exception e){
@@ -75,6 +84,8 @@ public class MyEditTextChangeListener implements TextWatcher {
                 try{
                    float y=Float.valueOf(s.toString());
                    targetPoint1.setY(y);
+                   targetPoint1.setX(editTextX.getFloatText());
+                   targetPoint1.setTheta(editTextC.getIntegerText());
                    pointView.setPoint(targetPoint1);
                    zoomImageView.invalidate();
                 }catch (Exception e){
@@ -88,6 +99,8 @@ public class MyEditTextChangeListener implements TextWatcher {
                     }else {
                         //pointView.setActionPointTowards(gaugeName,Float.valueOf(s.toString()));
                         float angle=Float.valueOf(s.toString());
+                        targetPoint1.setX(editTextX.getFloatText());
+                        targetPoint1.setY(editTextY.getFloatText());
                         targetPoint1.setTheta((int) angle);
                         pointView.setPoint(targetPoint1);
                         zoomImageView.invalidate();

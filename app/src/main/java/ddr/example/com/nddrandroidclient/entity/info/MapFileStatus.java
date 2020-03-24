@@ -122,6 +122,8 @@ public class MapFileStatus {
                 pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
                 pathLine.setPathType(pathLineItemExes.get(i).getTypeValue());
                 pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+                pathLine.setbStartFromSeg0(pathLineItemExes.get(i).getBStartFromSeg0());
+                pathLine.setbNoCornerSmoothing(pathLineItemExes.get(i).getBNoCornerSmoothing());
                 cPathLines.add(pathLine);
             }
             for (int i = 0; i < taskItemExes.size(); i++) {
@@ -198,6 +200,8 @@ public class MapFileStatus {
             pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
             pathLine.setPathType(pathLineItemExes.get(i).getTypeValue());
             pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+            pathLine.setbStartFromSeg0(pathLineItemExes.get(i).getBStartFromSeg0());
+            pathLine.setbNoCornerSmoothing(pathLineItemExes.get(i).getBNoCornerSmoothing());
             pathLines.add(pathLine);
         }
         //Logger.e("-------------任务的数量："+taskItemExes.size());

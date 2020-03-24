@@ -15,6 +15,7 @@ public class NotifyBaseStatusExProcessor extends BaseProcessor {
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
+       // Logger.e("---------NotifyBaseStatusExProcessor");
         BaseCmd.notifyBaseStatusEx notifyBaseStatusEx= (BaseCmd.notifyBaseStatusEx) msg;
         NotifyBaseStatusEx notifyBaseStatusEx1=NotifyBaseStatusEx.getInstance();
         notifyBaseStatusEx1.setCurroute(notifyBaseStatusEx.getCurrroute().toStringUtf8());
