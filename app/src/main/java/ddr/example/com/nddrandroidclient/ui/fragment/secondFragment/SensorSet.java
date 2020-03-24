@@ -27,7 +27,10 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-
+/**
+ * time: 2020/03/24
+ * desc: 高级设置传感器设置界面
+ */
 public class SensorSet extends DDRLazyFragment {
     @BindView(R.id.slideButton)
     SlideButton slideButton;
@@ -104,7 +107,7 @@ public class SensorSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
+                Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
     }
 

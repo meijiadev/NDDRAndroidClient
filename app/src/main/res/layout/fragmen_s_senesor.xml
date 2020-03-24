@@ -54,7 +54,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（静态模式下,触发超声波,机器人会停止运动）"
+        android:text="（静态模式下，触发超声波,机器人会停止运动）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
@@ -547,7 +547,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（建议比环境温度高10℃左右）"
+        android:text="（建议设置比环境温度高10℃左右）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_thirdBack"

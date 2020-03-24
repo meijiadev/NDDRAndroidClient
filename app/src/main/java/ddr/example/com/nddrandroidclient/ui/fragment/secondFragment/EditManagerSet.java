@@ -27,6 +27,10 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
 
+/**
+ * time: 2020/03/24
+ * desc: 高级设置版本管理界面
+ */
 public class EditManagerSet extends DDRLazyFragment {
 
     @BindView(R.id.computer_type_recycle)

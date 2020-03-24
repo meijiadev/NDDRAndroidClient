@@ -34,6 +34,10 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.NaparamAdapter;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 
+/**
+ * time: 2020/03/24
+ * desc: 高级设置导航参数界面
+ */
 public class NaParameterSet extends DDRLazyFragment{
 
     @BindView(R.id.tv_restartDefault)
@@ -338,12 +342,12 @@ public class NaParameterSet extends DDRLazyFragment{
                     break;
                 case 1:
                     naparam.setText("避障开始减速距离");
-                    naparam.setTitle("（障碍到机器人运动中心小于此值开始减速，建议比物理半径大100cm）");
+                    naparam.setTitle("（运动中心到障碍距离小于此值，机器人减速前进，建议比实际半径大100cm）");
                     naparam.setValue(String.valueOf(bz_sl));
                     break;
                 case 2:
                     naparam.setText("避障停止距离");
-                    naparam.setTitle("（当前方障碍到机器人运动中心小于等于此值停止，建议比物理半径大30cm）");
+                    naparam.setTitle("（运动中心到障碍距离小于等于此值，机器人停止，建议比实际半径大30cm）");
                     naparam.setValue(String.valueOf(bz_st));
                     break;
                 case 3:

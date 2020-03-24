@@ -1,6 +1,5 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
-
 import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
@@ -29,6 +28,10 @@ import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 
+/**
+ * time: 2020/03/24
+ * desc: 高级设置自动充电界面
+ */
 public class AutoChargingSet extends DDRLazyFragment {
     @BindView(R.id.slideButton)
     SlideButton slideButton;
@@ -216,9 +219,16 @@ public class AutoChargingSet extends DDRLazyFragment {
     private void getChosseStatus(){
         boolean isChecked=slideButton.isChecked;
         if (isChecked==true){
+            Logger.e("点击勾中---");
             autoValue="1";
+            ed_out_auto.setFocusable(true);
+            ed_trigger_auto.setFocusable(true);
+            ed_trigger_auto.setFocusableInTouchMode(true);
+            ed_out_auto.setFocusableInTouchMode(true);
         }else {
             autoValue="0";
+            ed_out_auto.setFocusable(false);
+            ed_trigger_auto.setFocusable(false);
         }
         Logger.e("是否选择"+isChecked);
     }

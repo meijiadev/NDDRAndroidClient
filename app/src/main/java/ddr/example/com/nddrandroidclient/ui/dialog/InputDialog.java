@@ -1,5 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.dialog;
 
+import android.text.InputFilter;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -69,6 +71,16 @@ public final class InputDialog {
             return this;
         }
 
+        /**
+         * 设置EditText的输入限制
+         * @param num
+         * @return
+         */
+        public Builder setEditNumAndSize(int num){
+            mInputView.setKeyListener(DigitsKeyListener.getInstance("123456789"));
+            mInputView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(num)});
+            return this;
+        }
         public Builder setHint(@StringRes int id) {
             return setHint(getString(id));
         }
