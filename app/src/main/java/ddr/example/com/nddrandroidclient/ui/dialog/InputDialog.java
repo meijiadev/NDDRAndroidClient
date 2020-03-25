@@ -119,6 +119,11 @@ public final class InputDialog {
             return this;
         }
 
+        /**
+         * 判断是否自动弹窗消失
+         * @param dismiss
+         * @return
+         */
         public Builder setAutoDismiss(boolean dismiss) {
             mAutoDismiss = dismiss;
             return this;

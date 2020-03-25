@@ -238,7 +238,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
 
     private int mPosition = 0;                                   //当前显示的是哪个子项数据 （目标点列表、路径列表、任务列表）
-
+    private String taskName;                                     //任务编辑框中的任务名
+    private BaseDialog inputDialog;                              //地图命名窗口
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -328,8 +329,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
                         startActivity(intent);
                     } else {
-                        new InputDialog.Builder(getAttachActivity())
+                        inputDialog=new InputDialog.Builder(getAttachActivity())
                                 .setTitle("采集地图")
+                                .setAutoDismiss(false)
                                 .setHint("输入地图名称")
                                 .setListener(new InputDialog.OnListener() {
                                     @Override
@@ -346,6 +348,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                 Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
                                                 intent.putExtra("CollectName", name);
                                                 startActivity(intent);
+                                                inputDialog.dismiss();
                                             } else {
                                                 toast("名字重复，请重新输入");
                                             }
@@ -356,7 +359,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
-
+                                        inputDialog.dismiss();
                                     }
                                 }).show();
                     }
@@ -389,8 +392,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                List<DDRVLNMap.reqMapOperational.OptItem> optItems = new ArrayList<>();
-                                ;
+                                List<DDRVLNMap.reqMapOperational.OptItem> optItems = new ArrayList<>();;
                                 for (int i = 0; i < mapInfos.size(); i++) {
                                     if (mapInfos.get(i).isSelected()) {
                                         DDRVLNMap.reqMapOperational.OptItem optItem = DDRVLNMap.reqMapOperational.OptItem.newBuilder()
@@ -650,6 +652,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 break;
             case R.id.bt_next:
+                taskName = etTaskName.getText().toString().trim();
+                taskName = "DDRTask_" + taskName + ".task";
                 layoutSelect.setVisibility(View.GONE);
                 layoutSort.setVisibility(View.VISIBLE);
                 sortAdapter.setNewData(taskModes.get(mPosition).getBaseModes());
@@ -661,8 +665,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.bt_save:
                 if (mPosition < taskModes.size()) {
                     if (taskModes.get(mPosition).getBaseModes().size() > 0) {
-                        String taskName = etTaskName.getText().toString().trim();
-                        taskName = "DDRTask_" + taskName + ".task";
                         taskModes.get(mPosition).setName(taskName);
                         taskAdapter.setNewData(taskModes);
                         BaseDialog waitDialog3 = new WaitDialog.Builder(getAttachActivity()).setMessage("保存中...").show();
@@ -703,8 +705,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     intent.putExtra("pathList", (Serializable) pathLines);
                     startActivity(intent);
                 } else if (taskDetailLayout.getVisibility() == View.VISIBLE) {
-                    new InputDialog.Builder(getAttachActivity())
+                    inputDialog=new InputDialog.Builder(getAttachActivity())
                             .setTitle("任务名")
+                            .setAutoDismiss(false)
                             .setHint("请输入名字")
                             .setListener(new InputDialog.OnListener() {
                                 @Override
@@ -713,40 +716,45 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                         //选择按键
                                         content = content.replaceAll(" ", "");
                                         String name = "DDRTask_" + content + ".task";
-                                        layoutSelect.setVisibility(View.VISIBLE);
-                                        layoutSort.setVisibility(View.GONE);
-                                        recyclerDetail.setAdapter(taskAdapter);
-                                        TaskMode taskMode = new TaskMode();
-                                        taskMode.setName(name);
-                                        taskMode.setType(0);
-                                        taskMode.setRunCounts(999);
-                                        taskMode.setStartHour(0);
-                                        taskMode.setStartMin(0);
-                                        taskMode.setEndHour(24);
-                                        taskMode.setEndMin(0);
-                                        taskModes.add(0, taskMode);
-                                        mPosition = 0;
-                                        if (taskModes.size() > 0) {
-                                            etTaskName.setText(content);
-                                            try {
-                                                initSelectRecycler(0);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (ClassNotFoundException e) {
-                                                e.printStackTrace();
+                                        if (checkTaskName(name)){
+                                            toast("任务重名，请重新命名!");
+                                        }else {
+                                            layoutSelect.setVisibility(View.VISIBLE);
+                                            layoutSort.setVisibility(View.GONE);
+                                            recyclerDetail.setAdapter(taskAdapter);
+                                            TaskMode taskMode = new TaskMode();
+                                            taskMode.setName(name);
+                                            taskMode.setType(0);
+                                            taskMode.setRunCounts(999);
+                                            taskMode.setStartHour(0);
+                                            taskMode.setStartMin(0);
+                                            taskMode.setEndHour(24);
+                                            taskMode.setEndMin(0);
+                                            taskModes.add(0, taskMode);
+                                            mPosition = 0;
+                                            if (taskModes.size() > 0) {
+                                                etTaskName.setText(content);
+                                                try {
+                                                    initSelectRecycler(0);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (ClassNotFoundException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
+                                            for (TaskMode taskMode1 : taskModes) {
+                                                taskMode1.setSelected(false);
+                                            }
+                                            taskModes.get(mPosition).setSelected(true);
+                                            taskAdapter.setNewData(taskModes);
+                                            inputDialog.dismiss();
                                         }
-                                        for (TaskMode taskMode1 : taskModes) {
-                                            taskMode1.setSelected(false);
-                                        }
-                                        taskModes.get(mPosition).setSelected(true);
-                                        taskAdapter.setNewData(taskModes);
                                     }
                                 }
 
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
-
+                                    inputDialog.dismiss();
                                 }
                             }).show();
                 }
@@ -949,6 +957,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     /**
+     * 防止任务重名
+     * @return true 表示任务重名
+     */
+    private boolean checkTaskName(String taskName){
+        for (TaskMode taskMode:taskModes){
+            if (taskMode.getName().equals(taskName)){
+                Logger.e("------"+taskName+";"+taskMode.getName());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 进入批量删除状态
      */
     private void showBatchSelected(){
@@ -1048,6 +1070,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     }
 
+    private Runnable waitRunnable;           //延迟执行
+
     /**
      * 进入地图详情页面
      */
@@ -1072,19 +1096,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         tvMapName.setText("地图名称：" + name);
         tvMapSize.setText("地图面积：" + (int) mapInfos.get(position).getWidth() + "x" + (int) mapInfos.get(position).getHeight() + "m²");
         tvCreateTime.setText("建立日期：" + mapInfos.get(position).getTime());
-        getAttachActivity().postDelayed(() -> {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-                toast("加载失败！");
-                mapLayout.setVisibility(View.GONE);
-                mapDetailLayout.setVisibility(View.VISIBLE);
-                leftDetailLayout.setVisibility(View.VISIBLE);
-                pointDetailLayout.setVisibility(View.VISIBLE);
-                pathDetailLayout.setVisibility(View.GONE);
-                taskDetailLayout.setVisibility(View.GONE);
-                zoomMap.setImageBitmap(lookBitmap);
+        waitRunnable=new Runnable() {
+            @Override
+            public void run() {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                    toast("加载失败！");
+                    mapLayout.setVisibility(View.GONE);
+                    mapDetailLayout.setVisibility(View.VISIBLE);
+                    leftDetailLayout.setVisibility(View.VISIBLE);
+                    pointDetailLayout.setVisibility(View.VISIBLE);
+                    pathDetailLayout.setVisibility(View.GONE);
+                    taskDetailLayout.setVisibility(View.GONE);
+                    zoomMap.setImageBitmap(lookBitmap);
+                }
             }
-        }, 3000);
+        };
+        getAttachActivity().postDelayed(waitRunnable,7000);
+
     }
 
     private String switchMapName, switchBitmapPath;
@@ -1519,6 +1548,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case updateDDRVLNMap:
                 if (dialog != null) {
                     if (dialog.isShowing()) {
+                        getAttachActivity().cancleDelay(waitRunnable);
                         getAttachActivity().postDelayed(() -> {
                             try {
                                 targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());

@@ -90,7 +90,8 @@ public class MapSettingActivity extends DDRActivity {
         super.initData();
         Intent intent=getIntent();
         mapName=intent.getStringExtra("mapName");
-        etMapName.setText(mapName);
+        String name = mapName.replaceAll("OneRoute_", "");
+        etMapName.setText(name);
     }
 
 
@@ -204,6 +205,7 @@ public class MapSettingActivity extends DDRActivity {
                     name="";
                 }
                 newMapName=etMapName.getText().toString().trim();
+                newMapName="OneRoute_"+newMapName;
                 List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();
                 DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
                         .setTypeValue(3)
@@ -317,7 +319,8 @@ public class MapSettingActivity extends DDRActivity {
                         waitDialog.dismiss();
                     }
                 }else {
-                    etMapName.setText(newMapName);
+                    String name = newMapName.replaceAll("OneRoute_", "");
+                    etMapName.setText(name);
                     mapName=newMapName;
                 }
                 break;

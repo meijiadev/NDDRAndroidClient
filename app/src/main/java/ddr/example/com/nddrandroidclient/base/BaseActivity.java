@@ -141,9 +141,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 取消延迟任务
      */
-    public final void cacleDelay(){
+    public final void cancleDelay(){
         if (mRunnable!=null){
             HANDLER.removeCallbacks(mRunnable,mHandlerToken);
+        }
+    }
+
+    /**
+     * 取消延迟任务
+     * @param runnable
+     */
+    public final void cancleDelay(Runnable runnable){
+        if (runnable!=null){
+            HANDLER.removeCallbacks(runnable);
         }
     }
 

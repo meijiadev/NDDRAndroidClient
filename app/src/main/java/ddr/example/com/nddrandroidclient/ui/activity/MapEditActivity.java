@@ -329,32 +329,6 @@ public class MapEditActivity extends DDRActivity {
                 break;
             /*** 勾选目标点建路径**/
             case R.id.tv_selected_point:
-               /* if (recyclerTarget.getVisibility()==View.VISIBLE){
-                    pathPoints.clear();
-                    LineView.getInstance(getApplication()).
-                            setPoints(pathPoints);
-                    zmap.invalidate();
-                    recyclerTarget.setVisibility(View.GONE);
-                    tvAddPath.setVisibility(View.VISIBLE);
-                    tvDeletePoint.setVisibility(View.VISIBLE);
-                    ivCenter.setVisibility(View.VISIBLE);
-                    tvSelectedPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.nocheckedwg), null);
-                }else {
-                    pathPoints.clear();
-                    LineView.getInstance(getApplication()).
-                            setPoints(pathPoints);
-                    zmap.invalidate();
-                    recyclerTarget.setVisibility(View.VISIBLE);
-                    tvAddPath.setVisibility(View.GONE);
-                    tvDeletePoint.setVisibility(View.GONE);
-                    ivCenter.setVisibility(View.GONE);
-                    tvSelectedPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.checkedwg), null);
-                }
-                for (TargetPoint targetPoint:selectPoints){
-                    targetPoint.setMultiple(false);
-                }
-                selectPointAdapter.setNewData(selectPoints);*/
-                //selectPointAdapter.setNewData(selectPoints);
                 if (!checkablePoint){
                     checkablePoint=true;
                     tvAddPath.setVisibility(View.GONE);
@@ -416,42 +390,48 @@ public class MapEditActivity extends DDRActivity {
             case R.id.save_path:
                 if (activityType==CREATE_PATH){
                     if (pathPoints.size()>1){
-                        new InputDialog.Builder(this).setTitle("添加路径名")
+                       inputDialog=new InputDialog.Builder(this).setTitle("添加路径名")
                                 .setHint("请输入")
+                                .setAutoDismiss(false)
                                 .setListener(new InputDialog.OnListener() {
                                     @Override
                                     public void onConfirm(BaseDialog dialog, String content) {
                                         if (!content.isEmpty()){
-                                            PathLine pathLine=new PathLine();
-                                            pathLine.setName(content);
-                                            if (!checkablePoint){
-                                                for (int i=0;i<pathPoints.size();i++){
-                                                    pathPoints.get(i).setName(content+"_"+i);
-                                                }
-                                                pathLine.setPathType(1);
+                                            if (checkPathName(content)){
+                                                toast("路径名字重复，请重新命名！");
                                             }else {
-                                                pathLine.setPathType(2);
+                                                PathLine pathLine=new PathLine();
+                                                pathLine.setName(content);
+                                                if (!checkablePoint){
+                                                    for (int i=0;i<pathPoints.size();i++){
+                                                        pathPoints.get(i).setName(content+"_"+i);
+                                                    }
+                                                    pathLine.setPathType(1);
+                                                }else {
+                                                    pathLine.setPathType(2);
+                                                }
+                                                List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
+                                                try {
+                                                    pathPoints1=ListTool.deepCopy(pathPoints);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (ClassNotFoundException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                pathLine.setPathPoints(pathPoints1);
+                                                pathLine.setVelocity(0.4f);
+                                                pathLine.setPathModel(64);
+                                                newPaths.add(pathLine);
+                                                pathLines.add(pathLine);
+                                                pathPoints.clear();
+                                                for (TargetPoint targetPoint:selectPoints){
+                                                    targetPoint.setMultiple(false);
+                                                }
+                                                //selectPointAdapter.setNewData(selectPoints);
+                                                tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                                                toast("保存成功!");
+                                                inputDialog.dismiss();
                                             }
-                                            List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
-                                            try {
-                                                pathPoints1=ListTool.deepCopy(pathPoints);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (ClassNotFoundException e) {
-                                                e.printStackTrace();
-                                            }
-                                            pathLine.setPathPoints(pathPoints1);
-                                            pathLine.setVelocity(0.4f);
-                                            pathLine.setPathModel(64);
-                                            newPaths.add(pathLine);
-                                            pathLines.add(pathLine);
-                                            pathPoints.clear();
-                                            for (TargetPoint targetPoint:selectPoints){
-                                                targetPoint.setMultiple(false);
-                                            }
-                                            //selectPointAdapter.setNewData(selectPoints);
-                                            tvPath.setText("路径" + "(" + pathLines.size() + ")");
-                                            toast("保存成功!");
                                         }else {
                                             toast("请先输入名称");
                                         }
@@ -460,6 +440,7 @@ public class MapEditActivity extends DDRActivity {
                                     public void onCancel(BaseDialog dialog) {
                                         pathPoints.clear();
                                         toast("取消添加");
+                                        inputDialog.dismiss();
                                     }
                                 })
                                 .show();
@@ -500,14 +481,15 @@ public class MapEditActivity extends DDRActivity {
         }
     }
 
-
+     private BaseDialog inputDialog;
     /**
      * 添加目标点
      */
     private void addPoint() {
         Logger.e("--------?");
-        new InputDialog.Builder(this).setTitle("添加目标名")
+        inputDialog=new InputDialog.Builder(this).setTitle("添加目标名")
                 .setHint("目标点-" + targetPoints.size())
+                .setAutoDismiss(false)
                 .setListener(new InputDialog.OnListener() {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
@@ -526,23 +508,29 @@ public class MapEditActivity extends DDRActivity {
                         }
                         targetPoint.setInTask(true);  //方便显示
                         targetPoint.setTheta(0);
-                        newPoints.add(targetPoint);
-                        try {
-                            List<TargetPoint> points = ListTool.deepCopy(newPoints);
-                            PointView.getInstance(getApplicationContext()).setPoints(points);
-                            zmap.invalidate();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                        if (checkPointName(targetPoint)){
+                            toast("目标点名字重复，请重新命名");
+                        }else {
+                            newPoints.add(targetPoint);
+                            try {
+                                List<TargetPoint> points = ListTool.deepCopy(newPoints);
+                                PointView.getInstance(getApplicationContext()).setPoints(points);
+                                zmap.invalidate();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            targetPoints.add(targetPoint);
+                            tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                            inputDialog.dismiss();
                         }
-                        targetPoints.add(targetPoint);
-                        tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
                     }
 
                     @Override
                     public void onCancel(BaseDialog dialog) {
                         toast("取消添加");
+                        inputDialog.dismiss();
                     }
                 })
                 .show();
@@ -572,6 +560,34 @@ public class MapEditActivity extends DDRActivity {
                 zmap.invalidate();
                 break;
         }
+    }
+
+    /**
+     * 防止目标点重名
+     * @param targetPoint
+     * @return true 表示重名
+     */
+    private boolean checkPointName(TargetPoint targetPoint){
+       for (TargetPoint targetPoint1:targetPoints){
+           if (targetPoint1.getName().equals(targetPoint.getName())){
+               return true;
+           }
+       }
+       return false;
+    }
+
+    /**
+     * 防止路径重名
+     * @param pathName
+     * @return true 表示重名
+     */
+    private boolean checkPathName(String pathName){
+        for (PathLine pathLine:pathLines){
+            if (pathLine.getName().equals(pathName)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void deleteVirtualWall(){
@@ -659,8 +675,10 @@ public class MapEditActivity extends DDRActivity {
                 targetPointAdapter.setNewData(targetPoints);
                 if (allShowPoint){
                     tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                    tv_all_selected.setTextColor(getResources().getColor(R.color.white));
                 }else {
                     tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+                    tv_all_selected.setTextColor(getResources().getColor(R.color.text_gray));
                 }
                 break;
             case 1:
@@ -668,8 +686,10 @@ public class MapEditActivity extends DDRActivity {
                 pathAdapter.setNewData(pathLines);
                 if (allShowPath){
                     tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                    tv_all_selected.setTextColor(getResources().getColor(R.color.white));
                 }else {
                     tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+                    tv_all_selected.setTextColor(getResources().getColor(R.color.text_gray));
                 }
                 break;
             case 2:
@@ -705,13 +725,13 @@ public class MapEditActivity extends DDRActivity {
                 case 1:
                     if (allShowPath){
                         allShowPath=false;
-                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
                         for (PathLine pathLine:pathLines){
                             pathLine.setMultiple(false);
                         }
                     }else {
                         allShowPath=true;
-                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                        tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
                         for (PathLine pathLine:pathLines){
                             pathLine.setMultiple(true);
                         }
