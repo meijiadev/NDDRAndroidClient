@@ -54,10 +54,8 @@ import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.SwitchModeDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
-import ddr.example.com.nddrandroidclient.widget.view.MapImageView;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 import ddr.example.com.nddrandroidclient.widget.view.MapImageView0;
 import ddr.example.com.nddrandroidclient.widget.view.MapImageView1;
@@ -159,6 +157,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private RecyclerView  recycler_task_check;
     private int modeType;
     public String sPoint;
+    private boolean isRunabPoint;               //是否在跑ab点
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
@@ -172,42 +171,45 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSwitchTaskFaild:
                 toast("添加临时任务失败");
                 break;
-            case getSpecifiPoint:
+            case getSpecificPoint:
                 toast("开始前往"+sPoint);
                 break;
-            case getSpecifiPoint1:
+            case getSpecificPoint1:
                 toast("添加任务成功，等待前往"+sPoint);
                 break;
-            case getSpecifiPoint2:
+            case getSpecificPoint2:
                 toast("发生未知错误");
                 break;
-            case getSpecifiPoint3:
+            case getSpecificPoint3:
                 toast("当前没有定位");
                 break;
-            case getSpecifiPoint4:
+            case getSpecificPoint4:
                 toast("生成路径失败");
                 break;
-            case getSpecifiPoint5:
+            case getSpecificPoint5:
                 toast("当前处于自标定");
                 break;
-            case getSpecifiPoint8:
+            case getSpecificPoint8:
                 toast("返回待机点");
                 break;
-            case getSpecifiPoint9:
+            case getSpecificPoint9:
                 toast("完成当前任务，开始时段任务");
                 break;
-            case getSpecifiPoint10:
+            case getSpecificPoint10:
                 toast("无任务，原地待命");
                 break;
-            case getSpecifiPoint11:
+            case getSpecificPoint11:
                 Logger.e("AB点"+sPoint);
                 toast("开始前往"+sPoint);
+                break;
+            case responseAbPoint:
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                break;
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setMapBitmap(mapName);
-                    mapImageView.setTaskName(notifyBaseStatusEx.getCurrpath());
                     tvTiMap.setVisibility(View.GONE);
                     tvCreateMap.setVisibility(View.GONE);
                     groupList = new ArrayList<>();
@@ -218,6 +220,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
+                    mapImageView.setABPointLine(isRunabPoint);
                 }
                 break;
         }
@@ -310,14 +313,19 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
+                isRunabPoint=false;
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
+                isRunabPoint=false;
                 break;
             case 3:
+                tv_task_num.setText(" ");
+                break;
             case 4:
             case 5:
                 tv_task_num.setText(" ");
+                isRunabPoint=true;
                 break;
 
 
@@ -398,10 +406,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         if(!Pattern.compile(regEx).matcher(robotid).find()&&!robotid.contains("BLANK")){
             robotID =robotid;
         }else {
-            //Looper.prepare();
-            //Toast.makeText(context,"机器目前为默认ID，请修改机器ID",Toast.LENGTH_SHORT).show();
             robotID=stringd+"001";
-           // Looper.loop();
         }
     }
     /**

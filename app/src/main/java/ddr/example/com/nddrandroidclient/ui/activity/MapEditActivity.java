@@ -375,7 +375,7 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case R.id.delete_point:
-                if (activityType==CREATE_POINT){
+                if (activityType==CREATE_PATH){
                     if (pathPoints.size()>0){
                         pathPoints.remove(pathPoints.size()-1);
                         LineView.getInstance(getApplication()).setPoints(pathPoints);

@@ -118,7 +118,10 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
                     float angle=radianToangle(notifyLidarPtsEntity.getPosdirection());
                     mapMatrix.setRotate(-angle);
                     directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,mapMatrix,true);
-                    canvas.drawBitmap(directionBitmap1,xyEntity1.getX()-30,xyEntity1.getY()-30,paint);
+                    float cx=xyEntity1.getX()-30;
+                    float cy=xyEntity1.getY()-30;
+                    Logger.e("------------机器人当前在地图上的位置（像素）:"+cx+";"+cy);
+                    canvas.drawBitmap(directionBitmap1,cx,cy,paint);
                 }
             }
         }

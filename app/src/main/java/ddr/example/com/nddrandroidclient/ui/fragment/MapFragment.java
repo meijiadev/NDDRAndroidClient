@@ -860,7 +860,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                                 zoomMap.invalidate();
                             }
-
                             @Override
                             public void onCancel(BaseDialog dialog) {
                             }

@@ -41,6 +41,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.LoginActivity;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 
 /**
@@ -196,7 +197,8 @@ public class TcpClient extends BaseSocketConnection {
                 fragmentActivity.postDelayed(()->{
                     if (waitDialog.isShowing()){
                         fragmentActivity.toast("网络无法连接，请退出重连！");
-                        fragmentActivity.finish();
+                        ActivityStackManager.getInstance().finishAllActivities();
+                        fragmentActivity.startActivity(LoginActivity.class);
                     }
                 },6000);
             }
