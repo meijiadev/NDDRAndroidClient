@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 
 /**
  *    time   : 2019/02/27
@@ -77,8 +78,9 @@ public final class InputDialog {
          * @return
          */
         public Builder setEditNumAndSize(int num){
-            mInputView.setKeyListener(DigitsKeyListener.getInstance("123456789"));
+            mInputView.setKeyListener(DigitsKeyListener.getInstance("1234567890"));
             mInputView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(num)});
+            mInputView.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "999")});
             return this;
         }
         public Builder setHint(@StringRes int id) {

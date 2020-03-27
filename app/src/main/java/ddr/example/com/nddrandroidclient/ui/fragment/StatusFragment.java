@@ -202,6 +202,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSpecifiPoint11:
                 Logger.e("AB点"+sPoint);
                 toast("开始前往"+sPoint);
+            case switchMapSucceed:
+                for (int i = 0; i < targetPoints.size(); i++) {
+                    targetPoints.get(i).setSelected(false);
+                }
+                break;
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
@@ -759,6 +764,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         toast("请稍等，正在退出");
 //                        exitModel();
                         addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
+                        for (int i = 0; i < targetPoints.size(); i++) {
+                            targetPoints.get(i).setSelected(false);
+                        }
                         break;
                 }
                 break;

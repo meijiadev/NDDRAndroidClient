@@ -1,30 +1,23 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
-import android.content.Context;
 import android.os.Build;
-import android.os.Handler;
 import android.view.View;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
-import DDRVLNMapProto.DDRVLNMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
@@ -46,7 +39,6 @@ import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
-import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
 import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
 
 /**
@@ -61,16 +53,13 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     TextView tv_task_save;
 
     private CustomPopuWindow customPopuWindow;
-    private DpOrPxUtils dpOrPxUtils;
     private PickValueView pickValueViewNum;
-    private NumEdit numEdit;
     private  TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private NotifyEnvInfo notifyEnvInfo;
     private MapFileStatus mapFileStatus;
     private TaskAdapter taskAdapter;
     private List<TaskMode> taskModeList =new ArrayList<>();
-    private TaskMode taskMode;
 
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -343,6 +332,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -390,18 +380,5 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         }
 
     }
-
-    /**
-     * 匿名内部类
-     */
-    private NumEdit.OnNumChangeListener onNumChangeListener =new NumEdit.OnNumChangeListener() {
-        @Override
-        public void onNumChange(View view, int num) {
-            Logger.e("Num"+num);
-            TaskMode taskModen=taskModeList.get(mPosition);
-                    taskModen.setRunCounts(num);
-
-        }
-    };
 
 }

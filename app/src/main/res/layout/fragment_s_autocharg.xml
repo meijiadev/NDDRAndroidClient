@@ -92,6 +92,8 @@
         android:layout_marginLeft="614dp"
         android:digits="1234567890"
         android:maxLength="2"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:gravity="center"
         android:id="@+id/ed_trigger_auto"
         android:background="@drawable/bg_task_cz"/>
@@ -134,7 +136,9 @@
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
         android:digits="1234567890"
-        android:maxLength="2"
+        android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:gravity="center"
         android:id="@+id/ed_out_auto"
         android:background="@drawable/bg_task_cz"/>
