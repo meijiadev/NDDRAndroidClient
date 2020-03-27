@@ -305,26 +305,30 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
+                    iv_jt_def.setVisibility(View.VISIBLE);
                     iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
-                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_default),null,null);
+                    iv_yk_def.setVisibility(View.GONE);
                     iv_jt_def.setTextColor(getResources().getColor(R.color.white));
                     iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;
                 case 8:
-                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_default),null,null);
+                    iv_yk_def.setVisibility(View.VISIBLE);
+                    iv_jt_def.setVisibility(View.GONE);
                     iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_nodef),null,null);
                     iv_jt_def.setTextColor(getResources().getColor(R.color.text_gray));
                     iv_yk_def.setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 12:
+                    iv_jt_def.setVisibility(View.VISIBLE);
+                    iv_yk_def.setVisibility(View.VISIBLE);
                     iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
                     iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_nodef),null,null);
                     iv_jt_def.setTextColor(getResources().getColor(R.color.white));
                     iv_yk_def.setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 0:
-                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_default),null,null);
-                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_default),null,null);
+                    iv_jt_def.setVisibility(View.GONE);
+                    iv_yk_def.setVisibility(View.GONE);
                     iv_jt_def.setTextColor(getResources().getColor(R.color.text_gray));
                     iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;

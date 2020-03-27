@@ -201,6 +201,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSpecificPoint11:
                 Logger.e("AB点"+sPoint);
                 toast("开始前往"+sPoint);
+
+            case switchMapSucceed:
+                for (int i = 0; i < targetPoints.size(); i++) {
+                    targetPoints.get(i).setSelected(false);
+                }
                 break;
             case responseAbPoint:
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
@@ -764,6 +769,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         toast("请稍等，正在退出");
 //                        exitModel();
                         addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
+                        for (int i = 0; i < targetPoints.size(); i++) {
+                            targetPoints.get(i).setSelected(false);
+                        }
                         break;
                 }
                 break;

@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
 import android.graphics.Color;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -32,7 +34,7 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
  * time: 2020/03/24
  * desc: 高级设置自动充电界面
  */
-public class AutoChargingSet extends DDRLazyFragment {
+public class AutoChargingSet extends DDRLazyFragment implements SlideButton.SlideButtonOnCheckedListener{
     @BindView(R.id.slideButton)
     SlideButton slideButton;
     @BindView(R.id.ed_trigger_auto)
@@ -76,6 +78,8 @@ public class AutoChargingSet extends DDRLazyFragment {
         slideButton.setSmallCircleModel(
                 Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
+        ed_out_auto.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
+        ed_trigger_auto.setFilters(new InputFilter[]{new InputFilterMinMax("1","100")});
 
     }
 
@@ -93,6 +97,7 @@ public class AutoChargingSet extends DDRLazyFragment {
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.slideButton:
+                Logger.e("点击切换-----");
                 getChosseStatus();
                 break;
             case R.id.tv_save_auto_char:
@@ -110,6 +115,7 @@ public class AutoChargingSet extends DDRLazyFragment {
     //获取导航参数
     private void getNaparmeter(int type){
         Logger.e("-------------获取");
+        slideButton.setOnCheckedListener(isChecked -> getChosseStatus());
         BaseCmd.eConfigItemOptType eConfigItemOptType;
         switch (type){
             case 0:
@@ -160,6 +166,7 @@ public class AutoChargingSet extends DDRLazyFragment {
                     slideButton.setChecked(false);
                 }
             }
+            getChosseStatus();
 
         }
     }
@@ -221,15 +228,30 @@ public class AutoChargingSet extends DDRLazyFragment {
         if (isChecked==true){
             Logger.e("点击勾中---");
             autoValue="1";
+            ed_trigger_auto.setCursorVisible(true);
+            ed_out_auto.setCursorVisible(true);
             ed_out_auto.setFocusable(true);
             ed_trigger_auto.setFocusable(true);
             ed_trigger_auto.setFocusableInTouchMode(true);
             ed_out_auto.setFocusableInTouchMode(true);
+            ed_out_auto.requestFocus();
+            ed_trigger_auto.requestFocus();
         }else {
+            Logger.e("点击未选择");
             autoValue="0";
+            ed_trigger_auto.setCursorVisible(false);
+            ed_out_auto.setCursorVisible(false);
             ed_out_auto.setFocusable(false);
             ed_trigger_auto.setFocusable(false);
+            ed_trigger_auto.setFocusableInTouchMode(false);
+            ed_out_auto.setFocusableInTouchMode(false);
         }
-        Logger.e("是否选择"+isChecked);
+        Logger.e("是否选择"+isChecked+"-----"+autoValue);
+    }
+
+
+    @Override
+    public void onCheckedChangeListener(boolean isChecked) {
+        Logger.e("状态"+isChecked);
     }
 }

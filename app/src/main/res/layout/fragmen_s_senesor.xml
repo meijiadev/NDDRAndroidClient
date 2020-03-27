@@ -54,7 +54,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（静态模式下，触发超声波,机器人会停止运动）"
+        android:text="（静态模式下，触发超声波，机器人会停止运动）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
@@ -91,6 +91,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs1"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -125,6 +127,8 @@
         android:layout_marginLeft="281.5dp"
         android:gravity="center"
         android:digits="1234567890"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:maxLength="3"
         android:id="@+id/ed_cs2"
         android:background="@drawable/bg_task_cz"/>
@@ -161,6 +165,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs3"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -196,6 +202,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs4"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -231,6 +239,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs5"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -266,6 +276,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs6"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -301,6 +313,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs7"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -336,6 +350,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs8"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -371,6 +387,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs9"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -406,6 +424,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs10"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -441,6 +461,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs11"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -476,6 +498,8 @@
         android:gravity="center"
         android:digits="1234567890"
         android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:id="@+id/ed_cs12"
         android:background="@drawable/bg_task_cz"/>
     <TextView
@@ -529,7 +553,8 @@
         android:background="@drawable/bg_task_cz"
         android:gravity="center"
         android:digits="1234567890"
-        android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:textColor="#ffffff"
         android:textSize="12sp" />
 

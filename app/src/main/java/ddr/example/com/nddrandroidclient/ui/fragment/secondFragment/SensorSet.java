@@ -1,6 +1,9 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
 import ddr.example.com.nddrandroidclient.entity.other.Sensor;
 import ddr.example.com.nddrandroidclient.entity.other.Sensors;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -109,6 +113,8 @@ public class SensorSet extends DDRLazyFragment {
         slideButton.setSmallCircleModel(
                 Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
+        ed_imu.setFilters(new InputFilter[]{new InputFilterMinMax("3","65")});
+        setEditMax();
     }
 
     @Override
@@ -435,5 +441,31 @@ public class SensorSet extends DDRLazyFragment {
             autoValue="0";
         }
         Logger.e("是否选择"+isChecked);
+    }
+    private void setEditMax(){
+        ed_imu.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+                try {
+                    if (Integer.parseInt(s.toString())<30){
+                        toast("输入的值必须在30-65！");
+                    }else {
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }});
     }
 }

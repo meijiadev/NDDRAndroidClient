@@ -351,11 +351,13 @@ public class NaParameterSet extends DDRLazyFragment{
                     naparam.setValue(String.valueOf(bz_st));
                     break;
                 case 3:
-                    naparam.setText("是否从第一段开始");
+                    naparam.setText("导航点必达");
+                    naparam.setTitle("（导航必从起点开始，且每个点必到，使用非建图路径作为任务时需开启该项。）");
                     naparam.setValue(String.valueOf(isFrom));
                     break;
                 case 4:
-                    naparam.setText("是否画弧");
+                    naparam.setText("智能弧线路径");
+                    naparam.setTitle("（开启后，导航路径为折角时，自动计算弧线最短路径（建议较大场景使用)。）");
                     naparam.setValue(String.valueOf(isPain));
                     break;
             }

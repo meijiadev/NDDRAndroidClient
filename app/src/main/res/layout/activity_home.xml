@@ -83,6 +83,7 @@
             android:layout_marginTop="5.5dp"
             android:drawablePadding="5dp"
             android:gravity="center_horizontal"
+            android:visibility="gone"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -98,6 +99,7 @@
             android:layout_marginTop="5.5dp"
             android:gravity="center_horizontal"
             android:drawablePadding="5dp"
+            android:visibility="gone"
             />
         <View
             android:id="@+id/view1"

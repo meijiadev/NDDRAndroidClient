@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.ui.adapter;
 
 import android.graphics.Color;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -78,6 +80,8 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                  ddrEditText=helper.getView(R.id.task_num_check);
                  ddrEditText.setViewType(1);
                  et_content=ddrEditText.et_content;
+                 et_content.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+                 et_content.setInputType(InputType.TYPE_CLASS_NUMBER);
                  tv_task_status=helper.getView(R.id.tv_task_status);
                  tv_task_time=helper.getView(R.id.tv_task_time);
                switch (item.getType()){
