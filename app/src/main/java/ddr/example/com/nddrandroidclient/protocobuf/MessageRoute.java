@@ -96,14 +96,14 @@ public class MessageRoute {
 
 
     public  byte []head=new byte[4];
-    public  byte[] btotallen=new byte[4];
-    public  byte[]bheadlen=new byte[4];
+    public  byte[] bTotalLen=new byte[4];
+    public  byte[]bHeadLen=new byte[4];
     public Thread parseThread;
-    public int where=0x00;  //
+    public int where=0x00;   //标志位
 
     /**
      * 解析数据
-     * @param
+     * @param （闲置）
      * @return
      * @throws IOException
      */
@@ -158,7 +158,7 @@ public class MessageRoute {
     }
 
     /**
-     * 直接解析包体
+     * 解析包体
      */
     public void parseBody(byte[] bodys,int headLength) throws InvalidProtocolBufferException {
         byte[] bheadData=new byte[headLength];
@@ -170,7 +170,6 @@ public class MessageRoute {
         boolean needEncrypt=true;
         if (needEncrypt)
         {
-
             byte[]bHeadDataDE=new byte[bheadData.length-5];
             if (Encrypt.Txt_Decrypt(bheadData,bheadData.length,bHeadDataDE,bHeadDataDE.length)){
             }else {
@@ -211,9 +210,7 @@ public class MessageRoute {
         if (streamBuffer.arrayDeque.size()>=4){
             head=streamBuffer.peekData(4);
             String shead=new String(head,"UTF-8");
-            //Logger.e(shead);
             if (shead.equals(headString)){
-                //Logger.e("------验证成功");
                 streamBuffer.pollData(4);
                 parseLengthState();
             }else {
@@ -227,7 +224,6 @@ public class MessageRoute {
 
     /**
      * 如果验证失败 则丢掉第一个字节 再取四个进行比较 直到遇到对的头部
-     *
      * @throws UnsupportedEncodingException
      * @throws InvalidProtocolBufferException
      */
@@ -237,7 +233,7 @@ public class MessageRoute {
         where=0x00;
     }
 
-    public int totallen;
+    public int totalLen;
 
     /**
      * 验证信息长度
@@ -245,33 +241,26 @@ public class MessageRoute {
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void parseLengthState() throws InvalidProtocolBufferException {
-        //Logger.e("-------可读长度:"+streamBuffer.arrayDeque.size());
         if (streamBuffer.arrayDeque.size()>=4){
-            btotallen=streamBuffer.pollData(4);
-            /* for (int i=0;i<btotallen.length;i++){
-                 Logger.e("-----"+i+":"+btotallen[i]);
-             }*/
-            totallen=bytesToIntLittle(btotallen,0);  //获取总长度信息
-            if (totallen>0){
+            bTotalLen=streamBuffer.pollData(4);
+            totalLen=bytesToIntLittle(bTotalLen,0);  //获取总长度信息
+            if (totalLen>0){
                 parseHeadState();
             }else {
                 where=0x00;
             }
-            //Logger.e("---可读长度，信息长度"+streamBuffer.arrayDeque.size()+";"+totallen);
         }else {
             where=0x02;
         }
     }
 
-    public int headlen;
+    public int headLen;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void parseHeadState() throws InvalidProtocolBufferException {
-        //Logger.e("-------av:"+streamBuffer.arrayDeque.size());
         if (streamBuffer.arrayDeque.size()>=4){
-            // Logger.e("验证头部信息");
-            bheadlen=streamBuffer.pollData(4);
-            headlen=bytesToIntLittle(bheadlen,0);     //获取头部长度信息
-            if (headlen>0){
+            bHeadLen=streamBuffer.pollData(4);
+            headLen=bytesToIntLittle(bHeadLen,0);     //获取头部长度信息
+            if (headLen>0){
                 parseBodyState();
             }else {
                 where=0x00;
@@ -283,25 +272,25 @@ public class MessageRoute {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void parseBodyState() throws InvalidProtocolBufferException {
-        if (streamBuffer.arrayDeque.size()>=totallen-8){
-            byte[] bheadData=streamBuffer.pollData(headlen);
-            byte[] bbodyData=streamBuffer.pollData(totallen-headlen-8);
+        if (streamBuffer.arrayDeque.size()>=totalLen-8){
+            byte[] bHeadData=streamBuffer.pollData(headLen);
+            byte[] bBodyData=streamBuffer.pollData(totalLen-headLen-8);
             BaseCmd.CommonHeader headData=null;
             Object bodyDataMsg=null;
             boolean needEncrypt=true;
             if (needEncrypt)
             {
-                byte[]bHeadDataDE=new byte[bheadData.length-5];
-                if (Encrypt.Txt_Decrypt(bheadData,bheadData.length,bHeadDataDE,bHeadDataDE.length)){
+                byte[]bHeadDataDE=new byte[bHeadData.length-5];
+                if (Encrypt.Txt_Decrypt(bHeadData,bHeadData.length,bHeadDataDE,bHeadDataDE.length)){
                 }else {
                     Logger.e("Txt_Decrypt Error ");
                     processReceive(null,null);
                     where=0x00;
                 }
                 headData=BaseCmd.CommonHeader.parseFrom(bHeadDataDE);
-                if (bbodyData.length>5){
-                    byte[] bbodyDataDE=new byte[bbodyData.length-5];
-                    if (Encrypt.Txt_Decrypt(bbodyData,bbodyData.length,bbodyDataDE,bbodyDataDE.length)){
+                if (bBodyData.length>5){
+                    byte[] bbodyDataDE=new byte[bBodyData.length-5];
+                    if (Encrypt.Txt_Decrypt(bBodyData,bBodyData.length,bbodyDataDE,bbodyDataDE.length)){
                         bodyDataMsg=parseDynamic(headData.getBodyType(),bbodyDataDE);
                         processReceive(headData,bodyDataMsg);
                         where=0x00;
@@ -318,8 +307,8 @@ public class MessageRoute {
 
                 }
             }else {
-                headData=BaseCmd.CommonHeader.parseFrom(bheadData);
-                bodyDataMsg=parseDynamic(headData.getBodyType(),bbodyData);
+                headData=BaseCmd.CommonHeader.parseFrom(bHeadData);
+                bodyDataMsg=parseDynamic(headData.getBodyType(),bBodyData);
                 Logger.e("bodyDataMsg:"+headData.getBodyType());
                 processReceive(headData,bodyDataMsg);
                 where=0x00;
@@ -337,48 +326,48 @@ public class MessageRoute {
      * @return
      */
     public  byte[] serialize(BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg){
-        byte[]bbody=msg.toByteArray();
-        String stype=msg.getClass().toString();
-        // Logger.e("未转换的stype:"+stype);
-        stype=javaClass2ProtoTypeName(stype);
+        byte[]bBody=msg.toByteArray();
+        String sType=msg.getClass().toString();
+        // Logger.e("未转换的stype:"+sType);
+        sType=javaClass2ProtoTypeName(sType);
         // Logger.e("转换后的stype:"+stype);
-        int bbodylen=bbody.length;
+        int bBodyLength=bBody.length;
         BaseCmd.CommonHeader headData;
         if (commonHeader!=null){
-            headData=BaseCmd.CommonHeader.newBuilder().setBodyType(stype)
+            headData=BaseCmd.CommonHeader.newBuilder().setBodyType(sType)
                     .setFromCltType(commonHeader.getFromCltType())
                     .setToCltType(commonHeader.getToCltType())
                     .addFlowDirection(commonHeader.getFlowDirection(0))
                     .setGuid(commonHeader.getGuid())
                     .build();      //设置头部类型
         }else{
-            headData=BaseCmd.CommonHeader.newBuilder().setBodyType(stype). build();      //设置头部类型
+            headData=BaseCmd.CommonHeader.newBuilder().setBodyType(sType). build();      //设置头部类型
         }
-        byte[]bshead=headString.getBytes();  //头部标识
-        byte[] bhead=headData.toByteArray();//头部信息
-        int bheadlen=bhead.length;
-        int totalLen=8+bheadlen+bbodylen;
+        byte[]bsHead=headString.getBytes();  //头部标识
+        byte[] bHead=headData.toByteArray();//头部信息
+        int bHeadLength=bHead.length;
+        int totalLen=8+bHeadLength+bBodyLength;
         byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
-        System.arraycopy(bshead,0,bytes,0,4);
+        System.arraycopy(bsHead,0,bytes,0,4);
         boolean needEncrypt=true;
         if (needEncrypt)
         {
             System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
-            System.arraycopy(intToBytesLittle(bheadlen+5),0,bytes,8,4);
-            byte[]bheadE=new byte[bheadlen+5];
-            if (Encrypt.Txt_Encrypt(bhead,bheadlen,bheadE,bheadE.length)){
-                bheadE=Encrypt.getTxt_Encrypt();
-                System.arraycopy(bheadE,0,bytes,12,bheadE.length);
+            System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
+            byte[]bHeadE=new byte[bHeadLength+5];
+            if (Encrypt.Txt_Encrypt(bHead,bHeadLength,bHeadE,bHeadE.length)){
+                bHeadE=Encrypt.getTxt_Encrypt();
+                System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
             }else {
                 Logger.e("Txt_Encrypt Error");
                 return null;
             }
-            if (bbodylen>0)
+            if (bBodyLength>0)
             {
-                byte[]bbodyE=new byte[bbodylen+5];
-                if (Encrypt.Txt_Encrypt(bbody,bbodylen,bbodyE,bbodyE.length)){
+                byte[]bBodyE=new byte[bBodyLength+5];
+                if (Encrypt.Txt_Encrypt(bBody,bBodyLength,bBodyE,bBodyE.length)){
                     try {
-                        System.arraycopy(bbodyE,0,bytes,12+bheadE.length,bbodyE.length);
+                        System.arraycopy(bBodyE,0,bytes,12+bHeadE.length,bBodyE.length);
                     }catch (ArrayIndexOutOfBoundsException a){
                         a.printStackTrace();
                         Logger.e("----------数组越界");
@@ -391,9 +380,9 @@ public class MessageRoute {
             }
         }else {
             System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
-            System.arraycopy(intToBytesLittle(bheadlen+5),0,bytes,8,4);
-            System.arraycopy(bhead,0,bytes,12,bheadlen);
-            System.arraycopy(bbody,0,bytes,12+bheadlen,bbody.length);
+            System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
+            System.arraycopy(bHead,0,bytes,12,bHeadLength);
+            System.arraycopy(bBody,0,bytes,12+bHeadLength,bBody.length);
             return bytes;
         }
         return bytes;

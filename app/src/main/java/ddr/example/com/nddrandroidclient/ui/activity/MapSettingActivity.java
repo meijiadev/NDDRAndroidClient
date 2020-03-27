@@ -90,7 +90,8 @@ public class MapSettingActivity extends DDRActivity {
         super.initData();
         Intent intent=getIntent();
         mapName=intent.getStringExtra("mapName");
-        etMapName.setText(mapName);
+        String name = mapName.replaceAll("OneRoute_", "");
+        etMapName.setText(name);
     }
 
 
@@ -204,6 +205,7 @@ public class MapSettingActivity extends DDRActivity {
                     name="";
                 }
                 newMapName=etMapName.getText().toString().trim();
+                newMapName="OneRoute_"+newMapName;
                 List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();
                 DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
                         .setTypeValue(3)
@@ -280,11 +282,11 @@ public class MapSettingActivity extends DDRActivity {
                 Logger.e("ab点速度："+abSpeed);
                 abMode=ddrMapBaseData.getAbPathModeValue();
                 if (modeType==1){
-                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 }else if (modeType==2){
-                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 }
                 etABSpeed.setText(String.valueOf(abSpeed));
                 if (abMode==64){
@@ -317,7 +319,8 @@ public class MapSettingActivity extends DDRActivity {
                         waitDialog.dismiss();
                     }
                 }else {
-                    etMapName.setText(newMapName);
+                    String name = newMapName.replaceAll("OneRoute_", "");
+                    etMapName.setText(name);
                     mapName=newMapName;
                 }
                 break;

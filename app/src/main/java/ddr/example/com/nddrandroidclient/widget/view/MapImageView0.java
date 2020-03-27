@@ -39,7 +39,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 @SuppressLint("AppCompatCustomView")
 public class MapImageView0 extends ImageView {
-    private String mapName;
+    private String mapName="";
     public static final int STATUS_INIT = 1;//常量初始化
     public static final int STATUS_ZOOM_OUT = 2;//图片放大状态常量
     public static final int STATUS_ZOOM_IN = 3;//图片缩小状态常量
@@ -92,6 +92,8 @@ public class MapImageView0 extends ImageView {
     private DDRVLNMap.reqDDRVLNMapEx data;
 
     private List<PathLine> pathLines=new ArrayList<>();   //经过转换坐标的路径
+    private boolean isRunAbPointLine;
+    private boolean isAutoPlanning=true;           //是否是自主导航
 
 
     public MapImageView0(Context context) {
@@ -119,40 +121,41 @@ public class MapImageView0 extends ImageView {
      * @param mapName
      */
     public void setMapBitmap(String mapName){
-        this.mapName=mapName;
-        Logger.e("设置图片");
-        String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(pngPath);
-            Bitmap bitmap = BitmapFactory.decodeStream(fis);
-            sourceBitmap=bitmap;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (NullPointerException e){
-            e.printStackTrace();
+        if (!this.mapName.equals(mapName)){
+            this.mapName=mapName;
+            Logger.e("设置图片");
+            String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(pngPath);
+                Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                sourceBitmap=bitmap;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+            Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+            totalTranslateX=0;
+            MapFileStatus mapFileStatus=MapFileStatus.getInstance();
+            data=mapFileStatus.getCurrentMapEx();
+            DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
+            r00=affine_mat.getR11();
+            r01=affine_mat.getR12();
+            t0=affine_mat.getTx();
+            r10=affine_mat.getR21();
+            r11=affine_mat.getR22();
+            t1=affine_mat.getTy();
+            totalTranslateY=0;
+            totalRatio=1;
+            scaledRatio=1;
+            initRatio=1;
+            lastFingerDis=0;
+            degree=0;
+            rotation=0;
+            currentStatus=STATUS_INIT;
         }
-        Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
-        totalTranslateX=0;
-        MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-        data=mapFileStatus.getCurrentMapEx();
-        DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
-        r00=affine_mat.getR11();
-        r01=affine_mat.getR12();
-        t0=affine_mat.getTx();
-        r10=affine_mat.getR21();
-        r11=affine_mat.getR22();
-        t1=affine_mat.getTy();
-        totalTranslateY=0;
-        totalRatio=1;
-        scaledRatio=1;
-        initRatio=1;
-        lastFingerDis=0;
-        degree=0;
-        rotation=0;
-        currentStatus=STATUS_INIT;
         invalidate();
-
     }
 
 
@@ -196,6 +199,26 @@ public class MapImageView0 extends ImageView {
         }
         invalidate();
 
+    }
+
+    /**
+     * 是否显示ab点路径
+     */
+    public void setABPointLine(boolean isRunAbPointLine){
+        this.isRunAbPointLine=isRunAbPointLine;
+        if (!isRunAbPointLine) {
+            setTaskName(notifyBaseStatusEx.getCurrpath());
+        }
+
+        switch (mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue()){
+            case 1:
+                isAutoPlanning=false;
+                break;
+            case 2:
+                isAutoPlanning=true;
+                break;
+        }
+        invalidate();
     }
 
 
@@ -386,51 +409,56 @@ public class MapImageView0 extends ImageView {
      * 绘制路径和点
      */
     private void drawLine(Canvas canvas){
-        if (pathLineItemExesS!=null){
-            pathLines=new ArrayList<>();
-            for (int i=0;i<pathLineItemExesS.size();i++){
-                List<PathLine.PathPoint> pathPoints=new ArrayList<>();
-                List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExesS.get(i).getPointSetList();
-                for (int j=0;j<path_lint_pt_items.size();j++){
-                    XyEntity xyEntity=toXorY(path_lint_pt_items.get(j).getPt().getX(),path_lint_pt_items.get(j).getPt().getY());
-                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
-                    pathPoint.setX(xyEntity.getX());
-                    pathPoint.setY(xyEntity.getY());
-                    pathPoints.add(pathPoint);
+        if (isRunAbPointLine){
+           drawAbLine(canvas);
+        }else {
+            if (pathLineItemExesS!=null){
+                pathLines=new ArrayList<>();
+                for (int i=0;i<pathLineItemExesS.size();i++){
+                    List<PathLine.PathPoint> pathPoints=new ArrayList<>();
+                    List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExesS.get(i).getPointSetList();
+                    for (int j=0;j<path_lint_pt_items.size();j++){
+                        XyEntity xyEntity=toXorY(path_lint_pt_items.get(j).getPt().getX(),path_lint_pt_items.get(j).getPt().getY());
+                        PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                        pathPoint.setX(xyEntity.getX());
+                        pathPoint.setY(xyEntity.getY());
+                        pathPoints.add(pathPoint);
+                    }
+                    PathLine pathLine=new PathLine();
+                    pathLine.setPathPoints(pathPoints);
+                    pathLines.add(pathLine);
                 }
-                PathLine pathLine=new PathLine();
-                pathLine.setPathPoints(pathPoints);
-                pathLines.add(pathLine);
-            }
-          //  Logger.e("----------路径数量："+pathLines.size());
-            for (int i=0;i<pathLines.size();i++){
-                List<PathLine.PathPoint>pathPoints=pathLines.get(i).getPathPoints();
-               // Logger.e("------路径点数量:"+pathPoints.size());
-                for (int j=0;j<pathPoints.size();j++){
-                    if (pathPoints.size()>1){
-                        XyEntity xyEntity1=coordinate2View(pathPoints.get(j).getX(),pathPoints.get(j).getY());
-                        if (j<pathPoints.size()-1){
-                            XyEntity xyEntity2=coordinate2View(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                            canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint);
-                        }
-                       // Logger.e("绘制路径");
-                        if (j==0){
-                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                            canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,paint);
-                            canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
-                           // Logger.e("绘制起点"+xyEntity1.getX()+";"+xyEntity1.getY());
-                        }else if (j==pathPoints.size()-1){
-                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                            canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,paint);
-                            canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
-                           // Logger.e("绘制终点");
-                        }else {
-                            canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,paint);
-                            canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                //  Logger.e("----------路径数量："+pathLines.size());
+                for (int i=0;i<pathLines.size();i++){
+                    List<PathLine.PathPoint>pathPoints=pathLines.get(i).getPathPoints();
+                    // Logger.e("------路径点数量:"+pathPoints.size());
+                    for (int j=0;j<pathPoints.size();j++){
+                        if (pathPoints.size()>1){
+                            XyEntity xyEntity1=coordinate2View(pathPoints.get(j).getX(),pathPoints.get(j).getY());
+                            if (j<pathPoints.size()-1){
+                                XyEntity xyEntity2=coordinate2View(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint);
+                            }
+                            // Logger.e("绘制路径");
+                            if (j==0){
+                                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                                canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,paint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                                // Logger.e("绘制起点"+xyEntity1.getX()+";"+xyEntity1.getY());
+                            }else if (j==pathPoints.size()-1){
+                                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                                canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,paint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                                // Logger.e("绘制终点");
+                            }else {
+                                canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,paint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }
                         }
                     }
                 }
             }
+
         }
         if (targetPoint!=null){
             XyEntity xyEntity=toXorY(targetPoint.getX(),targetPoint.getY());
@@ -442,7 +470,54 @@ public class MapImageView0 extends ImageView {
             canvas.drawBitmap(targetBitmap2,x -20,y-20,paint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
+    }
 
+    /**
+     * 绘制AB点
+     * @param canvas
+     */
+    private void drawAbLine(Canvas canvas){
+        List<PathLine> pathLineList=mapFileStatus.getcPathLines();
+        List<PathLine.PathPoint>pathPoints =null;
+        for (PathLine pathLine:pathLineList){
+            if (isAutoPlanning){
+                if (pathLine.getName().equals("ABPointLine")){
+                    pathPoints=pathLine.getPathPoints();
+                }
+            }else {
+                if (pathLine.getName().equals("DijkstraLine")){
+                    pathPoints=pathLine.getPathPoints();
+                }
+            }
+            if (pathPoints!=null){
+                for (int i=0;i<pathPoints.size();i++){
+                    if (pathPoints.size()>1){
+                        XyEntity xyEntity1=toXorY(pathPoints.get(i).getX(),pathPoints.get(i).getY());
+                        xyEntity1=coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        if (i<pathPoints.size()-1){
+                            XyEntity xyEntity2= toXorY(pathPoints.get(i+1).getX(),pathPoints.get(i+1).getY());
+                            xyEntity2=coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                            canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint);
+                        }
+                        Logger.e("------ab:"+xyEntity1.getX()+";"+xyEntity1.getY());
+                        if (i==0){
+                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                            canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,paint);
+                            canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                        }else if (i==pathPoints.size()-1){
+                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                            canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,paint);
+                            canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                        }else {
+                            canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,paint);
+                            canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                        }
+                    }
+                }
+
+            }
+            break;
+        }
     }
 
     /**

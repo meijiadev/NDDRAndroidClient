@@ -41,6 +41,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.LoginActivity;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 
 /**
@@ -86,7 +87,7 @@ public class TcpClient extends BaseSocketConnection {
      * @param ip
      * @param port
      */
-    public void creatConnect(String ip, int port){
+    public void createConnect(String ip, int port){
         info=new ConnectionInfo(ip,port);
         manager=OkSocket.open(info);
         OkSocketOptions.Builder clientOptions=new OkSocketOptions.Builder();
@@ -189,14 +190,15 @@ public class TcpClient extends BaseSocketConnection {
          */
         private void showDialog(Activity activity){
             activity.runOnUiThread(()->{
-                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").setCancelable(true).show();
+                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").show();
             });
             if (activity.getLocalClassName().contains("HomeActivity")){
                 HomeActivity fragmentActivity= (HomeActivity) activity;
                 fragmentActivity.postDelayed(()->{
                     if (waitDialog.isShowing()){
                         fragmentActivity.toast("网络无法连接，请退出重连！");
-                        fragmentActivity.finish();
+                        ActivityStackManager.getInstance().finishAllActivities();
+                        fragmentActivity.startActivity(LoginActivity.class);
                     }
                 },6000);
             }

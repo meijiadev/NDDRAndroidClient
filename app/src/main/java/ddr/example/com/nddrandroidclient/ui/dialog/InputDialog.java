@@ -78,7 +78,7 @@ public final class InputDialog {
          * @return
          */
         public Builder setEditNumAndSize(int num){
-            mInputView.setKeyListener(DigitsKeyListener.getInstance("1234567890"));
+            mInputView.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
             mInputView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(num)});
             mInputView.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "999")});
             return this;
@@ -121,6 +121,11 @@ public final class InputDialog {
             return this;
         }
 
+        /**
+         * 判断是否自动弹窗消失
+         * @param dismiss
+         * @return
+         */
         public Builder setAutoDismiss(boolean dismiss) {
             mAutoDismiss = dismiss;
             return this;
