@@ -64,6 +64,7 @@ public  class LoginActivity extends DDRActivity {
     private boolean hasReceiveBroadcast=false;            //是否接收到广播
     private boolean isLan=true;                                //是否是局域网  默认局域网登录
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDate(MessageEvent messageEvent){
         switch (messageEvent.getType()){
@@ -143,7 +144,7 @@ public  class LoginActivity extends DDRActivity {
                 }else {
                     if (isLan){                                   //局域网登录
                         if (hasReceiveBroadcast){
-                            tcpClient.creatConnect(LAN_IP,tcpPort);
+                            tcpClient.createConnect(LAN_IP,tcpPort);
                             waitDialog=new WaitDialog.Builder(this)
                                     .setMessage("登录中...")
                                     .show();
@@ -159,7 +160,7 @@ public  class LoginActivity extends DDRActivity {
                     }else {                                     //广域网登录
                         if (tcpClient.isConnected())
                             tcpClient.disConnect();
-                        tcpClient.creatConnect(CmdSchedule.broadcastServerIP,CmdSchedule.broadcastServerPort);      //连接地方服务器
+                        tcpClient.createConnect(CmdSchedule.broadcastServerIP,CmdSchedule.broadcastServerPort);      //连接地方服务器
                         waitDialog=new WaitDialog.Builder(this)
                                     .setMessage("登录中...")
                                     .show();

@@ -9,7 +9,7 @@ import java.util.Random;
  * eg:Byte.toUnsignedInt(pCode[pnCode])
  * byte的范围在-128~127
  *
- *android api>26 (必须）
+ *android api>26
  */
 public class Encrypt {
 

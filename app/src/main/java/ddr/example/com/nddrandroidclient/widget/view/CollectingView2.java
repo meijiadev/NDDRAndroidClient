@@ -58,6 +58,7 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
     private SurfaceHolder holder;
     public boolean isRunning=false;
     private DrawMapThread drawThread;          //绘制线程
+    private int directionW,directionH;
 
     private Paint paint,lastFrame,pathPaint,pointPaint,bitmapPaint;
 
@@ -114,6 +115,8 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         bgBitmap=Bitmap.createBitmap(1000,1000,Bitmap.Config.ARGB_8888);
         bgBitmap.eraseColor(Color.parseColor("#646464"));
+        directionW=directionBitmap.getWidth();
+        directionH=directionBitmap.getHeight();
         EventBus.getDefault().register(this);       //注册监听
 
     }
@@ -279,8 +282,8 @@ public class CollectingView2 extends SurfaceView implements SurfaceHolder.Callba
         posXSwitch=(-posY*ratio+measureWidth/2);
         posYSwitch=(-posX*ratio+measureHeight/2);
         matrix.setRotate(-angle);
-        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
-        canvas.drawBitmap(directionBitmap1,posXSwitch-30,posYSwitch-30,paint);
+        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,matrix,true);
+        canvas.drawBitmap(directionBitmap1,posXSwitch-20,posYSwitch-20,paint);
 
     }
 
