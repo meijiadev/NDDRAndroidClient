@@ -291,6 +291,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         mapName = notifyBaseStatusEx.getCurroute();
         taskNum=notifyBaseStatusEx.getTaskCount();
         taskName = notifyBaseStatusEx.getCurrpath();
+        lsNum=notifyBaseStatusEx.getTemopTaskNum();
 //        Logger.e("路径名字"+taskName);
         if (taskName!=null && !taskName.equals("PathError") && !taskName.equals("DDRTask_temporary.task")){
             String showName=taskName.replaceAll("DDRTask_","");
@@ -628,7 +629,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                     showName=showName.replaceAll(".task","");
                                     tv_now_task.setText(showName);
                                     mapImageView.setTaskName(taskName);
-                                    if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<999 ){
+                                    if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<1000 ){
                                         try {
                                             lsNum=Integer.parseInt(content);
                                         }catch (Exception e){
