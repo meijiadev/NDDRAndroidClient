@@ -1,15 +1,11 @@
 package ddr.example.com.nddrandroidclient.ui.dialog;
 
-
-import android.graphics.Paint;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
-
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;

@@ -109,7 +109,7 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
                     float cx=xyEntity1.getX()-20;
                     float cy=xyEntity1.getY()-20;
                    // Logger.e("------------机器人当前在地图上的位置（像素）:"+cx+";"+cy);
-                    canvas.drawBitmap(directionBitmap1,780,540,paint);
+                    canvas.drawBitmap(directionBitmap1,cx,cy,paint);
                 }
             }
         }
