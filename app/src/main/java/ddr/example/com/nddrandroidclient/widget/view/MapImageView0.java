@@ -121,7 +121,7 @@ public class MapImageView0 extends ImageView {
      * @param mapName
      */
     public void setMapBitmap(String mapName){
-        if (!this.mapName.equals(mapName)){
+        if (!this.mapName.equals(mapName)||sourceBitmap==null){
             this.mapName=mapName;
             Logger.e("设置图片");
             String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
@@ -154,6 +154,10 @@ public class MapImageView0 extends ImageView {
             degree=0;
             rotation=0;
             currentStatus=STATUS_INIT;
+            isRunAbPointLine=false;
+            targetPoint=null;
+            pathLines.clear();
+
         }
         invalidate();
     }
@@ -171,7 +175,7 @@ public class MapImageView0 extends ImageView {
         spaceItems=mapFileStatus.getcSpaceItems();
         pathLineItemExesS=new ArrayList<>();
         targetPtItemsS=new ArrayList<>();
-        Logger.e("设置任务");
+        Logger.e("设置任务:"+taskName);
         try {
             for (int i=0;i<taskItemExes.size();i++){
                 if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
@@ -210,7 +214,6 @@ public class MapImageView0 extends ImageView {
         if (!isRunAbPointLine) {
             setTaskName(notifyBaseStatusEx.getCurrpath());
         }
-
         switch (mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue()){
             case 1:
                 isAutoPlanning=false;

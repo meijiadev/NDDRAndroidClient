@@ -830,6 +830,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (!mapImageView1.drawThread.isAlive()){
                     mapImageView.invalidate();
                     mapImageView1.startThread();
+                    mapImageView.setMapBitmap(notifyBaseStatusEx.getCurroute());
                 }
             }
         }else {
