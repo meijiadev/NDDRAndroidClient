@@ -21,7 +21,7 @@ import ddr.example.com.nddrandroidclient.entity.other.Naparam;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
 
-public class NaparamAdapter extends BaseAdapter<Naparam> {
+public class NaparamAdapter extends BaseAdapter<Naparam> implements SlideButton.SlideButtonOnCheckedListener{
     private TextView tv_text;
     private TextView tv_title;
     private EditText ed_value;
@@ -63,13 +63,13 @@ public class NaparamAdapter extends BaseAdapter<Naparam> {
         slideButton.setSmallCircleModel(
                 Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
+        slideButton.setOnCheckedListener(isChecked -> getChosseStatus());
         helper.setText(R.id.tv_naparam_txt,item.getText())
                 .setText(R.id.tv_naparam_titer,item.getTitle())
                 .addOnClickListener(R.id.tv_naparam_txt,R.id.slide_is);
         editListener(item);
         isHide(item);
         setChosseStatus(item);
-//        getChosseStatus(item);
     }
 
     @Nullable
@@ -150,5 +150,20 @@ public class NaparamAdapter extends BaseAdapter<Naparam> {
                 slideButton.setChecked(true);
             }
         }
+    }
+
+    @Override
+    public void onCheckedChangeListener(boolean isChecked) {
+
+    }
+    public boolean isChecked;
+    private void getChosseStatus(){
+        isChecked=slideButton.isChecked;
+        Logger.e("状态"+isChecked);
+       if (isChecked){
+           slideButton.setChecked(true);
+       }else {
+           slideButton.setChecked(false);
+       }
     }
 }
