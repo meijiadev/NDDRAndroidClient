@@ -7,7 +7,7 @@ import java.io.Serializable;
  * desc : 目标点结构
  */
 public class TargetPoint extends BaseMode implements Serializable {
-    private String name;
+    private String name="";
     private float x;
     private float y;
     private int theta;  //朝向 单位：度 【-180,180】

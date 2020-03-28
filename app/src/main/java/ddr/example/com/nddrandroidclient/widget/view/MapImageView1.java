@@ -73,8 +73,7 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         radarPaint.setColor(Color.parseColor("#00CED1"));
         paint=new Paint();
         mapMatrix=new Matrix();
-        directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction
-        );
+        directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         EventBus.getDefault().register(this);
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
@@ -106,8 +105,8 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
                     float angle=radianToangle(notifyLidarPtsEntity.getPosdirection());
                     mapMatrix.setRotate(-angle);
                     directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,mapMatrix,true);
-                    float cx=xyEntity1.getX()-20;
-                    float cy=xyEntity1.getY()-20;
+                    float cx=xyEntity1.getX()-30;
+                    float cy=xyEntity1.getY()-30;
                    // Logger.e("------------机器人当前在地图上的位置（像素）:"+cx+";"+cy);
                     canvas.drawBitmap(directionBitmap1,cx,cy,paint);
                 }

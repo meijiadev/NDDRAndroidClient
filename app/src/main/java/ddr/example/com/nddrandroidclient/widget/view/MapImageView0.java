@@ -164,6 +164,7 @@ public class MapImageView0 extends ImageView {
      * @param taskName
      */
     public void setTaskName(String taskName){
+        isRunAbPointLine=false;
         targetPtItems=data.getTargetPtdata().getTargetPtList();
         pathLineItemExes=data.getPathSet().getPathLineDataList();
         taskItemExes=data.getTaskSetList();
@@ -483,40 +484,50 @@ public class MapImageView0 extends ImageView {
             if (isAutoPlanning){
                 if (pathLine.getName().equals("ABPointLine")){
                     pathPoints=pathLine.getPathPoints();
+                    Logger.e("------绘制AB点路径");
+                    drawABLine1(canvas,pathPoints);
+                    break;
                 }
             }else {
                 if (pathLine.getName().equals("DijkstraLine")){
                     pathPoints=pathLine.getPathPoints();
+                    Logger.e("------绘制AB点路径");
+                    drawABLine1(canvas,pathPoints);
+                    break;
                 }
             }
-            if (pathPoints!=null){
-                for (int i=0;i<pathPoints.size();i++){
-                    if (pathPoints.size()>1){
-                        XyEntity xyEntity1=toXorY(pathPoints.get(i).getX(),pathPoints.get(i).getY());
-                        xyEntity1=coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                        if (i<pathPoints.size()-1){
-                            XyEntity xyEntity2= toXorY(pathPoints.get(i+1).getX(),pathPoints.get(i+1).getY());
-                            xyEntity2=coordinate2View(xyEntity2.getX(),xyEntity2.getY());
-                            canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint);
-                        }
-                        Logger.e("------ab:"+xyEntity1.getX()+";"+xyEntity1.getY());
-                        if (i==0){
-                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                            canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,paint);
-                            canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
-                        }else if (i==pathPoints.size()-1){
-                            mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                            canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,paint);
-                            canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
-                        }else {
-                            canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,paint);
-                            canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
-                        }
-                    }
-                }
+        }
+    }
 
+    /**
+     * 绘制AB点路径和巡线路径
+     * @param canvas
+     * @param pathPoints
+     */
+    private void drawABLine1(Canvas canvas, List<PathLine.PathPoint>pathPoints ){
+        for (int i=0;i<pathPoints.size();i++){
+            if (pathPoints.size()>1){
+                XyEntity xyEntity1=toXorY(pathPoints.get(i).getX(),pathPoints.get(i).getY());
+                xyEntity1=coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                if (i<pathPoints.size()-1){
+                    XyEntity xyEntity2= toXorY(pathPoints.get(i+1).getX(),pathPoints.get(i+1).getY());
+                    xyEntity2=coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                    canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint);
+                }
+                Logger.e("------ab:"+xyEntity1.getX()+";"+xyEntity1.getY());
+                if (i==0){
+                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,paint);
+                    canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                }else if (i==pathPoints.size()-1){
+                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,paint);
+                    canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                }else {
+                    canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,paint);
+                    canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                }
             }
-            break;
         }
     }
 

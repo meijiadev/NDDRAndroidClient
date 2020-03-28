@@ -201,7 +201,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSpecificPoint11:
                 Logger.e("AB点"+sPoint);
                 toast("开始前往"+sPoint);
-
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {
                     targetPoints.get(i).setSelected(false);

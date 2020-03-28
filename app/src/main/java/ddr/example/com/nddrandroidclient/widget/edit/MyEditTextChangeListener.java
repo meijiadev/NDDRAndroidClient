@@ -71,11 +71,15 @@ public class MyEditTextChangeListener implements TextWatcher {
             case ET_X:
                 try {
                     float x=Float.valueOf(s.toString());
-                    targetPoint1.setX(x);
-                    targetPoint1.setY(editTextY.getFloatText());
-                    targetPoint1.setTheta(editTextC.getIntegerText());
-                    pointView.setPoint(targetPoint1);
-                    zoomImageView.invalidate();
+                    if (x>999||x<-999){
+                        ToastUtils.show("输入超出范围,请输入正确的数值");
+                    }else {
+                        targetPoint1.setX(x);
+                        targetPoint1.setY(editTextY.getFloatText());
+                        targetPoint1.setTheta(editTextC.getIntegerText());
+                        pointView.setPoint(targetPoint1);
+                        zoomImageView.invalidate();
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -83,11 +87,15 @@ public class MyEditTextChangeListener implements TextWatcher {
             case ET_Y:
                 try{
                    float y=Float.valueOf(s.toString());
-                   targetPoint1.setY(y);
-                   targetPoint1.setX(editTextX.getFloatText());
-                   targetPoint1.setTheta(editTextC.getIntegerText());
-                   pointView.setPoint(targetPoint1);
-                   zoomImageView.invalidate();
+                   if (y>999||y<-999){
+                       ToastUtils.show("输入超出范围,请输入正确的数值");
+                   }else {
+                       targetPoint1.setY(y);
+                       targetPoint1.setX(editTextX.getFloatText());
+                       targetPoint1.setTheta(editTextC.getIntegerText());
+                       pointView.setPoint(targetPoint1);
+                       zoomImageView.invalidate();
+                   }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
