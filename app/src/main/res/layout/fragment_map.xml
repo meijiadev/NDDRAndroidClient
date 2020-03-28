@@ -666,6 +666,8 @@
                             android:textColor="@color/white"
                             android:textSize="11sp"
                             android:layout_marginLeft="8dp"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"
                             />
                         <TextView
                             android:layout_width="wrap_content"
