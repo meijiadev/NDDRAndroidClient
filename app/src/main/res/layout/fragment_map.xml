@@ -307,6 +307,8 @@
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:layout_marginLeft="8dp"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
                         />
                     <RelativeLayout
                         android:id="@+id/layout_edit"
@@ -464,6 +466,8 @@
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:layout_marginLeft="8dp"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
                         />
                     <TextView
                         android:id="@+id/tv_mode"

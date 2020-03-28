@@ -38,7 +38,7 @@ import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
  * time: 2020/03/24
  * desc: 高级设置导航参数界面
  */
-public class NaParameterSet extends DDRLazyFragment{
+public class NaParameterSet extends DDRLazyFragment implements SlideButton.SlideButtonOnCheckedListener {
 
     @BindView(R.id.tv_restartDefault)
     TextView tv_restartDefault;
@@ -286,6 +286,7 @@ public class NaParameterSet extends DDRLazyFragment{
                 }
                 break;
             case 2:
+                getChosseStatus();
                 eConfigItemType=BaseCmd.eConfigItemType.eConfigTypeLogic;
                 for (int i=0;i<2;i++){
                     Parameter parameter1=new Parameter();
@@ -370,14 +371,20 @@ public class NaParameterSet extends DDRLazyFragment{
     //获取选择的状态
     private String autoValue;
     private void getChosseStatus(){
-        boolean isChecked=slideButton.isChecked;
-        if (isChecked==true){
-            autoValue="1";
-        }else {
-            autoValue="0";
+        try {
+            boolean isChecked=naparamAdapter.isChecked;
+            naparamAdapter.onCheckedChangeListener(isChecked);
+            if (isChecked==true){
+                autoValue="1";
+            }else {
+                autoValue="0";
+            }
+            naparamList.get(mposition).setValue(autoValue);
+            Logger.e("是否选择"+isChecked);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        naparamList.get(mposition).setValue(autoValue);
-        Logger.e("是否选择"+isChecked);
+
     }
     @Override
     public void onResume() {
@@ -395,5 +402,12 @@ public class NaParameterSet extends DDRLazyFragment{
     public void onDestroy() {
         super.onDestroy();
         Logger.e("-----------------跳转");
+    }
+
+    @Override
+    public void onCheckedChangeListener(boolean isChecked) {
+//        boolean isChecked=naparamAdapter.isChecked;
+        naparamAdapter.onCheckedChangeListener(isChecked);
+        Logger.e("是否选择"+isChecked);
     }
 }
