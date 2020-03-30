@@ -180,6 +180,7 @@ public class MapImageView0 extends ImageView {
             for (int i=0;i<taskItemExes.size();i++){
                 if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
                     pathElementExes=taskItemExes.get(i).getPathSetList();
+                    Logger.e("找到应该执行的任务");
                 }
             }
             for (int i=0;i<pathElementExes.size();i++){
@@ -188,6 +189,7 @@ public class MapImageView0 extends ImageView {
                     for (int j=0;j<pathLineItemExes.size();j++){
                         if (lineName.equals(pathLineItemExes.get(j).getName())){
                             pathLineItemExesS.add(pathLineItemExes.get(j));
+                            Logger.e("找到应该执行的路径");
                         }
                     }
                 }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
@@ -212,6 +214,7 @@ public class MapImageView0 extends ImageView {
     public void setABPointLine(boolean isRunAbPointLine){
         this.isRunAbPointLine=isRunAbPointLine;
         if (!isRunAbPointLine) {
+            Logger.e("---设置任务"+notifyBaseStatusEx.getCurrpath());
             setTaskName(notifyBaseStatusEx.getCurrpath());
         }
         switch (mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue()){
@@ -254,9 +257,6 @@ public class MapImageView0 extends ImageView {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(16);
         textPaint.setAntiAlias(true);
-
-
-
     }
 
 
@@ -426,6 +426,7 @@ public class MapImageView0 extends ImageView {
                         PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
                         pathPoint.setX(xyEntity.getX());
                         pathPoint.setY(xyEntity.getY());
+                        pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                         pathPoints.add(pathPoint);
                     }
                     PathLine pathLine=new PathLine();

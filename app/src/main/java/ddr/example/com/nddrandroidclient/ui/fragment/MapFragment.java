@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -56,6 +57,7 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -315,6 +317,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         /*************************************************************/
         etToward.setViewType(1);
         etSpeed.setEt_content(3);
+
+        etX.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999", "999")});
+        etY.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999", "999")});
+        etSpeed.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("0", "1.0")});
+        etToward.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-180", "180")});
+
 
     }
 

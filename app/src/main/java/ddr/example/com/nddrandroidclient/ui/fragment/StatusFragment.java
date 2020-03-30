@@ -442,7 +442,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_create_map,R.id.tv_restart_point})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -460,32 +460,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 showTaskPopupWindow(tv_now_task);
                 tv_now_task.setBackgroundResource(R.drawable.task_check_bg);
                 iv_task_xl.setImageResource(R.mipmap.xl_5);
-                break;
-            case R.id.tv_create_map:
-                new InputDialog.Builder(getAttachActivity())
-                        .setTitle("采集地图")
-                        .setHint("输入地图名称")
-                        .setListener(new InputDialog.OnListener() {
-                            @Override
-                            public void onConfirm(BaseDialog dialog, String content) {
-                                if (!content.isEmpty()){
-                                    content=content.replaceAll(" ","");
-                                    String name="OneRoute_"+content;
-                                    BaseCmd.reqCmdStartActionMode reqCmdStartActionMode=BaseCmd.reqCmdStartActionMode.newBuilder()
-                                            .setMode(BaseCmd.eCmdActionMode.eRec)
-                                            .setRouteName(ByteString.copyFromUtf8(name))
-                                            .build();
-                                    tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eLSMSlamNavigation),reqCmdStartActionMode);
-                                    startActivity(CollectingActivity.class);
-                                }else {
-                                    toast("请输入地图名字");
-                                }
-                            }
-                            @Override
-                            public void onCancel(BaseDialog dialog) {
-                                toast("取消新建地图");
-                            }
-                        }).show();
                 break;
             case R.id.tv_restart_point:
                 float theat= (float) 1.0;
@@ -826,6 +800,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         if (isVisibleToUser){
             // 相当于onResume()方法--获取焦点
             Logger.e("可见");
+            tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
             if (mapImageView1!=null){
                 if (!mapImageView1.drawThread.isAlive()){
                     mapImageView.invalidate();
