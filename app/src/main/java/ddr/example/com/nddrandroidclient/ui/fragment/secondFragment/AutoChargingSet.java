@@ -52,7 +52,7 @@ public class AutoChargingSet extends DDRLazyFragment implements SlideButton.Slid
     private List<Parameter> parameterList=new ArrayList<>();
     private String triggerAutoKey="MR_Params.RECHARGING_BATT_LO_PER";//自动充电下限
     private String outAutoKey="MR_Params.RECHARGING_BATT_HI_PER";//自动充电上限
-    private String swithAutoKey="Common_Params.AUTO_ENTER_RECHARGING"; //自动充电开关
+    private String switchAutoKey="Common_Params.AUTO_ENTER_RECHARGING"; //自动充电开关
     private String autoValue="1";
 
     public static AutoChargingSet newInstance(){
@@ -103,7 +103,7 @@ public class AutoChargingSet extends DDRLazyFragment implements SlideButton.Slid
             case R.id.tv_save_auto_char:
                 int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
                 int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
-                postNaparmeter(ByteString.copyFromUtf8(swithAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
+                postNaparmeter(ByteString.copyFromUtf8(switchAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
                 postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
                 postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
                 getNaparmeter(1);
@@ -156,7 +156,7 @@ public class AutoChargingSet extends DDRLazyFragment implements SlideButton.Slid
                 Logger.e("电量值"+out_auto);
                 ed_out_auto.setText(String.valueOf(out_auto));
             }
-            if(parameterList.get(i).getKey().contains(swithAutoKey)){
+            if(parameterList.get(i).getKey().contains(switchAutoKey)){
                 Logger.e("充电值"+parameterList.get(i).getValue());
                 if (parameterList.get(i).getValue().equals("1")){
                     Logger.e("开启充电-----");

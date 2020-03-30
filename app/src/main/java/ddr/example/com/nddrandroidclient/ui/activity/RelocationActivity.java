@@ -220,16 +220,17 @@ public class RelocationActivity extends DDRActivity {
                 break;
             case updateRelocationStatus:
                 relocationStatus= (int) messageEvent.getData();
+                if (waitDialog!=null&&waitDialog.isShowing()){
+                    waitDialog.dismiss();
+                }
                 switch (relocationStatus){
                     case 0:
                         toast("重新定位失败，请重新设置机器人位姿");
                         break;
                     case 1:
                         toast("定位成功");
+                        finish();
                         break;
-                }
-                if (waitDialog!=null&&waitDialog.isShowing()){
-                    waitDialog.dismiss();
                 }
                 break;
         }

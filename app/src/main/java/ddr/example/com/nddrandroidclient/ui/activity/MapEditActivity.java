@@ -708,12 +708,14 @@ public class MapEditActivity extends DDRActivity {
                     if (allShowPoint){
                         allShowPoint=false;
                         tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+                        tv_all_selected.setTextColor(getResources().getColor(R.color.text_gray));
                         for (TargetPoint targetPoint:targetPoints){
                             targetPoint.setMultiple(false);
                         }
                     }else {
                         allShowPoint=true;
                         tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                        tv_all_selected.setTextColor(getResources().getColor(R.color.white));
                         for (TargetPoint targetPoint:targetPoints){
                             targetPoint.setMultiple(true);
                         }
@@ -726,12 +728,14 @@ public class MapEditActivity extends DDRActivity {
                     if (allShowPath){
                         allShowPath=false;
                         tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+                        tv_all_selected.setTextColor(getResources().getColor(R.color.text_gray));
                         for (PathLine pathLine:pathLines){
                             pathLine.setMultiple(false);
                         }
                     }else {
                         allShowPath=true;
                         tv_all_selected.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                        tv_all_selected.setTextColor(getResources().getColor(R.color.white));
                         for (PathLine pathLine:pathLines){
                             pathLine.setMultiple(true);
                         }

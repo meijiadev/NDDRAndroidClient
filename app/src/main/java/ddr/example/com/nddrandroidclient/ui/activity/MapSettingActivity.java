@@ -123,7 +123,7 @@ public class MapSettingActivity extends DDRActivity {
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
-                                tcpClient.requestFile();
+                                //tcpClient.requestFile();
                                 finish();
                             }
                         }).show();

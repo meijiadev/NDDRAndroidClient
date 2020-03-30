@@ -128,6 +128,7 @@ public class CollectingActivity extends DDRActivity {
                 if (progress==1.0f){
                     setTitle("建图完成");
                     finish();
+
                 }
                 break;
             case updateDetectionLoopStatus:
@@ -514,6 +515,7 @@ public class CollectingActivity extends DDRActivity {
         task.cancel();
         tcpClient.requestFile();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+
     }
 
     @Override

@@ -8,7 +8,7 @@
         android:id="@+id/tv_all_select"
         android:layout_width="102dp"
         android:layout_height="20dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_gray"
         android:text="全选"
         android:textSize="12sp"
         android:gravity="center_vertical"
