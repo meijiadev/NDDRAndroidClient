@@ -168,6 +168,7 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
             }
             if (parameterList.get(i).getKey().contains(isPainHuKey)){
                 isPain=Integer.parseInt(parameterList.get(i).getValue());
+                changgePain(isPain,2);
             }
 
         }
@@ -252,6 +253,7 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
                     break;
                 case 4:
                     isPain_v=Integer.parseInt(naparamList.get(i).getValue());
+                    changgePain(isPain_v,1);
                     break;
 
             }
@@ -286,11 +288,11 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
                 }
                 break;
             case 2:
-                getChosseStatus();
+//                getChosseStatus();
                 eConfigItemType=BaseCmd.eConfigItemType.eConfigTypeLogic;
                 for (int i=0;i<2;i++){
                     Parameter parameter1=new Parameter();
-                    Logger.e("开始添加-----------"+isForm_v);
+                    Logger.e("开始添加-----------"+isPain_v);
                     switch (i){
                         case 0:
                             parameter1.setKey(isFormOneKey);
@@ -352,13 +354,14 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
                     naparam.setValue(String.valueOf(bz_st));
                     break;
                 case 3:
-                    naparam.setText("导航点必达");
-                    naparam.setTitle("（导航必从起点开始，且每个点必到，使用非建图路径作为任务时需开启该项。）");
+                    naparam.setText("智能导航");
+                    naparam.setTitle("（开启后，执行导航任务，机器人则寻找最近的路径前往并开始。）");
                     naparam.setValue(String.valueOf(isFrom));
                     break;
                 case 4:
-                    naparam.setText("智能弧线路径");
-                    naparam.setTitle("（开启后，导航路径为折角时，自动计算弧线最短路径（建议较大场景使用)。）");
+                    Logger.e("插入画弧数值"+isPain);
+                    naparam.setText("智能曲线路径");
+                    naparam.setTitle("（开启后，导航路径为折角时，自动计算曲线最短路径，建议较大场景使用。）");
                     naparam.setValue(String.valueOf(isPain));
                     break;
             }
@@ -372,8 +375,8 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
     private String autoValue;
     private void getChosseStatus(){
         try {
-            boolean isChecked=naparamAdapter.isChecked;
-            naparamAdapter.onCheckedChangeListener(isChecked);
+            boolean isChecked=slideButton.isChecked;
+//            naparamAdapter.onCheckedChangeListener(isChecked);
             if (isChecked==true){
                 autoValue="1";
             }else {
@@ -383,6 +386,27 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
             Logger.e("是否选择"+isChecked);
         }catch (Exception e){
             e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 画弧转换
+     */
+    private void changgePain(int pain,int type){
+        if (pain==0){
+            pain=1;
+        }else {
+            pain=0;
+        }
+        Logger.e("最终值"+pain);
+        switch (type){
+            case 1:
+                isPain_v=pain;
+                break;
+            case 2:
+                isPain=pain;
+                break;
         }
 
     }

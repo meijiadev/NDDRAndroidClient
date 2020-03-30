@@ -106,7 +106,7 @@ public class NaparamAdapter extends BaseAdapter<Naparam> implements SlideButton.
         ed_value.setTag(watcher);
     }
     private void isHide(Naparam item){
-        if (item.getText().contains("导航点必达") || item.getText().contains("智能弧线路径")){
+        if (item.getText().contains("智能导航") || item.getText().contains("智能曲线路径")){
             tv_cm.setVisibility(View.GONE);
             ed_value.setVisibility(View.GONE);
             slideButton.setVisibility(View.VISIBLE);
@@ -136,14 +136,14 @@ public class NaparamAdapter extends BaseAdapter<Naparam> implements SlideButton.
 //        }
 //    }
     private void setChosseStatus(Naparam item) {
-        if (item.getText().contains("导航点必达")) {
+        if (item.getText().contains("智能导航")) {
             if (item.getValue().equals("0")) {
                 slideButton.setChecked(false);
             } else {
                 slideButton.setChecked(true);
             }
         }
-        if (item.getText().contains("智能弧线路径")) {
+        if (item.getText().contains("智能曲线路径")) {
             if (item.getValue().equals("0")) {
                 slideButton.setChecked(false);
             } else {
