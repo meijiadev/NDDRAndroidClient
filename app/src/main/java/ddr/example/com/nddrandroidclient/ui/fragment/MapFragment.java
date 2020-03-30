@@ -1704,7 +1704,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         break;
                     case 1:
                         toast("定位成功！");
-                        tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                        //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                         break;
                 }
                 if (waitDialog2!=null&&waitDialog2.isShowing()){

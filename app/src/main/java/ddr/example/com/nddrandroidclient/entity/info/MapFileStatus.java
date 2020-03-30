@@ -90,7 +90,7 @@ public class MapFileStatus {
         space_items=reqDDRVLNMapEx.getSpacedata().getSpaceSetList();
         if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
            currentMapEx=reqDDRVLNMapEx;
-            Logger.e("返回信息为当前地图"+mapName);
+           // Logger.e("返回信息为当前地图"+mapName+";"+taskItemExes.size());
             cTargetPoints.clear();
             cPathLines.clear();
             cTaskModes.clear();
@@ -169,7 +169,6 @@ public class MapFileStatus {
             }
 
         }
-        //Logger.e("返回地图为查看信息");
         targetPoints.clear();
         pathLines.clear();
         taskModes.clear();

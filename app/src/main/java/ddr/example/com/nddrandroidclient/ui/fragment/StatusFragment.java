@@ -1,11 +1,8 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Looper;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,14 +10,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
-import com.yhao.floatwindow.FloatWindow;
+
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -102,7 +99,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.rel_step_description)
     RelativeLayout rel_step_description;
     @BindView(R.id.recycle_gopoint)
-    RecyclerView recycle_gopoint;
+    RecyclerView recyclerGoPoint;
     @BindView(R.id.iv_cd_xs)
     ImageView iv_cd_xs;
     @BindView(R.id.iv_task_xl)
@@ -112,8 +109,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_restart_point)
     TextView tv_restart_point;
 
-   /* @BindView(R.id.tv_switch_mode)
-    TextView tv_switch_mode;*/
 
     @BindView(R.id.left_layout)
     RelativeLayout leftLayout;                //非充电状态下的左侧布局
@@ -199,7 +194,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast("无任务，原地待命");
                 break;
             case getSpecificPoint11:
-                Logger.e("AB点"+sPoint);
                 toast("开始前往"+sPoint);
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {
@@ -249,8 +243,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
         @SuppressLint("WrongConstant")
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
-        recycle_gopoint.setLayoutManager(gridLayoutManager);
-        recycle_gopoint.setAdapter(targetPointAdapter);
+        recyclerGoPoint.setLayoutManager(gridLayoutManager);
+        recyclerGoPoint.setAdapter(targetPointAdapter);
         onItemClick(2);
     }
 
@@ -291,7 +285,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         taskNum=notifyBaseStatusEx.getTaskCount();
         taskName = notifyBaseStatusEx.getCurrpath();
         lsNum=notifyBaseStatusEx.getTemopTaskNum();
-//        Logger.e("路径名字"+taskName);
         if (taskName!=null && !taskName.equals("PathError") && !taskName.equals("DDRTask_temporary.task")){
             String showName=taskName.replaceAll("DDRTask_","");
             showName=showName.replaceAll(".task","");
@@ -305,11 +298,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tv_now_map.setText(showName);
         if (mapName!=null){
             rel_step_description.setVisibility(View.GONE);
-            recycle_gopoint.setVisibility(View.VISIBLE);
+            recyclerGoPoint.setVisibility(View.VISIBLE);
             tv_set_go.setText("前往目标点");
         }else {
             rel_step_description.setVisibility(View.VISIBLE);
-            recycle_gopoint.setVisibility(View.GONE);
+            recyclerGoPoint.setVisibility(View.GONE);
             tv_set_go.setText("建立任务步骤：");
         }
         tv_now_device.setText(robotID);
@@ -793,28 +786,29 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
      * 这种方式我们还是比较常见的,譬如,谷歌自带的TabLayout控件,此种场景下,当我们切换fragment的时候,会调用setUserVisibleHint方法,
      * 不会调用onHiddenChanged方法,也不会走fragment的生命周期方法(fragment初始化完成之后,注意这里需要重写viewpager中使用的适配器的方法,让fragment不会被销毁,不然还是会遇到问题)
      */
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser){
             // 相当于onResume()方法--获取焦点
             Logger.e("可见");
-            tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-            if (mapImageView1!=null){
-                if (!mapImageView1.drawThread.isAlive()){
-                    mapImageView.invalidate();
-                    mapImageView1.startThread();
-                    mapImageView.setMapBitmap(notifyBaseStatusEx.getCurroute());
-                }
+            if (notifyBaseStatusEx!=null){
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+            }
+            if (mapImageView1!=null&&!mapImageView1.drawThread.isAlive()){
+                mapImageView.invalidate();
+                mapImageView1.startThread();
+                mapImageView.setMapBitmap(notifyBaseStatusEx.getCurroute());
+            }
+            //当服务断开时
+            if (tcpClient!=null&&!tcpClient.isConnected()){
+                tv_work_statue.setText("断开连接");
             }
         }else {
             // 相当于onpause()方法---失去焦点
             Logger.e("不可见");
-            if (mapImageView1!=null){
-                if (mapImageView1.drawThread.isAlive()){
-                    mapImageView1.onStop();
-                }
+            if (mapImageView1!=null&&mapImageView1.drawThread.isAlive()){
+                mapImageView1.onStop();
             }
 
         }

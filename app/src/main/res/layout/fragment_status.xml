@@ -241,7 +241,7 @@
             android:layout_marginTop="100dp"
             android:gravity="left"
             android:textColor="#ffffff"
-            android:hint="待命中"
+            android:hint="待命中 "
             android:id="@+id/tv_work_statue"
             android:textSize="14dp"/>
         <TextView

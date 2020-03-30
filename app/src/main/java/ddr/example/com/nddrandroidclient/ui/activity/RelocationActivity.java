@@ -83,12 +83,13 @@ public class RelocationActivity extends DDRActivity {
             ivContent.setImageBitmap(currentBitmap);
             ivContent.refreshMap();
             robotLocationView.setBitmapSize(zoomView,mapName,currentBitmap.getWidth(),currentBitmap.getHeight());
+            tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
+
         realTimeRequest();
         //reqObstacleInfo();
         robotLocationView.startThread();

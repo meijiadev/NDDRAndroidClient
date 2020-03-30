@@ -138,7 +138,7 @@ public class MapImageView0 extends ImageView {
             Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
             totalTranslateX=0;
             MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-            data=mapFileStatus.getCurrentMapEx();
+            data=mapFileStatus.getReqDDRVLNMapEx();
             DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
             r00=affine_mat.getR11();
             r01=affine_mat.getR12();
@@ -168,44 +168,48 @@ public class MapImageView0 extends ImageView {
      * @param taskName
      */
     public void setTaskName(String taskName){
-        isRunAbPointLine=false;
-        targetPtItems=data.getTargetPtdata().getTargetPtList();
-        pathLineItemExes=data.getPathSet().getPathLineDataList();
-        taskItemExes=data.getTaskSetList();
-        spaceItems=mapFileStatus.getcSpaceItems();
-        pathLineItemExesS=new ArrayList<>();
-        targetPtItemsS=new ArrayList<>();
-        Logger.e("设置任务:"+taskName);
-        try {
-            for (int i=0;i<taskItemExes.size();i++){
-                if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
-                    pathElementExes=taskItemExes.get(i).getPathSetList();
-                    Logger.e("找到应该执行的任务");
-                }
-            }
-            for (int i=0;i<pathElementExes.size();i++){
-                if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
-                    ByteString lineName=pathElementExes.get(i).getName();
-                    for (int j=0;j<pathLineItemExes.size();j++){
-                        if (lineName.equals(pathLineItemExes.get(j).getName())){
-                            pathLineItemExesS.add(pathLineItemExes.get(j));
-                            Logger.e("找到应该执行的路径");
-                        }
-                    }
-                }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
-                    ByteString pointName=pathElementExes.get(i).getName();
-                    for (int j=0;j<targetPtItems.size();j++){
-                        if (pointName.equals(targetPtItems.get(j).getPtName())){
-                            targetPtItemsS.add(targetPtItems.get(j));
-                        }
+        data=mapFileStatus.getReqDDRVLNMapEx();
+        if (!taskName.equals("PathError")){
+            isRunAbPointLine=false;
+            targetPtItems=data.getTargetPtdata().getTargetPtList();
+            pathLineItemExes=data.getPathSet().getPathLineDataList();
+            taskItemExes=data.getTaskSetList();
+            spaceItems=mapFileStatus.getcSpaceItems();
+            pathLineItemExesS=new ArrayList<>();
+            targetPtItemsS=new ArrayList<>();
+            //Logger.e("设置任务:"+taskName+"------任务数量:"+taskItemExes.size());
+            try {
+                for (int i=0;i<taskItemExes.size();i++){
+                   // Logger.e("--------任务名:"+taskItemExes.get(i).getName().toStringUtf8());
+                    if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
+                        pathElementExes=taskItemExes.get(i).getPathSetList();
+                      //  Logger.e("找到应该执行的任务");
                     }
                 }
+                for (int i=0;i<pathElementExes.size();i++){
+                    if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
+                        ByteString lineName=pathElementExes.get(i).getName();
+                        for (int j=0;j<pathLineItemExes.size();j++){
+                            if (lineName.equals(pathLineItemExes.get(j).getName())){
+                                pathLineItemExesS.add(pathLineItemExes.get(j));
+                                Logger.e("找到应该执行的路径");
+                            }
+                        }
+                    }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
+                        ByteString pointName=pathElementExes.get(i).getName();
+                        for (int j=0;j<targetPtItems.size();j++){
+                            if (pointName.equals(targetPtItems.get(j).getPtName())){
+                                targetPtItemsS.add(targetPtItems.get(j));
+                            }
+                        }
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        invalidate();
+            invalidate();
 
+        }
     }
 
     /**
@@ -415,6 +419,7 @@ public class MapImageView0 extends ImageView {
     private void drawLine(Canvas canvas){
         if (isRunAbPointLine){
            drawAbLine(canvas);
+           Logger.e("绘制AB路径");
         }else {
             if (pathLineItemExesS!=null){
                 pathLines=new ArrayList<>();
@@ -462,6 +467,7 @@ public class MapImageView0 extends ImageView {
                         }
                     }
                 }
+                Logger.e("绘制路径");
             }
 
         }
