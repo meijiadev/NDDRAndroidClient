@@ -247,6 +247,7 @@ public class ZoomImageView extends View {
         PointView.getInstance(context).drawPoint(canvas,this);
         LineView.getInstance(context).drawLine(canvas,this);
         GridLayerView.getInstance(this).drawGrid(canvas);
+        RectangleView.getRectangleView().draw(canvas,this);
     }
 
     /**
@@ -268,6 +269,7 @@ public class ZoomImageView extends View {
         float y=(height/2-totalTranslateY)/totalRatio;
         return toPathXy(x,y);
     }
+
 
     /**
      * 将相对于图片的坐标转换成画布坐标
@@ -307,6 +309,33 @@ public class ZoomImageView extends View {
         float y1=(float) (r10*x+r11*y+t1);
         return new XyEntity(x1,y1);
     }
+
+    /**
+     * 将世界坐标转换成相对于画布的坐标
+     * @param xyEntity
+     * @return
+     */
+    public XyEntity toCanvasXY(XyEntity xyEntity){
+        float x = xyEntity.getX();
+        float y = xyEntity.getY();
+        float x1 = (float) (r00 * x + r01 * y + t0);
+        float y1 = (float) (r10 * x + r11 * y + t1);
+        float cx = x1 * totalRatio + totalTranslateX;
+        float cy = y1 * totalRatio + totalTranslateY;
+        return new XyEntity(cx,cy);
+    }
+
+    /**
+     * 获取中心标签处在地图上的点
+     * @return 返回的是像素坐标
+     */
+    public XyEntity getPoint(){
+        float x=(width/2-totalTranslateX)/totalRatio;           //相对于图片左上角的距离
+        float y=(height/2-totalTranslateY)/totalRatio;
+        return new XyEntity(x,y);
+    }
+
+
 
     private float txfloat(float a,float b) {
         DecimalFormat df=new DecimalFormat("0.0000");//设置保留位数

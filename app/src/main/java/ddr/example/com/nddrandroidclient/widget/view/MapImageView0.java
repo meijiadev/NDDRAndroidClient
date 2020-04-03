@@ -130,33 +130,34 @@ public class MapImageView0 extends ImageView {
                 fis = new FileInputStream(pngPath);
                 Bitmap bitmap = BitmapFactory.decodeStream(fis);
                 sourceBitmap=bitmap;
+                Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+                totalTranslateX=0;
+                MapFileStatus mapFileStatus=MapFileStatus.getInstance();
+                data=mapFileStatus.getReqDDRVLNMapEx();
+                DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
+                r00=affine_mat.getR11();
+                r01=affine_mat.getR12();
+                t0=affine_mat.getTx();
+                r10=affine_mat.getR21();
+                r11=affine_mat.getR22();
+                t1=affine_mat.getTy();
+                totalTranslateY=0;
+                totalRatio=1;
+                scaledRatio=1;
+                initRatio=1;
+                lastFingerDis=0;
+                degree=0;
+                rotation=0;
+                currentStatus=STATUS_INIT;
+                isRunAbPointLine=false;
+                targetPoint=null;
+                pathLineItemExesS.clear();
+                pathLines.clear();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }catch (NullPointerException e){
                 e.printStackTrace();
             }
-            Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
-            totalTranslateX=0;
-            MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-            data=mapFileStatus.getReqDDRVLNMapEx();
-            DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
-            r00=affine_mat.getR11();
-            r01=affine_mat.getR12();
-            t0=affine_mat.getTx();
-            r10=affine_mat.getR21();
-            r11=affine_mat.getR22();
-            t1=affine_mat.getTy();
-            totalTranslateY=0;
-            totalRatio=1;
-            scaledRatio=1;
-            initRatio=1;
-            lastFingerDis=0;
-            degree=0;
-            rotation=0;
-            currentStatus=STATUS_INIT;
-            isRunAbPointLine=false;
-            targetPoint=null;
-            pathLines.clear();
 
         }
         invalidate();
@@ -168,8 +169,8 @@ public class MapImageView0 extends ImageView {
      * @param taskName
      */
     public void setTaskName(String taskName){
-        data=mapFileStatus.getReqDDRVLNMapEx();
         if (!taskName.equals("PathError")){
+            data=mapFileStatus.getCurrentMapEx();
             isRunAbPointLine=false;
             targetPtItems=data.getTargetPtdata().getTargetPtList();
             pathLineItemExes=data.getPathSet().getPathLineDataList();
@@ -177,13 +178,13 @@ public class MapImageView0 extends ImageView {
             spaceItems=mapFileStatus.getcSpaceItems();
             pathLineItemExesS=new ArrayList<>();
             targetPtItemsS=new ArrayList<>();
-            //Logger.e("设置任务:"+taskName+"------任务数量:"+taskItemExes.size());
+            Logger.e("设置任务:"+taskName+"------任务数量:"+taskItemExes.size());
             try {
                 for (int i=0;i<taskItemExes.size();i++){
-                   // Logger.e("--------任务名:"+taskItemExes.get(i).getName().toStringUtf8());
+                    Logger.e("--------任务名:"+taskItemExes.get(i).getName().toStringUtf8());
                     if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
                         pathElementExes=taskItemExes.get(i).getPathSetList();
-                      //  Logger.e("找到应该执行的任务");
+                       Logger.e("找到应该执行的任务");
                     }
                 }
                 for (int i=0;i<pathElementExes.size();i++){
@@ -216,6 +217,7 @@ public class MapImageView0 extends ImageView {
      * 是否显示ab点路径
      */
     public void setABPointLine(boolean isRunAbPointLine){
+        Logger.e("是否在跑AB点路径："+isRunAbPointLine);
         this.isRunAbPointLine=isRunAbPointLine;
         if (!isRunAbPointLine) {
             Logger.e("---设置任务"+notifyBaseStatusEx.getCurrpath());

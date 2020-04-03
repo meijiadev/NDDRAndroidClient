@@ -73,10 +73,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     RelativeLayout shrinkTailLayout; // 伸缩的尾部布局
     @BindView(R.id.shrink_layout)
     RelativeLayout shrinkLayout;
-    @BindView(R.id.tv_ti_map)
-    TextView tvTiMap;
-    @BindView(R.id.tv_create_map)
-    TextView tvCreateMap;
+    @BindView(R.id.tv_warn)
+    TextView tvWarn;                  // 无地图显示提醒
+
     //绘制地图+路径
     @BindView(R.id.iv_map)
     MapImageView0 mapImageView;
@@ -208,8 +207,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setMapBitmap(mapName);
-                    tvTiMap.setVisibility(View.GONE);
-                    tvCreateMap.setVisibility(View.GONE);
+                    tvWarn.setVisibility(View.GONE);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
                     for (TaskMode taskMode:mapFileStatus.getcTaskModes()){
@@ -311,22 +309,18 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
-                isRunabPoint=false;
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
-                isRunabPoint=false;
                 break;
             case 3:
                 tv_task_num.setText(" ");
+
                 break;
             case 4:
             case 5:
                 tv_task_num.setText(" ");
-                isRunabPoint=true;
                 break;
-
-
         }
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
@@ -435,7 +429,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point,R.id.tv_warn})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -447,6 +441,15 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     shrinkTailLayout.setVisibility(View.VISIBLE);
                     shrinkLayout.startAnimation(showAnimation);
                     ivShrink.setImageResource(R.mipmap.iv_back);
+                }
+                break;
+            case R.id.tv_warn:
+                Logger.e("点击");
+                if (!notifyBaseStatusEx.getCurroute().equals("")){
+                    tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                    toast("正在加载地图！");
+                }else {
+                    toast("当前并无正在使用中的地图，请确定有采集的地图并选择一张地图使用！");
                 }
                 break;
             case R.id.tv_now_task:
@@ -496,40 +499,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         Logger.e("机器人暂停/重新运动");
     }
 
-    /**
-     * 添加或删除临时任务
-     * @param routeName
-     * @param taskName
-     * @param num
-     * @param type
-     */
 
-    private void addOrDetTemporary(ByteString routeName, ByteString taskName,int num,int type){
-        DDRVLNMap.eTaskOperationalType eTaskOperationalType;
-        switch (type){
-            case 0:
-                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalError;
-                break;
-            case 1:
-                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalStopTask;
-                break;
-            case 2:
-                 eTaskOperationalType=DDRVLNMap.eTaskOperationalType.eTaskOperationalAddTemporary;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + type);
-        }
-        DDRVLNMap.reqTaskOperational.OptItem optItem= DDRVLNMap.reqTaskOperational.OptItem.newBuilder()
-                .setOnerouteName(routeName)
-                .setTaskName(taskName)
-                .setRunCount(num)
-                .setType(eTaskOperationalType)
-                .build();
-        DDRVLNMap.reqTaskOperational reqTaskOperational=DDRVLNMap.reqTaskOperational.newBuilder()
-                .setOptSet(optItem)
-                .build();
-        tcpClient.sendData(null,reqTaskOperational);
-    }
 
     /**
      * 导航去目标点或者恢复
@@ -604,7 +574,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                     }else {
                                         lsNum=1;
                                     }
-                                    addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
+                                    tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
+                                    isRunabPoint=false;
                                     Logger.e("当前临时任务状态"+BaseCmd.eCmdRspType.values().length);
                                 }
                                 @Override
@@ -638,6 +609,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                         targetPoints.get(position).setSelected(true);
                                         targetPointAdapter.setNewData(targetPoints);
                                         sPoint = targetPoints.get(position).getName();
+                                        isRunabPoint=true;
                                     }
 
                                     @Override
@@ -666,7 +638,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         Logger.e("----mapName:"+mapName+"taskName:"+taskName);
                         if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
                             toast("请稍等，正在进入");
-                            addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
+                            tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
                         }else {
                             toast("请先建立任务");
                         }
@@ -734,8 +706,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         break;
                     case 3:
                         toast("请稍等，正在退出");
-//                        exitModel();
-                        addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
+                        tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
                         for (int i = 0; i < targetPoints.size(); i++) {
                             targetPoints.get(i).setSelected(false);
                         }
@@ -796,6 +767,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
             }
             if (mapImageView1!=null&&!mapImageView1.drawThread.isAlive()){
+                mapImageView1.setMapImageView0(mapImageView);
                 mapImageView.invalidate();
                 mapImageView1.startThread();
                 mapImageView.setMapBitmap(notifyBaseStatusEx.getCurroute());

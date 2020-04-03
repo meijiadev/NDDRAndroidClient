@@ -20,13 +20,13 @@ public class ServerInformationProcessor extends BaseProcessor {
         BaseCmd.bcLSAddr bcLSAddr=(BaseCmd.bcLSAddr) msg;
         for (BaseCmd.bcLSAddr.ServerInfo serverInfo:bcLSAddr.getLSInfosList()) {
             for (String ip:serverInfo.getIpsList()){
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateIPList,ip));
+                EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateIPList,ip));
             }
             robotId = serverInfo.getRobotid();
             StatusFragment.setRobotID(robotId);
             //TaskPerformActivity.setRobotID(robotId,context);
            // DatabaseHelper.setRobotID(robotId,context);
-            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePort,serverInfo.getPort()));
+            EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updatePort,serverInfo.getPort()));
 
         }
     }

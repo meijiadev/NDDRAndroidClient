@@ -423,6 +423,51 @@ message rspCmdSwitchOAMode{
 	eCmdRspType type = 1;
 }
 
+/*
+	请求临时AB点模式
+*/
+message reqSetTempOAMode{
+	float tarX = 1; // 目标位置
+	float tarY = 2;
+	float tarSp = 3; // 目标速度
+	float tarAng = 4; // 目标角度（弧度）。[-3.1415, 3.1415]  不在此区间表示不需要转特定角度
+	bool bStaticOA = 5;
+}
+
+/*
+	retCode:   0 - 成功进入/更新AB段模式;
+			   1 - 异步计算中, 结果通过回调函数给出;
+			   2 - 异步计算忙, 本次设置失败;
+			  -1 - 目标不可达(同步模式下保证可达);
+			  -2 - AB段过短;
+			  -3 - 普通巡逻已结束, 无法设置AB段模式;
+			 -55 - 内部对象错误, 或输入参数有误(如tarSp超出限制)
+*/
+message rspSetTempOAMode{
+	eCmdRspType type = 1;
+	int32 retCode = 2;
+}
+
+/*
+	回到普通巡逻
+	bBack2TaskPt: 
+		false:则直接从当前位置开始 继续普通巡逻;
+		true:先返回进入临时任务时的位置，再开始巡逻任务
+		
+	speed:返回离开位置时的速度
+	bStatic：反回离开位置时的动静态模式	
+*/
+message reqQuitTempTask{
+	bool bBack2TaskPt = 1; 
+	float speed = 2;
+	bool bStatic = 3;
+}
+
+message rspQuitTempTask{
+	eCmdRspType type = 1;
+}
+
+
 
 //-----------------------------------ClientCmd]]]]]
 //-----------------------------------ClientStatus[[[[[
@@ -623,7 +668,7 @@ message notifyEnvInfo{
 // 通知重定位状态。收到这个表示重定位结束了。
 message notifyRelocStatus
 {
-	int32 status = 1; // 0-重定位失败  1-重定位成功
+	int32 status = 1; // 0-重定位失败  1-重定位成功  2-进入  3-用户取消重定位
 }
 
 //ObsStatus
@@ -1243,6 +1288,72 @@ message notifyVisionPts{
 	float posx = 2;  // 机器人位置x
 	float posy = 3;  // 机器人位置y
 	float posdirection = 4; // 机器人朝向
+}
+
+// 以下为获取2D雷达点云数据相关，
+enum en2DLidarPointData
+{
+	en2DLidarPointData_Reserve = 0;
+	en2DLidarPointData_2DLidar = 1;
+	en2DLidarPointData_RGBD = 2;
+}
+
+// 也可以获取RGBD的数据
+message reqGet2DLidarPointData{
+	en2DLidarPointData type = 1; // 要获取的类型，en2DLidarPointData_Reserve 表示两种数据都获取
+}
+
+message rspGet2DLidarPointData{
+	message LidarPoint_2D
+	{
+		float angle = 1;
+		float distance = 2;
+	}
+	message dataItem
+	{
+		en2DLidarPointData type = 1;
+		repeated LidarPoint_2D dataSet = 2;
+	}
+	eCmdRspType type = 1;
+	repeated dataItem dataSet = 2;
+}
+
+// 以下为原图去燥功能相关
+enum enLidarMapEditorType
+{
+	enLidarMapEditorType_Reserve = 0;
+	
+	// erase the map points in the rectangle range ([top, left], [bottom, right]).
+	enLidarMapEditorType_Erase = 1;
+	
+	// back to the previous state.
+	enLidarMapEditorType_Back = 2;
+	
+	// Save the map after editing.
+	enLidarMapEditorType_Save = 3;
+	
+	// if bOriginal == false, the map will be reset to the initial state of this time.
+	// else, the map will be reset to the original state.
+	enLidarMapEditorType_Reset = 4;
+}
+
+message reqEditorLidarMap{
+	message eraseRange
+	{
+		float top = 1;
+		float left = 2;
+		float bottom = 3;
+		float right = 4;
+	}
+	enLidarMapEditorType type = 1; // 要操作的类型
+	repeated eraseRange range = 2; // 只有当 type 为 enLidarMapEditorType_Erase 时才有意义
+	bool bOriginal = 3; // 只有当 type 为 enLidarMapEditorType_Reset 时才有意义
+	bytes oneroutename = 4;
+}
+
+message rspEditorLidarMap{
+	eCmdRspType type = 1;
+	reqEditorLidarMap reqData = 2; // 收到的 reqEditorLidarMap 的值
 }
 
 

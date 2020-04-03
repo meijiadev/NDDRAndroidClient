@@ -26,6 +26,6 @@ public class NotifyLidarPtsProcessor extends BaseProcessor {
         notifyLidarPtsEntity.setPosdirection(notifyLidarPts.getPosdirection());
         notifyLidarPtsEntity.setPositionList(notifyLidarPts.getPtsDataList());
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.receivePointCloud));
-       // Logger.e("------发送点云数据:"+notifyLidarPtsEntity.getPosX()+";"+notifyLidarPtsEntity.getPosY());
+        //Logger.d("------发送点云数据:"+notifyLidarPtsEntity.getPosX()+";"+notifyLidarPtsEntity.getPosY());
     }
 }

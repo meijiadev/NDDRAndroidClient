@@ -83,7 +83,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         this.bitmapHeight = height;
         Logger.e("--------图片大小："+bitmapWidth+";"+bitmapHeight);
         EventBus.getDefault().register(this);
-        invalidate();
 
     }
 
@@ -205,7 +204,8 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * 停止绘制
      */
     public void onStop(){
-        if (drawLocationThread!=null){
+        if (drawLocationThread!=null&&isRunning){
+            isRunning=false;
             drawLocationThread.stopThread();
         }
     }
@@ -223,7 +223,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         }
 
         public void stopThread(){
-            isRunning=false;
             boolean workIsNotFinish=true;
             while (workIsNotFinish){
                 try {

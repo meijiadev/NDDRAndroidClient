@@ -37,6 +37,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
     private float angle;
     private Matrix matrix;
     private Bitmap directionBitmap,directionBitmap1;
+    private int directionW,directionH;
     private Paint paint,lastFrame;
     private int mBackColor=Color.TRANSPARENT;       //背景色透明
     public CollectingView3(Context context) {
@@ -64,6 +65,8 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         lastFrame.setStrokeWidth(1);
         lastFrame.setStyle(Paint.Style.FILL);
         lastFrame.setColor(Color.parseColor("#00CED1"));
+        directionW=directionBitmap.getWidth();
+        directionH=directionBitmap.getHeight();
     }
 
     /**
@@ -156,6 +159,8 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
+
+
     /**
      * 实时绘制机器人位置+雷达扫射位置
      * @param canvas
@@ -180,8 +185,8 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         path.close();
         canvas.drawPath(path,lastFrame);
         matrix.setRotate(-angle);
-        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
-        canvas.drawBitmap(directionBitmap1,x-30,y-30,paint);
+        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,matrix,true);
+        canvas.drawBitmap(directionBitmap1,x-directionW/2,y-directionH/2,paint);
     }
 
 

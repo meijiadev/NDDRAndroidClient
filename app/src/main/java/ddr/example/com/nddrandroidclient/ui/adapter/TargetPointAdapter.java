@@ -44,7 +44,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 Logger.e("-----------状态页面的 前往目标点布局");
                 helper.setText(R.id.item_recycle_gopoint,item.getName());
                 TextView tv_select=helper.getView(R.id.item_recycle_gopoint);
-                Logger.e("GOPOINT状态"+item.isSelected());
+                //Logger.e("GOPOINT状态"+item.isSelected());
                 if (item.isSelected()){
                    tv_select.setBackgroundResource(R.drawable.task_check_bg);
                 }else {

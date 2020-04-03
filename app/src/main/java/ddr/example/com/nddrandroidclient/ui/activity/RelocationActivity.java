@@ -200,6 +200,7 @@ public class RelocationActivity extends DDRActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isRunning=false;
     }
 
     @Override
@@ -214,23 +215,27 @@ public class RelocationActivity extends DDRActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
-            case enterRelocationMode:
-                waitDialog=new WaitDialog.Builder(this)
-                        .setMessage("正在重新定位中可能需要1~3分钟时间...")
-                        .show();
-                break;
             case updateRelocationStatus:
                 relocationStatus= (int) messageEvent.getData();
-                if (waitDialog!=null&&waitDialog.isShowing()){
-                    waitDialog.dismiss();
-                }
                 switch (relocationStatus){
                     case 0:
                         toast("重新定位失败，请重新设置机器人位姿");
+                        if (waitDialog!=null&&waitDialog.isShowing()){
+                            waitDialog.dismiss();
+                        }
                         break;
                     case 1:
                         toast("定位成功");
+                        if (waitDialog!=null&&waitDialog.isShowing()){
+                            waitDialog.dismiss();
+                        }
+                        robotLocationView.onStop();
                         finish();
+                        break;
+                    case 2:
+                        waitDialog=new WaitDialog.Builder(this)
+                                .setMessage("正在重新定位中可能需要1~3分钟时间...")
+                                .show();
                         break;
                 }
                 break;

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,9 +46,11 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.other.Rectangle;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -62,6 +65,7 @@ import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
+import ddr.example.com.nddrandroidclient.widget.view.RectangleView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
 
@@ -117,9 +121,18 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.bt_delete_wall)
     Button btDeleteWall;
 
+    @BindView(R.id.tv_save_de)
+    TextView tvSaveDe;                   //原图去噪 保存
+    @BindView(R.id.tv_init_de)
+    TextView tvInitDe;                    //原图去噪 初始化
+    @BindView(R.id.tv_add_de)
+    TextView tvAddDe;                      //原图去噪 添加点 确定区域
+    @BindView(R.id.tv_revocation_de)
+    TextView tvRevocationDe;               //原图去噪 撤销删除上次的区域
 
-  /*  @BindView(R.id.recycler_target)
-    RecyclerView recyclerTarget;        // 勾选目标点组建路径 ,目标点列表*/
+
+
+
     @BindView(R.id.tv_selected_point)
     TextView tvSelectedPoint;          // 是否显示目标点列表
     private boolean checkablePoint=false;    //是否勾选目标点建路径
@@ -152,6 +165,12 @@ public class MapEditActivity extends DDRActivity {
     public static final int EDIT_MAP=3;       //编辑地图 -虚拟墙等
     private int activityType;                         //界面的类型
 
+    private List<Rectangle> rectangles=new ArrayList<>();
+    private XyEntity firstPoint,secondPoint;      //两点确定一个矩形
+    private Rectangle rectangle=new Rectangle();                  //保存矩形信息坐标
+    private BaseDialog waitDialog;
+    private String bitmap;                                        //地图地址
+
 
 
     @Override
@@ -169,13 +188,9 @@ public class MapEditActivity extends DDRActivity {
         initTimer();
         setFixedSpeed();
         targetPointAdapter = new TargetPointAdapter(R.layout.item_show_recycler);
-        //selectPointAdapter=new TargetPointAdapter(R.layout.item_point_to_path);
         pathAdapter = new PathAdapter(R.layout.item_show_recycler);
         editTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
         graphTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        //recyclerTarget.setLayoutManager(layoutManager);
-        //recyclerTarget.setAdapter(selectPointAdapter);
         GridLayerView.getInstance(zmap).onDestroy();
 
     }
@@ -185,17 +200,8 @@ public class MapEditActivity extends DDRActivity {
         super.initData();
         Intent intent=getIntent();
         activityType=intent.getIntExtra("type",0);
-        String bitmap=intent.getStringExtra("bitmapPath");
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(bitmap);
-            lookBitmap= BitmapFactory.decodeStream(fis);
-            zmap.setImageBitmap(lookBitmap);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+        bitmap=intent.getStringExtra("bitmapPath");
+        setBitmap(bitmap);
         mapFileStatus = MapFileStatus.getInstance();
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -214,13 +220,30 @@ public class MapEditActivity extends DDRActivity {
         }
        // selectPointAdapter.setNewData(selectPoints);
         editTypes.add("虚拟墙");
+        editTypes.add("原图去噪");
         graphTypes.add("直线");
         //graphTypes.add("圆");
         //graphTypes.add("多边形");
         initType(activityType);
         onShowItemClick();
-        //onItemSelectClick();
 
+    }
+
+    /**
+     * 设置图片
+     * @param bitmap
+     */
+    private void setBitmap(String bitmap){
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(bitmap);
+            lookBitmap= BitmapFactory.decodeStream(fis);
+            zmap.setImageBitmap(lookBitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -231,7 +254,7 @@ public class MapEditActivity extends DDRActivity {
 
 
     @OnClick({R.id.iv_back,R.id.tv_target_point, R.id.tv_path, R.id.tv_025m, R.id.tv_05m, R.id.tv_1m, R.id.tv_2m, R.id.tv_mark_current,R.id.tv_selected_point, R.id.fixed_speed,R.id.iv_add_path
-    ,R.id.delete_point,R.id.save_path,R.id.bt_delete_wall})
+    ,R.id.delete_point,R.id.save_path,R.id.bt_delete_wall,R.id.tv_add_de,R.id.tv_revocation_de,R.id.tv_init_de,R.id.tv_save_de})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -355,7 +378,6 @@ public class MapEditActivity extends DDRActivity {
                 break;
             case R.id.fixed_speed:
                 break;
-
             case R.id.iv_add_path:
                 switch (activityType){
                     case CREATE_POINT:
@@ -476,9 +498,53 @@ public class MapEditActivity extends DDRActivity {
                         }).show();
 
                 break;
+            case R.id.tv_add_de:
+                if (tvAddDe.getText().toString().equals("添加点")){
+                    firstPoint=zmap.getTargetPoint();
+                    tvAddDe.setText("完成");
+                    tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_confirm);
+                    RectangleView.getRectangleView().setFirstPoint(firstPoint);
+                    zmap.invalidate();
+                }else {
+                    secondPoint=zmap.getTargetPoint();
+                    tvAddDe.setText("添加点");
+                    tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
+                    rectangle=new Rectangle(firstPoint,secondPoint);
+                    rectangles.add(rectangle);
+                    RectangleView.getRectangleView().setFirstPoint(null);
+                    RectangleView.getRectangleView().setRectangles(rectangles);
+                    zmap.invalidate();
+                    tvRevocationDe.setVisibility(View.VISIBLE);
+                }
 
-
+                break;
+            case R.id.tv_revocation_de:
+                if (rectangles.size()>0){
+                    rectangles.remove(rectangles.size()-1);
+                }
+                RectangleView.getRectangleView().setFirstPoint(null);
+                RectangleView.getRectangleView().setRectangles(rectangles);
+                zmap.invalidate();
+                break;
+            case R.id.tv_save_de:
+                tcpClient.reqEditMap(rectangles,1,false,mapFileStatus.getMapName());
+                showWaitDialog("正在保存中...");
+                break;
+            case R.id.tv_init_de:
+                tcpClient.reqEditMap(rectangles,4,true,mapFileStatus.getMapName());
+                showWaitDialog("正在初始化地图...");
+                break;
         }
+    }
+
+
+    /**
+     * 显示等待弹窗
+     */
+    private void showWaitDialog(String msg){
+        waitDialog=new WaitDialog.Builder(this)
+                .setMessage(msg)
+                .show();
     }
 
      private BaseDialog inputDialog;
@@ -657,6 +723,7 @@ public class MapEditActivity extends DDRActivity {
     private RecyclerView showRecycler;
     private TextView tv_all_selected;
     private boolean allShowPoint,allShowPath;
+    private boolean isDenoising;       //是否开启原图去噪
 
     private void showPopupWindow(View view, int type) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.window_point, null);
@@ -785,6 +852,13 @@ public class MapEditActivity extends DDRActivity {
 
         editTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
             tvTargetPoint.setText(editTypes.get(position));
+            customPopuWindow.dissmiss();
+            if (position==1){
+                isDenoising=true;
+            }else {
+                isDenoising=false;
+            }
+            whetherShowDe();
         });
 
         graphTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -800,6 +874,7 @@ public class MapEditActivity extends DDRActivity {
                     tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_polygon_blue),null,null,null);
                     break;
             }
+            customPopuWindow.dissmiss();
 
         });
 
@@ -807,36 +882,31 @@ public class MapEditActivity extends DDRActivity {
     /***************************************************end*************************************************************/
 
 
-   /* *//**
-     * 点击勾选目标点组建路径
-     *//*
-    private void onItemSelectClick(){
-        selectPointAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (selectPoints.get(position).isMultiple()){
-                selectPoints.get(position).setMultiple(false);
-                for (int i=0;i<pathPoints.size();i++){
-                    if (selectPoints.get(position).getName().equals(pathPoints.get(i).getName())){
-                        pathPoints.remove(i);
-                        LineView.getInstance(getApplication()).
-                                setPoints(pathPoints);
-                        zmap.invalidate();
-                    }
-                }
-                selectPointAdapter.setNewData(selectPoints);
-            }else {
-                selectPoints.get(position).setMultiple(true);
-                PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
-                pathPoint.setName(selectPoints.get(position).getName());
-                pathPoint.setY(selectPoints.get(position).getY());
-                pathPoint.setX(selectPoints.get(position).getX());
-                pathPoints.add(pathPoint);
-                LineView.getInstance(getApplication()).
-                        setPoints(pathPoints);
-                zmap.invalidate();
-                selectPointAdapter.setNewData(selectPoints);
-            }
-        });
-    }*/
+    /**
+     * 是否显示原图去噪相关内容
+     */
+    private void whetherShowDe(){
+        if (isDenoising){
+            btDeleteWall.setVisibility(View.GONE);
+            tvAddPath.setVisibility(View.GONE);
+            tvDeletePoint.setVisibility(View.GONE);
+            tvSavePath.setVisibility(View.GONE);
+
+            tvAddDe.setVisibility(View.VISIBLE);
+            tvSaveDe.setVisibility(View.VISIBLE);
+            tvInitDe.setVisibility(View.VISIBLE);
+        }else {
+            btDeleteWall.setVisibility(View.VISIBLE);
+            tvAddPath.setVisibility(View.VISIBLE);
+            tvDeletePoint.setVisibility(View.VISIBLE);
+            tvSavePath.setVisibility(View.VISIBLE);
+
+            tvAddDe.setVisibility(View.GONE);
+            tvSaveDe.setVisibility(View.GONE);
+            tvInitDe.setVisibility(View.GONE);
+        }
+    }
+
 
     @SuppressLint("NewApi")
     private void initSeekBar() {
@@ -1069,10 +1139,13 @@ public class MapEditActivity extends DDRActivity {
                 PointView.getInstance(getApplication()).clearDraw();
                 LineView.getInstance(getApplication()).clearDraw();
                 LineView.getInstance(getApplication()).setSpaceItems(spaceItems);
+                LineView.getInstance(getApplication()).setClickable(true);
                 zmap.invalidate();
                 break;
         }
     }
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
@@ -1093,7 +1166,6 @@ public class MapEditActivity extends DDRActivity {
                             zmap.invalidate();
                         }
                     }
-
                 }else {
                     selectPoints.get(position).setMultiple(true);
                     PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
@@ -1104,6 +1176,43 @@ public class MapEditActivity extends DDRActivity {
                     LineView.getInstance(getApplication()).
                             setPoints(pathPoints);
                     zmap.invalidate();
+                }
+                break;
+            case notifyEditorMapResult:
+                BaseCmd.rspEditorLidarMap rspEditorLidarMap= (BaseCmd.rspEditorLidarMap) messageEvent.getData();
+                int resultType=rspEditorLidarMap.getTypeValue();
+                int type=rspEditorLidarMap.getReqData().getTypeValue();
+                if (resultType==0){
+                    switch (type){
+                        case 1:
+                            tvRevocationDe.setVisibility(View.GONE);
+                            tcpClient.requestFile();          //去噪成功后，开始重新下载地图
+                            if (waitDialog!=null&&waitDialog.isShowing()){
+                                waitDialog.dismiss();
+                                showWaitDialog("重新加载地图...");
+                            }
+                            break;
+                        case 4:
+                            tcpClient.requestFile();          //地图初始化修改成功后，开始重新下载地图
+                            rectangles.clear();
+                            RectangleView.getRectangleView().setFirstPoint(null);
+                            RectangleView.getRectangleView().setRectangles(rectangles);
+                            zmap.invalidate();
+                            if (waitDialog!=null&&waitDialog.isShowing()){
+                                waitDialog.dismiss();
+                                showWaitDialog("重新加载地图...");
+                            }
+                            break;
+                    }
+                }else {
+                    toast("操作失败！");
+                }
+                break;
+            case updateMapList:
+                setBitmap(bitmap);
+                if (waitDialog!=null&&waitDialog.isShowing()){
+                    waitDialog.dismiss();
+                    toast("地图加载成功");
                 }
                 break;
         }
@@ -1120,6 +1229,7 @@ public class MapEditActivity extends DDRActivity {
         Logger.e("-------退出");
         PointView.getInstance(context).clearDraw();
         LineView.getInstance(context).clearDraw();
+        RectangleView.getRectangleView().clearDraw();
         isRuning=false;
         toPostData();
     }

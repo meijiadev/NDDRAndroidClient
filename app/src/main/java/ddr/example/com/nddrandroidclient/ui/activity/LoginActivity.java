@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -65,7 +66,7 @@ public  class LoginActivity extends DDRActivity {
     private boolean isLan=true;                                //是否是局域网  默认局域网登录
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void upDate(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateIPList:
@@ -213,6 +214,7 @@ public  class LoginActivity extends DDRActivity {
     protected void onDestroy() {
         super.onDestroy();
         tcpClient=null;
+        EventBus.getDefault().removeAllStickyEvents();
     }
 
     @Override

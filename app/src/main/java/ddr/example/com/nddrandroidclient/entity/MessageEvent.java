@@ -64,6 +64,8 @@ public class MessageEvent {
         getSpecificPoint10,
         getSpecificPoint11,
 
+        notifyEditorMapResult,
+
 
 
 

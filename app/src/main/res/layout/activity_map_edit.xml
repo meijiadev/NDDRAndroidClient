@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     android:background="#101112"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
     <LinearLayout
         android:id="@+id/second_title"
         android:layout_width="match_parent"
@@ -143,21 +141,14 @@
             android:layout_marginLeft="8dp"
             />
     </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_target"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/second_title"
-        android:visibility="gone"
-        android:background="#161718"
-        ></androidx.recyclerview.widget.RecyclerView>
+
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/second_title"
-        android:layout_toRightOf="@id/recycler_target"
         >
-
         <ImageView
             android:id="@+id/image"
             android:layout_width="wrap_content"
@@ -241,24 +232,6 @@
             />
     </LinearLayout>
 
-  <!--  <ImageView
-        android:id="@+id/add_poi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/add_poi"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="40dp"
-        android:layout_above="@id/my_rocker_zy"
-        android:visibility="gone"
-        />-->
-   <!-- <TextView
-        android:id="@+id/add_poi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="40dp"
-        android:layout_above="@id/my_rocker_zy"
-        android:visibility="gone"/>-->
 
     <ddr.example.com.nddrandroidclient.widget.view.RockerView
         android:id="@+id/my_rocker"
@@ -298,6 +271,42 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="130dp"
         android:text="添加点"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:gravity="center_horizontal"
+        android:paddingTop="39.5dp"
+        android:visibility="gone"
+        />
+
+    <!--原图去噪 添加-->
+    <TextView
+        android:id="@+id/tv_add_de"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/iv_denoising_add"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="130dp"
+        android:text="添加点"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:gravity="center_horizontal"
+        android:paddingTop="39.5dp"
+        android:visibility="gone"
+        />
+
+    <!--原图去噪 撤销-->
+    <TextView
+        android:id="@+id/tv_revocation_de"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/iv_denoising_revocation"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="55dp"
+        android:layout_marginBottom="22dp"
+        android:text="撤销"
         android:textColor="@color/white"
         android:textSize="9sp"
         android:gravity="center_horizontal"
@@ -349,6 +358,42 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
+        />
+    <!--原图去噪 保存-->
+    <TextView
+        android:id="@+id/tv_save_de"
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/second_title"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bt_bg__map"
+        android:drawableLeft="@mipmap/iv_denoising_save"
+        android:paddingLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="保存"
+        android:gravity="center_vertical"
+        android:drawablePadding="10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_12sp"
+        android:visibility="gone"
+        />
+    <!--原图去噪 初始化-->
+    <TextView
+        android:id="@+id/tv_init_de"
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/second_title"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bt_bg__map"
+        android:drawableLeft="@mipmap/iv_denoising_init"
+        android:paddingLeft="10dp"
+        android:text="初始化"
+        android:layout_marginRight="120dp"
+        android:gravity="center_vertical"
+        android:drawablePadding="10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_12sp"
         android:visibility="gone"
         />
 

@@ -103,10 +103,16 @@ public final class SelectDialog {
                     break;
                 case R.id.tv_confirm:
                     Logger.e("点击确定");
-                    PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(mPosition);
-                    pathPoint.setRotationAngle(et_toward.getFloatText());
-                    mListener.onConfirm();
-                    dismiss();
+                    if (tv_point_name.getText().toString().equals("选择路径点")){
+                        toast("请先选择路径点!");
+                    }else if (tv_action_name.getText().toString().equals("选择动作类型")){
+                        toast("请先选择动作类型!");
+                    }else {
+                        PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(mPosition);
+                        pathPoint.setRotationAngle(et_toward.getFloatText());
+                        mListener.onConfirm();
+                        dismiss();
+                    }
                     break;
 
             }
@@ -135,13 +141,11 @@ public final class SelectDialog {
             }else if (view==tv_action_name){
                 mAdapter.setNewData(actionData);
             }
-
             mAdapter.setOnItemClickListener((adapter, view1, position) -> {
                 if (view==tv_point_name){
                     mListener.onSelected(position,mAdapter.getItem(position));
                     PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(position);
                     tv_point_name.setText(pathPoint.getName());
-                    tv_action_name.setText("请选择动作类型");
                     mPosition=position;
                     customPopuWindow.dissmiss();
                 }else if (view==tv_action_name){

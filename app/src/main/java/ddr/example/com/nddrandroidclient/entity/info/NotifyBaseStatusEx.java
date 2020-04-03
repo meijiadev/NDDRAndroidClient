@@ -196,7 +196,7 @@ public class NotifyBaseStatusEx {
         this.exceptionValue = exceptionValue;
         if (exceptionValue==5){
             setHaveLocation(false);
-            Logger.e("定位不成功！");
+            //Logger.e("定位不成功！");
         }
     }
 
