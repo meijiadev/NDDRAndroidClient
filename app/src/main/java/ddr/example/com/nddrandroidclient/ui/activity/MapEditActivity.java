@@ -51,6 +51,7 @@ import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -189,7 +190,8 @@ public class MapEditActivity extends DDRActivity {
         setFixedSpeed();
         targetPointAdapter = new TargetPointAdapter(R.layout.item_show_recycler);
         pathAdapter = new PathAdapter(R.layout.item_show_recycler);
-        editTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
+        editTypeAdapter=new StringAdapter(R.layout.item_edit_type_recycler);
+        editTypeAdapter.setContext(context);
         graphTypeAdapter=new StringAdapter(R.layout.item_show_recycler);
         GridLayerView.getInstance(zmap).onDestroy();
 
@@ -201,7 +203,7 @@ public class MapEditActivity extends DDRActivity {
         Intent intent=getIntent();
         activityType=intent.getIntExtra("type",0);
         bitmap=intent.getStringExtra("bitmapPath");
-        setBitmap(bitmap);
+        zmap.setImageBitmap(bitmap);
         mapFileStatus = MapFileStatus.getInstance();
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -238,7 +240,7 @@ public class MapEditActivity extends DDRActivity {
         try {
             fis = new FileInputStream(bitmap);
             lookBitmap= BitmapFactory.decodeStream(fis);
-            zmap.setImageBitmap(lookBitmap);
+            zmap.setImageBitmap(bitmap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
@@ -528,7 +530,7 @@ public class MapEditActivity extends DDRActivity {
                 break;
             case R.id.tv_save_de:
                 tcpClient.reqEditMap(rectangles,1,false,mapFileStatus.getMapName());
-                showWaitDialog("正在保存中...");
+                showWaitDialog("正在保存中..."+mapFileStatus.getMapName());
                 break;
             case R.id.tv_init_de:
                 tcpClient.reqEditMap(rectangles,4,true,mapFileStatus.getMapName());
@@ -853,10 +855,15 @@ public class MapEditActivity extends DDRActivity {
         editTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
             tvTargetPoint.setText(editTypes.get(position));
             customPopuWindow.dissmiss();
-            if (position==1){
-                isDenoising=true;
-            }else {
-                isDenoising=false;
+            switch (position){
+                case 0:
+                    isDenoising=false;
+                    tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
+                    break;
+                case 1:
+                    isDenoising=true;
+                    tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);
+                    break;
             }
             whetherShowDe();
         });
@@ -1186,6 +1193,7 @@ public class MapEditActivity extends DDRActivity {
                     switch (type){
                         case 1:
                             tvRevocationDe.setVisibility(View.GONE);
+                            ImageLoader.clear(this);
                             tcpClient.requestFile();          //去噪成功后，开始重新下载地图
                             if (waitDialog!=null&&waitDialog.isShowing()){
                                 waitDialog.dismiss();
@@ -1193,6 +1201,7 @@ public class MapEditActivity extends DDRActivity {
                             }
                             break;
                         case 4:
+                            ImageLoader.clear(this);
                             tcpClient.requestFile();          //地图初始化修改成功后，开始重新下载地图
                             rectangles.clear();
                             RectangleView.getRectangleView().setFirstPoint(null);
@@ -1206,14 +1215,20 @@ public class MapEditActivity extends DDRActivity {
                     }
                 }else {
                     toast("操作失败！");
+                    if (waitDialog!=null&&waitDialog.isShowing()){
+                        waitDialog.dismiss();
+                    }
                 }
                 break;
             case updateMapList:
-                setBitmap(bitmap);
-                if (waitDialog!=null&&waitDialog.isShowing()){
-                    waitDialog.dismiss();
-                    toast("地图加载成功");
-                }
+                postDelayed(()->{
+                    if (waitDialog!=null&&waitDialog.isShowing()){
+                        waitDialog.dismiss();
+                        toast("地图加载成功");
+                    }
+                    zmap.setImageBitmap(bitmap);
+                    Logger.e("-------地图加载");
+                },500);
                 break;
         }
     }

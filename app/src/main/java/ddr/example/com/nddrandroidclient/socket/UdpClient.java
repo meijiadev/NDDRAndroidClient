@@ -48,7 +48,6 @@ public class UdpClient extends BaseSocketConnection {
             udpLife=false;
             readThread=null;
         }
-
     }
 
 
@@ -69,6 +68,8 @@ public class UdpClient extends BaseSocketConnection {
         }
         return true;
     }
+
+
     public void readData(){
         if (readThread==null){
             readThread=new Thread(new Runnable() {

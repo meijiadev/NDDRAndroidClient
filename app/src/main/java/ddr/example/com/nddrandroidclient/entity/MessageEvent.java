@@ -34,6 +34,7 @@ public class MessageEvent {
         updatePoints,   //添加完，更新目标点列表
         updatePaths,    //添加完，更新路径列表
         updateVirtualWall,  //添加完虚拟墙并通知保存
+        updateDenSuccess,    //原图去噪结束
         updateRevamp,   //更新修改之后的地图信息，提醒UI层重新拉地图信息
 
         touchFloatWindow, // 点击浮窗

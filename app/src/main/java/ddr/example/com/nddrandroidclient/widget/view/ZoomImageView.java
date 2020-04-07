@@ -2,6 +2,7 @@ package ddr.example.com.nddrandroidclient.widget.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
@@ -12,6 +13,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 
 import DDRVLNMapProto.DDRVLNMap;
@@ -80,10 +83,18 @@ public class ZoomImageView extends View {
      * @param bitmap
      * 待展示的Bitmap对象
      */
-    public void setImageBitmap(Bitmap bitmap) {
+    public void setImageBitmap(String bitmap) {
         if (bitmap!=null){
             try {
-                sourceBitmap = bitmap;
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(bitmap);
+                    sourceBitmap = BitmapFactory.decodeStream(fis);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
                 MapFileStatus mapFileStatus=MapFileStatus.getInstance();
                 DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();

@@ -1036,7 +1036,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
 
     private BaseDialog dialog, waitDialog;
-    private Bitmap lookBitmap;
+    //private Bitmap lookBitmap;
     private String bitmapPath;          // 点击的图片存储地址
     private boolean mapIsUsing = false;
 
@@ -1089,15 +1089,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         dialog = new WaitDialog.Builder(getAttachActivity())
                 .setMessage("加载" + mapName + "地图信息中")
                 .show();
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(mapInfos.get(position).getBitmap());
-            lookBitmap = BitmapFactory.decodeStream(fis);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
         String name = mapInfos.get(position).getMapName();
         name = name.replaceAll("OneRoute_", "");
         tvMapName.setText("地图名称：" + name);
@@ -1115,13 +1106,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     pointDetailLayout.setVisibility(View.VISIBLE);
                     pathDetailLayout.setVisibility(View.GONE);
                     taskDetailLayout.setVisibility(View.GONE);
-                    zoomMap.setImageBitmap(lookBitmap);
+                    zoomMap.setImageBitmap(bitmapPath);
                 }
             }
         };
         getAttachActivity().postDelayed(waitRunnable,7000);
 
     }
+
+
 
     private String switchMapName, switchBitmapPath;
 
@@ -1523,6 +1516,25 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     /**
+     * setUserVisibleHint的使用场景:FragmentPagerAdapter+ViewPager
+     * 这种方式我们还是比较常见的,譬如,谷歌自带的TabLayout控件,此种场景下,当我们切换fragment的时候,会调用setUserVisibleHint方法,
+     * 不会调用onHiddenChanged方法,也不会走fragment的生命周期方法(fragment初始化完成之后,注意这里需要重写viewpager中使用的适配器的方法,让fragment不会被销毁,不然还是会遇到问题)
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            // 相当于onResume()方法--获取焦点
+            Logger.e("可见");
+
+        }else {
+            // 相当于onpause()方法---失去焦点
+            Logger.e("不可见");
+        }
+    }
+
+
+    /**
      * 设置图片的路径
      *
      * @param infoList
@@ -1602,7 +1614,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue), null, null, null);
                             tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                             LineView.getInstance(getAttachActivity()).setSpaceItems(mapFileStatus.getSpaceItems());
-                            zoomMap.setImageBitmap(lookBitmap);
+                            zoomMap.setImageBitmap(bitmapPath);
                         }, 800);
                     }
                 }
@@ -1622,7 +1634,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case updateVirtualWall:
+                zoomMap.setImageBitmap(bitmapPath);
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                break;
+            case updateDenSuccess:
+                zoomMap.setImageBitmap(bitmapPath);
                 break;
             case updateRevamp:
 

@@ -121,46 +121,51 @@ public class MapImageView0 extends ImageView {
      * @param mapName
      */
     public void setMapBitmap(String mapName){
-        if (!this.mapName.equals(mapName)||sourceBitmap==null){
-            this.mapName=mapName;
-            Logger.e("设置图片");
-            String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(pngPath);
-                Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                sourceBitmap=bitmap;
-                Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
-                totalTranslateX=0;
-                MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-                data=mapFileStatus.getReqDDRVLNMapEx();
-                DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
-                r00=affine_mat.getR11();
-                r01=affine_mat.getR12();
-                t0=affine_mat.getTx();
-                r10=affine_mat.getR21();
-                r11=affine_mat.getR22();
-                t1=affine_mat.getTy();
-                totalTranslateY=0;
-                totalRatio=1;
-                scaledRatio=1;
-                initRatio=1;
-                lastFingerDis=0;
-                degree=0;
-                rotation=0;
-                currentStatus=STATUS_INIT;
-                isRunAbPointLine=false;
-                targetPoint=null;
-                pathLineItemExesS.clear();
-                pathLines.clear();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
-
+        this.mapName = mapName;
+        Logger.e("设置图片");
+        String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(pngPath);
+            Bitmap bitmap = BitmapFactory.decodeStream(fis);
+            sourceBitmap = bitmap;
+            Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
+            MapFileStatus mapFileStatus = MapFileStatus.getInstance();
+            data = mapFileStatus.getReqDDRVLNMapEx();
+            DDRVLNMap.affine_mat affine_mat = data.getBasedata().getAffinedata();
+            r00 = affine_mat.getR11();
+            r01 = affine_mat.getR12();
+            t0 = affine_mat.getTx();
+            r10 = affine_mat.getR21();
+            r11 = affine_mat.getR22();
+            t1 = affine_mat.getTy();
+            //initView();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+
         invalidate();
+    }
+
+    /**
+     * 重置
+     */
+    private void initView(){
+        totalTranslateX=0;
+        totalTranslateY=0;
+        totalRatio=1;
+        scaledRatio=1;
+        initRatio=1;
+        lastFingerDis=0;
+        degree=0;
+        rotation=0;
+        currentStatus=STATUS_INIT;
+        isRunAbPointLine=false;
+        targetPoint=null;
+        pathLineItemExesS.clear();
+        pathLines.clear();
     }
 
 

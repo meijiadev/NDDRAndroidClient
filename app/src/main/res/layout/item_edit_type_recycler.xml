@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="110dp"
+    android:layout_height="30dp"
+    android:layout_marginTop="12dp">
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="虚拟墙"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:drawablePadding="7.5dp"
+        android:drawableLeft="@mipmap/virtual_wall_gray"
+        />
+
+</LinearLayout>

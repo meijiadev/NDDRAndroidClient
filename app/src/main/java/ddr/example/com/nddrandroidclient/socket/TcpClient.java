@@ -436,10 +436,10 @@ public class TcpClient extends BaseSocketConnection {
         List<BaseCmd.reqEditorLidarMap.eraseRange> eraseRanges=new ArrayList<>();
         for (Rectangle rectangle:rectangles){
             BaseCmd.reqEditorLidarMap.eraseRange eraseRange=BaseCmd.reqEditorLidarMap.eraseRange.newBuilder()
-                    .setLeft(rectangle.getFirstPoint().getX())
-                    .setTop(rectangle.getFirstPoint().getY())
-                    .setBottom(rectangle.getSecondPoint().getY())
-                    .setRight(rectangle.getSecondPoint().getX())
+                    .setLeft(rectangle.getFirstPoint().getY())
+                    .setTop(rectangle.getFirstPoint().getX())
+                    .setBottom(rectangle.getSecondPoint().getX())
+                    .setRight(rectangle.getSecondPoint().getY())
                     .build();
             eraseRanges.add(eraseRange);
         }

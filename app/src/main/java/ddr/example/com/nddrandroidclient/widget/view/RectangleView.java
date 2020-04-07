@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 import java.util.List;
 
+import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.entity.other.Rectangle;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -69,6 +70,7 @@ public class RectangleView extends Shape {
             canvas.drawRect(xyEntity.getX(),xyEntity.getY(),xyEntity1.getX(),xyEntity1.getY(),paint);
 
         }
+
     }
 
 
@@ -83,6 +85,7 @@ public class RectangleView extends Shape {
 
     public void clearDraw(){
         rectangles=null;
-         firstPoint=null;
+        firstPoint=null;
+
     }
 }
