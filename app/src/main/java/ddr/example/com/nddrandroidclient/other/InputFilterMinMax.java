@@ -31,11 +31,24 @@ public class InputFilterMinMax implements InputFilter {
      */
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+        Logger.e("--------"+dest.toString()+";"+source.toString()+";"+start+";"+end+";"+dstart+";"+dend);
         try {
-            float input = Float.parseFloat(dest.toString() + source.toString());
-            if (isInRange(min, max, input))
-                return null;
-        } catch (NumberFormatException nfe) { }
+            if(source.toString().equals("-")){
+                if (dest.toString().equals("")){
+                    return null;
+                }else {
+                    float input = Float.parseFloat(source.toString()+dest.toString());
+                    if (isInRange(min, max, input))
+                        return null;
+                }
+            }else {
+                float input = Float.parseFloat(dest.toString()+source.toString());
+                if (isInRange(min, max, input))
+                    return null;
+            }
+        } catch (NumberFormatException nfe) {
+            nfe.printStackTrace();
+        }
         return "";
     }
 

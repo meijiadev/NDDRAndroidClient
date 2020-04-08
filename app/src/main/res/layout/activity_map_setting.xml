@@ -71,17 +71,19 @@
         android:layout_marginTop="24dp"/>
     <TextView
         android:id="@+id/tv_point_set"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:text="待机点设置："
         android:typeface="normal"
         android:textColor="#99ffffff"
         android:textSize="12sp"
-        android:gravity="left"
+        android:gravity="center_vertical"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="332dp"
+        android:layout_marginRight="356dp"
         android:layout_marginTop="32dp"
         android:layout_below="@id/layout_title"
+        android:drawableLeft="@mipmap/iv_hint"
+        android:drawablePadding="5dp"
         />
     <TextView
         android:id="@+id/tv_switch_point"

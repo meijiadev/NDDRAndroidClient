@@ -86,7 +86,7 @@ public class MapImageView0 extends ImageView {
     private List<DDRVLNMap.path_line_itemEx> pathLineItemExes;  // 路径列表
     private List<DDRVLNMap.task_itemEx> taskItemExes;          //  任务列表
     private List<DDRVLNMap.path_elementEx> pathElementExes;    // 任务列表的元素
-    private List<DDRVLNMap.path_line_itemEx> pathLineItemExesS;  // 路径列表  选中的任务中包含的路径
+    private List<DDRVLNMap.path_line_itemEx> pathLineItemExesS=new ArrayList<>();  // 路径列表  选中的任务中包含的路径
     private List<DDRVLNMap.targetPtItem> targetPtItemsS;          // 目标点列表 选中的任务中包含的目标点
     private List<SpaceItem> spaceItems;
     private DDRVLNMap.reqDDRVLNMapEx data;
@@ -121,6 +121,10 @@ public class MapImageView0 extends ImageView {
      * @param mapName
      */
     public void setMapBitmap(String mapName){
+        //如果设置的地图不是正在显示的地图，则清空之前的内容并且让地图恢复原始大小和位置
+        if (!this.mapName.equals(mapName)){
+            initView();
+        }
         this.mapName = mapName;
         Logger.e("设置图片");
         String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
@@ -139,20 +143,18 @@ public class MapImageView0 extends ImageView {
             r10 = affine_mat.getR21();
             r11 = affine_mat.getR22();
             t1 = affine_mat.getTy();
-            //initView();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-
         invalidate();
     }
 
     /**
      * 重置
      */
-    private void initView(){
+    public void initView(){
         totalTranslateX=0;
         totalTranslateY=0;
         totalRatio=1;
@@ -164,6 +166,7 @@ public class MapImageView0 extends ImageView {
         currentStatus=STATUS_INIT;
         isRunAbPointLine=false;
         targetPoint=null;
+
         pathLineItemExesS.clear();
         pathLines.clear();
     }
@@ -180,8 +183,6 @@ public class MapImageView0 extends ImageView {
             targetPtItems=data.getTargetPtdata().getTargetPtList();
             pathLineItemExes=data.getPathSet().getPathLineDataList();
             taskItemExes=data.getTaskSetList();
-            spaceItems=mapFileStatus.getcSpaceItems();
-            pathLineItemExesS=new ArrayList<>();
             targetPtItemsS=new ArrayList<>();
             Logger.e("设置任务:"+taskName+"------任务数量:"+taskItemExes.size());
             try {
@@ -552,7 +553,9 @@ public class MapImageView0 extends ImageView {
      * 绘制虚拟墙
      */
     private void onDrawWall(Canvas canvas){
+        spaceItems=mapFileStatus.getcSpaceItems();
         if (spaceItems!=null){
+            Logger.e("绘制虚拟墙");
             for (int i=0;i<spaceItems.size();i++){
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){

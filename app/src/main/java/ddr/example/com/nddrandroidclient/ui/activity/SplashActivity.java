@@ -30,7 +30,7 @@ import ddr.example.com.nddrandroidclient.socket.UdpClient;
  * desc:闪屏页面
  */
 public class SplashActivity extends DDRActivity implements OnPermission,Animation.AnimationListener {
-    private static final int ANIM_TIME = 1000;
+    private static final int ANIM_TIME = 1500;
     @BindView(R.id.iv_splash)
     ImageView ivSplash;
     public UdpClient udpClient;

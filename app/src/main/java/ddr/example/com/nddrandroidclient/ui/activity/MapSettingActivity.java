@@ -98,7 +98,7 @@ public class MapSettingActivity extends DDRActivity {
     }
 
 
-    @OnClick({R.id.tv_title, R.id.tv_recover, R.id.tv_navigation, R.id.tv_line_patrol, R.id.tv_cancel, R.id.tv_confirm,R.id.tv_switch_point,R.id.tv_static_mode,R.id.tv_dynamic_mode})
+    @OnClick({R.id.tv_title, R.id.tv_recover, R.id.tv_navigation, R.id.tv_line_patrol, R.id.tv_cancel, R.id.tv_confirm,R.id.tv_switch_point,R.id.tv_static_mode,R.id.tv_dynamic_mode,R.id.tv_point_set})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_title:
@@ -163,6 +163,9 @@ public class MapSettingActivity extends DDRActivity {
                             public void onCancel(BaseDialog dialog) {
                             }
                         }).show();
+                break;
+            case R.id.tv_point_set:
+                toast("任务结束后，机器人将自动返回指定的待机点待命");
                 break;
             case R.id.tv_switch_point:
                 showListPopupWindow(tvSwitchPoint);

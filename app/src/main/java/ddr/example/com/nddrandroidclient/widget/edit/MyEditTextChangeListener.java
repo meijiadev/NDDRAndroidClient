@@ -70,15 +70,18 @@ public class MyEditTextChangeListener implements TextWatcher {
         switch (editType){
             case ET_X:
                 try {
-                    float x=Float.valueOf(s.toString());
-                    if (x>999||x<-999){
-                        ToastUtils.show("输入超出范围,请输入正确的数值");
-                    }else {
-                        targetPoint1.setX(x);
-                        targetPoint1.setY(editTextY.getFloatText());
-                        targetPoint1.setTheta(editTextC.getIntegerText());
-                        pointView.setPoint(targetPoint1);
-                        zoomImageView.invalidate();
+                    String s1=s.toString();
+                    if (!s1.equals("-")){
+                        float x=Float.valueOf(s1);
+                        if (x>999||x<-999){
+                            ToastUtils.show("输入超出范围,请输入正确的数值");
+                        }else {
+                            targetPoint1.setX(x);
+                            targetPoint1.setY(editTextY.getFloatText());
+                            targetPoint1.setTheta(editTextC.getIntegerText());
+                            pointView.setPoint(targetPoint1);
+                            zoomImageView.invalidate();
+                        }
                     }
                 }catch (Exception e){
                     e.printStackTrace();

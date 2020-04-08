@@ -317,8 +317,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         etToward.setViewType(1);
         etSpeed.setEt_content(3);
 
-        etX.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999", "999")});
-        etY.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999", "999")});
+        etX.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999.99", "999.99")});
+        etY.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999.99", "999.99")});
         etSpeed.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("0", "1.0")});
         etToward.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-180", "180")});
 

@@ -53,7 +53,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 break;
             case R.layout.item_target_point:
                 //地图管理页面的布局
-                Logger.e("-----------地图管理页面的布局");
+                //Logger.e("-----------地图管理页面的布局");
                 if (item.isSelected()){
                     helper.setText(R.id.tv_target_name,item.getName()).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
                 }else {
@@ -102,7 +102,7 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
     @Override
     public void setNewData(@Nullable List<TargetPoint> data) {
         super.setNewData(data);
-        Logger.e("设置列表");
+       // Logger.e("设置列表");
 
     }
 

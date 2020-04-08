@@ -55,6 +55,7 @@ public class PointView extends Shape {
     private Bitmap targetBitmap,targetBitmap1;
     private Bitmap beginBitmap,chargeBitmap;        //初始点、充点电
     private boolean isCheckPoint;                   //是否通过点击选择目标点
+    private int directionW,directionH;
 
 
     /**
@@ -148,6 +149,8 @@ public class PointView extends Shape {
         chargeBitmap=BitmapFactory.decodeResource(context.getResources(),R.mipmap.charge_point);
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
         EventBus.getDefault().register(this);
+        directionW=directionBitmap.getWidth();
+        directionH=directionBitmap.getHeight();
     }
 
 
@@ -207,8 +210,8 @@ public class PointView extends Shape {
             XyEntity xyEntity=zoomImageView.toXorY(x,y);
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
             matrix.setRotate(-angle);
-            directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,60,60,matrix,true);
-            canvas.drawBitmap(directionBitmap1,(int)xyEntity.getX()-30,(int)xyEntity.getY()-30,pointPaint);
+            directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionW,matrix,true);
+            canvas.drawBitmap(directionBitmap1,(int)xyEntity.getX()-directionW/2,(int)xyEntity.getY()-directionH/2,pointPaint);
         }
 
         if (selectPoints != null) {

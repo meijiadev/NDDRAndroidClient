@@ -172,7 +172,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast("添加任务成功，等待前往"+sPoint);
                 break;
             case getSpecificPoint2:
-                toast("发生未知错误");
+                toast("当前无任务！");
                 break;
             case getSpecificPoint3:
                 toast("当前没有定位");

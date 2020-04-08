@@ -231,23 +231,6 @@ public class MapEditActivity extends DDRActivity {
 
     }
 
-    /**
-     * 设置图片
-     * @param bitmap
-     */
-    private void setBitmap(String bitmap){
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(bitmap);
-            lookBitmap= BitmapFactory.decodeStream(fis);
-            zmap.setImageBitmap(bitmap);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public boolean statusBarDarkFont() {
@@ -523,9 +506,14 @@ public class MapEditActivity extends DDRActivity {
             case R.id.tv_revocation_de:
                 if (rectangles.size()>0){
                     rectangles.remove(rectangles.size()-1);
+                }else {
+                    toast("当前无可撤销内容！");
                 }
                 RectangleView.getRectangleView().setFirstPoint(null);
                 RectangleView.getRectangleView().setRectangles(rectangles);
+                firstPoint=null;
+                tvAddDe.setText("添加点");
+                tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
                 zmap.invalidate();
                 break;
             case R.id.tv_save_de:
