@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -56,6 +57,7 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -74,6 +76,7 @@ import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.MenuDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.RelocationDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
@@ -303,9 +306,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         /*************************路径设置***************************/
         map = tv_Spinner.getMap();
         actionList = new ArrayList<>();
-        for (int i = 1; i < 9; i++) {
-            actionList.add(map.get(i));
-        }
+        actionList.add(map.get(7));
         modeList = new ArrayList<>();
         modeList.add(map.get(64));
         modeList.add(map.get(65));
@@ -315,6 +316,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         /*************************************************************/
         etToward.setViewType(1);
         etSpeed.setEt_content(3);
+
+        etX.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999", "999")});
+        etY.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-999", "999")});
+        etSpeed.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("0", "1.0")});
+        etToward.getEt_content().setFilters(new InputFilter[]{new InputFilterMinMax("-180", "180")});
+
 
     }
 
@@ -1029,7 +1036,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
 
     private BaseDialog dialog, waitDialog;
-    private Bitmap lookBitmap;
+    //private Bitmap lookBitmap;
     private String bitmapPath;          // 点击的图片存储地址
     private boolean mapIsUsing = false;
 
@@ -1082,15 +1089,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         dialog = new WaitDialog.Builder(getAttachActivity())
                 .setMessage("加载" + mapName + "地图信息中")
                 .show();
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(mapInfos.get(position).getBitmap());
-            lookBitmap = BitmapFactory.decodeStream(fis);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
         String name = mapInfos.get(position).getMapName();
         name = name.replaceAll("OneRoute_", "");
         tvMapName.setText("地图名称：" + name);
@@ -1108,13 +1106,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     pointDetailLayout.setVisibility(View.VISIBLE);
                     pathDetailLayout.setVisibility(View.GONE);
                     taskDetailLayout.setVisibility(View.GONE);
-                    zoomMap.setImageBitmap(lookBitmap);
+                    zoomMap.setImageBitmap(bitmapPath);
                 }
             }
         };
         getAttachActivity().postDelayed(waitRunnable,7000);
 
     }
+
+
 
     private String switchMapName, switchBitmapPath;
 
@@ -1145,10 +1145,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             .setListener(new InputDialog.OnListener() {
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {
+                                    switchMapName = mapInfos.get(position).getMapName();
+                                    switchBitmapPath = mapInfos.get(position).getBitmap();
+                                    Logger.e("-----把地图切换到：" + switchMapName);
                                     if (!mapIsUsing){
-                                        switchMapName = mapInfos.get(position).getMapName();
-                                        switchBitmapPath = mapInfos.get(position).getBitmap();
-                                        Logger.e("-----把地图切换到：" + switchMapName);
                                         tcpClient.reqRunControlEx(switchMapName);
                                         waitDialog = new WaitDialog.Builder(getAttachActivity())
                                                 .setMessage("正在切换中")
@@ -1516,6 +1516,25 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     /**
+     * setUserVisibleHint的使用场景:FragmentPagerAdapter+ViewPager
+     * 这种方式我们还是比较常见的,譬如,谷歌自带的TabLayout控件,此种场景下,当我们切换fragment的时候,会调用setUserVisibleHint方法,
+     * 不会调用onHiddenChanged方法,也不会走fragment的生命周期方法(fragment初始化完成之后,注意这里需要重写viewpager中使用的适配器的方法,让fragment不会被销毁,不然还是会遇到问题)
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            // 相当于onResume()方法--获取焦点
+            Logger.e("可见");
+
+        }else {
+            // 相当于onpause()方法---失去焦点
+            Logger.e("不可见");
+        }
+    }
+
+
+    /**
      * 设置图片的路径
      *
      * @param infoList
@@ -1538,7 +1557,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapInfos = infoList;
     }
 
-    private BaseDialog waitDialog2;
+    private BaseDialog relocationDialog;
     private NotifyBaseStatusEx notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
     private int relocationStatus;
 
@@ -1595,7 +1614,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue), null, null, null);
                             tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                             LineView.getInstance(getAttachActivity()).setSpaceItems(mapFileStatus.getSpaceItems());
-                            zoomMap.setImageBitmap(lookBitmap);
+                            zoomMap.setImageBitmap(bitmapPath);
                         }, 800);
                     }
                 }
@@ -1615,7 +1634,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case updateVirtualWall:
+                zoomMap.setImageBitmap(bitmapPath);
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                break;
+            case updateDenSuccess:
+                zoomMap.setImageBitmap(bitmapPath);
                 break;
             case updateRevamp:
 
@@ -1653,26 +1676,14 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     Logger.e("采集完并切换地图");
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 }
-                getAttachActivity().postDelayed(() -> {
-                    waitDialog2 = new WaitDialog.Builder(getAttachActivity())
-                            .setMessage("正在自动定位中可能需要1~3分钟，请稍后...")
-                            .show();
-                }, 600);
-                break;
-            case updateBaseStatus:
-                break;
-            case enterRelocationMode:
-                if (mapIsUsing){
-                    waitDialog2=new WaitDialog.Builder(getActivity())
-                            .setMessage("正在重新定位中可能需要1~3分钟时间...")
-                            .show();
-                    mapIsUsing=false;
-                }
                 break;
             case updateRelocationStatus:
                 relocationStatus= (int) messageEvent.getData();
                 switch (relocationStatus){
                     case 0:
+                        if (relocationDialog!=null&&relocationDialog.isShowing()){
+                            relocationDialog.dismiss();
+                        }
                         new InputDialog.Builder(getAttachActivity())
                                 .setEditVisibility(View.GONE)
                                 .setTitle("自动定位失败，是否进入手动定位")
@@ -1696,11 +1707,35 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         break;
                     case 1:
                         toast("定位成功！");
-                        tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                        if (relocationDialog!=null){
+                            relocationDialog.dismiss();
+                        }
                         break;
-                }
-                if (waitDialog2!=null&&waitDialog2.isShowing()){
-                    waitDialog2.dismiss();
+                    case 2:
+                        Logger.e("进入重定位...");
+                        relocationDialog = new RelocationDialog.Builder(getActivity())
+                                .setAutoDismiss(true)
+                                .setListener(new RelocationDialog.OnListener() {
+                                    @Override
+                                    public void onHandMovement() {
+                                        Logger.e("地图地址:"+switchBitmapPath);
+                                        tcpClient.exitModel();
+                                        Intent intent = new Intent(getAttachActivity(), RelocationActivity.class);
+                                        intent.putExtra("currentBitmap", switchBitmapPath);
+                                        intent.putExtra("currentMapName", switchMapName);
+                                        startActivity(intent);
+                                    }
+                                    @Override
+                                    public void onCancelRelocation() {
+                                        tcpClient.exitModel();
+
+                                    }
+                                })
+                                .show();
+                        break;
+                    case 3:
+
+                        break;
                 }
                 break;
 

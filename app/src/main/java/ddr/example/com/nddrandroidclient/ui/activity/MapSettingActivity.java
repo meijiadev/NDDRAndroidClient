@@ -2,6 +2,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -83,6 +85,7 @@ public class MapSettingActivity extends DDRActivity {
         super.initView();
         mapFileStatus=MapFileStatus.getInstance();
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+        etABSpeed.setFilters(new InputFilter[]{new InputFilterMinMax("0", "1.0")});
     }
 
     @Override

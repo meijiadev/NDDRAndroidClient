@@ -27,7 +27,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * time ：2019/11/13
  * desc : 绘制点
  */
-public class PointView {
+public class PointView extends Shape {
     public static PointView pointView;
     private List<TargetPoint> targetPoints;
     private List<TargetPoint> targetPoints1;

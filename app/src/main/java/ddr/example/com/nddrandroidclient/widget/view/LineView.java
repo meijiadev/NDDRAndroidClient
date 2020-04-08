@@ -23,7 +23,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  *  time : 2019/11/18
  *  desc : 路径绘制
  */
-public class LineView {
+public class LineView extends Shape {
     public static LineView lineView;
     private Paint linePaint,textPaint,linePaint1,selectPaint;
     private List<PathLine> pathLines;
@@ -275,7 +275,7 @@ public class LineView {
      * @param y
      */
     public void onClick(ZoomImageView zoomImageView,float x,float y){
-        if (spaceItems!=null){
+        if (spaceItems!=null&&isClickable){
             for (int i=0;i<spaceItems.size();i++){
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){
@@ -304,6 +304,16 @@ public class LineView {
     }
 
 
+    private boolean isClickable;         //是否可点击
+
+    /**
+     * 设置虚拟墙是否可点击
+     * @param isClickable
+     */
+    public void setClickable(boolean isClickable){
+        this.isClickable=isClickable;
+    }
+
 
 
 
@@ -318,6 +328,7 @@ public class LineView {
         lines=null;
         pathLines1=null;
         selectPosition=-1;
+        isClickable=false;
     }
 
 

@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.other.Rectangle;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
@@ -353,7 +354,7 @@ public class TcpClient extends BaseSocketConnection {
                 .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
-        tcpClient.sendData(commonHeader,reqGetDDRVLNMapEx);
+        sendData(commonHeader,reqGetDDRVLNMapEx);
         Logger.e("请求地图信息");
     }
 
@@ -392,6 +393,26 @@ public class TcpClient extends BaseSocketConnection {
 
     }
 
+    /**
+     * 添加或删除临时任务
+     * @param routeName
+     * @param taskName
+     * @param num
+     * @param type
+     */
+    public void addOrDetTemporary(ByteString routeName, ByteString taskName,int num,int type){
+        DDRVLNMap.reqTaskOperational.OptItem optItem= DDRVLNMap.reqTaskOperational.OptItem.newBuilder()
+                .setOnerouteName(routeName)
+                .setTaskName(taskName)
+                .setRunCount(num)
+                .setTypeValue(type)
+                .build();
+        DDRVLNMap.reqTaskOperational reqTaskOperational=DDRVLNMap.reqTaskOperational.newBuilder()
+                .setOptSet(optItem)
+                .build();
+        sendData(null,reqTaskOperational);
+    }
+
 
     /**
      * 退出当前模式
@@ -407,6 +428,31 @@ public class TcpClient extends BaseSocketConnection {
                 .build();
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
     }
+
+    /**
+     * 原图去噪相关功能
+     */
+    public void reqEditMap(List<Rectangle>rectangles,int type,boolean isReset,String mapName){
+        List<BaseCmd.reqEditorLidarMap.eraseRange> eraseRanges=new ArrayList<>();
+        for (Rectangle rectangle:rectangles){
+            BaseCmd.reqEditorLidarMap.eraseRange eraseRange=BaseCmd.reqEditorLidarMap.eraseRange.newBuilder()
+                    .setLeft(rectangle.getFirstPoint().getY())
+                    .setTop(rectangle.getFirstPoint().getX())
+                    .setBottom(rectangle.getSecondPoint().getX())
+                    .setRight(rectangle.getSecondPoint().getY())
+                    .build();
+            eraseRanges.add(eraseRange);
+        }
+        BaseCmd.reqEditorLidarMap reqEditorLidarMap=BaseCmd.reqEditorLidarMap.newBuilder()
+                .addAllRange(eraseRanges)
+                .setTypeValue(type)
+                .setBOriginal(isReset)
+                .setOneroutename(ByteString.copyFromUtf8(mapName))
+                .build();
+        sendData(null,reqEditorLidarMap);
+    }
+
+
 
     /**
      * 只保存已修改的目标点到服务器

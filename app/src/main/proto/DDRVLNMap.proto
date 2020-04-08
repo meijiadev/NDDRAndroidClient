@@ -666,7 +666,6 @@ enum enRspRunSpecificPointType
 	en_RunSpecificPtResume_GoNextPt = 9; // 前往下一个目标点
 }
 
-
 message rspRunSpecificPoint
 {
 	DDRCommProto.eCmdRspType type = 1;

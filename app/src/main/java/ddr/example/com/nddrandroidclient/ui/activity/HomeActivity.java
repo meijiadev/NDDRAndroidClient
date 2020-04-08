@@ -613,7 +613,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     //Logger.e("线速度，角速度：" + lineSpeed + ";" + palstance);
                     tcpClient.sendSpeed(lineSpeed, palstance);
                 }
-
             }
         };
         timer.schedule(task, 0, 50);

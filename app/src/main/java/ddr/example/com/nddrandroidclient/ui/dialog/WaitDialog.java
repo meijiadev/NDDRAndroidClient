@@ -13,11 +13,11 @@ import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
  *    desc   : 等待加载对话框
  */
 public final class WaitDialog {
-
+    public static String message;
     public static final class Builder
             extends MyDialogFragment.Builder<Builder> {
 
-        private final TextView mMessageView;
+        public final TextView mMessageView;
 
         public Builder(FragmentActivity activity) {
             super(activity);
@@ -37,5 +37,9 @@ public final class WaitDialog {
             mMessageView.setVisibility(text == null ? View.GONE : View.VISIBLE);
             return this;
         }
+
+
     }
+
+
 }

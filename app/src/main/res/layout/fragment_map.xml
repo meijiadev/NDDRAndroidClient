@@ -552,7 +552,8 @@
                         android:textColor="@color/white"
                         android:textSize="10sp"
                         android:layout_toRightOf="@id/et_speed"
-                        android:layout_alignBottom="@id/et_speed"
+                        android:layout_below="@id/et_parameter"
+                        android:layout_marginTop="28dp"
                         android:layout_marginLeft="5dp"
                         />
                     <TextView

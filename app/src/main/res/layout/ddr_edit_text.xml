@@ -23,6 +23,7 @@
         android:background="#272829"
         android:inputType="numberSigned|numberDecimal"
         android:text="0"
+        android:singleLine="true"
         />
 
     <ImageView

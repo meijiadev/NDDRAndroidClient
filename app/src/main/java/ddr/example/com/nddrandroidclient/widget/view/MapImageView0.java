@@ -121,45 +121,51 @@ public class MapImageView0 extends ImageView {
      * @param mapName
      */
     public void setMapBitmap(String mapName){
-        if (!this.mapName.equals(mapName)||sourceBitmap==null){
-            this.mapName=mapName;
-            Logger.e("设置图片");
-            String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(pngPath);
-                Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                sourceBitmap=bitmap;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
-            Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
-            totalTranslateX=0;
-            MapFileStatus mapFileStatus=MapFileStatus.getInstance();
-            data=mapFileStatus.getCurrentMapEx();
-            DDRVLNMap.affine_mat affine_mat=data.getBasedata().getAffinedata();
-            r00=affine_mat.getR11();
-            r01=affine_mat.getR12();
-            t0=affine_mat.getTx();
-            r10=affine_mat.getR21();
-            r11=affine_mat.getR22();
-            t1=affine_mat.getTy();
-            totalTranslateY=0;
-            totalRatio=1;
-            scaledRatio=1;
-            initRatio=1;
-            lastFingerDis=0;
-            degree=0;
-            rotation=0;
-            currentStatus=STATUS_INIT;
-            isRunAbPointLine=false;
-            targetPoint=null;
-            pathLines.clear();
-
+        this.mapName = mapName;
+        Logger.e("设置图片");
+        String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(pngPath);
+            Bitmap bitmap = BitmapFactory.decodeStream(fis);
+            sourceBitmap = bitmap;
+            Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
+            MapFileStatus mapFileStatus = MapFileStatus.getInstance();
+            data = mapFileStatus.getReqDDRVLNMapEx();
+            DDRVLNMap.affine_mat affine_mat = data.getBasedata().getAffinedata();
+            r00 = affine_mat.getR11();
+            r01 = affine_mat.getR12();
+            t0 = affine_mat.getTx();
+            r10 = affine_mat.getR21();
+            r11 = affine_mat.getR22();
+            t1 = affine_mat.getTy();
+            //initView();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+
         invalidate();
+    }
+
+    /**
+     * 重置
+     */
+    private void initView(){
+        totalTranslateX=0;
+        totalTranslateY=0;
+        totalRatio=1;
+        scaledRatio=1;
+        initRatio=1;
+        lastFingerDis=0;
+        degree=0;
+        rotation=0;
+        currentStatus=STATUS_INIT;
+        isRunAbPointLine=false;
+        targetPoint=null;
+        pathLineItemExesS.clear();
+        pathLines.clear();
     }
 
 
@@ -168,50 +174,58 @@ public class MapImageView0 extends ImageView {
      * @param taskName
      */
     public void setTaskName(String taskName){
-        isRunAbPointLine=false;
-        targetPtItems=data.getTargetPtdata().getTargetPtList();
-        pathLineItemExes=data.getPathSet().getPathLineDataList();
-        taskItemExes=data.getTaskSetList();
-        spaceItems=mapFileStatus.getcSpaceItems();
-        pathLineItemExesS=new ArrayList<>();
-        targetPtItemsS=new ArrayList<>();
-        Logger.e("设置任务:"+taskName);
-        try {
-            for (int i=0;i<taskItemExes.size();i++){
-                if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
-                    pathElementExes=taskItemExes.get(i).getPathSetList();
-                }
-            }
-            for (int i=0;i<pathElementExes.size();i++){
-                if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
-                    ByteString lineName=pathElementExes.get(i).getName();
-                    for (int j=0;j<pathLineItemExes.size();j++){
-                        if (lineName.equals(pathLineItemExes.get(j).getName())){
-                            pathLineItemExesS.add(pathLineItemExes.get(j));
-                        }
-                    }
-                }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
-                    ByteString pointName=pathElementExes.get(i).getName();
-                    for (int j=0;j<targetPtItems.size();j++){
-                        if (pointName.equals(targetPtItems.get(j).getPtName())){
-                            targetPtItemsS.add(targetPtItems.get(j));
-                        }
+        if (!taskName.equals("PathError")){
+            data=mapFileStatus.getCurrentMapEx();
+            isRunAbPointLine=false;
+            targetPtItems=data.getTargetPtdata().getTargetPtList();
+            pathLineItemExes=data.getPathSet().getPathLineDataList();
+            taskItemExes=data.getTaskSetList();
+            spaceItems=mapFileStatus.getcSpaceItems();
+            pathLineItemExesS=new ArrayList<>();
+            targetPtItemsS=new ArrayList<>();
+            Logger.e("设置任务:"+taskName+"------任务数量:"+taskItemExes.size());
+            try {
+                for (int i=0;i<taskItemExes.size();i++){
+                    Logger.e("--------任务名:"+taskItemExes.get(i).getName().toStringUtf8());
+                    if (taskItemExes.get(i).getName().toStringUtf8().equals(taskName)){
+                        pathElementExes=taskItemExes.get(i).getPathSetList();
+                       Logger.e("找到应该执行的任务");
                     }
                 }
+                for (int i=0;i<pathElementExes.size();i++){
+                    if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeLine)){
+                        ByteString lineName=pathElementExes.get(i).getName();
+                        for (int j=0;j<pathLineItemExes.size();j++){
+                            if (lineName.equals(pathLineItemExes.get(j).getName())){
+                                pathLineItemExesS.add(pathLineItemExes.get(j));
+                                Logger.e("找到应该执行的路径");
+                            }
+                        }
+                    }else if (pathElementExes.get(i).getType().equals(DDRVLNMap.path_element_type.ePathElementTypeActionPoint)){
+                        ByteString pointName=pathElementExes.get(i).getName();
+                        for (int j=0;j<targetPtItems.size();j++){
+                            if (pointName.equals(targetPtItems.get(j).getPtName())){
+                                targetPtItemsS.add(targetPtItems.get(j));
+                            }
+                        }
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        invalidate();
+            invalidate();
 
+        }
     }
 
     /**
      * 是否显示ab点路径
      */
     public void setABPointLine(boolean isRunAbPointLine){
+        Logger.e("是否在跑AB点路径："+isRunAbPointLine);
         this.isRunAbPointLine=isRunAbPointLine;
         if (!isRunAbPointLine) {
+            Logger.e("---设置任务"+notifyBaseStatusEx.getCurrpath());
             setTaskName(notifyBaseStatusEx.getCurrpath());
         }
         switch (mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue()){
@@ -254,9 +268,6 @@ public class MapImageView0 extends ImageView {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(16);
         textPaint.setAntiAlias(true);
-
-
-
     }
 
 
@@ -415,6 +426,7 @@ public class MapImageView0 extends ImageView {
     private void drawLine(Canvas canvas){
         if (isRunAbPointLine){
            drawAbLine(canvas);
+           Logger.e("绘制AB路径");
         }else {
             if (pathLineItemExesS!=null){
                 pathLines=new ArrayList<>();
@@ -426,6 +438,7 @@ public class MapImageView0 extends ImageView {
                         PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
                         pathPoint.setX(xyEntity.getX());
                         pathPoint.setY(xyEntity.getY());
+                        pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                         pathPoints.add(pathPoint);
                     }
                     PathLine pathLine=new PathLine();
@@ -461,6 +474,7 @@ public class MapImageView0 extends ImageView {
                         }
                     }
                 }
+                Logger.e("绘制路径");
             }
 
         }

@@ -11,6 +11,10 @@ public class XyEntity {
         this.x=x;
         this.y=y;
     }
+
+    public XyEntity() {
+    }
+
     public float getX() {
         return x;
     }

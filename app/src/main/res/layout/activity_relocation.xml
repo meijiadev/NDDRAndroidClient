@@ -59,7 +59,7 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="提示：请通过挪动地匹匹配雷达扫描形状确定机器人当前位置"
+        android:text="提示：请通过平移旋转地图匹配雷达扫描形状确定机器人当前位置"
         android:layout_below="@id/title_layout"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"

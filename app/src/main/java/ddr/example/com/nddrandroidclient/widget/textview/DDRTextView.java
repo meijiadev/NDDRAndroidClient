@@ -25,14 +25,14 @@ public class DDRTextView extends TextView {
         super(context, attrs);
         map=new ArrayMap<>();
         /*** 点动作类型*/
-        map.put(1,"必到点");
+        /*map.put(1,"必到点");
         map.put(2,"投影点");
         map.put(3,"闸机点");
         map.put(4,"电梯点");
         map.put(5,"充点电");
-        map.put(6,"QR点");
+        map.put(6,"QR点");*/
         map.put(7,"旋转点");
-        map.put(8,"默认点");
+       /* map.put(8,"默认点");*/
         /**路径的模式**/
         map.put(64,"动态避障");
         map.put(65,"静态避障");
