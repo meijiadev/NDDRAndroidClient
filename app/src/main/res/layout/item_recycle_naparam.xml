@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="748dp"
-    android:layout_height="110dp"
+    android:layout_height="105dp"
     android:background="#101112"
     android:focusable="true"
     android:focusableInTouchMode="true">
@@ -18,7 +18,7 @@
         android:textColor="#ffffff"
         android:textSize="12sp"
         android:layout_alignTop="@id/tv_firstBack"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="22dp"
         android:layout_marginLeft="2dp"
         android:gravity="center"
         android:id="@+id/tv_naparam_txt"
@@ -29,7 +29,7 @@
         android:textSize="12sp"
         android:textColor="#ffffff"
         android:layout_alignTop="@id/tv_firstBack"
-        android:layout_marginTop="23.5dp"
+        android:layout_marginTop="21.5dp"
         android:layout_marginLeft="614dp"
         android:id="@+id/ed_bzRadius"
         android:digits="1234567890"
@@ -64,7 +64,7 @@
         android:textColor="#99ffffff"
         android:layout_marginLeft="2dp"
         android:layout_below="@id/tv_naparam_txt"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="12dp"
         android:id="@+id/tv_naparam_titer"
         android:gravity="center"/>
 
