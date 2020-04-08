@@ -490,6 +490,7 @@ public class MapEditActivity extends DDRActivity {
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_confirm);
                     RectangleView.getRectangleView().setFirstPoint(firstPoint);
                     zmap.invalidate();
+                    tvRevocationDe.setText("取消");
                 }else {
                     secondPoint=zmap.getTargetPoint();
                     tvAddDe.setText("添加点");
@@ -500,20 +501,25 @@ public class MapEditActivity extends DDRActivity {
                     RectangleView.getRectangleView().setRectangles(rectangles);
                     zmap.invalidate();
                     tvRevocationDe.setVisibility(View.VISIBLE);
+                    tvRevocationDe.setText("撤销");
                 }
 
                 break;
             case R.id.tv_revocation_de:
-                if (rectangles.size()>0){
-                    rectangles.remove(rectangles.size()-1);
+                if (tvAddDe.getText().toString().equals("完成")){
+                    firstPoint=null;
+                    tvAddDe.setText("添加点");
+                    tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
+                    tvRevocationDe.setText("撤销");
                 }else {
-                    toast("当前无可撤销内容！");
+                    if (rectangles.size()>0){
+                        rectangles.remove(rectangles.size()-1);
+                    }else {
+                        toast("当前无可撤销内容！");
+                    }
                 }
                 RectangleView.getRectangleView().setFirstPoint(null);
                 RectangleView.getRectangleView().setRectangles(rectangles);
-                firstPoint=null;
-                tvAddDe.setText("添加点");
-                tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
                 zmap.invalidate();
                 break;
             case R.id.tv_save_de:
