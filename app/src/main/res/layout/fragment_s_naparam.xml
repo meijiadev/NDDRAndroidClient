@@ -29,7 +29,7 @@
         android:id="@+id/tv_save_param"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="340dp"
+        android:layout_height="350dp"
         android:layout_marginTop="62dp"
         android:layout_marginLeft="48dp"
         android:id="@+id/recycle_naparam"/>

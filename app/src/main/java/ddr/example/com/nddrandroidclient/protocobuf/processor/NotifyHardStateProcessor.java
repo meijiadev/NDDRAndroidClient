@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.other.NotifyHardState;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 public class NotifyHardStateProcessor extends BaseProcessor{
     @Override
@@ -18,5 +19,6 @@ public class NotifyHardStateProcessor extends BaseProcessor{
         NotifyHardState notifyHardState=NotifyHardState.getInstance();
         notifyHardState.setHardwareStatItemList(notifyHardwareStat.getDataList());
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataHardState));
+        Logger.e("请求自检----------");
     }
 }
