@@ -236,7 +236,7 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
     private int isForm_v;
     private int isPain_v;
     private void postAndGet(int type) {
-        naparamAdapter.setNewData(naparamList);
+//        naparamAdapter.setNewData(naparamList);
         for (int i=0;i<naparamList.size();i++){
             switch (i){
                 case 0:
@@ -355,7 +355,7 @@ public class NaParameterSet extends DDRLazyFragment implements SlideButton.Slide
                     break;
                 case 3:
                     naparam.setText("智能导航");
-                    naparam.setTitle("（开启后，执行导航任务，机器人则寻找最近的路径前往并开始。）");
+                    naparam.setTitle("（开启后，使用非闭环路径时，机器人计算循环路径线路，且从路径起点执行。）");
                     naparam.setValue(String.valueOf(isFrom));
                     break;
                 case 4:
