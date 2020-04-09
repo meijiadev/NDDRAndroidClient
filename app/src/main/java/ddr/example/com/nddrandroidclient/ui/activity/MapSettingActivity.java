@@ -28,6 +28,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
@@ -330,7 +331,30 @@ public class MapSettingActivity extends DDRActivity {
                     mapName=newMapName;
                 }
                 break;
+            case notifyTCPDisconnected:
+                netWorkStatusDialog();
+                break;
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tcpClient!=null&&!tcpClient.isConnected())
+        netWorkStatusDialog();
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
+    }
 }

@@ -117,7 +117,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
      */
     private String longToDate(long time){
         Date date=new Date(time);
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:MM ");
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
         return simpleDateFormat.format(date);
     }
 

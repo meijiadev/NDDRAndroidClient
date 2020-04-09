@@ -20,11 +20,13 @@ import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
 import com.yhao.floatwindow.FloatWindow;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import DDRCommProto.BaseCmd;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import java.text.DecimalFormat;
@@ -52,6 +54,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
@@ -115,6 +118,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
+    private BaseDialog waitDialog;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent) {
@@ -138,6 +143,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case touchFloatWindow:
                 showControlPopupWindow();
+                break;
+            case notifyTCPDisconnected:
+                Logger.e("----------断开连接页面：HomeActivity");
+                netWorkStatusDialog();
                 break;
         }
 
@@ -407,6 +416,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         super.onDestroy();
     }
 
+
+
     private boolean exit=false;       //线程是否被终止
     public void getMapInfo() {
         new Thread(() -> {
@@ -652,5 +663,29 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     public void onSoftKeyboardClosed() {
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!tcpClient.isConnected()){
+            netWorkStatusDialog();
+        }
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
+    }
+
+
 }
 

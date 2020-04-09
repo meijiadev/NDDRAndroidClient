@@ -90,26 +90,24 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
     private void drawRadarLine(Canvas canvas){
         if (mapImageView0!=null){
             canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
-            if (isStartRadar){
-                positionList=notifyLidarPtsEntity.getPositionList();
-               // Logger.e("-------点云数量："+positionList.size());
-                if (positionList!=null){
-                    int size =positionList.size();
-                    XyEntity xyEntity1=mapImageView0.toXorY(notifyLidarPtsEntity.getPosX(),notifyLidarPtsEntity.getPosY());
-                    xyEntity1=mapImageView0.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                    for (int i=0;i<size;i++){
-                        XyEntity xyEntity=mapImageView0.toXorY(positionList.get(i).getPtX(),positionList.get(i).getPtY());
-                        xyEntity=mapImageView0.coordinate2View(xyEntity.getX(),xyEntity.getY());
-                        canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity.getX(),xyEntity.getY(),radarPaint);
-                    }
-                    float angle=radianToangle(notifyLidarPtsEntity.getPosdirection());
-                    mapMatrix.setRotate(-angle);
-                    directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,mapMatrix,true);
-                    float cx=xyEntity1.getX()-directionW/2;
-                    float cy=xyEntity1.getY()-directionH/2;
-                    Logger.d("------------机器人当前在地图上的位置（像素）:"+cx+";"+cy);
-                    canvas.drawBitmap(directionBitmap1,cx,cy,paint);
+            positionList = notifyLidarPtsEntity.getPositionList();
+            // Logger.e("-------点云数量："+positionList.size());
+            if (positionList != null) {
+                int size = positionList.size();
+                XyEntity xyEntity1 = mapImageView0.toXorY(notifyLidarPtsEntity.getPosX(), notifyLidarPtsEntity.getPosY());
+                xyEntity1 = mapImageView0.coordinate2View(xyEntity1.getX(), xyEntity1.getY());
+                for (int i = 0; i < size; i++) {
+                    XyEntity xyEntity = mapImageView0.toXorY(positionList.get(i).getPtX(), positionList.get(i).getPtY());
+                    xyEntity = mapImageView0.coordinate2View(xyEntity.getX(), xyEntity.getY());
+                    canvas.drawLine(xyEntity1.getX(), xyEntity1.getY(), xyEntity.getX(), xyEntity.getY(), radarPaint);
                 }
+                float angle = radianToangle(notifyLidarPtsEntity.getPosdirection());
+                mapMatrix.setRotate(-angle);
+                directionBitmap1 = Bitmap.createBitmap(directionBitmap, 0, 0, directionW, directionH, mapMatrix, true);
+                float cx = xyEntity1.getX() - directionW / 2;
+                float cy = xyEntity1.getY() - directionH / 2;
+                Logger.d("------------机器人当前在地图上的位置（像素）:" + cx + ";" + cy);
+                canvas.drawBitmap(directionBitmap1, cx, cy, paint);
             }
         }
     }
@@ -134,9 +132,9 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         }
         long endTime=System.currentTimeMillis();
         long time=endTime-startTime;
-        if (time<100){
+        if (time<200){
             try {
-                Thread.sleep(100-time);
+                Thread.sleep(200-time);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -248,8 +246,8 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         } else {
             measureHeight = 1000;
         }
-        int max=Math.max(measureWidth,measureHeight);
-        setMeasuredDimension(max, max);
+        int min=Math.min(measureWidth,measureHeight);
+        setMeasuredDimension(measureWidth, measureHeight);
     }
 
 

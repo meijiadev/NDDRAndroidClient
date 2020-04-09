@@ -152,11 +152,9 @@ public class TcpClient extends BaseSocketConnection {
             Activity activity=ActivityStackManager.getInstance().getTopActivity();
             if (activity!=null){
                 if (activity.getLocalClassName().contains("LoginActivity")){
-                    //showToast(activity,"连接已断开，请重现连接",Toast.LENGTH_LONG);
                     disConnect();
                 }else {
-                    Logger.e("-------断开连接的页面："+activity.getLocalClassName());
-                    showDialog(activity );
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.notifyTCPDisconnected));
                 }
             }
         }
@@ -185,26 +183,6 @@ public class TcpClient extends BaseSocketConnection {
 
         }
 
-        /**
-         * 断连弹窗
-         * @param activity
-         */
-        private void showDialog(Activity activity){
-            activity.runOnUiThread(()->{
-                waitDialog=new WaitDialog.Builder((FragmentActivity) activity).setMessage("网络正在连接...").show();
-            });
-            if (activity.getLocalClassName().contains("HomeActivity")){
-                HomeActivity fragmentActivity= (HomeActivity) activity;
-                fragmentActivity.postDelayed(()->{
-                    if (waitDialog.isShowing()){
-                        fragmentActivity.toast("网络无法连接，请退出重连！");
-                        ActivityStackManager.getInstance().finishAllActivities();
-                        fragmentActivity.startActivity(LoginActivity.class);
-                    }
-                },6000);
-            }
-
-        }
 
     }
 

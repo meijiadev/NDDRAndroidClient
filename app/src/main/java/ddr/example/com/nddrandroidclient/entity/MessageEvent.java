@@ -66,6 +66,7 @@ public class MessageEvent {
         getSpecificPoint11,
 
         notifyEditorMapResult,
+        notifyTCPDisconnected,
 
 
 

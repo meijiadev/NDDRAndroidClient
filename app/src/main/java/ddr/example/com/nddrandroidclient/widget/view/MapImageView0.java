@@ -754,8 +754,8 @@ public class MapImageView0 extends ImageView {
         } else {
             measureHeight = 1000;
         }
-        int max=Math.max(measureWidth,measureHeight);
-        setMeasuredDimension(max, max);
+        //int min=Math.min(measureWidth,measureHeight);
+        setMeasuredDimension(measureWidth, measureHeight);
     }
 
     /**

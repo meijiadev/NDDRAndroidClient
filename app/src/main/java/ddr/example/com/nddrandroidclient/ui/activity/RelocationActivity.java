@@ -27,6 +27,7 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -239,8 +240,31 @@ public class RelocationActivity extends DDRActivity {
                         break;
                 }
                 break;
+            case notifyTCPDisconnected:
+                netWorkStatusDialog();
+                break;
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tcpClient!=null&&!tcpClient.isConnected())
+        netWorkStatusDialog();
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
+    }
 }
 

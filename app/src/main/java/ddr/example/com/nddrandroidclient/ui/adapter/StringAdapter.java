@@ -63,6 +63,9 @@ public class StringAdapter extends BaseAdapter<String> {
                     case "原图去噪":
                         textView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);
                         break;
+                    case "直线":
+                        textView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
+                        break;
 
                 }
                 break;
