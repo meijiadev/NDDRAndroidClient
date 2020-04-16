@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="50dp">
     <ddr.example.com.nddrandroidclient.widget.textview.GridImageView
+        android:id="@+id/iv_check"
         android:layout_width="34dp"
         android:layout_height="34dp"
         android:textColor="#ffffff"
         android:textSize="16sp"
         android:layout_marginLeft="19dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/iv_check"
         />
     <TextView
+        android:id="@+id/tv_map_list"
         android:layout_width="122dp"
         android:layout_height="34dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="85dp"
-        android:id="@+id/tv_map_list"
         android:textSize="12sp"
         android:textColor="#eaf1f5"
         android:text="地图列表-1"
@@ -25,12 +25,12 @@
 <!--    android:layout_toRightOf="@+id/iv_check"-->
 
     <TextView
+        android:id="@+id/tv_task_time"
         android:layout_width="175dp"
         android:layout_height="34dp"
         android:background="#161718"
         android:layout_toRightOf="@+id/tv_map_list"
         android:layout_marginTop="10dp"
-        android:id="@+id/tv_task_time"
         android:layout_marginLeft="29dp"
         android:paddingLeft="18dp"
         android:paddingTop="7dp"
@@ -50,57 +50,49 @@
         android:layout_marginLeft="165dp"
         android:layout_marginTop="20dp"
         />
-<!--    <ddr.example.com.nddrandroidclient.widget.view.NumEdit-->
-<!--        android:layout_width="106dp"-->
-<!--        android:layout_height="34dp"-->
-<!--        android:layout_toRightOf="@id/tv_task_time"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginLeft="60dp"-->
-<!--        android:id="@+id/task_num_check"-->
-<!--        android:gravity="center"-->
-<!--        />-->
-    <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+
+   <!-- <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
+        android:id="@+id/task_num_check"
         android:layout_width="106dp"
         android:layout_height="34dp"
         android:layout_toRightOf="@id/tv_task_time"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="63dp"
-        android:id="@+id/task_num_check"
-        android:gravity="center"/>
+        android:gravity="center"/>-->
     <TextView
+        android:id="@+id/tv_task_status"
         android:layout_width="80dp"
         android:layout_height="34dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/task_num_check"
-        android:layout_marginLeft="55dp"
+        android:layout_toRightOf="@id/tv_task_time"
+        android:layout_marginLeft="221.5dp"
         android:gravity="center"
         android:text="待命中"
-        android:id="@+id/tv_task_status"
         android:textColor="#eaf1f5"/>
     <TextView
+        android:id="@+id/tv_task_pause"
         android:layout_width="50dp"
         android:layout_height="34dp"
-        android:text="暂停"
+        android:text="修改"
         android:textColor="#99ffffff"
         android:layout_marginTop="10dp"
         android:textSize="12sp"
         android:gravity="center"
         android:layout_toRightOf="@id/tv_task_status"
         android:layout_marginLeft="55.5dp"
-        android:id="@+id/tv_task_pause"
         android:background="@drawable/bg_task_cz"
         />
     <TextView
+        android:id="@+id/tv_task_stop"
         android:layout_width="50dp"
         android:layout_height="34dp"
-        android:text="终止"
+        android:text="删除"
         android:textColor="#99ffffff"
         android:layout_marginTop="10dp"
         android:textSize="12sp"
         android:layout_toRightOf="@id/tv_task_pause"
         android:layout_marginLeft="12dp"
         android:gravity="center"
-        android:id="@+id/tv_task_stop"
         android:background="@drawable/bg_task_cz"
         />
 

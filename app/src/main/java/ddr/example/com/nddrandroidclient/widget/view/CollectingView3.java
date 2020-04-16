@@ -64,7 +64,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         lastFrame=new Paint();
         lastFrame.setStrokeWidth(1);
         lastFrame.setStyle(Paint.Style.FILL);
-        lastFrame.setColor(Color.parseColor("#00CED1"));
+        lastFrame.setColor(Color.parseColor("#9900CED1"));
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
     }
@@ -154,7 +154,16 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                         holder.unlockCanvasAndPost(canvas);
                     }
                 }
-
+                long endTime=System.currentTimeMillis();
+                Logger.e("------地图绘制耗时："+(endTime-startTime));
+                long time=endTime-startTime;
+                if (time<300){
+                    try {
+                        Thread.sleep(300-time);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }

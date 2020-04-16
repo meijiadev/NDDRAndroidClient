@@ -68,6 +68,9 @@ public class PathAdapter extends BaseAdapter<PathLine> {
                             .setImageResource(R.id.iv_select,R.mipmap.item_hide);
                 }
                 break;
+            case R.layout.item_select_to_task:
+                helper.setText(R.id.item_name,item.getName());
+                break;
         }
 
     }

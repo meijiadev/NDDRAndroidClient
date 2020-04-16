@@ -14,8 +14,10 @@ import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -29,11 +31,14 @@ public class LineView extends Shape {
     private List<PathLine> pathLines;
     private List<PathLine> pathLines1;
     private List<PathLine.PathPoint> pathPoints;
-
+    private List<PathLine.PathPoint> touchPoints;
     private List<DDRVLNMap.space_pointEx> lines;       //线段
     private List<DDRVLNMap.space_pointEx> polygons;    //多边形
 
+    private List<BaseMode> baseModes ;
+
     private List<SpaceItem> spaceItems;
+
 
     private Bitmap startBitamap,endBitamp;
     /**
@@ -99,6 +104,14 @@ public class LineView extends Shape {
     }
 
     /**
+     * 点击选择目标点组建路径
+     * @param pathPoints
+     */
+    public void setTouchPoints(List<PathLine.PathPoint> pathPoints){
+        this.touchPoints=pathPoints;
+    }
+
+    /**
      * 设置虚拟墙的显示
      * @param lines
      */
@@ -116,6 +129,14 @@ public class LineView extends Shape {
      */
     public void setSpaceItems(List<SpaceItem> spaceItems){
         this.spaceItems=spaceItems;
+    }
+
+    /**
+     * 绘制某一个任务里面包含路径或者点
+     * @param baseModes
+     */
+    public void setBaseModes( List<BaseMode> baseModes){
+        this.baseModes=baseModes;
     }
 
 
@@ -191,8 +212,6 @@ public class LineView extends Shape {
             }
 
         }
-
-
         if (pathPoints!=null){
             for (int j=0;j<pathPoints.size();j++){
                 XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
@@ -219,6 +238,31 @@ public class LineView extends Shape {
                 }
             }
         }
+        if (touchPoints!=null){
+            for (int j=0;j<touchPoints.size();j++){
+                XyEntity xyEntity1=zoomImageView.toXorY(touchPoints.get(j).getX(),touchPoints.get(j).getY());
+                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                if (touchPoints.size()>1){
+                    if (j<touchPoints.size()-1){
+                        XyEntity xyEntity2=zoomImageView.toXorY(touchPoints.get(j+1).getX(),touchPoints.get(j+1).getY());
+                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                    }
+                    if (j==0){
+
+                    }else if (j==touchPoints.size()-1){
+                        mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                    }else {
+                        canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
+                    }
+
+                }
+            }
+        }
+
 
         if (lines!=null){
             for (int i=0;i<lines.size();i++){
@@ -233,7 +277,6 @@ public class LineView extends Shape {
 
             }
         }
-
         if (polygons!=null){
             for (int i=0;i<polygons.size();i++){
                 if (i<polygons.size()-1){
@@ -245,7 +288,6 @@ public class LineView extends Shape {
                 }
             }
         }
-
         if (spaceItems!=null){
             for (int i=0;i<spaceItems.size();i++){
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
@@ -264,6 +306,44 @@ public class LineView extends Shape {
                 }
             }
         }
+        if (baseModes!=null){
+            for (BaseMode baseMode:baseModes){
+                if (baseMode.getType()==1){
+                    PathLine pathLine= (PathLine) baseMode;
+                    List<PathLine.PathPoint> pathPoints=pathLine.getPathPoints();
+                    for (int j=0;j<pathPoints.size();j++){
+                        XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
+                        xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                        canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                        if (pathPoints.size()>1){
+                            if (j<pathPoints.size()-1){
+                                XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                            }
+                            if (j==0){
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }else if (j==pathPoints.size()-1){
+                                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                                canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }else {
+                                canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }
+
+                        }
+                    }
+                }else if (baseMode.getType()==2){
+                    TargetPoint targetPoint= (TargetPoint) baseMode;
+                    XyEntity xyEntity=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());
+                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    canvas.drawCircle(xyEntity.getX(),xyEntity.getY(),8,linePaint);
+                    canvas.drawText(targetPoint.getName(),xyEntity.getX(),xyEntity.getY()+15,textPaint);
+                }
+            }
+        }
 
     }
 
@@ -275,6 +355,7 @@ public class LineView extends Shape {
      * @param y
      */
     public void onClick(ZoomImageView zoomImageView,float x,float y){
+        Logger.e("点击出坐标："+x+";"+y);
         if (spaceItems!=null&&isClickable){
             for (int i=0;i<spaceItems.size();i++){
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
@@ -288,9 +369,12 @@ public class LineView extends Shape {
                         float x2=xyEntity2.getX(); float y2=xyEntity2.getY();
                         float minX=Math.min(x1,x2);
                         float maxX=Math.max(x1,x2);
-                        if (x>minX-18&&x<maxX+18){
+                        float minY=Math.min(y1,y2);
+                        float maxY=Math.max(y1,y2);
+                        Logger.e("-----minx:"+minX+"maxX:"+maxX+"minY:"+minY+"maxY:"+maxY);
+                        if (x>minX-10&&x<maxX+10&&y>minY-10&&y<maxY+10){
                             double L=((y2-y1)*x+(x1-x2)*y+(x2*y1-x1*y2))/Math.sqrt(Math.pow(y2-y1,2)+Math.pow(x1-x2,2));
-                            if (L<18){
+                            if (L<10){
                                 selectPosition=i;
                                 Logger.e("------:"+L+"-----"+selectPosition);
                                 zoomImageView.invalidate();
@@ -329,6 +413,8 @@ public class LineView extends Shape {
         pathLines1=null;
         selectPosition=-1;
         isClickable=false;
+        touchPoints=null;
+        baseModes=null;
     }
 
 

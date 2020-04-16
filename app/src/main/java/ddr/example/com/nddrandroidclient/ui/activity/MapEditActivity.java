@@ -339,7 +339,7 @@ public class MapEditActivity extends DDRActivity {
                     tvMarkCurrent.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                 }
                 break;
-            /*** 勾选目标点建路径**/
+            /*** 点击选择目标点建路径**/
             case R.id.tv_selected_point:
                 if (!checkablePoint){
                     checkablePoint=true;
@@ -1175,7 +1175,7 @@ public class MapEditActivity extends DDRActivity {
                         if (selectPoints.get(position).getName().equals(pathPoints.get(i).getName())){
                             pathPoints.remove(i);
                             LineView.getInstance(getApplication()).
-                                    setPoints(pathPoints);
+                                    setTouchPoints(pathPoints);
                             zmap.invalidate();
                         }
                     }
@@ -1187,7 +1187,7 @@ public class MapEditActivity extends DDRActivity {
                     pathPoint.setX(selectPoints.get(position).getX());
                     pathPoints.add(pathPoint);
                     LineView.getInstance(getApplication()).
-                            setPoints(pathPoints);
+                            setTouchPoints(pathPoints);
                     zmap.invalidate();
                 }
                 break;
@@ -1201,6 +1201,10 @@ public class MapEditActivity extends DDRActivity {
                             tvRevocationDe.setVisibility(View.GONE);
                             ImageLoader.clear(this);
                             tcpClient.requestFile();          //去噪成功后，开始重新下载地图
+                            rectangles.clear();
+                            RectangleView.getRectangleView().setFirstPoint(null);
+                            RectangleView.getRectangleView().setRectangles(rectangles);
+                            zmap.invalidate();
                             if (waitDialog!=null&&waitDialog.isShowing()){
                                 waitDialog.dismiss();
                                 showWaitDialog("重新加载地图...");

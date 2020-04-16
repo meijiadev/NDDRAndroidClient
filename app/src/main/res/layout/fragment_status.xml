@@ -282,8 +282,8 @@
             />
         <ddr.example.com.nddrandroidclient.widget.StatusSwitchButton
             android:id="@+id/status_switch_bt"
-            android:layout_width="616px"
-            android:layout_height="100px"
+            android:layout_width="308dp"
+            android:layout_height="50dp"
             android:layout_marginTop="282dp"
             android:layout_marginLeft="32dp"
             />

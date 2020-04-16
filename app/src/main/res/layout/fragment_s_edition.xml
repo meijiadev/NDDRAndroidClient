@@ -13,7 +13,6 @@
             android:layout_height="127dp"
             android:layout_marginTop="196dp"
             android:layout_marginLeft="64dp"
-            android:src="@mipmap/versionlogo"
             android:id="@+id/iv_icon_set"
             />
         <!--android:text="大道智创客户端版本"-->

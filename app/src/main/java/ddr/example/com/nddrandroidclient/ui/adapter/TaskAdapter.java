@@ -32,8 +32,6 @@ import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
 public class TaskAdapter extends BaseAdapter<TaskMode> {
     public GridImageView gridImageView;
     public NumEdit numEdit;
-    public DDREditText ddrEditText;
-    public EditText et_content;
     public TextView tv_task_status;
     public TextView tv_task_time;
     public TaskAdapter(int layoutResId) {
@@ -77,11 +75,6 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 break;
             case R.layout.item_recycle_tasklist:
                  gridImageView=helper.getView(R.id.iv_check);
-                 ddrEditText=helper.getView(R.id.task_num_check);
-                 ddrEditText.setViewType(1);
-                 et_content=ddrEditText.et_content;
-                 et_content.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
-                 et_content.setInputType(InputType.TYPE_CLASS_NUMBER);
                  tv_task_status=helper.getView(R.id.tv_task_status);
                  tv_task_time=helper.getView(R.id.tv_task_time);
                switch (item.getType()){
@@ -138,56 +131,14 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 }else {
                     endm=""+item.getEndMin();
                 }
-//                ddrEditText.setText(item.getRunCounts());
                 String taskName1=item.getName();
                 taskName1=taskName1.replaceAll("DDRTask_","");
                 taskName1=taskName1.replaceAll(".task","");
                 helper.setText(R.id.tv_map_list,taskName1)
-                        .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop,R.id.task_num_check)
+                        .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop)
                         .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
-                editListen(item);
                 break;
         }
-    }
-    public void editListen(TaskMode item){
-        //        通过tag判断当前editText是否已经设置监听，有监听的话，移除监听再给editText赋值
-        if (et_content.getTag() instanceof TextWatcher){
-            et_content.removeTextChangedListener((TextWatcher) et_content.getTag());
-        }
-//        必须在判断tag后给editText赋值，否则会数据错乱
-        et_content.setText(item.getRunCounts()+"");
-        TextWatcher watcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(editable)) {
-                    try {
-                        int count=Integer.valueOf(editable.toString());
-                        Logger.e("-----------"+count);
-                        if (count>999 ||count<=0 || editable.equals("") || editable.length()==0 ){
-                            Logger.e("数值"+Integer.valueOf(editable.toString()));
-                        }else {
-                            item.setRunCounts(Integer.valueOf(editable.toString()));
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-//        给item中的editText设置监听
-        et_content.addTextChangedListener(watcher);
-//        给editText设置tag，以便于判断当前editText是否已经设置监听
-        et_content.setTag(watcher);
-
     }
 
 

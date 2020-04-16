@@ -239,8 +239,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         chargeAnimation= (AnimationDrawable) ivCharge.getBackground();
         taskCheckAdapter=new StringAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
-        @SuppressLint("WrongConstant")
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4);
         recyclerGoPoint.setLayoutManager(gridLayoutManager);
         recyclerGoPoint.setAdapter(targetPointAdapter);
         onItemClick(2);

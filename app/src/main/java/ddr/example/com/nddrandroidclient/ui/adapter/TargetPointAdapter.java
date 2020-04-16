@@ -41,10 +41,8 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
         switch (viewType){
             case R.layout.item_recycle_gopoint:
                 // 状态页面的 前往目标点布局
-                Logger.e("-----------状态页面的 前往目标点布局");
                 helper.setText(R.id.item_recycle_gopoint,item.getName());
                 TextView tv_select=helper.getView(R.id.item_recycle_gopoint);
-                //Logger.e("GOPOINT状态"+item.isSelected());
                 if (item.isSelected()){
                    tv_select.setBackgroundResource(R.drawable.task_check_bg);
                 }else {
@@ -53,7 +51,6 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 break;
             case R.layout.item_target_point:
                 //地图管理页面的布局
-                //Logger.e("-----------地图管理页面的布局");
                 if (item.isSelected()){
                     helper.setText(R.id.tv_target_name,item.getName()).setTextColor(R.id.tv_target_name,Color.parseColor("#0399ff"));
                 }else {
@@ -91,6 +88,9 @@ public class TargetPointAdapter extends BaseAdapter<TargetPoint> {
                 break;
             case R.layout.item_recycle_task_check:
                 helper.setText(R.id.item_recycle_t_chenck,item.getName());
+                break;
+            case R.layout.item_select_to_task:
+                helper.setText(R.id.item_name,item.getName());
                 break;
 
         }

@@ -526,7 +526,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             DDRVLNMap.task_itemEx task_itemEx=DDRVLNMap.task_itemEx.newBuilder()
                     .setName(ByteString.copyFromUtf8(taskMode.getName()))
-                    .setRunCount(taskMode.getRunCounts())
+                    .setRunCount(999)
                     .setStateValue(taskMode.getTaskState())
                     .setTypeValue(taskMode.getType())
                     .setTimeSet(timeItem)
@@ -642,7 +642,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             DDRVLNMap.task_itemEx task_itemEx=DDRVLNMap.task_itemEx.newBuilder()
                     .setName(ByteString.copyFromUtf8(taskMode.getName()))
-                    .setRunCount(taskMode.getRunCounts())
+                    .setRunCount(999)
                     .setStateValue(taskMode.getTaskState())
                     .setTypeValue(taskMode.getType())
                     .setTimeSet(timeItem)

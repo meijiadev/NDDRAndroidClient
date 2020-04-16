@@ -22,6 +22,7 @@ import cat.ereza.customactivityoncrash.config.CaocConfig;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
+import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
@@ -67,7 +68,6 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         ToastUtils.init(application);
         // EventBus 事件总线
         EventBusManager.init();
-
         // Crash 捕捉界面
         CaocConfig.Builder.create()
                 .backgroundMode(CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM)

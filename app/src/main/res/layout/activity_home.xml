@@ -14,7 +14,7 @@
         android:background="#101112">
         <!--大道智创客户端-->
         <TextView
-            android:layout_width="136dp"
+            android:layout_width= "136dp"
             android:layout_height="22.5dp"
             android:text=""
             android:textSize="16dp"
@@ -22,9 +22,9 @@
             android:layout_marginLeft="16dp"
             android:textColor="#ffffff"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:id="@+id/status"
             android:layout_width="83dp"
             android:layout_height="match_parent"
-            android:id="@+id/status"
             android:text="基础状态"
             android:textSize="12sp"
             android:layout_centerInParent="true"
@@ -47,9 +47,9 @@
             android:textColor="#ffffff"
             android:textSize="12sp" />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:id="@+id/taskmanager"
             android:layout_width="83dp"
             android:layout_height="match_parent"
-            android:id="@+id/taskmanager"
             android:text="任务管理"
             android:textSize="12sp"
             android:layout_centerInParent="true"
@@ -57,9 +57,9 @@
             android:gravity="center"
             android:drawableLeft="@mipmap/task_def"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
+            android:id="@+id/highset"
             android:layout_width="83dp"
             android:layout_height="match_parent"
-            android:id="@+id/highset"
             android:text="高级设置"
             android:textSize="12sp"
             android:layout_toRightOf="@id/taskmanager"
@@ -70,8 +70,8 @@
             android:drawableLeft="@mipmap/hightset_def"
             />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
             android:drawableTop="@mipmap/yk_default"
             android:text="遥控"
             android:textColor="@color/white"
@@ -83,11 +83,11 @@
             android:layout_marginTop="5.5dp"
             android:drawablePadding="5dp"
             android:gravity="center_horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
             android:text="急停"
             android:textSize="11sp"
             android:textColor="@color/white"
@@ -99,7 +99,7 @@
             android:layout_marginTop="5.5dp"
             android:gravity="center_horizontal"
             android:drawablePadding="5dp"
-            android:visibility="gone"
+            android:visibility="visible"
             />
         <View
             android:id="@+id/view1"
@@ -112,8 +112,8 @@
             ></View>
         <TextView
             android:id="@+id/tv_shutdown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
             android:text="关机"
             android:gravity="center_horizontal"
             android:textSize="11dp"
@@ -127,8 +127,8 @@
             />
         <TextView
             android:id="@+id/tv_quit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
             android:drawableTop="@mipmap/tv_quit"
             android:text="退出"
             android:textSize="11sp"

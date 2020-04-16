@@ -100,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="44dp"
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="22dp"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
                 android:src="@mipmap/iv_back"
                 />
             <TextView
@@ -124,6 +124,7 @@
                 android:textColor="@color/blue01"
                 android:layout_marginLeft="44dp"
                 android:drawableLeft="@mipmap/iv_target_blue"
+                android:layout_toRightOf="@id/iv_back"
                 />
             <TextView
                 android:id="@+id/tv_path"
@@ -135,18 +136,9 @@
                 android:textColor="@color/white"
                 android:layout_marginLeft="44dp"
                 android:drawableLeft="@mipmap/iv_path_gray"
+                android:layout_toRightOf="@id/tv_target_point"
                 />
-            <TextView
-                android:id="@+id/tv_task"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="任务 (0)"
-                android:textSize="@dimen/text_size_12sp"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:drawableLeft="@mipmap/iv_task_gray"
-                android:layout_marginLeft="44dp"
-                />
+
             <TextView
                 android:id="@+id/tv_edit_map"
                 android:layout_width="wrap_content"
@@ -157,66 +149,26 @@
                 android:textColor="@color/white"
                 android:drawableLeft="@mipmap/iv_edit_gray"
                 android:layout_marginLeft="44dp"
+                android:layout_toRightOf="@id/tv_path"
                 />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="网格 :"
+                android:id="@+id/tv_reference"
+                android:layout_width="124dp"
+                android:layout_height="32dp"
+                android:drawableLeft="@mipmap/item_show"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/bt_bg__map"
+                android:paddingLeft="20dp"
+                android:text="参考层"
                 android:textSize="@dimen/text_size_12sp"
                 android:textColor="@color/white"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="100dp"
-                />
-            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
-                android:id="@+id/tv_025m"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.25m"
-                android:textColor="#ccffffff"
-                android:textSize="12sp"
                 android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/nocheckedwg"
-                android:drawablePadding="6dp"
-                android:layout_marginLeft="8.5dp"
-                />
-            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
-                android:id="@+id/tv_05m"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.5m"
-                android:textColor="#ccffffff"
-                android:textSize="@dimen/text_size_12sp"
-                android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/nocheckedwg"
-                android:drawablePadding="6dp"
-                android:layout_marginLeft="8dp"
-                />
-            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
-                android:id="@+id/tv_1m"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1m"
-                android:textColor="#ccffffff"
-                android:textSize="@dimen/text_size_12sp"
-                android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/nocheckedwg"
-                android:drawablePadding="6dp"
-                android:layout_marginLeft="8dp"
-                />
+                android:drawablePadding="5dp"
+                android:layout_marginRight="17dp"
 
-            <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
-                android:id="@+id/tv_2m"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2m"
-                android:textColor="#ccffffff"
-                android:textSize="12sp"
-                android:gravity="center_vertical"
-                android:drawableLeft="@mipmap/nocheckedwg"
-                android:drawablePadding="6dp"
-                android:layout_marginLeft="8dp"
                 />
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/left_detail_layout"
@@ -631,178 +583,6 @@
                         android:layout_marginTop="40dp"
                         />
                 </RelativeLayout>
-                <!--task任务编辑布局-->
-                <RelativeLayout
-                    android:id="@+id/task_detail_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-                   <!--选择布局-->
-                    <RelativeLayout
-                        android:id="@+id/layout_select"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"
-                        >
-                        <TextView
-                            android:id="@+id/tv_task_name"
-                            android:layout_width="62.5dp"
-                            android:layout_height="18.5dp"
-                            android:text="任务名称:"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:layout_marginLeft="17dp"
-                            android:layout_marginTop="27dp"
-                            />
-                        <EditText
-                            android:id="@+id/et_task_name"
-                            android:layout_width="140dp"
-                            android:layout_height="24dp"
-                            android:text="任务-1"
-                            android:layout_toRightOf="@id/tv_task_name"
-                            android:layout_marginTop="24dp"
-                            android:background="@drawable/et_target_bg"
-                            android:paddingLeft="12dp"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/white"
-                            android:textSize="11sp"
-                            android:layout_marginLeft="8dp"
-                            android:imeOptions="actionDone"
-                            android:singleLine="true"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="操作提示：选择目标点和路径，在任务栏组合排序"
-                            android:textSize="9sp"
-                            android:textColor="#99ffffff"
-                            android:layout_alignLeft="@id/tv_task_name"
-                            android:layout_below="@id/tv_task_name"
-                            android:layout_marginTop="15dp"
-                            />
-                        <TextView
-                            android:id="@+id/tv_target_spread"
-                            android:layout_width="214.5dp"
-                            android:layout_height="33dp"
-                            android:layout_marginLeft="17.5dp"
-                            android:layout_below="@id/tv_task_name"
-                            android:layout_marginTop="45.5dp"
-                            android:text="目标点："
-                            android:gravity="center_vertical"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:drawableRight="@mipmap/iv_shrink"
-                            android:drawablePadding="4.5dp"
-                            />
-                        <View
-                            android:layout_width="214.5dp"
-                            android:layout_height="1dp"
-                            android:layout_below="@id/tv_target_spread"
-                            android:layout_marginLeft="17.5dp"
-                            android:background="#262728"
-                            />
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/select_point_Recycler"
-                            android:layout_width="214.5dp"
-                            android:layout_height="200dp"
-                            android:layout_below="@id/tv_target_spread"
-                            android:layout_alignLeft="@id/tv_target_spread"
-                            android:visibility="gone"
-                            android:layout_marginTop="10dp"
-                            ></androidx.recyclerview.widget.RecyclerView>
-                        <TextView
-                            android:id="@+id/tv_path_spread"
-                            android:layout_width="214.5dp"
-                            android:layout_height="33dp"
-                            android:layout_below="@id/select_point_Recycler"
-                            android:layout_marginTop="15.5dp"
-                            android:layout_marginLeft="17.5dp"
-                            android:text="路径："
-                            android:gravity="center_vertical"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:drawableRight="@mipmap/iv_shrink"
-                            android:drawablePadding="4.5dp"
-                            />
-                        <View
-                            android:layout_width="214.5dp"
-                            android:layout_height="1dp"
-                            android:layout_below="@id/tv_path_spread"
-                            android:layout_marginLeft="17.5dp"
-                            android:background="#262728"
-                            />
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/select_path_Recycler"
-                            android:layout_width="214.5dp"
-                            android:layout_height="200dp"
-                            android:layout_below="@id/tv_path_spread"
-                            android:layout_alignLeft="@id/tv_path_spread"
-                            android:layout_marginTop="10dp"
-                            android:visibility="gone"
-                            ></androidx.recyclerview.widget.RecyclerView>
-                        <Button
-                            android:id="@+id/bt_next"
-                            android:layout_width="88dp"
-                            android:layout_height="32dp"
-                            android:text="下一步"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="18.5dp"
-                            android:background="@drawable/bt_bg__map"/>
-                    </RelativeLayout>
-                   <!-- 排序布局-->
-                    <RelativeLayout
-                        android:id="@+id/sort_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="gone">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="任务排序"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:layout_marginLeft="17.5dp"
-                            android:layout_marginTop="28.5dp"
-                            />
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/sort_Recycler"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="63dp"
-                            android:layout_marginLeft="17.5dp"
-                            ></androidx.recyclerview.widget.RecyclerView>
-                        <Button
-                            android:id="@+id/bt_save"
-                            android:layout_width="88dp"
-                            android:layout_height="32dp"
-                            android:text="保存"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="24.5dp"
-                            android:layout_marginBottom="18.5dp"
-                            android:background="@drawable/button_shape_blue"/>
-                        <Button
-                            android:id="@+id/bt_back"
-                            android:layout_width="88dp"
-                            android:layout_height="32dp"
-                            android:text="返回"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="26.5dp"
-                            android:layout_marginBottom="18.5dp"
-                            android:background="@drawable/bt_bg__map"
-                            android:gravity="center"/>
-
-                    </RelativeLayout>
-                </RelativeLayout>
-
-
             </RelativeLayout>
 
         </RelativeLayout>

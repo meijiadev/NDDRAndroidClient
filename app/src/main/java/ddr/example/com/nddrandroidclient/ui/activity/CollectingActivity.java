@@ -36,6 +36,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -75,6 +76,14 @@ public class CollectingActivity extends DDRActivity {
     @BindView(R.id.tv_detection)
     TextView tvDetection;                   //回环检测
 
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_save_map)
+    TextView tvSaveMap;
+
+
     private float lineSpeed, palstance;  //线速度 ，角速度
     private double maxSpeed = 0.4;       //设置的最大速度
     private boolean isforward, isGoRight; //左右摇杆当前的方向
@@ -102,7 +111,7 @@ public class CollectingActivity extends DDRActivity {
             case updateBaseStatus:
                 Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
                 if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
-                    setTitle("正在自标定中...");
+                    tvTitle.setText("正在自标定中...");
                 } else {
                     if (notifyBaseStatusEx.getMode() == 2) {
                         switch (notifyBaseStatusEx.getSonMode()) {
@@ -112,7 +121,7 @@ public class CollectingActivity extends DDRActivity {
                                 finish();
                                 break;
                             case 6:
-                                setTitle("采集中...");
+                                tvTitle.setText("正在采集中...");
                                 waitDialog.dismiss();
                                 myRockerZy.setVisibility(View.VISIBLE);
                                 myRocker.setVisibility(View.VISIBLE);
@@ -126,9 +135,10 @@ public class CollectingActivity extends DDRActivity {
                 float progress= (float) mainUpDate.getData();
                 setAnimation(processBar,(int) (progress*100),0);
                 if (progress==1.0f){
-                    setTitle("建图完成");
-                    finish();
-
+                    tvTitle.setText("建图完成");
+                    postDelayed(()->{
+                        finish();
+                    },1000);
                 }
                 break;
             case updateDetectionLoopStatus:
@@ -150,6 +160,9 @@ public class CollectingActivity extends DDRActivity {
                         toast("距离太近不需要检测回环");
                         break;
                 }
+                break;
+            case notifyTCPDisconnected:
+                netWorkStatusDialog();
                 break;
         }
     }
@@ -185,47 +198,8 @@ public class CollectingActivity extends DDRActivity {
         initWaitDialog();
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-    }
 
-    @Override
-    public void onLeftClick(View v) {
-        new InputDialog.Builder(getActivity())
-                .setTitle("是否退出采集")
-                .setEditVisibility(View.GONE)
-                .setListener(new InputDialog.OnListener() {
-                    @Override
-                    public void onConfirm(BaseDialog dialog, String content) {
-                        quitCollect();
-                        stopDraw();
-                        finish();
-                    }
-                    @Override
-                    public void onCancel(BaseDialog dialog) {
-                    }
-                }).show();
 
-    }
-
-    @Override
-    public void onRightClick(View v) {
-        new InputDialog.Builder(getActivity())
-                .setTitle("是否保存当前采集")
-                .setEditVisibility(View.GONE)
-                .setListener(new InputDialog.OnListener() {
-                    @Override
-                    public void onConfirm(BaseDialog dialog, String content) {
-                        exitModel();
-                        processBar.setVisibility(View.VISIBLE);
-                        stopDraw();
-                    }
-                    @Override
-                    public void onCancel(BaseDialog dialog) {
-                    }
-                }).show();
-    }
 
     /**
      * 自标定等待弹窗
@@ -263,9 +237,42 @@ public class CollectingActivity extends DDRActivity {
         });
     }
 
-    @OnClick({R.id.add_poi,R.id.tv_detection})
+    @OnClick({R.id.add_poi,R.id.tv_detection,R.id.tv_save_map,R.id.iv_back})
     public void onViewClicked(View view) {
         switch (view.getId()){
+            case R.id.iv_back:
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否退出采集")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                quitCollect();
+                                stopDraw();
+                                finish();
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
+
+                break;
+            case R.id.tv_save_map:
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否保存当前采集")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                exitModel();
+                                processBar.setVisibility(View.VISIBLE);
+                                stopDraw();
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
+                break;
             case R.id.add_poi:
                 BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
                 tcpClient.sendData(null,reqAddPathPointWhileCollecting);
@@ -516,6 +523,26 @@ public class CollectingActivity extends DDRActivity {
         tcpClient.requestFile();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tcpClient!=null&&!tcpClient.isConnected())
+            netWorkStatusDialog();
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
     }
 
     @Override

@@ -116,6 +116,8 @@ public class ZoomImageView extends View {
             degree=0;
             rotation=0;
             currentStatus=STATUS_INIT;
+            //将旋转的图片矫正
+            setRotation(rotation);
             invalidate();
         }
 

@@ -47,6 +47,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private Paint paint;
     private float scale=1;                             //地图缩放的比例
     private ZoomLayout zoomLayout;
+    private int directionW,directionH;
 
     public RobotLocationView(Context context) {
         super(context);
@@ -68,6 +69,8 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         directionBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         paint = new Paint();
         paint.setColor(Color.parseColor("#00CED1"));
+        directionW=directionBitmap.getWidth();
+        directionH=directionBitmap.getHeight();
     }
 
     /**
@@ -290,7 +293,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                     canvas.drawLine(posX,posY,xyEntity1.getX(),xyEntity1.getY(),paint);
                 }
             }
-            canvas.drawBitmap(directionBitmap, posX-30, posY-30, paint);
+            canvas.drawBitmap(directionBitmap, posX-directionW/2, posY-directionH/2, paint);
         }
     }
 

@@ -62,7 +62,7 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
         mPagerAdapter.addFragment(SensorSet.newInstance());
         mPagerAdapter.addFragment(RobotTestSet.newInstance());
         mPagerAdapter.addFragment(EditManagerSet.newInstance());
-        mPagerAdapter.addFragment(HelpFeedbackSet.newInstance());
+        //mPagerAdapter.addFragment(HelpFeedbackSet.newInstance());
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         viewPager.addOnPageChangeListener(this);

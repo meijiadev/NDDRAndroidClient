@@ -105,6 +105,8 @@ public class PointView extends Shape {
         this.selectPoints=selectPoints;
     }
 
+
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
@@ -179,7 +181,7 @@ public class PointView extends Shape {
                     mRectSrc=new Rect(0,0,40,40);
                     mRectDst=new Rect(x-20,y-20,x+20,y+20);
                     matrix.setRotate(-targetPoints1.get(i).getTheta());
-                    targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+                    targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getWidth()  ,matrix,true);
                     canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
                     canvas.drawText(targetPoints1.get(i).getName(),x,y+15,textPaint);
                 }
@@ -192,7 +194,7 @@ public class PointView extends Shape {
             int x= (int) xyEntity.getX();
             int y= (int) xyEntity.getY();
             matrix.setRotate(-targetPoint.getTheta());
-            targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+            targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getHeight(),matrix,true);
             canvas.drawBitmap(targetBitmap1,x-20,y-20,pointPaint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
@@ -203,7 +205,7 @@ public class PointView extends Shape {
             int x= (int) xyEntity.getX();
             int y= (int) xyEntity.getY();
             matrix.setRotate(-pathPoint.getRotationAngle());
-            targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
+            targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getWidth(),matrix,true);
             canvas.drawBitmap(targetBitmap1,x-20,y-20,pointPaint);
         }
         if (isRuning){

@@ -28,6 +28,7 @@ import java.util.List;
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 
@@ -127,7 +128,7 @@ public class MapImageView0 extends ImageView {
         }
         this.mapName = mapName;
         Logger.e("设置图片");
-        String pngPath = Environment.getExternalStorageDirectory().getPath() + "/" + "机器人" + "/" + mapName + "/" + "bkPic.png";
+        String pngPath = GlobalParameter.ROBOT_FOLDER + mapName + "/" + "bkPic.png";
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(pngPath);
@@ -183,6 +184,7 @@ public class MapImageView0 extends ImageView {
             targetPtItems=data.getTargetPtdata().getTargetPtList();
             pathLineItemExes=data.getPathSet().getPathLineDataList();
             taskItemExes=data.getTaskSetList();
+            pathLineItemExesS=new ArrayList<>();
             targetPtItemsS=new ArrayList<>();
             Logger.e("设置任务:"+taskName+"------任务数量:"+taskItemExes.size());
             try {
@@ -293,7 +295,7 @@ public class MapImageView0 extends ImageView {
         }
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                Logger.e("----点击的坐标："+event.getX()+";"+event.getY());
+               // Logger.e("----点击的坐标："+event.getX()+";"+event.getY());
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 if (event.getPointerCount() == 2) {
@@ -317,7 +319,7 @@ public class MapImageView0 extends ImageView {
                     movedDistanceX = xMove - lastXMove;
                     movedDistanceY = yMove - lastYMove;
                     // 进行边界检查，不允许将图片拖出边界
-                    Logger.e("地图左上角在画布中的坐标："+totalTranslateX+";"+totalTranslateY);
+                    //Logger.e("地图左上角在画布中的坐标："+totalTranslateX+";"+totalTranslateY);
                     if (totalTranslateX + movedDistanceX > width/2) {
                         movedDistanceX = 0;
                     } else if (width - (totalTranslateX + movedDistanceX) > currentBitmapWidth+width/2) {

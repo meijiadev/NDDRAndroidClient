@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#101112"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#161718"
+        >
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/iv_back"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="扫描环境中..."
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/white"
+            />
+        <TextView
+            android:id="@+id/tv_save_map"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="保存"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+<!--
     <com.hjq.bar.TitleBar
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
@@ -17,6 +55,7 @@
         app:rightColor="@color/white"
         >
     </com.hjq.bar.TitleBar>
+-->
     <!--回环检测-->
     <TextView
         android:id="@+id/tv_detection"
@@ -35,8 +74,8 @@
 
     <ddr.example.com.nddrandroidclient.widget.view.CollectingView4
         android:id="@+id/collect4"
-        android:layout_width="1000px"
-        android:layout_height="1000px"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_layout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,8 +83,8 @@
         />
     <ddr.example.com.nddrandroidclient.widget.view.CollectingView3
         android:id="@+id/collect3"
-        android:layout_width="1000px"
-        android:layout_height="1000px"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_layout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,13 +92,14 @@
         />
     <com.daimajia.numberprogressbar.NumberProgressBar
         android:id="@+id/process_bar"
-        android:layout_width="300dp"
-        android:layout_height="20dp"
+        android:layout_width="400dp"
+        android:layout_height="50dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_layout"
         android:layout_marginTop="5dp"
+        app:progress_reached_color="#0399ff"
         />
     <LinearLayout
         android:layout_width="30dp"

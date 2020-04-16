@@ -70,7 +70,7 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         radarPaint=new Paint();
         radarPaint.setStrokeWidth(1);
-        radarPaint.setColor(Color.parseColor("#00CED1"));
+        radarPaint.setColor(Color.parseColor("#6600CED1"));
         paint=new Paint();
         mapMatrix=new Matrix();
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
@@ -91,9 +91,9 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         if (mapImageView0!=null){
             canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
             positionList = notifyLidarPtsEntity.getPositionList();
-            // Logger.e("-------点云数量："+positionList.size());
-            if (positionList != null) {
-                int size = positionList.size();
+             Logger.d("-------点云数量："+positionList.size());
+            int size = positionList.size();
+            if (positionList != null&&size>0) {
                 XyEntity xyEntity1 = mapImageView0.toXorY(notifyLidarPtsEntity.getPosX(), notifyLidarPtsEntity.getPosY());
                 xyEntity1 = mapImageView0.coordinate2View(xyEntity1.getX(), xyEntity1.getY());
                 for (int i = 0; i < size; i++) {
@@ -132,9 +132,9 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         }
         long endTime=System.currentTimeMillis();
         long time=endTime-startTime;
-        if (time<200){
+        if (time<100){
             try {
-                Thread.sleep(200-time);
+                Thread.sleep(100-time);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

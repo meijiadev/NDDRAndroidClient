@@ -1,9 +1,12 @@
 package ddr.example.com.nddrandroidclient.entity.info;
 
+import android.os.Environment;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
@@ -13,7 +16,6 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * 用于保存解析后的地图详情信息的列表
- *
  */
 public class MapFileStatus {
     public static MapFileStatus mapFileStatus;
@@ -231,6 +233,7 @@ public class MapFileStatus {
             taskModes.add(taskMode);
         }
 
+
         for (int i=0;i<space_items.size();i++){
             SpaceItem spaceItem=new SpaceItem();
             spaceItem.setName(space_items.get(i).getName().toStringUtf8());
@@ -260,12 +263,27 @@ public class MapFileStatus {
     }
 
     public void setMapInfos(List<MapInfo> mapInfos) {
+        for (int i = 0; i < mapInfos.size(); i++) {
+            String dirName = mapInfos.get(i).getMapName();
+            String pngPath = GlobalParameter.ROBOT_FOLDER + dirName + "/" + "bkPic.png";
+            if (pngPath != null) {
+                mapInfos.get(i).setBitmap(pngPath);
+            } else {
+                mapInfos.remove(i);
+            }
+            if (dirName.equals(NotifyBaseStatusEx.getInstance().getCurroute())) {
+                mapInfos.get(i).setUsing(true);
+            } else {
+                mapInfos.get(i).setUsing(false);
+            }
+        }
         this.mapInfos = mapInfos;
     }
 
     public List<MapInfo> getMapInfos() {
         return mapInfos;
     }
+
 
     /**
      * 获取解析后的目标点列表

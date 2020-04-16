@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="42dp">
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:text="目标点-1"
+        android:textColor="#ccffffff"
+        android:textSize="@dimen/text_size_12sp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="3dp"
+        android:drawableRight="@mipmap/iv_add"
+        />
+
+</LinearLayout>
