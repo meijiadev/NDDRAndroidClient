@@ -14,6 +14,7 @@ import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
@@ -26,6 +27,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  *  desc : 路径绘制
  */
 public class LineView extends Shape {
+    private MapFileStatus mapFileStatus;
     public static LineView lineView;
     private Paint linePaint,textPaint,linePaint1,selectPaint;
     private List<PathLine> pathLines;
@@ -39,8 +41,10 @@ public class LineView extends Shape {
 
     private List<SpaceItem> spaceItems;
 
+    private int bitmapW,bitmapH;
 
-    private Bitmap startBitamap,endBitamp;
+
+    private Bitmap startBitmap,endBitmap;
     /**
      *用于裁剪源图像的矩形（可重复使用）。
      */
@@ -79,8 +83,11 @@ public class LineView extends Shape {
         textPaint.setStrokeWidth(8);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setStyle(Paint.Style.FILL);
-        startBitamap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.start_default);
-        endBitamp=BitmapFactory.decodeResource(context.getResources(),R.mipmap.end_defalut);
+        startBitmap=BitmapFactory.decodeResource(context.getResources(), R.mipmap.start_default);
+        endBitmap=BitmapFactory.decodeResource(context.getResources(),R.mipmap.end_defalut);
+        bitmapW=startBitmap.getWidth();
+        bitmapH=startBitmap.getHeight();
+        mapFileStatus=MapFileStatus.getInstance();
     }
 
     /**
@@ -163,11 +170,13 @@ public class LineView extends Shape {
                                 }
                                 if (j==0){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                                    //canvas.drawBitmap(startBitmap,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                                     canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }else if (j==pathPoints.size()-1){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                    //canvas.drawBitmap(endBitmap,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                                     canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }else {
                                     canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
@@ -195,11 +204,11 @@ public class LineView extends Shape {
                                 }
                                 if (j==0){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                    canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                                     canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }else if (j==pathPoints.size()-1){
                                     mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                    canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                    canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                                     canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                                 }else {
                                     canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
@@ -216,8 +225,6 @@ public class LineView extends Shape {
             for (int j=0;j<pathPoints.size();j++){
                 XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                 xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
                 if (pathPoints.size()>1){
                     if (j<pathPoints.size()-1){
                         XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
@@ -226,15 +233,17 @@ public class LineView extends Shape {
                     }
                     if (j==0){
                         canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                        canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                     }else if (j==pathPoints.size()-1){
                         mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                        canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                         canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                     }else {
                         canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
                         canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                     }
-
+                }else {
+                    canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                 }
             }
         }
@@ -242,8 +251,7 @@ public class LineView extends Shape {
             for (int j=0;j<touchPoints.size();j++){
                 XyEntity xyEntity1=zoomImageView.toXorY(touchPoints.get(j).getX(),touchPoints.get(j).getY());
                 xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                 if (touchPoints.size()>1){
                     if (j<touchPoints.size()-1){
                         XyEntity xyEntity2=zoomImageView.toXorY(touchPoints.get(j+1).getX(),touchPoints.get(j+1).getY());
@@ -251,10 +259,10 @@ public class LineView extends Shape {
                         canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                     }
                     if (j==0){
-
+                        canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                     }else if (j==touchPoints.size()-1){
                         mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                        canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                        canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                     }else {
                         canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
                     }
@@ -310,12 +318,17 @@ public class LineView extends Shape {
             for (BaseMode baseMode:baseModes){
                 if (baseMode.getType()==1){
                     PathLine pathLine= (PathLine) baseMode;
-                    List<PathLine.PathPoint> pathPoints=pathLine.getPathPoints();
+                    String lineName=pathLine.getName();
+                    List<PathLine> pathLineList=mapFileStatus.getcPathLines();
+                    for (PathLine pathLine1:pathLineList){
+                        if (lineName.equals(pathLine1.getName())){
+                            pathPoints=pathLine1.getPathPoints();
+                        }
+                    }
                     for (int j=0;j<pathPoints.size();j++){
                         XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                         xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                        mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                        canvas.drawBitmap(startBitamap,mRectSrc,mRectDst,linePaint);
+                        canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                         if (pathPoints.size()>1){
                             if (j<pathPoints.size()-1){
                                 XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
@@ -323,10 +336,12 @@ public class LineView extends Shape {
                                 canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                             }
                             if (j==0){
+                                canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                                 canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                             }else if (j==pathPoints.size()-1){
                                 mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
-                                canvas.drawBitmap(endBitamp,mRectSrc,mRectDst,linePaint);
+                                //canvas.drawBitmap(endBitmap,mRectSrc,mRectDst,linePaint);
+                                canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                                 canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                             }else {
                                 canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
@@ -335,6 +350,7 @@ public class LineView extends Shape {
 
                         }
                     }
+
                 }else if (baseMode.getType()==2){
                     TargetPoint targetPoint= (TargetPoint) baseMode;
                     XyEntity xyEntity=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());

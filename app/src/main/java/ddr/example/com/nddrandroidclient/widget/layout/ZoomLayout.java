@@ -74,7 +74,7 @@ public class ZoomLayout extends RelativeLayout {
                 actionX = event.getRawX();
                 actionY = event.getRawY();
                 //Log.e("点击处相对于屏幕的坐标：","x:"+actionX+"y:"+actionY);
-                //Log.e("点击处坐标：",event.getX()+";"+event.getY());
+                Log.e("点击处坐标：",event.getX()+";"+event.getY());
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 moveType = 2;
@@ -85,7 +85,7 @@ public class ZoomLayout extends RelativeLayout {
                 if (moveType == 1) {
                     translationX = translationX + event.getRawX() - actionX;
                     translationY = translationY + event.getRawY() - actionY;
-                    Logger.e("平移的距离-------x:"+translationX+"---y:"+translationY);
+                   // Logger.e("平移的距离-------x:"+translationX+"---y:"+translationY);
                     setTranslationX(translationX);
                     setTranslationY(translationY);
                     actionX = event.getRawX();

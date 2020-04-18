@@ -31,13 +31,14 @@ public class MapEditView extends ImageView {
     public MapEditView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint=new Paint();
-        paint.setStrokeWidth(2);
+        paint.setStrokeWidth(10);
         paint.setColor(Color.RED);
     }
 
     public void refreshMap(){
         invalidate();
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {

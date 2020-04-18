@@ -12,8 +12,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.spec.RC2ParameterSpec;
-
 import DDRCommProto.BaseCmd;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -33,7 +31,7 @@ import ddr.example.com.nddrandroidclient.ui.adapter.RobotTestAdapter;
  * time: 2020/03/24
  * desc: 高级设置机器检测界面
  */
-public class RobotTestSet extends DDRLazyFragment {
+public class RobotTestSetFragment extends DDRLazyFragment {
 
     @BindView(R.id.one_test)
     TextView one_test;
@@ -59,7 +57,7 @@ public class RobotTestSet extends DDRLazyFragment {
 
     }
 
-    public static RobotTestSet newInstance(){return new RobotTestSet();}
+    public static RobotTestSetFragment newInstance(){return new RobotTestSetFragment();}
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_s_robottest;

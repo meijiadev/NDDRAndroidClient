@@ -31,7 +31,7 @@ import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
  * time: 2020/03/24
  * desc: 高级设置版本管理界面
  */
-public class EditManagerSet extends DDRLazyFragment {
+public class EditManagerSetFragment extends DDRLazyFragment {
 
     @BindView(R.id.computer_type_recycle)
     RecyclerView computer_type_recycle;
@@ -55,7 +55,7 @@ public class EditManagerSet extends DDRLazyFragment {
                 break;
         }
     }
-    public static EditManagerSet newInstance(){return new EditManagerSet();}
+    public static EditManagerSetFragment newInstance(){return new EditManagerSetFragment();}
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_s_edition;

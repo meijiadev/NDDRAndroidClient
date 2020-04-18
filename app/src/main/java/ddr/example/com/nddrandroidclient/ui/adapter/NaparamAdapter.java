@@ -117,29 +117,7 @@ public class NaparamAdapter extends BaseAdapter<Naparam> implements SlideButton.
             slideButton.setVisibility(View.GONE);
         }
     }
-//    //获取选择的状态
-//    private String autoValue;
-//    public void getChosseStatus(Naparam item){
-//        boolean isChecked=slideButton.isChecked;
-//        if (item.getText().contains("是否画弧")) {
-//            if (isChecked == true) {
-//                autoValue = "1";
-//            } else {
-//                autoValue = "0";
-//            }
-//            Logger.e("是否选择" + isChecked);
-//            item.setValue(autoValue);
-//        }
-//        if (item.getText().contains("是否从第一段开始")) {
-//            if (isChecked == true) {
-//                autoValue = "1";
-//            } else {
-//                autoValue = "0";
-//            }
-//            Logger.e("是否选择" + isChecked);
-//            item.setValue(autoValue);
-//        }
-//    }
+
     private void setChosseStatus(Naparam item) {
         if (item.getText().contains("智能导航")) {
             if (item.getValue().equals("0")) {

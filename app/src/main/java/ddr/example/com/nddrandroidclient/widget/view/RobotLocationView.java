@@ -224,7 +224,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
             super();
             isRunning=true;
         }
-
         public void stopThread(){
             boolean workIsNotFinish=true;
             while (workIsNotFinish){
@@ -277,8 +276,9 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private void doDraw(Canvas canvas){
         canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
         scale=zoomLayout.getScale();
-        posX=(float)t0+(measureWidth-bitmapWidth)/2;
-        posY=(float)t1+(measureHeight-bitmapHeight)/2;
+        XyEntity xyEntity=getRobotLocationInWindow();
+        posX=xyEntity.getX();
+        posY=xyEntity.getY();
         if (obstacleInfos!=null){
             int size =obstacleInfos.size();
             for (int i=0;i<size;i++){

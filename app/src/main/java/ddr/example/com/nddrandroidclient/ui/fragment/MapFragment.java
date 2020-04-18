@@ -394,12 +394,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 showBatchSelected();
                 break;
             case R.id.iv_back:
-                mapDetailLayout.setVisibility(View.GONE);
-                mapLayout.setVisibility(View.VISIBLE);
-                mPosition = 0;
-                PointView.getInstance(getAttachActivity()).clearDraw();
-                LineView.getInstance(getAttachActivity()).clearDraw();
-                GridLayerView.getInstance(zoomMap).onDestroy();
+                backToMapList();
                 break;
             case R.id.tv_target_point:
                 mPosition = 0;
@@ -1374,10 +1369,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         if (isVisibleToUser){
             // 相当于onResume()方法--获取焦点
             Logger.e("可见");
-
         }else {
             // 相当于onpause()方法---失去焦点
             Logger.e("不可见");
+            backToMapList();
+        }
+    }
+
+    /**
+     * 返回到地图列表页面
+     */
+    private void backToMapList(){
+        if (mapDetailLayout!=null){
+            mapDetailLayout.setVisibility(View.GONE);
+            mapLayout.setVisibility(View.VISIBLE);
+            mPosition = 0;
+            PointView.getInstance(getAttachActivity()).clearDraw();
+            LineView.getInstance(getAttachActivity()).clearDraw();
+            GridLayerView.getInstance(zoomMap).onDestroy();
         }
     }
 

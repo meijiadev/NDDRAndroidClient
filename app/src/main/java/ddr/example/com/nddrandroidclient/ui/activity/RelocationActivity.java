@@ -137,6 +137,7 @@ public class RelocationActivity extends DDRActivity {
                 float rotation1=(float) Math.toRadians(zoomView.getRotation());
                 Logger.e("-x:"+xyEntity3.getX()+";"+xyEntity3.getY()+"弧度："+rotation1);
                 toast("X:"+xyEntity3.getX()+",Y:"+xyEntity3.getY()+",弧度："+rotation1);
+                ivContent.refreshMap();
                 break;
         }
     }

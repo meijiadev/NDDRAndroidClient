@@ -34,7 +34,7 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
  * time: 2020/03/24
  * desc: 高级设置自动充电界面
  */
-public class AutoChargingSet extends DDRLazyFragment implements SlideButton.SlideButtonOnCheckedListener{
+public class AutoChargingSetFragment extends DDRLazyFragment implements SlideButton.SlideButtonOnCheckedListener{
     @BindView(R.id.slideButton)
     SlideButton slideButton;
     @BindView(R.id.ed_trigger_auto)
@@ -55,8 +55,8 @@ public class AutoChargingSet extends DDRLazyFragment implements SlideButton.Slid
     private String switchAutoKey="Common_Params.AUTO_ENTER_RECHARGING"; //自动充电开关
     private String autoValue="1";
 
-    public static AutoChargingSet newInstance(){
-        return new AutoChargingSet();
+    public static AutoChargingSetFragment newInstance(){
+        return new AutoChargingSetFragment();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)

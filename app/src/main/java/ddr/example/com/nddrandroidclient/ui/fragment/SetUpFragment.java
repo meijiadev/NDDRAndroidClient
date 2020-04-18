@@ -1,7 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.viewpager.widget.ViewPager;
 
@@ -10,15 +9,13 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
-import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
-import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.AutoChargingSet;
-import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.EditManagerSet;
-import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.HelpFeedbackSet;
-import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.NaParameterSet;
-import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.RobotTestSet;
-import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.SensorSet;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.AutoChargingSetFragment;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.EditManagerSetFragment;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.NaParameterSetFragment;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.RobotTestSetFragment;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.SensorSetFragment;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 
@@ -57,12 +54,12 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
     @Override
     protected void initView() {
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
-        mPagerAdapter.addFragment(NaParameterSet.newInstance());
-        mPagerAdapter.addFragment(AutoChargingSet.newInstance());
-        mPagerAdapter.addFragment(SensorSet.newInstance());
-        mPagerAdapter.addFragment(RobotTestSet.newInstance());
-        mPagerAdapter.addFragment(EditManagerSet.newInstance());
-        //mPagerAdapter.addFragment(HelpFeedbackSet.newInstance());
+        mPagerAdapter.addFragment(NaParameterSetFragment.newInstance());
+        mPagerAdapter.addFragment(AutoChargingSetFragment.newInstance());
+        mPagerAdapter.addFragment(SensorSetFragment.newInstance());
+        mPagerAdapter.addFragment(RobotTestSetFragment.newInstance());
+        mPagerAdapter.addFragment(EditManagerSetFragment.newInstance());
+        //mPagerAdapter.addFragment(HelpFeedbackSetFragment.newInstance());
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         viewPager.addOnPageChangeListener(this);

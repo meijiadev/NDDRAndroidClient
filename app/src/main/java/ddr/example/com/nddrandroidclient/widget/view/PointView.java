@@ -36,15 +36,7 @@ public class PointView extends Shape {
     private TargetPoint targetPoint;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private PathLine.PathPoint pathPoint;
-    /**
-     *用于裁剪源图像的矩形（可重复使用）。
-     */
-    private Rect mRectSrc;
 
-    /**
-     * 用于在画布上指定绘图区域的矩形（可重新使用）。
-     */
-    private Rect mRectDst;
 
     private Bitmap autoBitmap;
     private float x,y;
@@ -56,6 +48,8 @@ public class PointView extends Shape {
     private Bitmap beginBitmap,chargeBitmap;        //初始点、充点电
     private boolean isCheckPoint;                   //是否通过点击选择目标点
     private int directionW,directionH;
+    private int bitmapW,bitmapH;
+
 
 
     /**
@@ -153,6 +147,8 @@ public class PointView extends Shape {
         EventBus.getDefault().register(this);
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
+        bitmapW=targetBitmap.getWidth();
+
     }
 
 
@@ -162,11 +158,9 @@ public class PointView extends Shape {
                 if (targetPoints.get(i).isInTask()){
                     XyEntity xyEntity=zoomImageView.toXorY(targetPoints.get(i).getX(),targetPoints.get(i).getY());
                     xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-                    int x= (int) xyEntity.getX();
-                    int y= (int) xyEntity.getY();
-                    mRectSrc=new Rect(0,0,22,22);
-                    mRectDst=new Rect(x-11,y-11,x+11,y+11);
-                    canvas.drawBitmap(autoBitmap,mRectSrc,mRectDst,pointPaint);
+                    float x= xyEntity.getX();
+                    float y= xyEntity.getY();
+                    canvas.drawBitmap(autoBitmap,x-bitmapW/2,y-bitmapH/2,pointPaint);
                     canvas.drawText(targetPoints.get(i).getName(),x,y+15,textPaint);
                 }
             }
@@ -176,13 +170,11 @@ public class PointView extends Shape {
                 if (targetPoints1.get(i).isMultiple()){
                     XyEntity xyEntity=zoomImageView.toXorY(targetPoints1.get(i).getX(),targetPoints1.get(i).getY());
                     xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-                    int x= (int) xyEntity.getX();
-                    int y= (int) xyEntity.getY();
-                    mRectSrc=new Rect(0,0,40,40);
-                    mRectDst=new Rect(x-20,y-20,x+20,y+20);
+                    float x= xyEntity.getX();
+                    float y=  xyEntity.getY();
                     matrix.setRotate(-targetPoints1.get(i).getTheta());
                     targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getWidth()  ,matrix,true);
-                    canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+                    canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
                     canvas.drawText(targetPoints1.get(i).getName(),x,y+15,textPaint);
                 }
             }
@@ -191,22 +183,22 @@ public class PointView extends Shape {
         if (targetPoint!=null){
             XyEntity xyEntity=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-            int x= (int) xyEntity.getX();
-            int y= (int) xyEntity.getY();
+            float x=  xyEntity.getX();
+            float y=  xyEntity.getY();
             matrix.setRotate(-targetPoint.getTheta());
             targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getHeight(),matrix,true);
-            canvas.drawBitmap(targetBitmap1,x-20,y-20,pointPaint);
+            canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
 
         if (pathPoint!=null){
             XyEntity xyEntity=zoomImageView.toXorY(pathPoint.getX(),pathPoint.getY());
             xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-            int x= (int) xyEntity.getX();
-            int y= (int) xyEntity.getY();
+            float x=  xyEntity.getX();
+            float y=  xyEntity.getY();
             matrix.setRotate(-pathPoint.getRotationAngle());
             targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getWidth(),matrix,true);
-            canvas.drawBitmap(targetBitmap1,x-20,y-20,pointPaint);
+            canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
         }
         if (isRuning){
             XyEntity xyEntity=zoomImageView.toXorY(x,y);
@@ -220,13 +212,11 @@ public class PointView extends Shape {
             for (int i=0;i<selectPoints.size();i++){
                     XyEntity xyEntity=zoomImageView.toXorY(selectPoints.get(i).getX(),selectPoints.get(i).getY());
                     xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-                    int x= (int) xyEntity.getX();
-                    int y= (int) xyEntity.getY();
-                    mRectSrc=new Rect(0,0,40,40);
-                    mRectDst=new Rect(x-20,y-20,x+20,y+20);
+                    float x= (int) xyEntity.getX();
+                    float y= (int) xyEntity.getY();
                     matrix.setRotate(-selectPoints.get(i).getTheta());
-                    targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,40,40,matrix,true);
-                    canvas.drawBitmap(targetBitmap1,mRectSrc,mRectDst,pointPaint);
+                    targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getHeight(),matrix,true);
+                    canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
                     canvas.drawText(selectPoints.get(i).getName(),x,y+15,textPaint);
             }
         }

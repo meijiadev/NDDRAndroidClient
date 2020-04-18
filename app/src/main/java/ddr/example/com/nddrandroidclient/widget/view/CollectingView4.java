@@ -212,7 +212,7 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
         for (int i=0;i<pts;i++){
             float y=((-poiPoints.get(i).getX())*ratio+measureHeight/2);
             float x=((-poiPoints.get(i).getY())*ratio+measureWidth/2);
-            canvas.drawBitmap(poiBitmap,(int) x-10,(int) y-10,pathPaint);
+            canvas.drawBitmap(poiBitmap,x-poiBitmap.getWidth()/2,y-poiBitmap.getHeight()/2,pathPaint);
         }
     }
 

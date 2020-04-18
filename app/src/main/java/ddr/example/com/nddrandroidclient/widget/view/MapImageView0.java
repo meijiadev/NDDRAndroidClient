@@ -487,7 +487,7 @@ public class MapImageView0 extends ImageView {
             int x= (int) xyEntity.getX();
             int y= (int) xyEntity.getY();
             matrix.setRotate(-targetPoint.getTheta());
-            Bitmap targetBitmap2=Bitmap.createBitmap(targetBitmap1,0,0,40,40,matrix,true);
+            Bitmap targetBitmap2=Bitmap.createBitmap(targetBitmap1,0,0,targetBitmap.getWidth(),targetBitmap.getHeight(),matrix,true);
             canvas.drawBitmap(targetBitmap2,x -20,y-20,paint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }

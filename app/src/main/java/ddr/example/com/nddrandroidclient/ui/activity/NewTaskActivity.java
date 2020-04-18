@@ -108,6 +108,8 @@ public class NewTaskActivity extends DDRActivity {
     //等待弹窗
     private BaseDialog waitDialog;
 
+    private int viewType;
+
 
     @Override
     protected int getLayoutId() {
@@ -152,16 +154,18 @@ public class NewTaskActivity extends DDRActivity {
     protected void initData() {
         super.initData();
         Intent intent = getIntent();
-        int viewType =intent.getIntExtra("viewType",0);
+        viewType =intent.getIntExtra("viewType",0);
         if (viewType==TaskFragment.CREATE_NEW_TASK){
             taskName = intent.getStringExtra("taskName");
         }else if (viewType==TaskFragment.REVAMP_TASK){
-            TaskMode taskMode= (TaskMode) intent.getSerializableExtra("taskMode");
+            TaskMode taskMode= taskModes.get(intent.getIntExtra("taskMode",0));
             taskName=taskMode.getName();
             baseModes=taskMode.getBaseModes();
             taskName=taskName.replaceAll("DDRTask_","");
             taskName=taskName.replaceAll(".task","");
             baseModeDraggableAdapter.setNewData(baseModes);
+            LineView.getInstance(context).setBaseModes(baseModes);
+            zoomView.invalidate();
         }
         tvTaskName.setText(taskName);
         for (MapInfo mapInfo:mapFileStatus.getMapInfos()){
@@ -189,8 +193,8 @@ public class NewTaskActivity extends DDRActivity {
                 break;
             case R.id.tv_finish:
                 if (baseModes.size()>0){
-                    TaskMode taskMode=new TaskMode();
                     String name="DDRTask_" + tvTaskName.getText().toString() + ".task";
+                    TaskMode taskMode=new TaskMode();
                     taskMode.setName(name);
                     taskMode.setBaseModes(baseModes);
                     taskMode.setType(0);
@@ -210,7 +214,6 @@ public class NewTaskActivity extends DDRActivity {
                             toast("保存失败,请重试或者检查网络!");
                         }
                     },5000);
-
                 }else {
                     toast("请选择相应的路径和目标点组建路径");
                 }
@@ -244,6 +247,19 @@ public class NewTaskActivity extends DDRActivity {
     }
 
 
+    /**
+     * 防止任务重名
+     * @return true 表示任务重名
+     */
+    private boolean checkTaskName(String taskName){
+        for (TaskMode taskMode:taskModes){
+            if (taskMode.getName().equals(taskName)){
+                Logger.e("------"+taskName+";"+taskMode.getName());
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * 列表点击事件
      */
@@ -324,21 +340,30 @@ public class NewTaskActivity extends DDRActivity {
     };
 
 
+    private BaseDialog inputDialog;
     /**
      * 重命名任务名弹窗
      */
     private void showRenameDialog(){
-        new InputDialog.Builder(this)
+       inputDialog= new InputDialog.Builder(this)
                 .setTitle("任务重命名")
+                .setAutoDismiss(false)
                 .setListener(new InputDialog.OnListener() {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
-                        tvTaskName.setText(content);
+                        String name="DDRTask_" +content+ ".task";
+                        if (checkTaskName(name)){
+                            toast("名称已存在，请重新命名。");
+                        }else {
+                            tvTaskName.setText(content);
+                            inputDialog.dismiss();
+                        }
                     }
 
                     @Override
                     public void onCancel(BaseDialog dialog) {
                         toast("取消重命名!");
+                        inputDialog.dismiss();
                     }
                 }).show();
     }

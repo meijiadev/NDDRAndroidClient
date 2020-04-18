@@ -22,7 +22,7 @@ import ddr.example.com.nddrandroidclient.ui.adapter.HelpBackAdapter;
  * time: 2020/03/24
  * desc: 高级设置帮助与反馈界面
  */
-public class HelpFeedbackSet extends DDRLazyFragment {
+public class HelpFeedbackSetFragment extends DDRLazyFragment {
     @BindView(R.id.recycle_help)
     RecyclerView recycle_help;
     @BindView(R.id.tv_idea_back)
@@ -32,7 +32,7 @@ public class HelpFeedbackSet extends DDRLazyFragment {
     private HelpAndBack helpAndBack;
     private List<HelpAndBack> helpAndBackList;
 
-    public static HelpFeedbackSet newInstance(){return new HelpFeedbackSet();}
+    public static HelpFeedbackSetFragment newInstance(){return new HelpFeedbackSetFragment();}
 
     @Override
     protected int getLayoutId() {

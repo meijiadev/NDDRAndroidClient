@@ -161,7 +161,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                 case R.id.tv_task_pause:
                                     Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
                                     intent.putExtra("viewType",REVAMP_TASK);
-                                    intent.putExtra("taskMode",taskModeList.get(position));
+                                    intent.putExtra("taskMode",position);
                                     startActivity(intent);
                                     break;
                                     // 已修改成“删除”任务
@@ -218,25 +218,50 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         }
     }
 
+    private BaseDialog inputDialog;
     /**
      * 新建任务
      */
     private void showCreateTaskDialog(){
-        new InputDialog.Builder(getAttachActivity())
+       inputDialog= new InputDialog.Builder(getAttachActivity())
                 .setTitle("输入任务名")
+                .setAutoDismiss(false)
                 .setListener(new InputDialog.OnListener() {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
-                        Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
-                        intent.putExtra("viewType",CREATE_NEW_TASK);
-                        intent.putExtra("taskName",content);
-                        startActivity(intent);
+                        if (!content.equals("")){
+                            String name="DDRTask_" +content+ ".task";
+                            if (checkTaskName(name)){
+                                toast("名称已存在，请重新命名。");
+                            }else {
+                                Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
+                                intent.putExtra("viewType",CREATE_NEW_TASK);
+                                intent.putExtra("taskName",content);
+                                startActivity(intent);
+                                inputDialog.dismiss();
+                            }
+                        }
                     }
                     @Override
                     public void onCancel(BaseDialog dialog) {
                         toast("取消新建任务");
+                        inputDialog.dismiss();
                     }
                 }).show();
+    }
+
+    /**
+     * 防止任务重名
+     * @return true 表示任务重名
+     */
+    private boolean checkTaskName(String taskName){
+        for (TaskMode taskMode:taskModeList){
+            if (taskMode.getName().equals(taskName)){
+                Logger.e("------"+taskName+";"+taskMode.getName());
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

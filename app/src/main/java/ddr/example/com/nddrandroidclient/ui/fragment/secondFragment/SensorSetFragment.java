@@ -35,7 +35,7 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
  * time: 2020/03/24
  * desc: 高级设置传感器设置界面
  */
-public class SensorSet extends DDRLazyFragment {
+public class SensorSetFragment extends DDRLazyFragment {
     @BindView(R.id.slideButton)
     SlideButton slideButton;
     @BindView(R.id.ed_cs1)
@@ -102,7 +102,7 @@ public class SensorSet extends DDRLazyFragment {
         }
     }
 
-    public static SensorSet newInstance(){return new SensorSet();}
+    public static SensorSetFragment newInstance(){return new SensorSetFragment();}
     @Override
     protected int getLayoutId() {
         return R.layout.fragmen_s_senesor;
