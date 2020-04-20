@@ -339,6 +339,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             tv_work_statue.setText("运动中");
                         }
                         break;
+                    case 2:
+                        tv_work_statue.setText("正在采集中...");
+                        break;
                     case 3:
                         tv_work_statue.setText("运动中");
                         tv_now_task.setClickable(false);

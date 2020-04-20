@@ -62,7 +62,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
-            case updataParameter:
+            case updateParameter:
                 setNaparmeter();
                 break;
         }

@@ -47,6 +47,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private Paint paint;
     private float scale=1;                             //地图缩放的比例
     private ZoomLayout zoomLayout;
+    private MapEditView mapEditView;
     private int directionW,directionH;
 
     public RobotLocationView(Context context) {
@@ -75,16 +76,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
 
     /**
      * 设置显示大小
-     *
-     * @param width
-     * @param height
      */
-    public void setBitmapSize(ZoomLayout zoomLayout,String mapName, int width, int height) {
+    public void setBitmapSize(ZoomLayout zoomLayout,MapEditView mapEditView,String mapName) {
         this.zoomLayout=zoomLayout;
+        this.mapEditView=mapEditView;
         this.mapName = mapName;
-        this.bitmapWidth = width;
-        this.bitmapHeight = height;
-        Logger.e("--------图片大小："+bitmapWidth+";"+bitmapHeight);
         EventBus.getDefault().register(this);
 
     }
@@ -113,14 +109,14 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
 
 
     /**
-     * 世界坐标——>像素坐标
+     * 世界坐标——>像素坐标 直接绘制到地图上的坐标
      * @param x
      * @param y
      * @return
      */
     public XyEntity toXorY(float x, float y){
-        float x1=(float)( r00*x+r01*y+t0)+(measureWidth-bitmapWidth)/2;
-        float y1=(float) (r10*x+r11*y+t1)+(measureHeight-bitmapHeight)/2;
+        float x1=(float)( r00*x+r01*y+t0)/mapEditView.getScale()+mapEditView.getMarginLeft();
+        float y1=(float) (r10*x+r11*y+t1)/mapEditView.getScale()+mapEditView.getMarginTop();
         return new XyEntity(x1,y1);
     }
 
@@ -132,6 +128,8 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * @return
      */
     public XyEntity toPathXy(float x,float y){
+        x=(x)*mapEditView.getScale();
+        y=(y)*mapEditView.getScale();
         float k= (float) (r00*r11-r10*r01);
         float j= (float) (r10*r01-r00*r11);
         float ax= (float) (r11*x-r01*y+r01*t1-r11*t0);
@@ -275,7 +273,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      */
     private void doDraw(Canvas canvas){
         canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
-        scale=zoomLayout.getScale();
+        scale= zoomLayout.getScale()/mapEditView.getScale();
         XyEntity xyEntity=getRobotLocationInWindow();
         posX=xyEntity.getX();
         posY=xyEntity.getY();

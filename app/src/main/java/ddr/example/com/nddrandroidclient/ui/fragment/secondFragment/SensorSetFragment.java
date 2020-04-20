@@ -84,7 +84,7 @@ public class SensorSetFragment extends DDRLazyFragment {
             case updataSenesor:
                 setSensorParam();
                 break;
-            case updataParameter:
+            case updateParameter:
                 setNaparmeter();
                 break;
         }

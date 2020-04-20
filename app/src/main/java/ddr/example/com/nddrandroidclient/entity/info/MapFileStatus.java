@@ -41,6 +41,8 @@ public class MapFileStatus {
     private List<PathLine> cPathLines=new ArrayList<>();               //解析后的路径数据
     private List<TaskMode> cTaskModes=new ArrayList<>();               //解析后的任务数据
 
+    private List<byte[]> bitmapBytes=new ArrayList<>();               //图片的字节数组
+
     private DDRVLNMap.affine_mat affine_mat;                          //地图的矩阵
 
     public int AllCount=0; //定时任务总次数
@@ -284,6 +286,13 @@ public class MapFileStatus {
         return mapInfos;
     }
 
+    public void setBitmapBytes(List<byte[]> bitmapBytes) {
+        this.bitmapBytes = bitmapBytes;
+    }
+
+    public List<byte[]> getBitmapBytes() {
+        return bitmapBytes;
+    }
 
     /**
      * 获取解析后的目标点列表

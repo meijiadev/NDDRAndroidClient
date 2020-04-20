@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,6 +59,8 @@ public class RelocationActivity extends DDRActivity {
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
+    private int mapLayoutW,mapLayoutH;
+    private int marginLeft,marginTop;
 
     @Override
     protected int getLayoutId() {
@@ -81,9 +84,8 @@ public class RelocationActivity extends DDRActivity {
         try {
             fis = new FileInputStream(bitmap);
             currentBitmap= BitmapFactory.decodeStream(fis);
-            ivContent.setImageBitmap(currentBitmap);
-            ivContent.refreshMap();
-            robotLocationView.setBitmapSize(zoomView,mapName,currentBitmap.getWidth(),currentBitmap.getHeight());
+            ivContent.setBitmap(currentBitmap);
+            robotLocationView.setBitmapSize(zoomView,ivContent,mapName);
             tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -94,7 +96,6 @@ public class RelocationActivity extends DDRActivity {
         realTimeRequest();
         //reqObstacleInfo();
         robotLocationView.startThread();
-
     }
 
     /**
@@ -148,8 +149,8 @@ public class RelocationActivity extends DDRActivity {
     private void setCenterTouch(){
         int [] location=new int[2];
         mapLayout.getLocationOnScreen(location); //布局在整个屏幕中的位置
-        int marginLeft=location[0];             // 距离屏幕左边的距离
-        int marginTop=location[1];             //  距离屏幕上方的距离
+        marginLeft=location[0];             // 距离屏幕左边的距离
+        marginTop=location[1];             //  距离屏幕上方的距离
         Logger.e("marginLeft:"+marginLeft+";"+"marginTop:"+marginTop);
         XyEntity xyEntity=robotLocationView.getRobotLocationInWindow();
         float x=xyEntity.getX();

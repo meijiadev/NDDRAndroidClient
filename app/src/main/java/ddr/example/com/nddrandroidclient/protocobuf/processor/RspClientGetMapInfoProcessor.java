@@ -35,6 +35,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
     FileUtil fileUtil;
     private List<String> urlList;
     private List<String> mapNames;
+    private List<byte[]> bitmapBytes;
 
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
@@ -44,6 +45,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
         mapInfoItemList=rspClientGetMapInfo.getMapDataList();
         urlList=new ArrayList<>();
         mapNames=new ArrayList<>();
+        bitmapBytes=new ArrayList<>();
         if (mapInfoItemList!=null&&mapInfoItemList.size()>0){
             mapInfoList=new ArrayList<>();
             for (int i=0;i<mapInfoItemList.size();i++){
@@ -54,31 +56,38 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
                 mapInfo.setAuthor(mapInfoItemList.get(i).getAuthor().toStringUtf8());
                 mapInfo.setTime(longToDate(mapInfoItemList.get(i).getTimeStamp()));
                 mapInfo.setTaskItemList(mapInfoItemList.get(i).getTaskSetList());
-                mapInfoList.add(mapInfo);
                 ByteString bytes=mapInfoItemList.get(i).getBkPicAddr();
                 String url=bytes.toStringUtf8();
-                Logger.e("-----url:"+url);
-                urlList.add(url);
-                String files=url.split("//")[1];
-                String fileDir= files.split("/")[1];        //文件夹名
-                String fileName=files.split("/")[2];        //文件名
-                fileUtil=new FileUtil(fileDir);
-                File target = null;
-                if (url.contains(".png")||url.contains(".jpg")){
-                    Logger.e("----使用图片专用下载工具-----");
-                    try {
-                        target=fileUtil.createSdFile(fileName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                byte [] bitmaps=null;
+                if (url.contains("http:")){
+                    Logger.e("-----url:"+url);
+                    urlList.add(url);
+                    String files=url.split("//")[1];
+                    String fileDir= files.split("/")[1];        //文件夹名
+                    String fileName=files.split("/")[2];        //文件名
+                    fileUtil=new FileUtil(fileDir);
+                    File target = null;
+                    if (url.contains(".png")||url.contains(".jpg")){
+                        Logger.e("----使用图片专用下载工具-----");
+                        try {
+                            target=fileUtil.createSdFile(fileName);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        new Thread(new DownLoadImageService(context,url,this,target)).start();
+                    }else {
+                        try {
+                            fileUtil.writeToSdFromInput(url,fileName);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    new Thread(new DownLoadImageService(context,url,this,target)).start();
                 }else {
-                    try {
-                        fileUtil.writeToSdFromInput(url,fileName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    bitmaps=bytes.toByteArray();
+                   // bitmapBytes.add(bitmaps);
                 }
+                mapInfo.setBytes(bitmaps);
+                mapInfoList.add(mapInfo);
             }
             SortClass sortClass=new SortClass();
             Collections.sort(mapInfoList,sortClass);
@@ -90,6 +99,7 @@ public class RspClientGetMapInfoProcessor extends BaseProcessor implements DownL
             mapFileStatus.setMapNames(mapNames);
             mapFileStatus.setPictureUrls(urlList);
             mapFileStatus.setMapInfos(mapInfoList);
+            mapFileStatus.setBitmapBytes(bitmapBytes);
             EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateMapList));
         }
     }

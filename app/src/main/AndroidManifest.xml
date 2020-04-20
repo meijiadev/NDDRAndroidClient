@@ -52,6 +52,8 @@
         <activity android:name=".ui.activity.NewTaskActivity"
             android:screenOrientation="landscape"
             />
+        <activity android:name=".ui.activity.DeviceSelectActivity"
+            android:screenOrientation="landscape"/>
         <meta-data
             android:name="design_width_in_dp"
             android:value="960"/>

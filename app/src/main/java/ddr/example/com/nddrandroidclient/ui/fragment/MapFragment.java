@@ -858,7 +858,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                             }
                                         }, 5000);
                                     }else {
-                                        reqCmdReloc();     //发送重定位命令
+                                        reqCmdRelocation();     //发送重定位命令
                                     }
                                 }
                                 @Override
@@ -898,11 +898,32 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 发送重定位
      */
-    private void reqCmdReloc(){
+    private void reqCmdRelocation(){
+        if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
+            toast("正在自标定中,无法进行重定位...");
+        }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
+            switch (notifyBaseStatusEx.getMode()) {
+                case 3:
+                    switch (notifyBaseStatusEx.getSonMode()){
+                        case 15:
+                            toast("正在重定位中,请先退出当前定位...");
+                            break;
+                    }
+                    break;
+                    default:
+                        reqCmdRelocation1();
+                        break;
+            }
+        }else{
+            reqCmdRelocation1();
+        }
+
+    }
+    private void reqCmdRelocation1(){
         BaseCmd.reqCmdReloc reqCmdReloc=BaseCmd.reqCmdReloc.newBuilder()
                 .setTypeValue(0)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eForwarderClient),reqCmdReloc);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdReloc);
     }
 
     /**

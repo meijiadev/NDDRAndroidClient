@@ -82,7 +82,6 @@ enum eCltType {
 	eLocalAndroidClient = 0x02;	
 	eRemotePCClient = 0x04;
 	eRemoteAndroidClient = 0x08;
-	eForwarderClient = 0x10;
 	eAllClient = 0xff;
 	eLSMStreamRelay = 0x100;
 	eLSMSlamNavigation = 0x200;
@@ -90,11 +89,12 @@ enum eCltType {
 	eLSMThermalImaging =0x800;
 	eLSMVirtual = 0x1000;
 	eAllLSM = 0xff00;
-	eLocalServer = 0x10000;
+	eModuleServer = 0x10000;
 	eRemoteServer = 0x20000;
 	eAIServer = 0x30000;
 	eLocalAIClient = 0x30001;
 	eAllServer = 0xff0000;
+	eSellV2AndroidClient = 0x60000;
 }
 // flowDirection = UNKNOWN2RS or UNKNOWN2LS
 // eSrcCondition = NoCond; forwardType = NoForwarding; eSrcRecType = NoRec;

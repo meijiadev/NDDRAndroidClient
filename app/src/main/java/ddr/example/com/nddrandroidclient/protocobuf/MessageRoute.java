@@ -188,7 +188,7 @@ public class MessageRoute {
                     processReceive(null,null);
                 }
             }else {
-                Logger.e("bodyDataMsg:"+headData.getBodyType());
+                //Logger.e("bodyDataMsg:"+headData.getBodyType());
                 bodyDataMsg=parseDynamic(headData.getBodyType(),null);
                 processReceive(headData,bodyDataMsg);
             }

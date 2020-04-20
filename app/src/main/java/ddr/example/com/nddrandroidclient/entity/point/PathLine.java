@@ -55,7 +55,6 @@ public class PathLine extends BaseMode implements Serializable {
 
     public void setPathType(int pathType) {
         this.pathType = pathType;
-        Logger.e("-------:"+pathType);
     }
 
     public int getPathType() {

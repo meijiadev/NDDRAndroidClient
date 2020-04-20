@@ -11,6 +11,7 @@ public class MapInfo {
     private String mapName;
     private String bitmap;
     private String time;
+    private byte[] bytes;                //图片的字节流数组
     private int width;
     private int height;
     private String author;
@@ -34,6 +35,14 @@ public class MapInfo {
 
     public void setBitmap(String bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
     }
 
     public String  getTime() {

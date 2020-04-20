@@ -38,7 +38,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
     private Matrix matrix;
     private Bitmap directionBitmap,directionBitmap1;
     private int directionW,directionH;
-    private Paint paint,lastFrame;
+    private Paint paint,lastFrame,pathPaint;
     private int mBackColor=Color.TRANSPARENT;       //背景色透明
     public CollectingView3(Context context) {
         super(context);
@@ -65,6 +65,9 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         lastFrame.setStrokeWidth(1);
         lastFrame.setStyle(Paint.Style.FILL);
         lastFrame.setColor(Color.parseColor("#9900CED1"));
+        pathPaint=new Paint();
+        pathPaint.setColor(Color.BLACK);
+        pathPaint.setStrokeWidth(2);
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
     }
@@ -123,15 +126,18 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         }
 
         public void stopThread(){
-            isRunning=false;
-            boolean workIsNotFinish=true;
-            while (workIsNotFinish){
-                try {
-                    drawRobotThread.join();   //保证run方法执行完毕
-                }catch (InterruptedException e){
-                    e.printStackTrace();
+            if (isRunning){
+                isRunning=false;
+                boolean workIsNotFinish=true;
+                while (workIsNotFinish){
+                    try {
+                        drawRobotThread.join();   //保证run方法执行完毕
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                    workIsNotFinish=false;
                 }
-                workIsNotFinish=false;
+                Logger.e("终止线程");
             }
         }
 
@@ -146,6 +152,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                     if (canvas!=null){
                         //drawRadar(canvas);
                         drawRobot(canvas);
+                        drawPath(canvas);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -196,6 +203,28 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         matrix.setRotate(-angle);
         directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,matrix,true);
         canvas.drawBitmap(directionBitmap1,x-directionW/2,y-directionH/2,paint);
+    }
+
+    /**
+     * 绘制行走路线
+     */
+    private void drawPath(Canvas canvas){
+        int ptsSize=ptsEntityList.size();
+        if (ptsSize>1){
+            try {
+                for (int i=0;i<ptsSize;i++){
+                    if (i<ptsSize-2){
+                        float y=((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
+                        float x=((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
+                        float y1=((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
+                        float x1=((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
+                        canvas.drawLine(x,y,x1,y1,pathPaint);
+                    }
+                }
+            }catch ( IndexOutOfBoundsException e){
+                e.printStackTrace();
+            }
+        }
     }
 
 

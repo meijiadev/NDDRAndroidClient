@@ -109,7 +109,7 @@ public class CollectingActivity extends DDRActivity {
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
-                Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
+                //Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
                 if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
                     tvTitle.setText("正在自标定中...");
                 } else {
