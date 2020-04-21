@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.entity.info;
 import android.os.Environment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
@@ -112,7 +113,7 @@ public class MapFileStatus {
                 List<PathLine.PathPoint> pathPoints = new ArrayList<>();
                 List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
                 for (int j = 0; j < path_lint_pt_items.size(); j++) {
-                    PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                    PathLine.PathPoint pathPoint = new PathLine.PathPoint();
                     pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                     pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                     pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
@@ -189,7 +190,7 @@ public class MapFileStatus {
             List<PathLine.PathPoint> pathPoints = new ArrayList<>();
             List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
             for (int j = 0; j < path_lint_pt_items.size(); j++) {
-                PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                PathLine.PathPoint pathPoint = new PathLine.PathPoint();
                 pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                 pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                 pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
@@ -275,6 +276,7 @@ public class MapFileStatus {
             }
             if (dirName.equals(NotifyBaseStatusEx.getInstance().getCurroute())) {
                 mapInfos.get(i).setUsing(true);
+                Collections.swap(mapInfos,0,i);
             } else {
                 mapInfos.get(i).setUsing(false);
             }

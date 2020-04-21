@@ -96,7 +96,7 @@ public class PathLine extends BaseMode implements Serializable {
     /**
      * 路径的组成点
      */
-    public class PathPoint implements Serializable{
+    public static class PathPoint implements Serializable{
         private String name="";          //自动生成的路径点名字
         private float x;
         private float y;

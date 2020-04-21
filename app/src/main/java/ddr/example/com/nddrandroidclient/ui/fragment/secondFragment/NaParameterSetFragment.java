@@ -27,6 +27,7 @@ import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.NaparamAdapter;
@@ -189,7 +190,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 .build();
         BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
                 .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
         tcpClient.sendData(commonHeader, reqConfigOperational);
@@ -223,7 +224,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 .setType(eConfigItemOptType)
                 .addAllData(configDataList)
                 .build();
-        tcpClient.sendData(null, reqConfigOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqConfigOperational);
 
     }
 
@@ -328,10 +329,14 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
      * @param type
      */
     private void  postAndGet(int type) {
-        bz_radius_text = Float.parseFloat(edBzRadius.getText().toString());
-        bz_sldown_text = Float.parseFloat(etDecelerationDistance.getText().toString());
-        bz_stop_text = Float.parseFloat(etStopDistance.getText().toString());
-        List<Parameter> parameterList1 =new ArrayList<>();;
+        try {
+            bz_radius_text = Float.parseFloat(edBzRadius.getText().toString());
+            bz_sldown_text = Float.parseFloat(etDecelerationDistance.getText().toString());
+            bz_stop_text = Float.parseFloat(etStopDistance.getText().toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<Parameter> parameterList1 =new ArrayList<>();
         BaseCmd.eConfigItemType eConfigItemType;
         switch (type) {
             case 0:

@@ -307,7 +307,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                         .setMode(BaseCmd.eCmdActionMode.eRec)
                                                         .setRouteName(ByteString.copyFromUtf8(name))
                                                         .build();
-                                                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eLSMSlamNavigation), reqCmdStartActionMode);
+                                                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
                                                 Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
                                                 intent.putExtra("CollectName", name);
                                                 startActivity(intent);

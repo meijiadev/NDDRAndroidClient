@@ -27,6 +27,7 @@ import ddr.example.com.nddrandroidclient.entity.other.Parameters;
 import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 
@@ -138,7 +139,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
                 .build();
         BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
                 .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
         tcpClient.sendData(commonHeader, reqConfigOperational);
@@ -218,7 +219,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
                 .setType(eConfigItemOptType)
                 .addAllData(configDataList)
                 .build();
-        tcpClient.sendData(null,reqConfigOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqConfigOperational);
 
     }
 

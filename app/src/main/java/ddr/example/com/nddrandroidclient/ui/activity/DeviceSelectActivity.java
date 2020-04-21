@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import DDRCommProto.BaseCmd;
 import DDRCommProto.RemoteCmd;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.DevicesInfo;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.DevicesAdapter;
@@ -89,7 +91,7 @@ public class DeviceSelectActivity extends DDRActivity {
                     //.setUdid(devices.get(position).getUdid())
                     .build();
             Logger.e("------udip"+devices.get(position).getUdid()+"------name:"+devices.get(position).getName());
-            tcpClient.sendData(null,reqSelectLS);
+            tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqSelectLS);
             toast("正在连接机器人...");
         }));
     }

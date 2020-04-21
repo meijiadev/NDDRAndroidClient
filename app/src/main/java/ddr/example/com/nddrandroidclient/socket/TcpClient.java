@@ -101,6 +101,8 @@ public class TcpClient extends BaseSocketConnection {
     }
 
 
+
+
     /**
      * 连接的状态信息
      */
@@ -264,6 +266,7 @@ public class TcpClient extends BaseSocketConnection {
             manager.unRegisterReceiver(socketCallBack);
             manager.disconnect();
             setConnected(false);
+            manager=null;
         }
     }
 
@@ -299,7 +302,7 @@ public class TcpClient extends BaseSocketConnection {
                     try {
                         manager.getPulseManager().setPulseSendable(new PulseData(m_MessageRoute.serialize(null,hb))).pulse();
                         //Logger.e("发送心跳包");
-                        Thread.sleep(4000);
+                        Thread.sleep(3000);
                     }catch (NullPointerException e){
                         e.printStackTrace();
                     }catch (InterruptedException e) {
@@ -327,12 +330,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.reqGetDDRVLNMapEx reqGetDDRVLNMapEx=DDRVLNMap.reqGetDDRVLNMapEx.newBuilder()
                 .setOnerouteName(routeName)
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        sendData(commonHeader,reqGetDDRVLNMapEx);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqGetDDRVLNMapEx);
         Logger.e("请求地图信息");
     }
 
@@ -364,7 +362,7 @@ public class TcpClient extends BaseSocketConnection {
                 .build();
         BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
                 .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
         tcpClient.sendData(commonHeader, reqCmdMove);
@@ -388,7 +386,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.reqTaskOperational reqTaskOperational=DDRVLNMap.reqTaskOperational.newBuilder()
                 .setOptSet(optItem)
                 .build();
-        sendData(null,reqTaskOperational);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqTaskOperational);
     }
 
 
@@ -401,7 +399,7 @@ public class TcpClient extends BaseSocketConnection {
                 .build();
         BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
                 .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
+                .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
@@ -427,7 +425,7 @@ public class TcpClient extends BaseSocketConnection {
                 .setBOriginal(isReset)
                 .setOneroutename(ByteString.copyFromUtf8(mapName))
                 .build();
-        sendData(null,reqEditorLidarMap);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqEditorLidarMap);
     }
 
 

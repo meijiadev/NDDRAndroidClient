@@ -30,6 +30,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
@@ -102,14 +103,9 @@ public class RelocationActivity extends DDRActivity {
      * 请求当前障碍物信息
      */
     private void reqObstacleInfo(){
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
         DDRModuleCmd.reqObstacleInfo reqObstacleInfo=DDRModuleCmd.reqObstacleInfo.newBuilder().build();
         if (tcpClient!=null){
-            tcpClient.sendData(commonHeader,reqObstacleInfo);
+            tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqObstacleInfo);
         }
     }
 
@@ -179,7 +175,7 @@ public class RelocationActivity extends DDRActivity {
                 .setPosY0(y)
                 .setPosTh0(rotation)
                 .build();
-        tcpClient.sendData(null,reqCmdReloc);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdReloc);
     }
 
     private boolean isRunning=true;

@@ -18,15 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
 
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import butterknife.BindView;
@@ -38,7 +35,6 @@ import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
-import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
@@ -46,7 +42,6 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
@@ -179,6 +174,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
             case getSpecificPoint4:
                 toast("生成路径失败");
+                isRunabPoint=false;
                 break;
             case getSpecificPoint5:
                 toast("当前处于自标定");
@@ -188,12 +184,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
             case getSpecificPoint9:
                 toast("完成当前任务，开始时段任务");
+                isRunabPoint=false;
                 break;
             case getSpecificPoint10:
                 toast("无任务，原地待命");
                 break;
             case getSpecificPoint11:
                 toast("开始前往"+sPoint);
+                break;
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {
                     targetPoints.get(i).setSelected(false);
@@ -308,9 +306,19 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
+                if (mapImageView!=null){
+                    isRunabPoint=false;
+                    mapImageView.setABPointLine(isRunabPoint);
+                }
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
+                if (mapImageView!=null){
+                    if (mapImageView!=null){
+                        isRunabPoint=false;
+                        mapImageView.setABPointLine(isRunabPoint);
+                    }
+                }
                 break;
             case 3:
                 tv_task_num.setText(" ");
@@ -335,6 +343,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             tv_now_task.setClickable(true);
                             tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
                             iv_task_xl.setVisibility(View.VISIBLE);
+                            if (mapImageView!=null)
+                                mapImageView.setABPointLine(isRunabPoint);
                         }else {
                             tv_work_statue.setText("运动中");
                         }
@@ -492,12 +502,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         BaseCmd.reqCmdPauseResume reqCmdPauseResume=BaseCmd.reqCmdPauseResume.newBuilder()
                 .setError(value)
                 .build();
-        BaseCmd.CommonHeader commonHeader=BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader,reqCmdPauseResume);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdPauseResume);
         Logger.e("机器人暂停/重新运动");
     }
 
@@ -541,7 +546,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 .setBIsDynamicOA(true)
                 .setOptType(eRunSpecificPointTyp)
                 .build();
-        tcpClient.sendData(null,reqRunSpecificPoint);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqRunSpecificPoint);
 
     }
 
@@ -635,8 +640,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case 1:
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
-//                        sendModel(BaseCmd.eCmdActionMode.eAutoDynamic);
-                        //Logger.e("待命模式" + modeView.getText());
                         Logger.e("----mapName:"+mapName+"taskName:"+taskName);
                         if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
                             toast("请稍等，正在进入");
@@ -784,7 +787,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             if (mapImageView1!=null&&mapImageView1.drawThread.isAlive()){
                 mapImageView1.onStop();
             }
-
         }
     }
 

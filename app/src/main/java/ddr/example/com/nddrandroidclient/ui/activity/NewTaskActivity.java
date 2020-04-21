@@ -379,7 +379,7 @@ public class NewTaskActivity extends DDRActivity {
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateRevamp:
-                if (waitDialog!=null&&waitDialog.isShowing()){
+                if (waitDialog!=null){
                     waitDialog.dismiss();
                     toast("保存成功");
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));

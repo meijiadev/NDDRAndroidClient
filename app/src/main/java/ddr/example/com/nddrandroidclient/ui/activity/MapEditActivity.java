@@ -375,11 +375,11 @@ public class MapEditActivity extends DDRActivity {
                     case CREATE_PATH:
                         if (System.currentTimeMillis()-lastClickTime>=FAST_CLICK_DELAY_TIME){
                             lastClickTime=System.currentTimeMillis();
-                            PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                            PathLine.PathPoint pathPoint=new PathLine.PathPoint();
                             pathPoint.setY(zmap.getTargetPoint().getY());
                             pathPoint.setX(zmap.getTargetPoint().getX());
                             pathPoints.add(pathPoint);
-                            LineView.getInstance(getApplication()).setPoints(pathPoints);
+                            LineView.getInstance(getApplication()).setShowPoints(pathPoints);
                             zmap.invalidate();
                         }else {
                             toast("请勿重复标记");
@@ -394,7 +394,7 @@ public class MapEditActivity extends DDRActivity {
                 if (activityType==CREATE_PATH){
                     if (pathPoints.size()>0){
                         pathPoints.remove(pathPoints.size()-1);
-                        LineView.getInstance(getApplication()).setPoints(pathPoints);
+                        LineView.getInstance(getApplication()).setShowPoints(pathPoints);
                         zmap.invalidate();
                     }else {
                         toast("请先添加点");
@@ -1181,7 +1181,7 @@ public class MapEditActivity extends DDRActivity {
                     }
                 }else {
                     selectPoints.get(position).setMultiple(true);
-                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                    PathLine.PathPoint pathPoint=new PathLine.PathPoint();
                     pathPoint.setName(selectPoints.get(position).getName());
                     pathPoint.setY(selectPoints.get(position).getY());
                     pathPoint.setX(selectPoints.get(position).getX());

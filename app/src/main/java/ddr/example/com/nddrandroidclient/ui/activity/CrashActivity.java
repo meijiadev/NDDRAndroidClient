@@ -114,17 +114,6 @@ public final class CrashActivity extends DDRActivity {
             dir.mkdirs();
         }
         StringBuffer sb=new StringBuffer();
-       /* Writer writer=new StringWriter();
-        PrintWriter printWriter=new PrintWriter(writer);
-        throwable.printStackTrace(printWriter);
-        Throwable cause=throwable.getCause();
-        while (cause!=null){
-            cause.printStackTrace(printWriter);
-            cause=cause.getCause();
-        }
-        printWriter.close();
-        //得到错误信息
-        String result=writer.toString();*/
         sb.append(errorMessage);
         //存到文件
         String time=dateFormat.format(new Date());

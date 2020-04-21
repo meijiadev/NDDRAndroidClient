@@ -269,7 +269,7 @@ public class MapImageView extends GLView {
                 List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items=pathLineItemExesS.get(i).getPointSetList();
                 for (int j=0;j<path_lint_pt_items.size();j++){
                     XyEntity xyEntity=toXorY(path_lint_pt_items.get(j).getPt().getX(),path_lint_pt_items.get(j).getPt().getY());
-                    PathLine.PathPoint pathPoint=new PathLine().new PathPoint();
+                    PathLine.PathPoint pathPoint=new PathLine.PathPoint();
                     pathPoint.setX(xyEntity.getX());
                     pathPoint.setY(xyEntity.getY());
                     pathPoints.add(pathPoint);

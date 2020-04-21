@@ -63,7 +63,6 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
         }else{
             helper.getView(R.id.iv_select).setBackgroundResource(R.mipmap.nocheckedwg);
         }
-
     }
 
     @Override

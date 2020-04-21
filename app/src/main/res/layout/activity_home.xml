@@ -50,7 +50,7 @@
             android:id="@+id/taskmanager"
             android:layout_width="83dp"
             android:layout_height="match_parent"
-            android:text="任务管理"
+            android:text="时段管理"
             android:textSize="12sp"
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
