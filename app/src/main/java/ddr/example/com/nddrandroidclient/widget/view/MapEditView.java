@@ -81,7 +81,6 @@ public class MapEditView extends ImageView {
         if (changed){
             width = getWidth();
             height = getHeight();
-
             if (sourceBitmap!=null){
                 bitmapWidth=sourceBitmap.getWidth();
                 bitmapHeight=sourceBitmap.getHeight();

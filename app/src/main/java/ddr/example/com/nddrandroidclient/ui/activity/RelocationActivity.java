@@ -33,6 +33,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.MapEditView;
@@ -240,6 +241,9 @@ public class RelocationActivity extends DDRActivity {
                 break;
             case notifyTCPDisconnected:
                 netWorkStatusDialog();
+                break;
+            case touchFloatWindow:
+                new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.iv_back));
                 break;
         }
     }

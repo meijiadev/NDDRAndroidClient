@@ -194,7 +194,6 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         switch (mainUpDate.getType()){
             case receivePointCloud:
                 isStartRadar=true;
-                //Logger.d("------当前机器人速度："+notifyLidarPtsEntity.getPosX()+";"+notifyLidarPtsEntity.getPosY());
                 break;
 
         }

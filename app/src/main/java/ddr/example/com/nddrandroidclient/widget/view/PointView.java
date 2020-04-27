@@ -148,6 +148,7 @@ public class PointView extends Shape {
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
         bitmapW=targetBitmap.getWidth();
+        bitmapH=targetBitmap.getHeight();
 
     }
 

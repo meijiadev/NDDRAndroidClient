@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
@@ -31,6 +32,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.NaparamAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 
 /**
  * time: 2020/03/24
@@ -80,6 +82,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private String isPainHuKey = "Common_Params.AUTO_NO_CORNER_SMOOTHING"; // 是否不画弧                       1-表示不画弧
     private String isOriginalWayBack="Common_Params.AUTOMODE_RETURN";           // 是否原路返回                1-原路返回
     private List<BaseCmd.configData> configDataList = new ArrayList<>();
+    private BaseDialog waitDialog;
 
     public static NaParameterSetFragment newInstance() {
         return new NaParameterSetFragment();
@@ -126,8 +129,15 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 postAndGet(1);
                 postAndGet(2);
                 //getNaParmeter(1);
-
-                toast("保存成功");
+                waitDialog=new WaitDialog.Builder(getAttachActivity())
+                        .setMessage("正在保存...")
+                        .show();
+                getAttachActivity().postDelayed(()->{
+                    if (waitDialog!=null){
+                        waitDialog.dismiss();
+                        toast("保存成功");
+                    }
+                },1500);
                 break;
             case R.id.tv_task_origin:
                 tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
@@ -237,57 +247,61 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private void setNaparmeter() {
         parameterList = parameters.getParameterList();
         Logger.e("数量" + parameterList.size());
-        for (int i = 0; i < parameterList.size(); i++) {
-            if (parameterList.get(i).getKey().contains(bzRadiusKey)) {
-                bz_ra = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
-                edBzRadius.setText(String.valueOf(bz_ra));
-            }
-            if (parameterList.get(i).getKey().contains(bzDistanceKey)) {
-                bz_sl = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
-                etDecelerationDistance.setText(String.valueOf(bz_sl));
-            }
-            if (parameterList.get(i).getKey().contains(bzStopKey)) {
-                bz_st = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
-                etStopDistance.setText(String.valueOf(bz_st));
-            }
-            //是否从第一段开始--》任务启动方式 1-任务起点启动
-            if (parameterList.get(i).getKey().contains(isFormOneKey)) {
-                isFrom = Integer.parseInt(parameterList.get(i).getValue());
-                Logger.e("是否从第一端开始："+isFrom);
-                if (isFrom==1){
-                    tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                    tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                }else {
-                    tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                    tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+        try {
+            for (int i = 0; i < parameterList.size(); i++) {
+                if (parameterList.get(i).getKey().contains(bzRadiusKey)) {
+                    bz_ra = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
+                    edBzRadius.setText(String.valueOf(bz_ra));
+                }
+                if (parameterList.get(i).getKey().contains(bzDistanceKey)) {
+                    bz_sl = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
+                    etDecelerationDistance.setText(String.valueOf(bz_sl));
+                }
+                if (parameterList.get(i).getKey().contains(bzStopKey)) {
+                    bz_st = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
+                    etStopDistance.setText(String.valueOf(bz_st));
+                }
+                //是否从第一段开始--》任务启动方式 1-任务起点启动
+                if (parameterList.get(i).getKey().contains(isFormOneKey)) {
+                    isFrom = Integer.parseInt(parameterList.get(i).getValue());
+                    Logger.e("是否从第一端开始："+isFrom);
+                    if (isFrom==1){
+                        tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                        tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+                    }else {
+                        tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+                        tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    }
+                }
+                // 是否不画弧   1-不画弧
+                if (parameterList.get(i).getKey().contains(isPainHuKey)) {
+                    isPain = Integer.parseInt(parameterList.get(i).getValue());
+                    Logger.e("是否从画弧："+isPain);
+                    if (isPain==1){
+                        tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                        tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+                    }else {
+                        tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+                        tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    }
+                }
+                // 是否原路返回 1-表示原路返回
+                if (parameterList.get(i).getKey().equals(isOriginalWayBack)){
+                    isOriginal= Integer.parseInt(parameterList.get(i).getValue());
+                    Logger.e("是否原路返回："+isOriginal);
+                    if (isOriginal==1){
+                        tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                        tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+                    }else {
+                        tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+                        tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    }
                 }
             }
-            // 是否不画弧   1-不画弧
-            if (parameterList.get(i).getKey().contains(isPainHuKey)) {
-                isPain = Integer.parseInt(parameterList.get(i).getValue());
-                Logger.e("是否从画弧："+isPain);
-                if (isPain==1){
-                    tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                    tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                }else {
-                    tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                    tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                }
-            }
-            // 是否原路返回 1-表示原路返回
-            if (parameterList.get(i).getKey().equals(isOriginalWayBack)){
-                isOriginal= Integer.parseInt(parameterList.get(i).getValue());
-                Logger.e("是否原路返回："+isOriginal);
-                if (isOriginal==1){
-                    tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                    tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                }else {
-                    tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                    tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                }
-            }
-        }
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         int number = 6;
         naparamList = new ArrayList<>();
         for (int i = 0; i < number; i++) {

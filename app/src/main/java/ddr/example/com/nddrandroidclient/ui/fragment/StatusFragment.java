@@ -306,23 +306,22 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
-                if (mapImageView!=null){
+                if (mapImageView!=null&&isRunabPoint){
                     isRunabPoint=false;
-                    mapImageView.setABPointLine(isRunabPoint);
+                    mapImageView.setABPointLine(false);
                 }
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
                 if (mapImageView!=null){
-                    if (mapImageView!=null){
+                    if (mapImageView!=null&&isRunabPoint){
                         isRunabPoint=false;
-                        mapImageView.setABPointLine(isRunabPoint);
+                        mapImageView.setABPointLine(false);
                     }
                 }
                 break;
             case 3:
                 tv_task_num.setText(" ");
-
                 break;
             case 4:
             case 5:
@@ -343,8 +342,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             tv_now_task.setClickable(true);
                             tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
                             iv_task_xl.setVisibility(View.VISIBLE);
-                            if (mapImageView!=null)
-                                mapImageView.setABPointLine(isRunabPoint);
                         }else {
                             tv_work_statue.setText("运动中");
                         }
@@ -516,7 +513,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
      * @param pname
      * @param routeName
      */
-
     private void goPointLet(float x,float y,float theta,ByteString pname, ByteString routeName,int type){
         DDRVLNMap.eRunSpecificPointType eRunSpecificPointTyp;
         switch (type){
@@ -602,7 +598,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     float y=targetPoints.get(position).getY();
                     float theta=targetPoints.get(position).getTheta();
                     mapImageView.setTargetPoint(targetPoints.get(position));
-                    Logger.e("当前点的名字" + targetPoints.get(position).getName());
                         new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
                                 .setTitle("是否前往" + targetPoints.get(position).getName())
                                 .setListener(new InputDialog.OnListener() {
@@ -618,7 +613,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                         sPoint = targetPoints.get(position).getName();
                                         isRunabPoint=true;
                                     }
-
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
                                         toast("取消去目标点");
