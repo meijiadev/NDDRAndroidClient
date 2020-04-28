@@ -53,6 +53,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
@@ -142,7 +143,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 },800);
                 break;
             case touchFloatWindow:
-                showControlPopupWindow();
+                String className=ActivityStackManager.getInstance().getTopActivity().getClass().toString();
+                Logger.e("--------当前栈顶的活动:"+className+";"+HomeActivity.class.toString());
+                if (className.equals(HomeActivity.class.toString()))
+                new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.taskmanager));
                 break;
             case notifyTCPDisconnected:
                 Logger.e("----------断开连接页面：HomeActivity");

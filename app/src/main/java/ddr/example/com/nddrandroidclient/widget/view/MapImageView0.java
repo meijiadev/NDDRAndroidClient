@@ -110,6 +110,7 @@ public class MapImageView0 extends ImageView {
      */
     public void setTargetPoint(TargetPoint targetPoint){
         this.targetPoint=targetPoint;
+        currentStatus=STATUS_INIT;
         invalidate();
     }
 
@@ -120,9 +121,7 @@ public class MapImageView0 extends ImageView {
      */
     public void setMapBitmap(String mapName){
         //如果设置的地图不是正在显示的地图，则清空之前的内容并且让地图恢复原始大小和位置
-        if (!this.mapName.equals(mapName)){
-            initView();
-        }
+        //initView();
         this.mapName = mapName;
         Logger.e("设置图片");
         String pngPath = GlobalParameter.ROBOT_FOLDER + mapName + "/" + "bkPic.png";
@@ -164,8 +163,6 @@ public class MapImageView0 extends ImageView {
         currentStatus=STATUS_INIT;
         isRunAbPointLine=false;
         targetPoint=null;
-
-
         pathLines.clear();
     }
 
@@ -244,8 +241,12 @@ public class MapImageView0 extends ImageView {
                 isAutoPlanning=true;
                 break;
         }
+        currentStatus = STATUS_INIT;
         invalidate();
     }
+
+
+
 
 
     /**
@@ -413,6 +414,7 @@ public class MapImageView0 extends ImageView {
                     break;
             }
         }
+        currentStatus=-1;
         drawLine(canvas);
         onDrawWall(canvas);
 
@@ -470,7 +472,7 @@ public class MapImageView0 extends ImageView {
             int y= (int) xyEntity.getY();
             matrix.setRotate(-targetPoint.getTheta());
             Bitmap targetBitmap2=Bitmap.createBitmap(targetBitmap1,0,0,targetBitmap1.getWidth(),targetBitmap1.getHeight(),matrix,true);
-            canvas.drawBitmap(targetBitmap2,x -20,y-20,paint);
+            canvas.drawBitmap(targetBitmap2,x -targetBitmap2.getWidth()/2,y-targetBitmap2.getHeight()/2,paint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
     }

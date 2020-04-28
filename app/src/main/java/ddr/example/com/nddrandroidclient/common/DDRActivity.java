@@ -95,7 +95,11 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ActivityStackManager.getInstance().onResume(this);
+    }
 
     /**
      * 递归获取 ViewGroup 中的 TitleBar 对象
