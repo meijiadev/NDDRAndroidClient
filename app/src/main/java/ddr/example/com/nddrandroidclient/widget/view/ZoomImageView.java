@@ -401,6 +401,7 @@ public class ZoomImageView extends View {
         currentBitmapHeight = scaledHeight;
         canvas.drawBitmap(sourceBitmap, matrix, null);
         setRotation(rotation);
+
     }
 
     /**

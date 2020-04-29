@@ -77,8 +77,6 @@ public class MapImageView1 extends SurfaceView implements SurfaceHolder.Callback
         EventBus.getDefault().register(this);
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
-
-
     }
 
 
