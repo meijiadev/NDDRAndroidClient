@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.widget.view;
+package ddr.example.com.nddrandroidclient.widget.zoomview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,6 +24,10 @@ import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
+import ddr.example.com.nddrandroidclient.widget.view.LineView;
+import ddr.example.com.nddrandroidclient.widget.view.PointView;
+import ddr.example.com.nddrandroidclient.widget.view.RectangleView;
 
 /**
  * desc :  通过Matrix实现可缩放、平移、旋转图片的控件
@@ -49,7 +53,7 @@ public class ZoomImageView1 extends View {
     public double r10=-61.6269;
     public double r11=0;
     public double t1=410.973;
-
+    private TouchEvenHandler touchEvenHandler;
 
     public ZoomImageView1(Context context) {
         super(context);
@@ -61,15 +65,9 @@ public class ZoomImageView1 extends View {
         init(context);
     }
 
-    public ZoomImageView1(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
     private void init(Context context){
         this.context=context;
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
-        sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bkpic);
         currentStatus=DEFAULT_BITMAP;
         pointPaint=new Paint();
         pointPaint.setColor(Color.RED);
@@ -137,7 +135,7 @@ public class ZoomImageView1 extends View {
         return new XyEntity(x1,y1);
     }
     /**
-     * 将像素坐标变成（世界坐标）
+     * 将相对于图片的像素坐标变成（世界坐标）
      * @param x
      * @param y
      * @return
@@ -159,12 +157,22 @@ public class ZoomImageView1 extends View {
      * @return
      */
     public XyEntity toCanvas(float x,float y){
+        //世界坐标转成相对于图片位置的像素坐标
         XyEntity xyEntity=toXorY(x,y);
-        return coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
+        //再将相对于图片的位置转成相对于画布的位置
+        return touchEvenHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
     }
 
+    /**
+     * 将相对于画布坐标转成世界坐标
+     * @param x
+     * @param y
+     * @return
+     */
     public XyEntity toWorld(float x,float y){
-
+        //先将相对于画布的坐标转成相对于图片的坐标
+        XyEntity xyEntity=touchEvenHandler.coordinatesToImage(x,y);
+        return toPathXy(xyEntity.getX(),xyEntity.getY());
     }
 
     private float txfloat(float a,float b) {
@@ -181,26 +189,21 @@ public class ZoomImageView1 extends View {
         super.onLayout(changed, left, top, right, bottom);
         if (changed){
             // 分别获取到ImageView的宽度和高度
-
+            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
         }
     }
 
     protected void onDraw(Canvas canvas) {
-       if (currentStatus==DEFAULT_BITMAP){
-           //initBitmap(canvas);
-       }else{
-           canvas.save();
-           canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG| Paint.FILTER_BITMAP_FLAG));
-           //canvas.drawBitmap(sourceBitmap, matrix, null);
-           canvas.restore();
-       }
-        PointView.getInstance(context).drawPoint(canvas,this);
-        LineView.getInstance(context).drawLine(canvas,this);
-        GridLayerView.getInstance(this).drawGrid(canvas);
+        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG| Paint.FILTER_BITMAP_FLAG));
+        canvas.drawBitmap(sourceBitmap, touchEvenHandler.getMatrix(), null);
+       // PointView.getInstance(context).drawPoint(canvas,this);
+        //LineView.getInstance(context).drawLine(canvas,this);
+        //GridLayerView.getInstance(context).drawGrid(canvas);
         RectangleView.getRectangleView().draw(canvas,this);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
+        touchEvenHandler.touchEvent(event);
         return true;
     }
 
