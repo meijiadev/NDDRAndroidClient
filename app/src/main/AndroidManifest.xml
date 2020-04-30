@@ -14,7 +14,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.HomeActivity"
@@ -50,6 +49,17 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".ui.activity.MapSettingActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".ui.activity.NewTaskActivity"
+            android:screenOrientation="landscape"
+            />
+        <activity android:name=".ui.activity.DeviceSelectActivity"
+            android:screenOrientation="landscape"/>
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="960"/>
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="600"/>
     </application>
 
 </manifest>

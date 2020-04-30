@@ -31,6 +31,8 @@ public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder>
     }
 
 
+
+
     @Override
     public void setNewData(@Nullable List<T> data) {
         super.setNewData(data);

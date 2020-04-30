@@ -1,5 +1,8 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.content.Context;
+import android.widget.TextView;
+
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
@@ -14,11 +17,14 @@ import ddr.example.com.nddrandroidclient.base.BaseAdapter;
  * desc : String类型的列表适配器
  */
 public class StringAdapter extends BaseAdapter<String> {
-
+    private Context context;
     public StringAdapter(int layoutResId) {
         super(layoutResId);
     }
 
+    public void setContext(Context context){
+        this.context=context;
+    }
     public StringAdapter(int layoutResId, @Nullable List<String> data) {
         super(layoutResId, data);
     }
@@ -45,6 +51,23 @@ public class StringAdapter extends BaseAdapter<String> {
                 break;
             case R.layout.item_show_recycler:
                 helper.setText(R.id.tv_show_name,item);
+                helper.setImageResource(R.id.iv_select,R.mipmap.checkedwg);
+                break;
+            case R.layout.item_edit_type_recycler:
+                TextView textView=helper.getView(R.id.item_name);
+                textView.setText(item);
+                switch (item){
+                    case "虚拟墙":
+                        textView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
+                        break;
+                    case "原图去噪":
+                        textView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);
+                        break;
+                    case "直线":
+                        textView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.mipmap.iv_line_blue),null,null,null);
+                        break;
+
+                }
                 break;
         }
 

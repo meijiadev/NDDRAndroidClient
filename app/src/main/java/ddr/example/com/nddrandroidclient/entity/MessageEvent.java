@@ -24,7 +24,7 @@ public class MessageEvent {
         receivePointCloud,    //接收点云
         receiveVisionPoints,   //接收视觉点云
         switchTaskSuccess,   //
-        updataParameter,//获取参数
+        updateParameter,//获取参数
         updataHardState,//获取自检参数
         updataSenesor,//获取传感器参数
 
@@ -34,6 +34,7 @@ public class MessageEvent {
         updatePoints,   //添加完，更新目标点列表
         updatePaths,    //添加完，更新路径列表
         updateVirtualWall,  //添加完虚拟墙并通知保存
+        updateDenSuccess,    //原图去噪结束
         updateRevamp,   //更新修改之后的地图信息，提醒UI层重新拉地图信息
 
         touchFloatWindow, // 点击浮窗
@@ -42,6 +43,7 @@ public class MessageEvent {
 
         receiveObstacleInfo,  //接收机器人当前位置的障碍物信息
         enterRelocationMode,  //重新进入重定位模式
+        updateRelocationStatus,  //接受重定位结果
 
         notifyMapGenerateProgress,  //接受地图生成的进度
         updateDetectionLoopStatus,   //接受回环检测结果
@@ -51,16 +53,20 @@ public class MessageEvent {
         getSwitchTaskSuccess, //获取临时任务结果成功
         getSwitchTaskFaild,//获取临时任务结果失败
 
-        getSpecifiPoint,//获取点击AB点的结果
-        getSpecifiPoint1,
-        getSpecifiPoint2,
-        getSpecifiPoint3,
-        getSpecifiPoint4,
-        getSpecifiPoint5,
-        getSpecifiPoint8,
-        getSpecifiPoint9,
-        getSpecifiPoint10,
-        getSpecifiPoint11,
+        responseAbPoint,     // 点击ab点回复消息
+        getSpecificPoint,   //获取点击AB点的结果
+        getSpecificPoint1,
+        getSpecificPoint2,
+        getSpecificPoint3,
+        getSpecificPoint4,
+        getSpecificPoint5,
+        getSpecificPoint8,
+        getSpecificPoint9,
+        getSpecificPoint10,
+        getSpecificPoint11,
+
+        notifyEditorMapResult,
+        notifyTCPDisconnected,
 
 
 
@@ -75,6 +81,7 @@ public class MessageEvent {
         this.type=type;
         this.data=object;
     }
+
 
     public Type getType() {
         return type;

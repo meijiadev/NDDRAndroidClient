@@ -10,4 +10,8 @@
     <dimen name="dialog_message_round_size">15dp</dimen>
     <!-- 菜单对话框圆角大小 -->
     <dimen name="dialog_menu_round_size">12dp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+
 </resources>

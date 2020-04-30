@@ -1,9 +1,13 @@
 package ddr.example.com.nddrandroidclient.entity.info;
 
+import android.os.Environment;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
@@ -13,7 +17,6 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * 用于保存解析后的地图详情信息的列表
- *
  */
 public class MapFileStatus {
     public static MapFileStatus mapFileStatus;
@@ -38,6 +41,8 @@ public class MapFileStatus {
     private List<TargetPoint> cTargetPoints=new ArrayList<>();         // 解析后的目标点数据
     private List<PathLine> cPathLines=new ArrayList<>();               //解析后的路径数据
     private List<TaskMode> cTaskModes=new ArrayList<>();               //解析后的任务数据
+
+    private List<byte[]> bitmapBytes=new ArrayList<>();               //图片的字节数组
 
     private DDRVLNMap.affine_mat affine_mat;                          //地图的矩阵
 
@@ -90,7 +95,7 @@ public class MapFileStatus {
         space_items=reqDDRVLNMapEx.getSpacedata().getSpaceSetList();
         if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
            currentMapEx=reqDDRVLNMapEx;
-            Logger.e("返回信息为当前地图"+mapName);
+           // Logger.e("返回信息为当前地图"+mapName+";"+taskItemExes.size());
             cTargetPoints.clear();
             cPathLines.clear();
             cTaskModes.clear();
@@ -108,7 +113,7 @@ public class MapFileStatus {
                 List<PathLine.PathPoint> pathPoints = new ArrayList<>();
                 List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
                 for (int j = 0; j < path_lint_pt_items.size(); j++) {
-                    PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                    PathLine.PathPoint pathPoint = new PathLine.PathPoint();
                     pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                     pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                     pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
@@ -122,6 +127,8 @@ public class MapFileStatus {
                 pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
                 pathLine.setPathType(pathLineItemExes.get(i).getTypeValue());
                 pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+                pathLine.setbStartFromSeg0(pathLineItemExes.get(i).getBStartFromSeg0());
+                pathLine.setbNoCornerSmoothing(pathLineItemExes.get(i).getBNoCornerSmoothing());
                 cPathLines.add(pathLine);
             }
             for (int i = 0; i < taskItemExes.size(); i++) {
@@ -167,7 +174,6 @@ public class MapFileStatus {
             }
 
         }
-        //Logger.e("返回地图为查看信息");
         targetPoints.clear();
         pathLines.clear();
         taskModes.clear();
@@ -184,7 +190,7 @@ public class MapFileStatus {
             List<PathLine.PathPoint> pathPoints = new ArrayList<>();
             List<DDRVLNMap.path_line_itemEx.path_lint_pt_Item> path_lint_pt_items = pathLineItemExes.get(i).getPointSetList();
             for (int j = 0; j < path_lint_pt_items.size(); j++) {
-                PathLine.PathPoint pathPoint = new PathLine().new PathPoint();
+                PathLine.PathPoint pathPoint = new PathLine.PathPoint();
                 pathPoint.setName(path_lint_pt_items.get(j).getPtName().toStringUtf8());
                 pathPoint.setX(path_lint_pt_items.get(j).getPt().getX());
                 pathPoint.setY(path_lint_pt_items.get(j).getPt().getY());
@@ -198,6 +204,8 @@ public class MapFileStatus {
             pathLine.setPathModel(pathLineItemExes.get(i).getModeValue());
             pathLine.setPathType(pathLineItemExes.get(i).getTypeValue());
             pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
+            pathLine.setbStartFromSeg0(pathLineItemExes.get(i).getBStartFromSeg0());
+            pathLine.setbNoCornerSmoothing(pathLineItemExes.get(i).getBNoCornerSmoothing());
             pathLines.add(pathLine);
         }
         //Logger.e("-------------任务的数量："+taskItemExes.size());
@@ -228,6 +236,7 @@ public class MapFileStatus {
             taskModes.add(taskMode);
         }
 
+
         for (int i=0;i<space_items.size();i++){
             SpaceItem spaceItem=new SpaceItem();
             spaceItem.setName(space_items.get(i).getName().toStringUtf8());
@@ -257,11 +266,34 @@ public class MapFileStatus {
     }
 
     public void setMapInfos(List<MapInfo> mapInfos) {
+        for (int i = 0; i < mapInfos.size(); i++) {
+            String dirName = mapInfos.get(i).getMapName();
+            String pngPath = GlobalParameter.ROBOT_FOLDER + dirName + "/" + "bkPic.png";
+            if (pngPath != null) {
+                mapInfos.get(i).setBitmap(pngPath);
+            } else {
+                mapInfos.remove(i);
+            }
+            if (dirName.equals(NotifyBaseStatusEx.getInstance().getCurroute())) {
+                mapInfos.get(i).setUsing(true);
+                Collections.swap(mapInfos,0,i);
+            } else {
+                mapInfos.get(i).setUsing(false);
+            }
+        }
         this.mapInfos = mapInfos;
     }
 
     public List<MapInfo> getMapInfos() {
         return mapInfos;
+    }
+
+    public void setBitmapBytes(List<byte[]> bitmapBytes) {
+        this.bitmapBytes = bitmapBytes;
+    }
+
+    public List<byte[]> getBitmapBytes() {
+        return bitmapBytes;
     }
 
     /**

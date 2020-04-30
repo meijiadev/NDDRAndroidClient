@@ -22,10 +22,12 @@ import cat.ereza.customactivityoncrash.config.CaocConfig;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
+import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.LoginActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
@@ -67,7 +69,6 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         ToastUtils.init(application);
         // EventBus 事件总线
         EventBusManager.init();
-
         // Crash 捕捉界面
         CaocConfig.Builder.create()
                 .backgroundMode(CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM)
@@ -97,7 +98,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 .setX(Screen.width,0.5f)
                 .setY(120)
                 .setMoveType(MoveType.active)
-                .setFilter(true, HomeActivity.class)
+                .setFilter(true, HomeActivity.class,RelocationActivity.class)
                 .setDesktopShow(false)
                 .build();
     }

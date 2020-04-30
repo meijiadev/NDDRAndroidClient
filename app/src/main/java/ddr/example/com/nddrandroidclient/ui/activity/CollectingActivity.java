@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.google.protobuf.ByteString;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
@@ -35,7 +36,9 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
@@ -50,6 +53,7 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
 /**
  * time:  2019/11/5
  * desc:  采集页面
+ * modify time: 2020/3/23
  */
 public class CollectingActivity extends DDRActivity {
     @BindView(R.id.collect4)
@@ -65,13 +69,21 @@ public class CollectingActivity extends DDRActivity {
     @BindView(R.id.fixed_speed)
     CheckBox fixedSpeed;
     @BindView(R.id.add_poi)
-    ImageView addPoi;
+    TextView addPoi;
     @BindView(R.id.my_rocker)
     RockerView myRocker;
     @BindView(R.id.my_rocker_zy)
     RockerView myRockerZy;
     @BindView(R.id.tv_detection)
     TextView tvDetection;                   //回环检测
+
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_save_map)
+    TextView tvSaveMap;
+
 
     private float lineSpeed, palstance;  //线速度 ，角速度
     private double maxSpeed = 0.4;       //设置的最大速度
@@ -80,8 +92,6 @@ public class CollectingActivity extends DDRActivity {
     private TcpClient tcpClient;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    /*private boolean iscreatingMap = false;       //是否正在生成地图
-    private boolean haveCtrated = false;         //是否地图生成完成*/
     private String collectName;                  //采集的地图名
     private BaseDialog waitDialog;
 
@@ -100,9 +110,9 @@ public class CollectingActivity extends DDRActivity {
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
-                Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
+                //Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
                 if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
-                    setTitle("正在自标定中...");
+                    tvTitle.setText("正在自标定中...");
                 } else {
                     if (notifyBaseStatusEx.getMode() == 2) {
                         switch (notifyBaseStatusEx.getSonMode()) {
@@ -112,7 +122,7 @@ public class CollectingActivity extends DDRActivity {
                                 finish();
                                 break;
                             case 6:
-                                setTitle("采集中...");
+                                tvTitle.setText("正在采集中...");
                                 waitDialog.dismiss();
                                 myRockerZy.setVisibility(View.VISIBLE);
                                 myRocker.setVisibility(View.VISIBLE);
@@ -124,15 +134,12 @@ public class CollectingActivity extends DDRActivity {
                 break;
             case notifyMapGenerateProgress:
                 float progress= (float) mainUpDate.getData();
-                setAnimation(processBar,(int) (progress*100),100);
+                setAnimation(processBar,(int) (progress*100),0);
                 if (progress==1.0f){
-                    setTitle("建图完成");
-                    finish();
-                    try {
-                        tcpClient.reqRunControlEx(collectName);       //切换地图
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    tvTitle.setText("建图完成");
+                    postDelayed(()->{
+                        finish();
+                    },1000);
                 }
                 break;
             case updateDetectionLoopStatus:
@@ -154,7 +161,9 @@ public class CollectingActivity extends DDRActivity {
                         toast("距离太近不需要检测回环");
                         break;
                 }
-
+                break;
+            case notifyTCPDisconnected:
+                netWorkStatusDialog();
                 break;
         }
     }
@@ -190,48 +199,8 @@ public class CollectingActivity extends DDRActivity {
         initWaitDialog();
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-    }
 
-    @Override
-    public void onLeftClick(View v) {
-        new InputDialog.Builder(getActivity())
-                .setTitle("是否退出采集")
-                .setEditVisibility(View.GONE)
-                .setListener(new InputDialog.OnListener() {
-                    @Override
-                    public void onConfirm(BaseDialog dialog, String content) {
-                        quitCollect();
-                        stopDraw();
-                        finish();
-                    }
-                    @Override
-                    public void onCancel(BaseDialog dialog) {
-                    }
-                }).show();
 
-    }
-
-    @Override
-    public void onRightClick(View v) {
-       // collecting.unRegister();
-        new InputDialog.Builder(getActivity())
-                .setTitle("是否保存当前采集")
-                .setEditVisibility(View.GONE)
-                .setListener(new InputDialog.OnListener() {
-                    @Override
-                    public void onConfirm(BaseDialog dialog, String content) {
-                        exitModel();
-                        processBar.setVisibility(View.VISIBLE);
-                        stopDraw();
-                    }
-                    @Override
-                    public void onCancel(BaseDialog dialog) {
-                    }
-                }).show();
-    }
 
     /**
      * 自标定等待弹窗
@@ -269,12 +238,45 @@ public class CollectingActivity extends DDRActivity {
         });
     }
 
-    @OnClick({R.id.add_poi,R.id.tv_detection})
+    @OnClick({R.id.add_poi,R.id.tv_detection,R.id.tv_save_map,R.id.iv_back})
     public void onViewClicked(View view) {
         switch (view.getId()){
+            case R.id.iv_back:
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否退出采集")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                quitCollect();
+                                stopDraw();
+                                finish();
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
+
+                break;
+            case R.id.tv_save_map:
+                new InputDialog.Builder(getActivity())
+                        .setTitle("是否保存当前采集")
+                        .setEditVisibility(View.GONE)
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                exitModel();
+                                processBar.setVisibility(View.VISIBLE);
+                                stopDraw();
+                            }
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+                            }
+                        }).show();
+                break;
             case R.id.add_poi:
                 BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
-                tcpClient.sendData(null,reqAddPathPointWhileCollecting);
+                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqAddPathPointWhileCollecting);
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
                 poiPoints.add(new XyEntity(posX,posY));
                 toast("标记成功");
@@ -282,7 +284,7 @@ public class CollectingActivity extends DDRActivity {
             case R.id.tv_detection:
                 BaseCmd.reqDetectLoop reqDetectLoop=BaseCmd.reqDetectLoop.newBuilder()
                         .build();
-                tcpClient.sendData(null,reqDetectLoop);
+                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDetectLoop);
                 break;
         }
 
@@ -468,12 +470,7 @@ public class CollectingActivity extends DDRActivity {
                 .setLineSpeed(lineSpeed)
                 .setAngulauSpeed(palstance)
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqCmdMove);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdMove);
 
     }
 
@@ -485,12 +482,7 @@ public class CollectingActivity extends DDRActivity {
         BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
                 .setError("noError")
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdEndActionMode);
     }
 
     /**
@@ -502,12 +494,7 @@ public class CollectingActivity extends DDRActivity {
                 .setError("noError")
                 .setCancelRec(true)
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdEndActionMode);
 
     }
 
@@ -519,6 +506,29 @@ public class CollectingActivity extends DDRActivity {
         editor.commit();
         timer.cancel();
         task.cancel();
+        tcpClient.requestFile();
+        tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tcpClient!=null&&!tcpClient.isConnected())
+            netWorkStatusDialog();
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
     }
 
     @Override

@@ -89,6 +89,14 @@ public final class ActivityStackManager {
     }
 
     /**
+     *Activity 同名方法回调
+     * @param activity
+     */
+    public void onResume(Activity activity){
+        mCurrentTag = getObjectTag(activity);
+    }
+
+    /**
      * Activity 同名方法回调
      */
     public void onDestroyed(Activity activity) {

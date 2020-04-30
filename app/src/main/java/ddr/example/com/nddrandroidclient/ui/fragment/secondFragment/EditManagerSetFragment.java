@@ -1,11 +1,11 @@
-package ddr.example.com.nddrandroidclient.ui.fragment;
+package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
+import android.graphics.Canvas;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -17,23 +17,24 @@ import butterknife.BindView;
 import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
-import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
-import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
-import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
 
 /**
- * time: 2019/10/26
- * desc：版本管理界面
+ * time: 2020/03/24
+ * desc: 高级设置版本管理界面
  */
-public class VersionFragment extends DDRLazyFragment<HomeActivity> {
+public class EditManagerSetFragment extends DDRLazyFragment {
+
     @BindView(R.id.computer_type_recycle)
     RecyclerView computer_type_recycle;
     @BindView(R.id.tv_bb_type)
@@ -56,15 +57,10 @@ public class VersionFragment extends DDRLazyFragment<HomeActivity> {
                 break;
         }
     }
-
-    public static VersionFragment newInstance() {
-        return new VersionFragment();
-    }
-
-
+    public static EditManagerSetFragment newInstance(){return new EditManagerSetFragment();}
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_version;
+        return R.layout.fragment_s_edition;
     }
 
     @Override
@@ -114,12 +110,7 @@ public class VersionFragment extends DDRLazyFragment<HomeActivity> {
     private void getHostComputerEdition() {
         BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqGetSysVersion);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
     }
 
     /**
@@ -131,11 +122,10 @@ public class VersionFragment extends DDRLazyFragment<HomeActivity> {
         tv_bb_type.setText("V " + versionName + " " + buildTime);
     }
 
+
     @Override
     public void onDestroy() {
-        Logger.e("-----------------跳转");
         super.onDestroy();
 
     }
-
 }

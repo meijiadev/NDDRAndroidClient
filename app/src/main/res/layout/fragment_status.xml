@@ -7,52 +7,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="366dp"
+        android:background="#101112"
         >
         <!--android:background="#101112"-->
-        <TextView
-            android:layout_width="140dp"
-            android:layout_height="24dp"
-            android:text="暂无地图正在运行,"
-            android:textSize="16sp"
-            android:id="@+id/tv_ti_map"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="207dp"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            />
-        <TextView
-            android:id="@+id/tv_create_map"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:text="新建地图"
-            android:textColor="@color/blue01"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_toRightOf="@id/tv_ti_map"
-            android:layout_alignBaseline="@id/tv_ti_map"
-            />
+
         <ddr.example.com.nddrandroidclient.widget.view.MapImageView0
             android:id="@+id/iv_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             />
-      <!--  <TextView
-            android:id="@+id/tv_switch_mode"
-            android:layout_width="172.5dp"
-            android:layout_height="29dp"
-            android:layout_marginLeft="215dp"
-            android:layout_marginTop="28dp"
-            android:background="@drawable/bt_bg_mode"
-            android:drawableLeft="@drawable/circle_blue"
-            android:paddingLeft="21dp"
-            android:drawablePadding="15dp"
-            android:text="自主导航模式"
-            android:textSize="12sp"
-            android:textColor="@color/white"
+        <ddr.example.com.nddrandroidclient.widget.view.MapImageView1
+            android:id="@+id/iv_map1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:text="未加载到正在使用中的地图，请点击此处刷新！"
+            android:textSize="18sp"
+            android:id="@+id/tv_warn"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="127dp"
+            android:textColor="#ffffff"
             android:textStyle="bold"
-            android:gravity="center_vertical"
-            />-->
-
+            android:gravity="center"
+            />
         <RelativeLayout
             android:id="@+id/shrink_layout"
             android:layout_width="380dp"
@@ -230,9 +212,9 @@
             android:layout_height="18dp"
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="100dp"
-            android:gravity="center"
+            android:gravity="left"
             android:textColor="#ffffff"
-            android:hint="待命中"
+            android:hint="待命中 "
             android:id="@+id/tv_work_statue"
             android:textSize="14dp"/>
         <TextView
@@ -240,7 +222,7 @@
             android:layout_height="18dp"
             android:layout_toRightOf="@id/tv_work1"
             android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
+            android:gravity="left"
             android:textColor="#ffffff"
             android:textSize="14dp"
             android:layout_below="@id/tv_work_statue"
@@ -251,7 +233,7 @@
             android:layout_height="18dp"
             android:layout_toRightOf="@id/tv_work3"
             android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:gravity="left"
             android:textColor="#ffffff"
             android:hint="待命中"
             android:textSize="14dp"
@@ -262,7 +244,7 @@
             android:layout_height="18dp"
             android:layout_toRightOf="@id/tv_work3"
             android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:gravity="left"
             android:textColor="#ffffff"
             android:hint="待命中"
             android:textSize="14dp"
@@ -300,8 +282,8 @@
             />
         <ddr.example.com.nddrandroidclient.widget.StatusSwitchButton
             android:id="@+id/status_switch_bt"
-            android:layout_width="616px"
-            android:layout_height="100px"
+            android:layout_width="308dp"
+            android:layout_height="50dp"
             android:layout_marginTop="282dp"
             android:layout_marginLeft="32dp"
             />

@@ -1,6 +1,8 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,8 +28,10 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
+import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -82,15 +86,20 @@ public class MapSettingActivity extends DDRActivity {
         super.initView();
         mapFileStatus=MapFileStatus.getInstance();
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+        etABSpeed.setFilters(new InputFilter[]{new InputFilterMinMax("0", "1.0")});
     }
 
     @Override
     protected void initData() {
         super.initData();
+        Intent intent=getIntent();
+        mapName=intent.getStringExtra("mapName");
+        String name = mapName.replaceAll("OneRoute_", "");
+        etMapName.setText(name);
     }
 
 
-    @OnClick({R.id.tv_title, R.id.tv_recover, R.id.tv_navigation, R.id.tv_line_patrol, R.id.tv_cancel, R.id.tv_confirm,R.id.tv_switch_point,R.id.tv_static_mode,R.id.tv_dynamic_mode})
+    @OnClick({R.id.tv_title, R.id.tv_recover, R.id.tv_navigation, R.id.tv_line_patrol, R.id.tv_cancel, R.id.tv_confirm,R.id.tv_switch_point,R.id.tv_static_mode,R.id.tv_dynamic_mode,R.id.tv_point_set})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_title:
@@ -118,7 +127,7 @@ public class MapSettingActivity extends DDRActivity {
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
-                                tcpClient.requestFile();
+                                //tcpClient.requestFile();
                                 finish();
                             }
                         }).show();
@@ -156,6 +165,9 @@ public class MapSettingActivity extends DDRActivity {
                             }
                         }).show();
                 break;
+            case R.id.tv_point_set:
+                toast("任务结束后，机器人将自动返回指定的待机点待命");
+                break;
             case R.id.tv_switch_point:
                 showListPopupWindow(tvSwitchPoint);
                 break;
@@ -170,14 +182,14 @@ public class MapSettingActivity extends DDRActivity {
                 tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
                 break;
             case R.id.tv_navigation:
-                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 modeType=2;
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
             case R.id.tv_line_patrol:
-                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 modeType=1;
                 Logger.e("-----------"+mapFileStatus.getCurrentMapEx().getBasedata().getAbNaviTypeValue());
                 break;
@@ -199,6 +211,16 @@ public class MapSettingActivity extends DDRActivity {
                 if (name.equals("原地待命")){
                     name="";
                 }
+                newMapName=etMapName.getText().toString().trim();
+                newMapName="OneRoute_"+newMapName;
+                List<DDRVLNMap.reqMapOperational.OptItem> optItems=new ArrayList<>();
+                DDRVLNMap.reqMapOperational.OptItem optItem=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
+                        .setTypeValue(3)
+                        .setSourceName(ByteString.copyFromUtf8(mapName))
+                        .setTargetName(ByteString.copyFromUtf8(newMapName))
+                        .build();
+                optItems.add(optItem);
+                tcpClient.reqMapOperational(optItems);
                 tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
                 break;
         }
@@ -235,6 +257,7 @@ public class MapSettingActivity extends DDRActivity {
     private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
     private DDRVLNMap.DDRMapBaseData ddrMapBaseData;
     private String mapName="";
+    private String newMapName;
     private int modeType;
     private float abSpeed;           //ab点速度
     private int abMode;              //ab点模式
@@ -246,7 +269,6 @@ public class MapSettingActivity extends DDRActivity {
                 mapFileStatus=MapFileStatus.getInstance();
                 reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
                 ddrMapBaseData=reqDDRVLNMapEx.getBasedata();
-                mapName=ddrMapBaseData.getName().toStringUtf8();
                 modeType=ddrMapBaseData.getAbNaviTypeValue();
                 try {
                     targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
@@ -258,7 +280,6 @@ public class MapSettingActivity extends DDRActivity {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                etMapName.setText(mapName);
                 String pointName=ddrMapBaseData.getTargetPtName().toStringUtf8();
                 if (pointName.equals("")){
                     pointName="原地待命";
@@ -268,11 +289,11 @@ public class MapSettingActivity extends DDRActivity {
                 Logger.e("ab点速度："+abSpeed);
                 abMode=ddrMapBaseData.getAbPathModeValue();
                 if (modeType==1){
-                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 }else if (modeType==2){
-                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_blue),null,null,null);
-                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_selected_gray),null,null,null);
+                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
                 }
                 etABSpeed.setText(String.valueOf(abSpeed));
                 if (abMode==64){
@@ -287,6 +308,8 @@ public class MapSettingActivity extends DDRActivity {
                         if (waitDialog1.isShowing()){
                             waitDialog1.dismiss();
                             toast("保存成功");
+                            tcpClient.requestFile();
+                            finish();
                         }
                     }else if (waitDialog2!=null){
                         if (waitDialog2.isShowing()){
@@ -302,9 +325,36 @@ public class MapSettingActivity extends DDRActivity {
                     if (waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
+                }else {
+                    String name = newMapName.replaceAll("OneRoute_", "");
+                    etMapName.setText(name);
+                    mapName=newMapName;
                 }
+                break;
+            case notifyTCPDisconnected:
+                netWorkStatusDialog();
                 break;
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (tcpClient!=null&&!tcpClient.isConnected())
+        netWorkStatusDialog();
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
+    }
 }

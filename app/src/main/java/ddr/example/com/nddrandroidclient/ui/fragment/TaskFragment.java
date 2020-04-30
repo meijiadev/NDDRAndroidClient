@@ -1,30 +1,24 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
 import android.view.View;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
-import DDRVLNMapProto.DDRVLNMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
@@ -41,17 +35,18 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.NewTaskActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
-import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
 import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
 
 /**
  * time：2019/10/28
  * desc：任务管理界面
+ * author: ----
  */
 public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickValueView.onSelectedChangeListener {
 
@@ -59,18 +54,20 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     RecyclerView recycle_task_list;
     @BindView(R.id.tv_task_save)
     TextView tv_task_save;
+    @BindView(R.id.tv_create_task)
+    TextView tvCreateTask;
 
     private CustomPopuWindow customPopuWindow;
-    private DpOrPxUtils dpOrPxUtils;
     private PickValueView pickValueViewNum;
-    private NumEdit numEdit;
     private  TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private NotifyEnvInfo notifyEnvInfo;
     private MapFileStatus mapFileStatus;
     private TaskAdapter taskAdapter;
     private List<TaskMode> taskModeList =new ArrayList<>();
-    private TaskMode taskMode;
+
+    public final static int CREATE_NEW_TASK=0;      //创建新的任务
+    public final static int REVAMP_TASK=1;          //修改任务
 
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -114,7 +111,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         try {
             taskModeList=ListTool.deepCopy(mapFileStatus.getcTaskModes());
             taskAdapter.setNewData(taskModeList);
-//            submissionTask();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -161,39 +157,29 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                         taskModeList.get(position).setTaskState(3);
                                     }
                                     break;
+                                    //已修改成“修改”任务
                                 case R.id.tv_task_pause:
-                                    tv_task_pause= (TextView) view;
-                                    if (tv_task_pause.getText().equals("暂停")) {
-                                        pauseOrResume("Pause");
-                                        tv_task_pause.setText("开始");
-                                    }else {
-                                        pauseOrResume("Resume");
-                                        tv_task_pause.setText("暂停");
-                                    }
+                                    Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
+                                    intent.putExtra("viewType",REVAMP_TASK);
+                                    intent.putExtra("taskMode",position);
+                                    startActivity(intent);
                                     break;
+                                    // 已修改成“删除”任务
                                 case R.id.tv_task_stop:
-                                    if (taskModeList.get(position).getTaskState()==2){
-                                        toast("终止当前任务");
-                                        exitModel();
-                                        taskModeList.get(position).setTaskState(3);
-                                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
-                                    }else if (taskModeList.get(position).getTaskState()==1){
-                                        toast("终止未开始的任务");
-                                        taskModeList.get(position).setTaskState(3);
-                                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
-                                    }else if(taskModeList.get(position).getType()==0){
-                                        toast("不在定时任务中");
-                                    }
-                                    break;
-                                case R.id.task_num_check:
-                                    task_num_check=(DDREditText) view;
-                                    Logger.e("输入数字"+((int) task_num_check.getFloatText())+"原来数字"+ taskModeList.get(position).getRunCounts());
-                                    int count=(int) task_num_check.getFloatText();
-                                    if (count>999 || count<=0){
-                                        toast("输入次数范围有误");
-                                    }else {
-                                        taskModeList.get(position).setRunCounts(count);
-                                    }
+                                    new InputDialog.Builder(getAttachActivity())
+                                            .setEditVisibility(View.GONE)
+                                            .setTitle("是否要删除该任务")
+                                            .setListener(new InputDialog.OnListener() {
+                                                @Override
+                                                public void onConfirm(BaseDialog dialog, String content) {
+                                                    taskModeList.remove(position);
+                                                    tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                                                }
+                                                @Override
+                                                public void onCancel(BaseDialog dialog) {
+
+                                                }
+                                            }).show();
                                     break;
                             }
 
@@ -203,7 +189,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         taskAdapter.setNewData(taskModeList);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    @OnClick({R.id.tv_task_save})
+    @OnClick({R.id.tv_task_save,R.id.tv_create_task})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.tv_task_save:
@@ -225,8 +211,57 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                             }
                         }).show();
                 break;
+            case R.id.tv_create_task:
+                showCreateTaskDialog();
+                break;
 
         }
+    }
+
+    private BaseDialog inputDialog;
+    /**
+     * 新建任务
+     */
+    private void showCreateTaskDialog(){
+       inputDialog= new InputDialog.Builder(getAttachActivity())
+                .setTitle("输入任务名")
+                .setAutoDismiss(false)
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        if (!content.equals("")){
+                            String name="DDRTask_" +content+ ".task";
+                            if (checkTaskName(name)){
+                                toast("名称已存在，请重新命名。");
+                            }else {
+                                Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
+                                intent.putExtra("viewType",CREATE_NEW_TASK);
+                                intent.putExtra("taskName",content);
+                                startActivity(intent);
+                                inputDialog.dismiss();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                        toast("取消新建任务");
+                        inputDialog.dismiss();
+                    }
+                }).show();
+    }
+
+    /**
+     * 防止任务重名
+     * @return true 表示任务重名
+     */
+    private boolean checkTaskName(String taskName){
+        for (TaskMode taskMode:taskModeList){
+            if (taskMode.getName().equals(taskName)){
+                Logger.e("------"+taskName+";"+taskMode.getName());
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -271,7 +306,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     /**
      * 机器人暂停/重新运动
      * @param value
-     */
+     *//*
     private void pauseOrResume(String value){
         BaseCmd.reqCmdPauseResume reqCmdPauseResume=BaseCmd.reqCmdPauseResume.newBuilder()
                 .setError(value)
@@ -284,10 +319,10 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         tcpClient.sendData(commonHeader,reqCmdPauseResume);
         Logger.e("机器人暂停/重新运动");
     }
-
-    /**
+*/
+   /* *//**
      * 退出当前模式
-     */
+     *//*
     private void exitModel() {
         BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
                 .setError("noError")
@@ -298,13 +333,14 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
-    }
+    }*/
 
     /**
      * 上传任务列表
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void submissionTask(){
+        // 先按照执行顺序排列 再按照结束时间升序排列
         taskModeList.sort(Comparator.comparing(TaskMode::getType).reversed().thenComparing(TaskMode::getEndHour).thenComparing(TaskMode::getEndMin));
         taskAdapter.setNewData(taskModeList);
         int j=0;
@@ -343,6 +379,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -388,20 +425,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         } else {
             String selectedStr = (String) leftValue;
         }
-
     }
-
-    /**
-     * 匿名内部类
-     */
-    private NumEdit.OnNumChangeListener onNumChangeListener =new NumEdit.OnNumChangeListener() {
-        @Override
-        public void onNumChange(View view, int num) {
-            Logger.e("Num"+num);
-            TaskMode taskModen=taskModeList.get(mPosition);
-                    taskModen.setRunCounts(num);
-
-        }
-    };
 
 }

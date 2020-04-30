@@ -1,6 +1,9 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,12 +26,17 @@ import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
 import ddr.example.com.nddrandroidclient.entity.other.Sensor;
 import ddr.example.com.nddrandroidclient.entity.other.Sensors;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-
-public class SensorSet extends DDRLazyFragment {
+/**
+ * time: 2020/03/24
+ * desc: 高级设置传感器设置界面
+ */
+public class SensorSetFragment extends DDRLazyFragment {
     @BindView(R.id.slideButton)
     SlideButton slideButton;
     @BindView(R.id.ed_cs1)
@@ -77,7 +85,7 @@ public class SensorSet extends DDRLazyFragment {
             case updataSenesor:
                 setSensorParam();
                 break;
-            case updataParameter:
+            case updateParameter:
                 setNaparmeter();
                 break;
         }
@@ -95,7 +103,7 @@ public class SensorSet extends DDRLazyFragment {
         }
     }
 
-    public static SensorSet newInstance(){return new SensorSet();}
+    public static SensorSetFragment newInstance(){return new SensorSetFragment();}
     @Override
     protected int getLayoutId() {
         return R.layout.fragmen_s_senesor;
@@ -104,8 +112,10 @@ public class SensorSet extends DDRLazyFragment {
     @Override
     protected void initView() {
         slideButton.setSmallCircleModel(
-                Color.parseColor("#999999"), Color.parseColor("#999999"),Color.parseColor("#0399ff"),
+                Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
+        ed_imu.setFilters(new InputFilter[]{new InputFilterMinMax("3","65")});
+        setEditMax();
     }
 
     @Override
@@ -127,12 +137,7 @@ public class SensorSet extends DDRLazyFragment {
         BaseCmd.reqSensorConfigOperational reqSensorConfigOperational = BaseCmd.reqSensorConfigOperational.newBuilder()
                 .setType(eSensorConfigItemOptType)
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqSensorConfigOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqSensorConfigOperational);
     }
     //设置传感器参数
     private void setSensorParam(){
@@ -220,7 +225,7 @@ public class SensorSet extends DDRLazyFragment {
                 .setType(eSensorConfigItemOptType)
                 .addAllData(sensorConfigItems)
                 .build();
-        tcpClient.sendData(null,reqSensorConfigOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqSensorConfigOperational);
     }
     //获取导航参数
     private void getNaparmeter(){
@@ -229,12 +234,7 @@ public class SensorSet extends DDRLazyFragment {
         BaseCmd.reqConfigOperational reqConfigOperational = BaseCmd.reqConfigOperational.newBuilder()
                 .setType(eConfigItemOptType)
                 .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqConfigOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqConfigOperational);
     }
     //设置导航参数
     private void setNaparmeter(){
@@ -301,7 +301,7 @@ public class SensorSet extends DDRLazyFragment {
                 .setType(eConfigItemOptType)
                 .addAllData(configDataList)
                 .build();
-        tcpClient.sendData(null,reqConfigOperational);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqConfigOperational);
 
     }
 
@@ -317,30 +317,35 @@ public class SensorSet extends DDRLazyFragment {
                     if (ed_cs1.getText()!=null){
                         sensor1.setKey(String.valueOf(1));
                         sensor1.setStaticdistance(ed_cs1.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 1:
                     if (ed_cs2.getText()!=null){
                         sensor1.setKey(String.valueOf(2));
                         sensor1.setStaticdistance(ed_cs2.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 2:
                     if (ed_cs3.getText()!=null){
                         sensor1.setKey(String.valueOf(3));
                         sensor1.setStaticdistance(ed_cs3.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 3:
                     if (ed_cs4.getText()!=null){
                         sensor1.setKey(String.valueOf(4));
                         sensor1.setStaticdistance(ed_cs4.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 4:
                     if (ed_cs5.getText()!=null){
                         sensor1.setKey(String.valueOf(5));
                         sensor1.setStaticdistance(ed_cs5.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 5:
@@ -348,18 +353,21 @@ public class SensorSet extends DDRLazyFragment {
                         sensor1.setKey(String.valueOf(6));
                         Logger.e("上传数值"+ed_cs6.getText().toString());
                         sensor1.setStaticdistance(ed_cs6.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 6:
                     if (ed_cs7.getText()!=null){
                         sensor1.setKey(String.valueOf(7));
                         sensor1.setStaticdistance(ed_cs7.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 7:
                     if (ed_cs8.getText()!=null){
                         sensor1.setKey(String.valueOf(8));
                         sensor1.setStaticdistance(ed_cs8.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
 
                     break;
@@ -367,24 +375,28 @@ public class SensorSet extends DDRLazyFragment {
                     if (ed_cs9.getText()!=null){
                         sensor1.setKey(String.valueOf(9));
                         sensor1.setStaticdistance(ed_cs9.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 9:
                     if (ed_cs10.getText()!=null){
                         sensor1.setKey(String.valueOf(10));
                         sensor1.setStaticdistance(ed_cs10.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 10:
                     if (ed_cs11.getText()!=null){
                         sensor1.setKey(String.valueOf(11));
                         sensor1.setStaticdistance(ed_cs11.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 11:
                     if (ed_cs12.getText()!=null){
                         sensor1.setKey(String.valueOf(12));
                         sensor1.setStaticdistance(ed_cs12.getText().toString());
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
 
                     break;
@@ -397,6 +409,7 @@ public class SensorSet extends DDRLazyFragment {
             BaseCmd.sensorConfigItem sensorConfigItem=BaseCmd.sensorConfigItem.newBuilder()
                     .setKey(ByteString.copyFromUtf8(sensorList1.get(i).getKey()))
                     .setStaticOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getStaticdistance()))
+                    .setDynamicOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getDydistance()))
                     .build();
 
             sensorConfigItemList.add(sensorConfigItem);
@@ -414,10 +427,36 @@ public class SensorSet extends DDRLazyFragment {
     private void getChosseStatus(){
         boolean isChecked=slideButton.isChecked;
         if (isChecked==true){
-            autoValue="5";
+            autoValue="1";
         }else {
-            autoValue="4";
+            autoValue="0";
         }
         Logger.e("是否选择"+isChecked);
+    }
+    private void setEditMax(){
+        ed_imu.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+                try {
+                    if (Integer.parseInt(s.toString())<30){
+                        toast("输入的值必须在30-65！");
+                    }else {
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }});
     }
 }

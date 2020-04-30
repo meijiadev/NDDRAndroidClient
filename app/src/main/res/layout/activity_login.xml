@@ -120,7 +120,7 @@
                 android:textSize="13sp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                app:regexType="english" />
+                 />
 
             <View
                 android:layout_width="match_parent"

@@ -29,9 +29,9 @@ public class RspGetParameterProcessor extends BaseProcessor{
         List<BaseCmd.configData> configDataList=rspConfigOperational.getDataList();
         parameters= Parameters.getInstance();
         parameterList=new ArrayList<>();
-        Logger.e("接受数量"+configDataList.size());
+        //Logger.e("接受数量"+configDataList.size());
         for (int i=0;i<configDataList.size();i++){
-            Logger.e("key"+configDataList.get(1).getData().getKey());
+            //Logger.e("key"+configDataList.get(1).getData().getKey());
             Parameter parameter=new Parameter();
             parameter.setKey(configDataList.get(i).getData().getKey().toStringUtf8());
             parameter.setValue(configDataList.get(i).getData().getValue().toStringUtf8());
@@ -40,9 +40,8 @@ public class RspGetParameterProcessor extends BaseProcessor{
             parameter.setAlias(configDataList.get(i).getData().getAlias().toStringUtf8());
             parameterList.add(parameter);
         }
-        Logger.e("数量"+parameterList.size());
         parameters.setParameterList(parameterList);
-        Logger.e("实际数量"+parameters.getParameterList().size());
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataParameter));
+        //Logger.e("实际数量"+parameters.getParameterList().size());
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateParameter));
     }
 }

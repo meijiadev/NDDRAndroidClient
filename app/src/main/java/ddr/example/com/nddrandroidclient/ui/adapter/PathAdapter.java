@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class PathAdapter extends BaseAdapter<PathLine> {
     }
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void convert(@NonNull BaseViewHolder helper, PathLine item) {
         super.convert(helper, item);
@@ -57,10 +59,17 @@ public class PathAdapter extends BaseAdapter<PathLine> {
                 break;
             case R.layout.item_show_recycler:
                 if (item.isMultiple()){
-                    helper.setText(R.id.tv_show_name,item.getName()).setImageResource(R.id.iv_select,R.mipmap.checkedwg);
+                    helper.setText(R.id.tv_show_name,item.getName())
+                            .setTextColor(R.id.tv_show_name,Color.parseColor("#FFFFFFFF"))
+                            .setImageResource(R.id.iv_select,R.mipmap.item_show);
                 }else {
-                    helper.setText(R.id.tv_show_name,item.getName()).setImageResource(R.id.iv_select,R.mipmap.nocheckedwg);
+                    helper.setText(R.id.tv_show_name,item.getName())
+                            .setTextColor(R.id.tv_show_name,Color.parseColor("#66ffffff"))
+                            .setImageResource(R.id.iv_select,R.mipmap.item_hide);
                 }
+                break;
+            case R.layout.item_select_to_task:
+                helper.setText(R.id.item_name,item.getName());
                 break;
         }
 

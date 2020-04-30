@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_sort_task"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="42dp">
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:text="目标点-5"
+        android:layout_gravity="center_vertical"
+        />
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@mipmap/iv_delete"
+        android:scaleType="center"
+        />
+</LinearLayout>

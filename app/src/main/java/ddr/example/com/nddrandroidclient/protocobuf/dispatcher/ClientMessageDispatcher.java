@@ -11,6 +11,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyEnvInfoProce
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyHardStateProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyMapGenStatProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyRelocaStatusProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdRelocProcessor;
@@ -20,6 +21,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDDRVLNMapExProc
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdStartActionModelProcessor;
 
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDetecLoopProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspEditorLidarMapProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetParameterProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSensorProcessor;
@@ -115,10 +117,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
         BaseCmd.rspDetectLoop rspDetectLoop=BaseCmd.rspDetectLoop.newBuilder().build();
         m_ProcessorMap.put(rspDetectLoop.getClass().toString(),new RspDetecLoopProcessor());
 
-
         BaseCmd.rspConfigOperational rspConfigOperational=BaseCmd.rspConfigOperational.newBuilder().build();
         m_ProcessorMap.put(rspConfigOperational.getClass().toString(),new RspGetParameterProcessor());
-
 
         BaseCmd.notifyHardwareStat notifyHardwareStat=BaseCmd.notifyHardwareStat.newBuilder().build();
         m_ProcessorMap.put(notifyHardwareStat.getClass().toString(),new NotifyHardStateProcessor());
@@ -131,5 +131,11 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         DDRVLNMap.rspRunSpecificPoint rspRunSpecificPoint=DDRVLNMap.rspRunSpecificPoint.newBuilder().build();
         m_ProcessorMap.put(rspRunSpecificPoint.getClass().toString(),new RspRunSpecificPoint());
+
+        BaseCmd.notifyRelocStatus relocStatus=BaseCmd.notifyRelocStatus.newBuilder().build();
+        m_ProcessorMap.put(relocStatus.getClass().toString(),new NotifyRelocaStatusProcessor());
+
+        BaseCmd.rspEditorLidarMap rspEditorLidarMap=BaseCmd.rspEditorLidarMap.newBuilder().build();
+        m_ProcessorMap.put(rspEditorLidarMap.getClass().toString(),new RspEditorLidarMapProcessor());
     }
 }

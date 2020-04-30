@@ -3,11 +3,13 @@
     android:orientation="horizontal"
     android:layout_width="202dp"
     android:layout_height="24dp"
+    android:layout_marginTop="18dp"
     >
     <TextView
         android:id="@+id/tv_name"
-        android:layout_width="185dp"
+        android:layout_width="0dp"
         android:layout_height="24dp"
+        android:layout_weight="1"
         android:text="目标点-1"
         android:textColor="@color/white"
         android:textSize="11sp"
@@ -15,8 +17,8 @@
         />
     <ImageView
         android:id="@+id/iv_select"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@mipmap/nocheckedwg"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="5dp"

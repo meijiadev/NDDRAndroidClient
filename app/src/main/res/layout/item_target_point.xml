@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp">
+    android:layout_marginTop="21dp">
     <TextView
         android:id="@+id/tv_target_name"
         android:layout_width="match_parent"

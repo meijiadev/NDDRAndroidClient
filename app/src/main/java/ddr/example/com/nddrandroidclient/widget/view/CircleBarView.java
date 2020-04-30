@@ -80,7 +80,7 @@ public class CircleBarView extends View {
 
         textPaint=new Paint();
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setTextSize(48);
+        textPaint.setTextSize(defaultSize/4);
         textPaint.setColor(Color.WHITE);
         bgPaint=new Paint();
         bgPaint.setStyle(Paint.Style.STROKE);
@@ -105,17 +105,10 @@ public class CircleBarView extends View {
         //RectF rectF = new RectF(x,y,x+300,y+300);//建一个大小为300 * 300的正方形区域
         int measuredWidth = getMeasuredWidth();          //获取View原始大小
         int measuredHeight = getMeasuredHeight();
-        // Logger.e("view的宽："+measuredWidth);
-        int cx = measuredWidth / 2;
-        int cy = measuredHeight / 2;
-        // 中心点
-      /*  Rect src=new Rect(0,0,centerBg.getWidth(),centerBg.getHeight());
-        Rect dst=new Rect(cx-centerBg.getWidth()/2,cy-centerBg.getHeight()/2,cx+centerBg.getWidth()/2,cy+centerBg.getHeight()/2);
-        canvas.drawBitmap(centerBg,src,dst,centerPaint);*/
         progressPaint.setColor(progressColor);
         canvas.drawArc(mRectF,startAngle,sweepAngle,false,bgPaint);//这里角度0对应的是三点钟方向，顺时针方向递增   背景圆弧
         canvas.drawArc(mRectF,startProgressAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
-        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight-90,textPaint);
+        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight*2/3 ,textPaint);
 
     }
 

@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.entity.info;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
@@ -12,7 +13,7 @@ public class NotifyLidarPtsEntity {
     private float posX;
     private float posY;
     private float posdirection;
-    private List<BaseCmd.notifyLidarPts.Position> positionList;
+    private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();
 
     public static NotifyLidarPtsEntity getInstance(){
         if (notifyLidarPtsEntity==null){

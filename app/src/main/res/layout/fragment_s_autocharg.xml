@@ -22,7 +22,7 @@
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:gravity="center"
-        android:background="@drawable/bg_task_cz"
+        android:background="@drawable/textview_button_top"
         android:layout_alignParentRight="true"
         android:layout_marginRight="40dp"
         android:layout_marginTop="24dp"
@@ -36,11 +36,11 @@
         android:id="@+id/tv_firstBack"
         />
     <TextView
-        android:layout_width="108.5dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="开启自动返回充电点"
+        android:text="开启自动充电"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
@@ -52,11 +52,11 @@
         android:id="@+id/slideButton"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="640dp"/>
+        android:layout_marginLeft="617.5dp"/>
     <TextView
-        android:layout_width="408dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（开启后，当电池电量低于设置的返回电量时机器人会自动返回充电点）"
+        android:text="（当电池电量低于触发值，机器人自动返回充电）"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
@@ -92,6 +92,8 @@
         android:layout_marginLeft="614dp"
         android:digits="1234567890"
         android:maxLength="2"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:gravity="center"
         android:id="@+id/ed_trigger_auto"
         android:background="@drawable/bg_task_cz"/>
@@ -134,7 +136,9 @@
         android:layout_marginTop="23.5dp"
         android:layout_marginLeft="614dp"
         android:digits="1234567890"
-        android:maxLength="2"
+        android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
         android:gravity="center"
         android:id="@+id/ed_out_auto"
         android:background="@drawable/bg_task_cz"/>

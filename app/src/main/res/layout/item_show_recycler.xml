@@ -3,6 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="110dp"
     android:layout_height="30dp"
+    android:layout_marginTop="12dp"
     >
     <TextView
         android:id="@+id/tv_show_name"
@@ -10,15 +11,17 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text=""
+        android:textSize="12sp"
         android:textColor="@color/white"
         android:gravity="center_vertical"
         android:layout_marginLeft="8dp"
         />
+
     <ImageView
         android:id="@+id/iv_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/nocheckedwg"
+        android:src="@mipmap/item_hide"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="8dp"

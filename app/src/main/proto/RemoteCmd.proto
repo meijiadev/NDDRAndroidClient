@@ -40,7 +40,6 @@ message reqRemoteLogin
 }
 message rspRemoteLogin
 {
-
 	message LSEntity
 	{
 		string udid = 1;

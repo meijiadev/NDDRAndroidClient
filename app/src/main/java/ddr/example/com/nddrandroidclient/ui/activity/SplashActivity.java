@@ -14,6 +14,7 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 
+import java.io.IOException;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
@@ -21,16 +22,19 @@ import butterknife.BindView;
 
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
+import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.socket.UdpClient;
 
 /**
  * time:2019/10/26
  * desc:闪屏页面
  */
 public class SplashActivity extends DDRActivity implements OnPermission,Animation.AnimationListener {
-    private static final int ANIM_TIME = 1000;
+    private static final int ANIM_TIME = 2000;
     @BindView(R.id.iv_splash)
     ImageView ivSplash;
-
+    public UdpClient udpClient;
+    private int port=28888;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_splash;
@@ -44,6 +48,7 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
         ivSplash.startAnimation(alphaAnimation);
         getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
                 .init();
+        receiveBroadcast();
     }
 
     /**
@@ -63,6 +68,18 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+    }
+
+    /**
+     * 接收广播
+     */
+    private void receiveBroadcast(){
+        udpClient= UdpClient.getInstance(this,ClientMessageDispatcher.getInstance());
+        try {
+            udpClient.connect(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

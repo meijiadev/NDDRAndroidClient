@@ -42,7 +42,11 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
         }else {
             helper.getView(R.id.iv_select).setVisibility(View.GONE);
         }
-        Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
+        if (item.getBytes()!=null){
+            Glide.with(mContext).load(item.getBytes()).skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
+        }else {
+            Glide.with(mContext).load(item.getBitmap()).skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.NONE).into((ImageView) helper.getView(R.id.iv_map));
+        }
         String mapName=item.getMapName();
         mapName=mapName.replaceAll("OneRoute_","");
         helper.setText(R.id.tv_map_name,mapName)
@@ -59,7 +63,6 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
         }else{
             helper.getView(R.id.iv_select).setBackgroundResource(R.mipmap.nocheckedwg);
         }
-
     }
 
     @Override

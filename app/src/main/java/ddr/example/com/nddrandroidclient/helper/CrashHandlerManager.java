@@ -94,14 +94,14 @@ public class CrashHandlerManager implements Thread.UncaughtExceptionHandler {
             Logger.e("------用户未处理");
             mDefaultHandler.uncaughtException(t,e);
         }else {
-          /*  Logger.e("用户处理");
+            Logger.e("用户处理");
             try {
                 Thread.sleep(2000);
             }catch (InterruptedException e1){
 
             }
             // 将Activity的栈清空
-            ActivityStackManager.getInstance().finishAllActivities();*/
+            ActivityStackManager.getInstance().finishAllActivities();
         }
     }
     public static CrashHandlerManager getInstance(){

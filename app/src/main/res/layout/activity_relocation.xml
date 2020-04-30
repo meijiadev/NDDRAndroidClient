@@ -38,13 +38,13 @@
         >
         <ddr.example.com.nddrandroidclient.widget.layout.ZoomLayout
             android:id="@+id/zoom_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true">
             <ddr.example.com.nddrandroidclient.widget.view.MapEditView
                 android:id="@+id/iv_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"/>
         </ddr.example.com.nddrandroidclient.widget.layout.ZoomLayout>
         <ddr.example.com.nddrandroidclient.widget.view.RobotLocationView
@@ -59,7 +59,7 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="提示：请通过挪动地匹匹配雷达扫描形状确定机器人当前位置"
+        android:text="提示：请通过平移旋转地图匹配雷达扫描形状确定机器人当前位置"
         android:layout_below="@id/title_layout"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
@@ -91,18 +91,18 @@
 
     <TextView
         android:id="@+id/tv_finish"
-        android:background="@mipmap/finish_path"
+        android:background="@mipmap/iv_finish_relocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="22dp"
         android:layout_marginRight="30dp"
-        android:text="完成"
+        android:text="重定位"
         android:textColor="@color/white"
-        android:textSize="9sp"
+        android:textSize="12sp"
         android:gravity="center_horizontal"
-        android:paddingTop="39.5dp"
+        android:paddingTop="50dp"
         />
     <TextView
         android:id="@+id/tv_look"

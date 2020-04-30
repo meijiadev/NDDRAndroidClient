@@ -7,8 +7,8 @@ import DDRCommProto.RemoteCmd;
  * 所有命令集合
  */
 public class CmdSchedule {
-    public static String broadcastServerIP="111.230.250.213";  //广域网远程服务器的Ip和端口
-    public static int broadcastServerPort=8800;
+    public static String broadcastServerIP="129.204.18.252";  //广域网远程服务器的Ip和端口
+    public static int broadcastServerPort=9999;
 
 
     /**

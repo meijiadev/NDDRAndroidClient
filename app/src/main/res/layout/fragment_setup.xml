@@ -13,7 +13,7 @@
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
-            android:layout_height="23dp"
+            android:layout_height="33dp"
             android:text="导航参数"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
@@ -23,7 +23,7 @@
             android:layout_marginTop="60dp"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
-            android:layout_height="23dp"
+            android:layout_height="33dp"
             android:text="自动充电"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
@@ -34,7 +34,7 @@
             android:id="@+id/tv_autoCharging"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
-            android:layout_height="23dp"
+            android:layout_height="33dp"
             android:text="传感器配置"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
@@ -46,7 +46,7 @@
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
-            android:layout_height="23dp"
+            android:layout_height="33dp"
             android:text="硬件检测"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
@@ -58,7 +58,7 @@
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
-            android:layout_height="23dp"
+            android:layout_height="33dp"
             android:text="关于我们"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
@@ -70,7 +70,7 @@
         />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
-            android:layout_height="23dp"
+            android:layout_height="33dp"
             android:text="帮助与反馈"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
@@ -79,6 +79,7 @@
             android:gravity="center"
             android:layout_alignTop="@id/tv_editionManager"
             android:id="@+id/tv_helpFeedback"
+            android:visibility="gone"
             />
     </RelativeLayout>
     <ddr.example.com.nddrandroidclient.widget.view.DDRViewPager

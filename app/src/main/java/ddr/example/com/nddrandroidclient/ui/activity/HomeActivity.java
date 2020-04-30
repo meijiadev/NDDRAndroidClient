@@ -4,10 +4,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +15,18 @@ import android.widget.TextView;
 
 
 import com.google.protobuf.ByteString;
-import com.gyf.immersionbar.BarHide;
-import com.hjq.toast.ToastUtils;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
 import com.yhao.floatwindow.FloatWindow;
-import com.yhao.floatwindow.MoveType;
-import com.yhao.floatwindow.PermissionListener;
-import com.yhao.floatwindow.Screen;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import DDRCommProto.BaseCmd;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import java.text.DecimalFormat;
@@ -43,13 +37,11 @@ import butterknife.BindView;
 
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
-import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
-import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
@@ -61,16 +53,16 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
-import ddr.example.com.nddrandroidclient.ui.fragment.VersionFragment;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
-import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
@@ -86,17 +78,17 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @BindView(R.id.status)
     LineTextView tv_status;
     @BindView(R.id.mapmanager)
-    LineTextView tv_mapmanager;
+    LineTextView tv_mapManager;
     @BindView(R.id.taskmanager)
-    LineTextView tv_taskmanager;
+    LineTextView tv_taskManager;
     @BindView(R.id.highset)
-    LineTextView tv_highset;
+    LineTextView tv_highSet;
     @BindView(R.id.tv_quit)
-    ImageView tv_quit;
+    TextView tv_quit;
     @BindView(R.id.iv_jt_def)
-    ImageView iv_jt_def;
+    TextView iv_jt_def;
     @BindView(R.id.iv_yk_def)
-    ImageView iv_yk_def;
+    TextView iv_yk_def;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -127,6 +119,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
+    private BaseDialog waitDialog;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent) {
@@ -149,7 +143,14 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 },800);
                 break;
             case touchFloatWindow:
-                showControlPopupWindow();
+                String className=ActivityStackManager.getInstance().getTopActivity().getClass().toString();
+                Logger.e("--------当前栈顶的活动:"+className+";"+HomeActivity.class.toString());
+                if (className.equals(HomeActivity.class.toString()))
+                new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.taskmanager));
+                break;
+            case notifyTCPDisconnected:
+                Logger.e("----------断开连接页面：HomeActivity");
+                netWorkStatusDialog();
                 break;
         }
 
@@ -168,7 +169,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         mPagerAdapter.addFragment(MapFragment.newInstance());
         mPagerAdapter.addFragment(TaskFragment.newInstance());
         mPagerAdapter.addFragment(SetUpFragment.newInstance());
-        mPagerAdapter.addFragment(VersionFragment.newInstance());
         vpHomePager.setAdapter(mPagerAdapter);
         //限制页面的数量
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
@@ -263,43 +263,43 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         switch (vpHomePager.getCurrentItem()) {
             case 0:
                 tv_status.isChecked(true);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(false);
+                tv_mapManager.isChecked(false);
+                tv_highSet.isChecked(false);
+                tv_taskManager.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_check), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
             case 1:
                 tv_status.isChecked(false);
-                tv_mapmanager.isChecked(true);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(false);
+                tv_mapManager.isChecked(true);
+                tv_highSet.isChecked(false);
+                tv_taskManager.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_check), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_check), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
             case 2:
                 tv_status.isChecked(false);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(false);
-                tv_taskmanager.isChecked(true);
+                tv_mapManager.isChecked(false);
+                tv_highSet.isChecked(false);
+                tv_taskManager.isChecked(true);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_def), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_check), null, null, null);
                 break;
             case 3:
                 tv_status.isChecked(false);
-                tv_mapmanager.isChecked(false);
-                tv_highset.isChecked(true);
-                tv_taskmanager.isChecked(false);
+                tv_mapManager.isChecked(false);
+                tv_highSet.isChecked(true);
+                tv_taskManager.isChecked(false);
                 tv_status.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.status_def), null, null, null);
-                tv_mapmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
-                tv_highset.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check), null, null, null);
-                tv_taskmanager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
+                tv_mapManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.map_def), null, null, null);
+                tv_highSet.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.hightset_check), null, null, null);
+                tv_taskManager.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.version_def), null, null, null);
                 break;
         }
     }
@@ -318,20 +318,32 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
-                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
-                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    iv_jt_def.setVisibility(View.VISIBLE);
+                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
+                    iv_yk_def.setVisibility(View.GONE);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.white));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;
                 case 8:
-                    iv_jt_def.setImageResource(R.mipmap.jt_default);
-                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    iv_yk_def.setVisibility(View.VISIBLE);
+                    iv_jt_def.setVisibility(View.GONE);
+                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_nodef),null,null);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.text_gray));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 12:
-                    iv_jt_def.setImageResource(R.mipmap.jt_nodef);
-                    iv_yk_def.setImageResource(R.mipmap.yk_nodef);
+                    iv_jt_def.setVisibility(View.VISIBLE);
+                    iv_yk_def.setVisibility(View.VISIBLE);
+                    iv_jt_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
+                    iv_yk_def.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.yk_nodef),null,null);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.white));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.white));
                     break;
                 case 0:
-                    iv_jt_def.setImageResource(R.mipmap.jt_default);
-                    iv_yk_def.setImageResource(R.mipmap.yk_default);
+                    iv_jt_def.setVisibility(View.GONE);
+                    iv_yk_def.setVisibility(View.GONE);
+                    iv_jt_def.setTextColor(getResources().getColor(R.color.text_gray));
+                    iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;
             }
         }
@@ -407,6 +419,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         editor.commit();
         super.onDestroy();
     }
+
+
 
     private boolean exit=false;       //线程是否被终止
     public void getMapInfo() {
@@ -614,7 +628,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     //Logger.e("线速度，角速度：" + lineSpeed + ";" + palstance);
                     tcpClient.sendSpeed(lineSpeed, palstance);
                 }
-
             }
         };
         timer.schedule(task, 0, 50);
@@ -654,5 +667,29 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     public void onSoftKeyboardClosed() {
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!tcpClient.isConnected()){
+            netWorkStatusDialog();
+        }
+    }
+
+    /**
+     * 显示网络连接弹窗
+     */
+    private void  netWorkStatusDialog(){
+        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        postDelayed(()->{
+            if (waitDialog.isShowing()){
+                toast("网络无法连接，请退出重连！");
+                ActivityStackManager.getInstance().finishAllActivities();
+                startActivity(LoginActivity.class);
+            }
+        },6000);
+    }
+
+
 }
 

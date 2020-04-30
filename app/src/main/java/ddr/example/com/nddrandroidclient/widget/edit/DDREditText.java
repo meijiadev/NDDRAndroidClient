@@ -2,6 +2,7 @@ package ddr.example.com.nddrandroidclient.widget.edit;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -17,6 +18,7 @@ import com.hjq.toast.ToastUtils;
 
 import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
@@ -54,7 +56,6 @@ public class DDREditText extends LinearLayout {
         et_content=findViewById(R.id.et_content);
         iv_add=findViewById(R.id.iv_add);
         iv_reduce=findViewById(R.id.iv_reduce);
-
     }
 
     public void addListener(){
@@ -174,6 +175,14 @@ public class DDREditText extends LinearLayout {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取编辑框的对象
+     * @return
+     */
+    public EditText getEt_content() {
+        return et_content;
     }
 
     /**

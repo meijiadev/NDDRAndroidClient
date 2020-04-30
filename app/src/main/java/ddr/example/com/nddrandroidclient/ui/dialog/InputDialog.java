@@ -1,5 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.dialog;
 
+import android.text.InputFilter;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
+import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 
 /**
  *    time   : 2019/02/27
@@ -69,6 +72,17 @@ public final class InputDialog {
             return this;
         }
 
+        /**
+         * 设置EditText的输入限制
+         * @param num
+         * @return
+         */
+        public Builder setEditNumAndSize(int num){
+            mInputView.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+            mInputView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(num)});
+            mInputView.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "999")});
+            return this;
+        }
         public Builder setHint(@StringRes int id) {
             return setHint(getString(id));
         }
@@ -107,6 +121,11 @@ public final class InputDialog {
             return this;
         }
 
+        /**
+         * 判断是否自动弹窗消失
+         * @param dismiss
+         * @return
+         */
         public Builder setAutoDismiss(boolean dismiss) {
             mAutoDismiss = dismiss;
             return this;
