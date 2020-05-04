@@ -22,7 +22,7 @@
         </activity>
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.SplashActivity"
             android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
             <!--程序入口-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

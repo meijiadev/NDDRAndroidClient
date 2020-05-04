@@ -303,6 +303,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tv_now_device.setText(robotID);
         tv_work_time.setText(String.valueOf(workTimes)+" 分");
         tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
+        Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
@@ -313,19 +314,21 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
-                if (mapImageView!=null){
-                    if (mapImageView!=null&&isRunabPoint){
-                        isRunabPoint=false;
-                        mapImageView.setABPointLine(false);
-                    }
+                if (mapImageView!=null&&isRunabPoint){
+                    isRunabPoint=false;
+                    mapImageView.setABPointLine(false);
                 }
                 break;
             case 3:
-                tv_task_num.setText(" ");
+
                 break;
             case 4:
             case 5:
                 tv_task_num.setText(" ");
+                if (mapImageView!=null&&!isRunabPoint){
+                    isRunabPoint=true;
+                    mapImageView.setABPointLine(true);
+                }
                 break;
         }
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
