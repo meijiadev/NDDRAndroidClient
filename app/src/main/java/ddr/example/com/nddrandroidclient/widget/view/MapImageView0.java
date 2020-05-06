@@ -223,6 +223,8 @@ public class MapImageView0 extends ImageView {
         }
     }
 
+
+    private float currentX,currentY;
     /**
      * 是否显示ab点路径
      */
@@ -241,6 +243,9 @@ public class MapImageView0 extends ImageView {
                 isAutoPlanning=true;
                 break;
         }
+        taskPoints=null;
+        currentX=notifyBaseStatusEx.getPosX();
+        currentY=notifyBaseStatusEx.getPosY();
         currentStatus = STATUS_INIT;
         invalidate();
     }
@@ -511,6 +516,8 @@ public class MapImageView0 extends ImageView {
     private void drawABLine1(Canvas canvas, List<PathLine.PathPoint>pathPoints ){
         for (int i=0;i<pathPoints.size();i++){
             if (pathPoints.size()>1){
+                XyEntity xyEntity0=toXorY(currentX,currentY);
+                xyEntity0=coordinate2View(xyEntity0.getX(),xyEntity0.getY());
                 XyEntity xyEntity1=toXorY(pathPoints.get(i).getX(),pathPoints.get(i).getY());
                 xyEntity1=coordinate2View(xyEntity1.getX(),xyEntity1.getY());
                 if (i<pathPoints.size()-1){
@@ -520,11 +527,10 @@ public class MapImageView0 extends ImageView {
                 }
                 Logger.e("------ab:"+xyEntity1.getX()+";"+xyEntity1.getY());
                 if (i==0){
-                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
+                    canvas.drawLine(xyEntity0.getX(),xyEntity0.getY(),xyEntity1.getX(),xyEntity1.getY(),paint);
                     canvas.drawBitmap(startBitamap,xyEntity1.getX()-startBitamap.getWidth()/2,xyEntity1.getY()-startBitamap.getHeight()/2,paint);
                     canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                 }else if (i==pathPoints.size()-1){
-                    mRectDst=new Rect((int)xyEntity1.getX()-11,(int)xyEntity1.getY()-11,(int)xyEntity1.getX()+11,(int)xyEntity1.getY()+11);
                     canvas.drawBitmap(endBitamp,xyEntity1.getX()-endBitamp.getWidth()/2,xyEntity1.getY()-endBitamp.getHeight()/2,paint);
                     canvas.drawText(pathPoints.get(i).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                 }else {
