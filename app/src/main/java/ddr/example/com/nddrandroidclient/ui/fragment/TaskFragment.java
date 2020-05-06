@@ -355,9 +355,19 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
             Logger.e("选中列数"+j);
             if (j>1){
                 for (int i=0;i<j-1;i++){
+                    boolean isTrueTime;
                     if (taskModeList.get(i+1).getStartHour()>taskModeList.get(i).getEndHour()){
+                        isTrueTime=true;
+                    }else if (taskModeList.get(i+1).getStartHour()==taskModeList.get(i).getEndHour() &&
+                            taskModeList.get(i+1).getStartMin()>taskModeList.get(i).getEndMin()){
+                        isTrueTime=true;
+                    }else {
+                        isTrueTime=false;
+                    }
+                    if (isTrueTime){
                         isCheckTime=true;
                     }else {
+                        Logger.e("前"+taskModeList.get(i).getEndHour()+"后"+taskModeList.get(i+1).getStartHour());
                         isCheckTime=false;
                         toast("定时列表第"+(i+2)+"行时间设置有误");
                     }
