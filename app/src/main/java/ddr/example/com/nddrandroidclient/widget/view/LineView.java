@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 /**
  *  time : 2019/11/18
@@ -209,11 +209,9 @@ public class LineView extends Shape {
                     if (pathPoints.size()>1){
                         for (int j=0;j<pathPoints.size();j++){
                             if (pathPoints.size()>1){
-                                XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
-                                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                                XyEntity xyEntity1=zoomImageView.toCanvas(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                                 if (j<pathPoints.size()-1){
-                                    XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                    XyEntity xyEntity2=zoomImageView.toCanvas(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
                                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                                 }
                                 if (j==0){
@@ -243,11 +241,9 @@ public class LineView extends Shape {
                     List<PathLine.PathPoint> pathPoints=pathLines1.get(i).getPathPoints();
                         for (int j=0;j<pathPoints.size();j++){
                             if (pathPoints.size()>1){
-                                XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
-                                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                                XyEntity xyEntity1=zoomImageView.toCanvas(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                                 if (j<pathPoints.size()-1){
-                                    XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                                    XyEntity xyEntity2=zoomImageView.toCanvas(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
                                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                                 }
                                 if (j==0){
@@ -271,12 +267,10 @@ public class LineView extends Shape {
         }
         if (pathPoints!=null){
             for (int j=0;j<pathPoints.size();j++){
-                XyEntity xyEntity1=zoomImageView.toXorY(pathPoints.get(j).getX(),pathPoints.get(j).getY());
-                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                XyEntity xyEntity1=zoomImageView.toCanvas(pathPoints.get(j).getX(),pathPoints.get(j).getY());
                 if (pathPoints.size()>1){
                     if (j<pathPoints.size()-1){
-                        XyEntity xyEntity2=zoomImageView.toXorY(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
-                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        XyEntity xyEntity2=zoomImageView.toCanvas(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
                         canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                     }
                     if (j==0){
@@ -297,12 +291,10 @@ public class LineView extends Shape {
         }
         if (showPoints!=null){
             for (int j=0;j<showPoints.size();j++){
-                XyEntity xyEntity1=zoomImageView.toXorY(showPoints.get(j).getX(),showPoints.get(j).getY());
-                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                XyEntity xyEntity1=zoomImageView.toCanvas(showPoints.get(j).getX(),showPoints.get(j).getY());
                 if (showPoints.size()>1){
                     if (j<showPoints.size()-1){
-                        XyEntity xyEntity2=zoomImageView.toXorY(showPoints.get(j+1).getX(),showPoints.get(j+1).getY());
-                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        XyEntity xyEntity2=zoomImageView.toCanvas(showPoints.get(j+1).getX(),showPoints.get(j+1).getY());
                         canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                     }
                     if (j==0){
@@ -313,7 +305,7 @@ public class LineView extends Shape {
                         canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                         canvas.drawText(showPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
                         XyEntity xyEntity3=zoomImageView.getGaugePoint();
-                        xyEntity3=zoomImageView.toCanvasXY(xyEntity3);
+                        xyEntity3=zoomImageView.toCanvas(xyEntity3.getX(),xyEntity3.getY());
                         canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity3.getX(),xyEntity3.getY(),linePaint);
                     }else {
                         canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
@@ -322,7 +314,7 @@ public class LineView extends Shape {
                 }else {
                     canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                     XyEntity xyEntity3=zoomImageView.getGaugePoint();
-                    xyEntity3=zoomImageView.toCanvasXY(xyEntity3);
+                    xyEntity3=zoomImageView.toCanvas(xyEntity3.getX(),xyEntity3.getY());
                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity3.getX(),xyEntity3.getY(),linePaint);
                 }
             }
@@ -332,13 +324,11 @@ public class LineView extends Shape {
 
         if (touchPoints!=null){
             for (int j=0;j<touchPoints.size();j++){
-                XyEntity xyEntity1=zoomImageView.toXorY(touchPoints.get(j).getX(),touchPoints.get(j).getY());
-                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                XyEntity xyEntity1=zoomImageView.toCanvas(touchPoints.get(j).getX(),touchPoints.get(j).getY());
                 canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
                 if (touchPoints.size()>1){
                     if (j<touchPoints.size()-1){
-                        XyEntity xyEntity2=zoomImageView.toXorY(touchPoints.get(j+1).getX(),touchPoints.get(j+1).getY());
-                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        XyEntity xyEntity2=zoomImageView.toCanvas(touchPoints.get(j+1).getX(),touchPoints.get(j+1).getY());
                         canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
                     }
                     if (j==0){
@@ -357,16 +347,14 @@ public class LineView extends Shape {
 
         if (lines!=null&&lines.size()>0){
             for (int i=0;i<lines.size();i++){
-                XyEntity xyEntity1=zoomImageView.toXorY(lines.get(i).getX(),lines.get(i).getY());
-                xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                XyEntity xyEntity1=zoomImageView.toCanvas(lines.get(i).getX(),lines.get(i).getY());
                 canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),3,linePaint1);
                 if (i<lines.size()-1){
-                    XyEntity xyEntity2=zoomImageView.toXorY(lines.get(i+1).getX(),lines.get(i+1).getY());
-                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                    XyEntity xyEntity2=zoomImageView.toCanvas(lines.get(i+1).getX(),lines.get(i+1).getY());
                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint1);
                 }else if (i==lines.size()-1){
                     XyEntity xyEntity3=zoomImageView.getGaugePoint();
-                    xyEntity3=zoomImageView.toCanvasXY(xyEntity3);
+                    xyEntity3=zoomImageView.toCanvas(xyEntity3.getX(),xyEntity3.getY());
                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity3.getX(),xyEntity3.getY(),linePaint1);
                 }
 
@@ -375,10 +363,8 @@ public class LineView extends Shape {
         if (polygons!=null&&polygons.size()>0){
             for (int i=0;i<polygons.size();i++){
                 if (i<polygons.size()-1){
-                    XyEntity xyEntity1=zoomImageView.toXorY(polygons.get(i).getX(),polygons.get(i).getY());
-                    xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                    XyEntity xyEntity2=zoomImageView.toXorY(polygons.get(i+1).getX(),polygons.get(i+1).getY());
-                    xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                    XyEntity xyEntity1=zoomImageView.toCanvas(polygons.get(i).getX(),polygons.get(i).getY());
+                    XyEntity xyEntity2=zoomImageView.toCanvas(polygons.get(i+1).getX(),polygons.get(i+1).getY());
                     canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint1);
                 }
             }
@@ -388,10 +374,8 @@ public class LineView extends Shape {
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){
                     if (j<space_pointExes.size()-1){
-                        XyEntity xyEntity1=zoomImageView.toXorY(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
-                        xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
-                        XyEntity xyEntity2=zoomImageView.toXorY(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
-                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        XyEntity xyEntity1=zoomImageView.toCanvas(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
+                        XyEntity xyEntity2=zoomImageView.toCanvas(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
                         if (i==selectPosition){
                             canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),selectPaint);
                         }else {
@@ -404,13 +388,11 @@ public class LineView extends Shape {
 
         if (baseModes!=null&&baseModes.size()>0) {
             for (int j = 0; j < taskPoints.size(); j++) {
-                XyEntity xyEntity1 = zoomImageView.toXorY(taskPoints.get(j).getX(), taskPoints.get(j).getY());
-                xyEntity1 = zoomImageView.coordinate2View(xyEntity1.getX(), xyEntity1.getY());
+                XyEntity xyEntity1 = zoomImageView.toCanvas(taskPoints.get(j).getX(), taskPoints.get(j).getY());
                 canvas.drawBitmap(startBitmap, xyEntity1.getX() - bitmapW / 2, xyEntity1.getY() - bitmapH / 2, linePaint);
                 if (taskPoints.size() > 1) {
                     if (j < taskPoints.size() - 1) {
-                        XyEntity xyEntity2 = zoomImageView.toXorY(taskPoints.get(j + 1).getX(), taskPoints.get(j + 1).getY());
-                        xyEntity2 = zoomImageView.coordinate2View(xyEntity2.getX(), xyEntity2.getY());
+                        XyEntity xyEntity2 = zoomImageView.toCanvas(taskPoints.get(j + 1).getX(), taskPoints.get(j + 1).getY());
                         canvas.drawLine(xyEntity1.getX(), xyEntity1.getY(), xyEntity2.getX(), xyEntity2.getY(), linePaint);
                     }
                     if (j == 0) {
@@ -437,18 +419,16 @@ public class LineView extends Shape {
      * @param x
      * @param y
      */
-    public void onClick(ZoomImageView zoomImageView,float x,float y){
+    public void onClick(ZoomImageView zoomImageView, float x, float y){
         Logger.e("点击出坐标："+x+";"+y);
         if (spaceItems!=null&&isClickable){
             for (int i=0;i<spaceItems.size();i++){
                 List<DDRVLNMap.space_pointEx> space_pointExes=spaceItems.get(i).getLines();
                 for (int j=0;j<space_pointExes.size();j++){
                     if (j<space_pointExes.size()-1){
-                        XyEntity xyEntity1=zoomImageView.toXorY(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
-                        xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                        XyEntity xyEntity1=zoomImageView.toCanvas(space_pointExes.get(j).getX(),space_pointExes.get(j).getY());
                         float x1=xyEntity1.getX(); float y1=xyEntity1.getY();
-                        XyEntity xyEntity2=zoomImageView.toXorY(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
-                        xyEntity2=zoomImageView.coordinate2View(xyEntity2.getX(),xyEntity2.getY());
+                        XyEntity xyEntity2=zoomImageView.toCanvas(space_pointExes.get(j+1).getX(),space_pointExes.get(j+1).getY());
                         float x2=xyEntity2.getX(); float y2=xyEntity2.getY();
                         float minX=Math.min(x1,x2);
                         float maxX=Math.max(x1,x2);
@@ -470,7 +450,6 @@ public class LineView extends Shape {
         }
     }
 
-
     private boolean isClickable;         //是否可点击
 
     /**
@@ -480,10 +459,6 @@ public class LineView extends Shape {
     public void setClickable(boolean isClickable){
         this.isClickable=isClickable;
     }
-
-
-
-
 
     /**
      * 主动清空列表
@@ -500,8 +475,4 @@ public class LineView extends Shape {
         touchPoints=null;
         baseModes=null;
     }
-
-
-
-
 }

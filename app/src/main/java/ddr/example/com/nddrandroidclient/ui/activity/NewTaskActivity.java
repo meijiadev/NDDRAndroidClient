@@ -1,7 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
@@ -45,7 +43,7 @@ import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
-import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 
 /**

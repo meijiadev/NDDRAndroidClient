@@ -21,6 +21,10 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
+/**
+ * desc:采集实时绘制地图
+ * time：2020/05/12
+ */
 public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callback {
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
     private int measureWidth, measureHeight;
@@ -137,7 +141,6 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
                     canvas=holder.lockCanvas();
                     if (canvas!=null){
                        drawMap(canvas);
-
                        drawPoint(canvas);
                     }
                 }catch (Exception e){

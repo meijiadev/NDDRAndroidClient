@@ -160,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ddr.example.com.nddrandroidclient.widget.view.ZoomImageView
+            <ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView
                 android:id="@+id/zoom_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

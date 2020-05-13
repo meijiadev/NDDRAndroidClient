@@ -2,18 +2,10 @@ package ddr.example.com.nddrandroidclient.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,17 +14,13 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.protobuf.ByteString;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +29,6 @@ import DDRVLNMapProto.DDRVLNMap;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
@@ -53,7 +40,6 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
@@ -70,14 +56,11 @@ import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapSettingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.ActionAdapter;
-import ddr.example.com.nddrandroidclient.ui.adapter.BaseModeAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
-import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.MenuDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.RelocationDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
@@ -90,7 +73,7 @@ import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
-import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 /**
  * time: 2019/10/26

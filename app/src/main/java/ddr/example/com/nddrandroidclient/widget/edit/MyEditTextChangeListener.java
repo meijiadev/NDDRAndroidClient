@@ -2,14 +2,13 @@ package ddr.example.com.nddrandroidclient.widget.edit;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
 
 
 import com.hjq.toast.ToastUtils;
 
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
-import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 /**
  * time :  2019/11/27

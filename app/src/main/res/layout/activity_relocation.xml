@@ -36,24 +36,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/title_layout"
         >
-        <ddr.example.com.nddrandroidclient.widget.layout.ZoomLayout
-            android:id="@+id/zoom_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true">
-            <ddr.example.com.nddrandroidclient.widget.view.MapEditView
-                android:id="@+id/iv_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"/>
-        </ddr.example.com.nddrandroidclient.widget.layout.ZoomLayout>
         <ddr.example.com.nddrandroidclient.widget.view.RobotLocationView
             android:id="@+id/robot_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             />
-
     </RelativeLayout>
     <TextView
         android:id="@+id/text"

@@ -1,6 +1,5 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
@@ -49,8 +48,7 @@ import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
-import ddr.example.com.nddrandroidclient.widget.view.MapImageView0;
-import ddr.example.com.nddrandroidclient.widget.view.MapImageView1;
+import ddr.example.com.nddrandroidclient.widget.zoomview.MapImageView;
 
 /**
  * time: 2019/10/26
@@ -71,11 +69,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_warn)
     TextView tvWarn;                  // 无地图显示提醒
 
-    //绘制地图+路径
-    @BindView(R.id.iv_map)
-    MapImageView0 mapImageView;
     @BindView(R.id.iv_map1)
-    MapImageView1 mapImageView1;
+    MapImageView mapImageView;
     @BindView(R.id.tv_now_task)
     TextView tv_now_task;
     @BindView(R.id.tv_now_device)
@@ -204,7 +199,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
                     Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
-                    mapImageView.setMapBitmap(mapName);
+                    mapImageView.setImageBitmap(mapName);
                     tvWarn.setVisibility(View.GONE);
                     groupList = new ArrayList<>();
                     targetPoints=new ArrayList<>();
@@ -263,8 +258,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
-        mapImageView1.setMapImageView0(mapImageView);
-        mapImageView1.startThread();
+        mapImageView.startThread();
     }
 
     /**
@@ -307,14 +301,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
-                if (mapImageView!=null&&isRunabPoint){
+                if (mapImageView !=null&&isRunabPoint){
                     isRunabPoint=false;
                     mapImageView.setABPointLine(false);
                 }
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
-                if (mapImageView!=null&&isRunabPoint){
+                if (mapImageView !=null&&isRunabPoint){
                     isRunabPoint=false;
                     mapImageView.setABPointLine(false);
                 }
@@ -325,7 +319,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case 4:
             case 5:
                 tv_task_num.setText(" ");
-                if (mapImageView!=null&&!isRunabPoint){
+                if (mapImageView !=null&&!isRunabPoint){
                     isRunabPoint=true;
                     mapImageView.setABPointLine(true);
                 }
@@ -479,7 +473,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                mapImageView.clearDraw();
                                 goPointLet(x,y,theat,ByteString.copyFromUtf8("one"),ByteString.copyFromUtf8(mapName),2);
 //                                tv_restart_point.setVisibility(View.GONE);
                             }
@@ -567,10 +560,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {
                                     taskName=groupList.get(position);
+                                    mapImageView.setTaskName(taskName);
                                     String showName=taskName.replaceAll("DDRTask_","");
                                     showName=showName.replaceAll(".task","");
                                     tv_now_task.setText(showName);
-                                    mapImageView.setTaskName(taskName);
                                     if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<1000 ){
                                         try {
                                             lsNum=Integer.parseInt(content);
@@ -768,11 +761,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             if (notifyBaseStatusEx!=null){
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
             }
-            if (mapImageView1!=null&&!mapImageView1.drawThread.isAlive()){
-                mapImageView1.setMapImageView0(mapImageView);
-                mapImageView.invalidate();
-                mapImageView1.startThread();
-                mapImageView.setMapBitmap(notifyBaseStatusEx.getCurroute());
+            if (mapImageView !=null&&!mapImageView.drawThread.isAlive()){
+                mapImageView.startThread();
+                mapImageView.setImageBitmap(notifyBaseStatusEx.getCurroute());
             }
             //当服务断开时
             if (tcpClient!=null&&!tcpClient.isConnected()){
@@ -781,8 +772,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }else {
             // 相当于onpause()方法---失去焦点
             Logger.e("不可见");
-            if (mapImageView1!=null&&mapImageView1.drawThread.isAlive()){
-                mapImageView1.onStop();
+            if (mapImageView !=null&& mapImageView.drawThread.isAlive()){
+                mapImageView.onStop();
             }
         }
     }
@@ -792,7 +783,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         super.onDestroy();
         try {
             statusSwitchButton.onDestroy();
-            mapImageView1.onStop();
+            mapImageView.onStop();
         }catch (NullPointerException e){
             e.printStackTrace();
         }

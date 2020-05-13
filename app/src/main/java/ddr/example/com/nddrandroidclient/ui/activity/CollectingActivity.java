@@ -432,7 +432,7 @@ public class CollectingActivity extends DDRActivity {
     int a = 0;
 
     /**
-     * 定时器，每90毫秒执行一次
+     * 定时器，每50毫秒执行一次
      */
     private void initTimer() {
         timer = new Timer();
@@ -455,7 +455,7 @@ public class CollectingActivity extends DDRActivity {
 
             }
         };
-        timer.schedule(task, 0, 90);
+        timer.schedule(task, 0, 50);
     }
 
 

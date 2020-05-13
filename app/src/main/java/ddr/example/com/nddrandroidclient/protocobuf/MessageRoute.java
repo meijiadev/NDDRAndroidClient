@@ -21,16 +21,12 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.BaseSocketConnection;
 import ddr.example.com.nddrandroidclient.socket.StreamBuffer;
-
-
-
 /**
  * 负责解析和包装数据（序列化）
  */
 public class MessageRoute {
     private Context context;
     public  String headString="pbh\0";
-
     private BaseSocketConnection m_BaseSocketConnection;
     private BaseMessageDispatcher m_MessageDispatcher=null;
     public  static StreamBuffer streamBuffer;
@@ -94,13 +90,11 @@ public class MessageRoute {
 
     }
 
-
     public  byte []head=new byte[4];
     public  byte[] bTotalLen=new byte[4];
     public  byte[]bHeadLen=new byte[4];
     public Thread parseThread;
     public int where=0x00;   //标志位
-
     /**
      * 解析数据
      * @param （闲置）
@@ -347,7 +341,7 @@ public class MessageRoute {
         byte[] bHead=headData.toByteArray();//头部信息
         int bHeadLength=bHead.length;
         int totalLen=8+bHeadLength+bBodyLength;
-        byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
+          byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
         System.arraycopy(bsHead,0,bytes,0,4);
         boolean needEncrypt=true;
         if (needEncrypt)
@@ -422,10 +416,6 @@ public class MessageRoute {
         }
         return null;
     }
-
-
-
-
 
 
     /**

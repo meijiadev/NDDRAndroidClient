@@ -11,13 +11,7 @@
         >
         <!--android:background="#101112"-->
 
-        <ddr.example.com.nddrandroidclient.widget.view.MapImageView0
-            android:id="@+id/iv_map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            />
-        <ddr.example.com.nddrandroidclient.widget.view.MapImageView1
+        <ddr.example.com.nddrandroidclient.widget.zoomview.MapImageView
             android:id="@+id/iv_map1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

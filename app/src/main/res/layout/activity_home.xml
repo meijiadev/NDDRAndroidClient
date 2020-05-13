@@ -13,23 +13,21 @@
         android:layout_height="60dp"
         android:background="#101112">
         <!--大道智创客户端-->
-        <TextView
+        <!--<TextView
             android:layout_width= "136dp"
             android:layout_height="22.5dp"
             android:text=""
             android:textSize="16dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"/>-->
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/status"
             android:layout_width="83dp"
             android:layout_height="match_parent"
             android:text="基础状态"
             android:textSize="12sp"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/mapmanager"
-            android:layout_marginRight="34dp"
+            android:layout_marginLeft="100dp"
             android:textColor="#ffffff"
             android:gravity="center"
             android:drawableLeft="@mipmap/status_def"
@@ -39,8 +37,8 @@
             android:layout_width="82dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:layout_marginRight="34dp"
-            android:layout_toLeftOf="@id/taskmanager"
+            android:layout_marginLeft="44dp"
+            android:layout_toRightOf="@id/status"
             android:drawableLeft="@mipmap/map_def"
             android:gravity="center"
             android:text="地图管理"
@@ -52,7 +50,8 @@
             android:layout_height="match_parent"
             android:text="时段管理"
             android:textSize="12sp"
-            android:layout_centerInParent="true"
+            android:layout_toRightOf="@id/mapmanager"
+            android:layout_marginLeft="44dp"
             android:textColor="#ffffff"
             android:gravity="center"
             android:drawableLeft="@mipmap/task_def"/>
@@ -64,7 +63,7 @@
             android:textSize="12sp"
             android:layout_toRightOf="@id/taskmanager"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="34dp"
+            android:layout_marginLeft="44dp"
             android:textColor="#ffffff"
             android:gravity="center"
             android:drawableLeft="@mipmap/hightset_def"

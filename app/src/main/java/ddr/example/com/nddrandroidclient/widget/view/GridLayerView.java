@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 
 /**
@@ -38,8 +39,8 @@ public class GridLayerView {
     public void setPrecision(float precision){
         Logger.e("--------"+zoomImageView.r01+";"+zoomImageView.r10);
         this.precision=precision;
-        pixIntervalX=precision/Math.abs(1/zoomImageView.r01)*zoomImageView.totalRatio;
-        prxIntervalY=precision/Math.abs(1/zoomImageView.r10)*zoomImageView.totalRatio;
+        pixIntervalX=precision/Math.abs(1/zoomImageView.r01)*zoomImageView.getScale();
+        prxIntervalY=precision/Math.abs(1/zoomImageView.r10)*zoomImageView.getScale();
 
     }
 
