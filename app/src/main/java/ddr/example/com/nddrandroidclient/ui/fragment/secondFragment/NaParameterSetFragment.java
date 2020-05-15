@@ -65,10 +65,11 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     @BindView(R.id.et_stop_distance)
     EditText etStopDistance;
 
+    public static NaParameterSetFragment naParameterSetFragment;
     private Naparam naparam;
     private List<Naparam> naparamList;
 
-    private TcpClient tcpClient;
+    private static TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private NotifyEnvInfo notifyEnvInfo;
     private MapFileStatus mapFileStatus;
@@ -83,9 +84,20 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private String isOriginalWayBack="Common_Params.AUTOMODE_RETURN";           // 是否原路返回                1-原路返回
     private List<BaseCmd.configData> configDataList = new ArrayList<>();
     private BaseDialog waitDialog;
-
+    public static boolean isShow;
     public static NaParameterSetFragment newInstance() {
         return new NaParameterSetFragment();
+    }
+
+    public static NaParameterSetFragment getInstance(){
+        if (naParameterSetFragment==null){
+            synchronized (NaParameterSetFragment.class){
+                if (naParameterSetFragment==null){
+                    naParameterSetFragment=new NaParameterSetFragment();
+                }
+            }
+        }
+        return naParameterSetFragment;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -109,6 +121,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
 
     @Override
     protected void initData() {
+        isShow=true;
         tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
@@ -176,7 +189,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
      * 获取导航参数
      *
      */
-    private void getNaParmeter(int type) {
+    public void getNaParmeter(int type) {
         BaseCmd.eConfigItemOptType eConfigItemOptType;
         switch (type) {
             case 0:
@@ -203,6 +216,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
+        if (tcpClient!=null)
         tcpClient.sendData(commonHeader, reqConfigOperational);
     }
 
@@ -244,7 +258,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     /**
      * 筛选配置参数
      */
-    private void setNaparmeter() {
+    public void setNaparmeter() {
         parameterList = parameters.getParameterList();
         Logger.e("数量" + parameterList.size());
         try {
@@ -418,6 +432,13 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
         }
         postNaparmeter(configDataList, 3);
 
+    }
+
+    @Override
+    public void onRestart() {
+        getNaParmeter(1);
+        setNaparmeter();
+        super.onRestart();
     }
 
     @Override
