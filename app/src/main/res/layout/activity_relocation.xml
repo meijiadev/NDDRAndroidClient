@@ -36,7 +36,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/title_layout"
         >
-        <ddr.example.com.nddrandroidclient.widget.view.RobotLocationView
+        <ddr.example.com.nddrandroidclient.widget.zoomview.RobotLocationView
             android:id="@+id/robot_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

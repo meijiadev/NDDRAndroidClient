@@ -31,7 +31,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
-import ddr.example.com.nddrandroidclient.widget.view.RobotLocationView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.RobotLocationView;
 
 /**
  * time : 2019/12/25
