@@ -459,4 +459,14 @@ public class SensorSetFragment extends DDRLazyFragment {
 
             }});
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getSensorParam();
+        getChosseStatus();
+        getNaparmeter();
+        setNaparmeter();
+        setSensorParam();
+    }
 }

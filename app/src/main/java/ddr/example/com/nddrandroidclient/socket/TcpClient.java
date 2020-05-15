@@ -76,6 +76,10 @@ public class TcpClient extends BaseSocketConnection {
         return tcpClient;
     }
 
+    public static TcpClient getTcpClient() {
+        return tcpClient;
+    }
+
     private TcpClient(Context context, BaseMessageDispatcher baseMessageDispatcher) {
         this.context=context.getApplicationContext();         //使用Application的context
         m_MessageRoute=new MessageRoute(context,this,baseMessageDispatcher);

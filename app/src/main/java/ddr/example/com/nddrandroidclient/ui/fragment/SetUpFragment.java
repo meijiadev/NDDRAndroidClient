@@ -10,6 +10,8 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.AutoChargingSetFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.EditManagerSetFragment;
@@ -41,6 +43,7 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
 
 
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
+    private TcpClient tcpClient;
 
     public static SetUpFragment newInstance(){
         return new SetUpFragment();
@@ -53,8 +56,9 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
 
     @Override
     protected void initView() {
+        tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
-        mPagerAdapter.addFragment(NaParameterSetFragment.newInstance());
+        mPagerAdapter.addFragment(NaParameterSetFragment.getInstance());
         mPagerAdapter.addFragment(AutoChargingSetFragment.newInstance());
         mPagerAdapter.addFragment(SensorSetFragment.newInstance());
         mPagerAdapter.addFragment(RobotTestSetFragment.newInstance());
@@ -69,7 +73,7 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
 
     @Override
     protected void initData() {
-
+        tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
     }
 
     @OnClick({R.id.tv_naParam,R.id.tv_autoCharging,R.id.tv_sensorSet,R.id.tv_robotTest,R.id.tv_editionManager,R.id.tv_helpFeedback})
@@ -161,10 +165,14 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
 
         }
     }
-
+    private NaParameterSetFragment naParameterSetFragment;
     @Override
     protected void onRestart() {
         super.onRestart();
+        viewPager.setCurrentItem(0);
+        naParameterSetFragment= NaParameterSetFragment.getInstance();
+        naParameterSetFragment.getNaParmeter(1);
+        naParameterSetFragment.setNaparmeter();
         Logger.e("------onRestart");
     }
 
