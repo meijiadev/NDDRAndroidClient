@@ -39,7 +39,6 @@ import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
  * desc: 高级设置导航参数界面
  */
 public class NaParameterSetFragment extends DDRLazyFragment  {
-
     @BindView(R.id.tv_restartDefault)
     TextView tv_restartDefault;
     @BindView(R.id.tv_save_param)
@@ -83,6 +82,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private String isOriginalWayBack="Common_Params.AUTOMODE_RETURN";           // 是否原路返回                1-原路返回
     private List<BaseCmd.configData> configDataList = new ArrayList<>();
     private BaseDialog waitDialog;
+
 
     public static NaParameterSetFragment newInstance() {
         return new NaParameterSetFragment();
@@ -430,6 +430,12 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     public void onPause() {
         Logger.e("-----------------跳转");
         super.onPause();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Logger.e("---------:"+isVisibleToUser);
     }
 
     @Override

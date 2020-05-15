@@ -252,6 +252,7 @@ public class ZoomImageView extends View {
             LineView.getInstance(context).onClick(this,event.getX(),event.getY());
             PointView.getInstance(context).onClick(this,event.getX(),event.getY());
         }
+        GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
         return true;
     }
 

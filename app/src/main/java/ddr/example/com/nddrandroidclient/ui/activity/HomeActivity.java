@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -26,6 +27,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import DDRCommProto.BaseCmd;
 
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -89,14 +91,20 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     TextView iv_jt_def;
     @BindView(R.id.iv_yk_def)
     TextView iv_yk_def;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.drawer_layout_left)
+    LinearLayout drawerLayoutLeft;
+    @BindView(R.id.iv_menu)
+    ImageView ivMenu;
+
+
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private String currentMap;     //当前运行的地图名
     private String currentTask;   //当前运行的任务
     private CustomPopuWindow customPopuWindow;
-    private DpOrPxUtils dpOrPxUtils;
-    private NotifyEnvInfo notifyEnvInfo;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private float lineSpeed, palstance;  //线速度 ，角速度
@@ -212,9 +220,16 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown})
+    @OnClick({R.id.iv_menu,R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.iv_menu:
+                if (drawerLayout.isDrawerOpen(drawerLayoutLeft)){
+                    drawerLayout.closeDrawer(drawerLayoutLeft);
+                }else {
+                    drawerLayout.openDrawer(drawerLayoutLeft);
+                }
+                break;
             case R.id.status:
                 Logger.e("---------setCurrentItem");
                 vpHomePager.setCurrentItem(0);

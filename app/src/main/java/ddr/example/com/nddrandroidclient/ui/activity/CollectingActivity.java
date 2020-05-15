@@ -76,7 +76,8 @@ public class CollectingActivity extends DDRActivity {
     RockerView myRockerZy;
     @BindView(R.id.tv_detection)
     TextView tvDetection;                   //回环检测
-
+    @BindView(R.id.tv_stop_move)
+    TextView tvStopMove;                    //急停
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_title)
@@ -111,26 +112,7 @@ public class CollectingActivity extends DDRActivity {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
                 //Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
-                if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
-                    tvTitle.setText("正在自标定中...");
-                } else {
-                    if (notifyBaseStatusEx.getMode() == 2) {
-                        switch (notifyBaseStatusEx.getSonMode()) {
-                            case 2:
-                                toast("建图异常,即将退出当前模式，本次地图无效");
-                                exitModel();
-                                finish();
-                                break;
-                            case 6:
-                                tvTitle.setText("正在采集中...");
-                                waitDialog.dismiss();
-                                myRockerZy.setVisibility(View.VISIBLE);
-                                myRocker.setVisibility(View.VISIBLE);
-                                addPoi.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                    }
-                }
+                initStatusBar();
                 break;
             case notifyMapGenerateProgress:
                 float progress= (float) mainUpDate.getData();
@@ -199,7 +181,34 @@ public class CollectingActivity extends DDRActivity {
         initWaitDialog();
     }
 
-
+    private void initStatusBar() {
+        if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
+            tvTitle.setText("正在自标定中...");
+        } else {
+            if (notifyBaseStatusEx.getMode() == 2) {
+                switch (notifyBaseStatusEx.getSonMode()) {
+                    case 2:
+                        toast("建图异常,即将退出当前模式，本次地图无效");
+                        exitModel();
+                        finish();
+                        break;
+                    case 6:
+                        tvTitle.setText("正在采集中...");
+                        waitDialog.dismiss();
+                        myRockerZy.setVisibility(View.VISIBLE);
+                        myRocker.setVisibility(View.VISIBLE);
+                        addPoi.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        }
+        if (notifyBaseStatusEx.getStopStat()==4|notifyBaseStatusEx.getStopStat()==12){
+            tvStopMove.setVisibility(View.VISIBLE);
+            tvStopMove.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
+        }else {
+            tvStopMove.setVisibility(View.GONE);
+        }
+    }
 
 
     /**

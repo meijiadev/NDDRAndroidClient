@@ -59,8 +59,7 @@ public class TouchEvenHandler {
     public static final int SCALE_BITMAP_IN=6;    // 缩小
     private boolean isAutoRefresh;
     private boolean canRotate=true;             // 默认可旋转
-    private float originalX,originalY;           //最初时图片左上角位于画布
-    // 中的位置
+    private float originalX,originalY;           //最初时图片左上角位于画布中的位置
 
     public TouchEvenHandler(@NotNull View view, Bitmap sourceBitmap, boolean isAutoRefresh) {
         Logger.e("初始化TouchEvenHandler");
@@ -74,9 +73,6 @@ public class TouchEvenHandler {
             view.invalidate();
         }
     }
-
-
-
 
     /**
      * 获取最终用于绘制的矩阵变量

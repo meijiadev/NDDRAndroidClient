@@ -271,10 +271,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         switch (view.getId()) {
             case R.id.bt_create_map:
                 if (!isShowSelected){
-                    if (NotifyBaseStatusEx.getInstance().getMode() == 2) {
-                        Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
-                        startActivity(intent);
-                    } else {
+                    if (notifyBaseStatusEx.getMode()==1){
                         inputDialog=new InputDialog.Builder(getAttachActivity())
                                 .setTitle("采集地图")
                                 .setAutoDismiss(false)
@@ -308,6 +305,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                         inputDialog.dismiss();
                                     }
                                 }).show();
+
+                    }else if (NotifyBaseStatusEx.getInstance().getMode() == 2) {
+                        Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
+                        startActivity(intent);
+                    }else {
+                        toast("非待命模式下无法采图，请先退回到待命模式");
                     }
                 }else {
                     toast("当前批量删除状态，无法进入采集模式");
@@ -829,6 +832,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                     switchMapName = mapInfos.get(position).getMapName();
                                     switchBitmapPath = mapInfos.get(position).getBitmap();
                                     Logger.e("-----把地图切换到：" + switchMapName);
+                                    tcpClient.exitModel();
                                     if (!mapIsUsing){
                                         tcpClient.reqRunControlEx(switchMapName);
                                         waitDialog = new WaitDialog.Builder(getAttachActivity())
@@ -1507,6 +1511,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         }
                     }, 200);
                 }
+
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 break;
             case updateRelocationStatus:

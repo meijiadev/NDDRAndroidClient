@@ -312,8 +312,6 @@ public class MessageRoute {
         }
     }
 
-
-
     /**
      * 序列化要发送的信息
      * @param msg
@@ -432,7 +430,6 @@ public class MessageRoute {
 
     /**
      * 以小端模式将int转成byte[]
-     *
      * @param value
      * @return
      */
