@@ -67,7 +67,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private void init(){
         holder=getHolder();
         holder.addCallback(this);
-        setZOrderOnTop(true);
         holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         mapFileStatus=MapFileStatus.getInstance();
         directionBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
@@ -284,7 +283,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         if (obstacleInfos!=null){
             int size =obstacleInfos.size();
             for (int i=0;i<size;i++){
-                double angle=Math.toRadians(obstacleInfos.get(i).getStartAngle());  //角度转弧度
+                double angle=Math.toRadians(-obstacleInfos.get(i).getStartAngle());  //角度转弧度
                 float distance=obstacleInfos.get(i).getDist();
                 if (distance<1950&&distance>1){
                     distance=distance/100*scale;

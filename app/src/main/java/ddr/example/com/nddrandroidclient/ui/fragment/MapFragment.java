@@ -1506,10 +1506,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             waitDialog.dismiss();
                         }
                     }, 200);
-                }else {
-                    Logger.e("采集完并切换地图");
-                    tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 }
+                tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 break;
             case updateRelocationStatus:
                 relocationStatus= (int) messageEvent.getData();

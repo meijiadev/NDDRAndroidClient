@@ -152,6 +152,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("----------断开连接页面：HomeActivity");
                 netWorkStatusDialog();
                 break;
+            case updateRelocationStatus:
+                int relocationStatus= (int) messageEvent.getData();
+                if (relocationStatus==1&&vpHomePager!=null){
+                    vpHomePager.setCurrentItem(0);
+                }
+                break;
         }
 
     }

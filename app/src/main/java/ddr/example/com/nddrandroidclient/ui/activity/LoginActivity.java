@@ -62,7 +62,7 @@ public  class LoginActivity extends DDRActivity {
     private BaseDialog waitDialog;
     private static final String LAN_IP="192.168.0.95";    //局域网IP
     private int port=28888;
-    private boolean hasReceiveBroadcast=false;            //是否接收到广播
+    //private boolean hasReceiveBroadcast=false;            //是否接收到广播
     private boolean isLan=true;                                //是否是局域网  默认局域网登录
 
 
@@ -70,7 +70,7 @@ public  class LoginActivity extends DDRActivity {
     public void upDate(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateIPList:
-                hasReceiveBroadcast=true;
+                //hasReceiveBroadcast=true;
                 break;
             case updatePort:
                 tcpPort= (int) messageEvent.getData();
@@ -143,7 +143,7 @@ public  class LoginActivity extends DDRActivity {
                     toast("用户名和密码不能为空");
                 }else {
                     if (isLan){                                   //局域网登录
-                        if (hasReceiveBroadcast){
+                        //if (hasReceiveBroadcast){
                             tcpClient.createConnect(LAN_IP,tcpPort);
                             waitDialog=new WaitDialog.Builder(this)
                                     .setMessage("登录中...")
@@ -154,9 +154,9 @@ public  class LoginActivity extends DDRActivity {
                                     waitDialog.dismiss();
                                 }
                                 },5000);
-                        }else {
-                            toast("无法连接，请检查机器人服务是否正常开启！");
-                        }
+                       // }else {
+                            //toast("无法连接，请检查机器人服务是否正常开启！");
+                       // }
                     }else {                                     //广域网登录
                         if (tcpClient.isConnected())
                             tcpClient.disConnect();

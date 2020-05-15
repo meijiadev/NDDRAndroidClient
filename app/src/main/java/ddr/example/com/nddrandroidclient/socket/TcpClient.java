@@ -59,8 +59,6 @@ public class TcpClient extends BaseSocketConnection {
     private byte[] heads=new byte[4];  //存储头部长度信息的字节数组
     private byte [] bodyLenths=new byte[4];        //存储body体的信息长度
 
-
-
     /**
      * 获取客户端
      * @param context
@@ -156,6 +154,7 @@ public class TcpClient extends BaseSocketConnection {
                 if (activity.getLocalClassName().contains("LoginActivity")){
                     disConnect();
                 }else {
+                    Logger.e("网络连接断开！");
                     EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.notifyTCPDisconnected));
                 }
             }
