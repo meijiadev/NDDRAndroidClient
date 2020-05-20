@@ -110,7 +110,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
      * 停止绘制
      */
     public void onStop(){
-        if (drawRobotThread!=null){
+        if (drawRobotThread!=null&&isRunning){
             drawRobotThread.stopThread();
         }
     }

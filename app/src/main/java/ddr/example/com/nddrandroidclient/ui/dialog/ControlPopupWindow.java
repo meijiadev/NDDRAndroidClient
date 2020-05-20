@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hjq.toast.ToastUtils;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
@@ -44,6 +45,7 @@ public class ControlPopupWindow {
     private ImageView iv_quit_yk;
     private CustomPopuWindow customPopuWindow;
     private TcpClient tcpClient;
+    private boolean isShowToast;
 
     private Context context;
     public ControlPopupWindow(Context context) {
@@ -106,6 +108,12 @@ public class ControlPopupWindow {
             public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
                 Logger.e("------" + seekBar.getLeftSeekBar().getProgress());
                 maxSpeed = seekBar.getLeftSeekBar().getProgress();
+                if (maxSpeed<=0){
+                    isShowToast=true;
+                }else {
+                    isShowToast=false;
+
+                }
                 tvSpeed.setText(showSpeed(maxSpeed));
 
             }
@@ -237,6 +245,9 @@ public class ControlPopupWindow {
                     if (a <= 5) {
                         //Logger.e("----a:" + a);
                         tcpClient.sendSpeed(lineSpeed, palstance);
+                    }
+                    if (isShowToast){
+                        ToastUtils.show("当前速度为0，无法移动");
                     }
                 } else {
                     a = 0;

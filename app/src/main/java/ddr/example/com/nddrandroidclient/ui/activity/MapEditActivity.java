@@ -126,9 +126,6 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.tv_revocation_de)
     TextView tvRevocationDe;               //原图去噪 撤销删除上次的区域
 
-
-
-
     @BindView(R.id.tv_selected_point)
     TextView tvSelectedPoint;          // 是否显示目标点列表
     private boolean checkablePoint=false;    //是否勾选目标点建路径
@@ -861,11 +858,13 @@ public class MapEditActivity extends DDRActivity {
             customPopuWindow.dissmiss();
             switch (position){
                 case 0:
+                    zmap.setCanRotate(true);
                     isDenoising=false;
                     tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
                     break;
                 case 1:
                     isDenoising=true;
+                    zmap.setCanRotate(false);
                     tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);
                     break;
             }

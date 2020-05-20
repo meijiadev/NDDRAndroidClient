@@ -462,7 +462,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        touchEvenHandler.touchEvent(event);
+        if (touchEvenHandler!=null){
+            touchEvenHandler.touchEvent(event);
+        }else {
+            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+        }
         return true;
     }
 }

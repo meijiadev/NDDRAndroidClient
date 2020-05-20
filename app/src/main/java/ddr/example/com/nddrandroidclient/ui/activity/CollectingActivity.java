@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
@@ -61,7 +63,7 @@ public class CollectingActivity extends DDRActivity {
     @BindView(R.id.collect3)
     CollectingView3 collectingView3;
     @BindView(R.id.process_bar)
-    NumberProgressBar processBar;
+    ProgressBar processBar;
     @BindView(R.id.tv_speed)
     TextView tvSpeed;
     @BindView(R.id.seek_bar)
@@ -84,6 +86,8 @@ public class CollectingActivity extends DDRActivity {
     TextView tvTitle;
     @BindView(R.id.tv_save_map)
     TextView tvSaveMap;
+    @BindView(R.id.layout_collect)
+    LinearLayout layoutCollect;
 
 
     private float lineSpeed, palstance;  //线速度 ，角速度
@@ -91,11 +95,8 @@ public class CollectingActivity extends DDRActivity {
     private boolean isforward, isGoRight; //左右摇杆当前的方向
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private TcpClient tcpClient;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private String collectName;                  //采集的地图名
-    private BaseDialog waitDialog;
-
+    private BaseDialog waitDialog,waitDialog1;
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
     private NotifyLidarPtsEntity notifyLidarPtsEntity1;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
@@ -107,6 +108,7 @@ public class CollectingActivity extends DDRActivity {
     private float ratio=1;         //地图比例
     private int measureWidth=1000, measureHeight=1000;
     private boolean isStartDraw=false;        //是否开始绘制
+    private int clicks;                       //点击次数
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
@@ -173,9 +175,6 @@ public class CollectingActivity extends DDRActivity {
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         processBar.setMax(100);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = sharedPreferences.edit();
-        maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
         initWaitDialog();
@@ -193,8 +192,8 @@ public class CollectingActivity extends DDRActivity {
                         finish();
                         break;
                     case 6:
-                        tvTitle.setText("正在采集中...");
                         waitDialog.dismiss();
+                        tvTitle.setText("正在采集中...");
                         myRockerZy.setVisibility(View.VISIBLE);
                         myRocker.setVisibility(View.VISIBLE);
                         addPoi.setVisibility(View.VISIBLE);
@@ -227,8 +226,6 @@ public class CollectingActivity extends DDRActivity {
             @Override
             public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
                 if (!ishaveChecked) {
-                    editor.putFloat("speed", (float) maxSpeed);                 //保存最近的改变速度
-                    editor.commit();
                     tvSpeed.setText(String.valueOf(maxSpeed));
                 }
                 Logger.e("------" + seekBar.getLeftSeekBar().getProgress());
@@ -247,7 +244,7 @@ public class CollectingActivity extends DDRActivity {
         });
     }
 
-    @OnClick({R.id.add_poi,R.id.tv_detection,R.id.tv_save_map,R.id.iv_back})
+    @OnClick({R.id.add_poi,R.id.tv_detection,R.id.tv_save_map,R.id.iv_back,R.id.tv_hide})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_back:
@@ -295,6 +292,15 @@ public class CollectingActivity extends DDRActivity {
                         .build();
                 tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDetectLoop);
                 break;
+            case R.id.tv_hide:
+                if (layoutCollect.getVisibility()==View.GONE){
+                    clicks++;
+                    if (clicks>=6){
+                        layoutCollect.setVisibility(View.VISIBLE);
+                        clicks=0;
+                    }
+                }
+                break;
         }
 
 
@@ -309,7 +315,6 @@ public class CollectingActivity extends DDRActivity {
         fixedSpeed.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             if (isChecked) {
                 ishaveChecked = isChecked;
-                maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 Logger.e("-----" + maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 seekBar.setEnabled(false);
@@ -317,7 +322,6 @@ public class CollectingActivity extends DDRActivity {
             } else {
                 seekBar.setEnabled(true);
                 ishaveChecked = isChecked;
-                maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 seekBar.setProgress((float) maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 toast("取消锁定");
@@ -329,12 +333,11 @@ public class CollectingActivity extends DDRActivity {
 
     /**
      * 设置进度条的 进度和动画效果
-     *
      * @param view
      *
      * @param mProgressBar
      */
-    private void setAnimation(final NumberProgressBar view, final int mProgressBar, int time) {
+    private void setAnimation(final ProgressBar view, final int mProgressBar, int time) {
         ValueAnimator animator = ValueAnimator.ofInt(0, mProgressBar).setDuration(time);
 
         animator.addUpdateListener((valueAnimator) -> {
@@ -511,8 +514,6 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor.putFloat("speed", (float) maxSpeed);
-        editor.commit();
         timer.cancel();
         task.cancel();
         tcpClient.requestFile();
@@ -530,9 +531,9 @@ public class CollectingActivity extends DDRActivity {
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog1=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
         postDelayed(()->{
-            if (waitDialog.isShowing()){
+            if (waitDialog1.isShowing()){
                 toast("网络无法连接，请退出重连！");
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);

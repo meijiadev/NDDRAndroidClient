@@ -121,7 +121,7 @@ public class ZoomImageView extends View {
     }
 
     /**
-     *
+     *初始化参数
      */
     private void initAffine(){
         touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
@@ -134,6 +134,26 @@ public class ZoomImageView extends View {
         r11=affine_mat.getR22();
         t1=affine_mat.getTy();
         invalidate();
+    }
+
+    /**
+     * 设置图片是否可以旋转
+     * @param canRotate
+     */
+    public void setCanRotate(boolean canRotate){
+        if (touchEvenHandler!=null){
+            touchEvenHandler.setCanRotate(canRotate);
+            touchEvenHandler.initMatrix();
+        }
+    }
+
+    /**
+     * 重置矩阵
+     */
+    public void initMatrix(){
+        if (touchEvenHandler!=null){
+            touchEvenHandler.initMatrix();
+        }
     }
 
 
@@ -246,13 +266,17 @@ public class ZoomImageView extends View {
      * @return
      */
     public boolean onTouchEvent(MotionEvent event) {
-        touchEvenHandler.touchEvent(event);
-        if (event.getAction()==MotionEvent.ACTION_UP){
-            //当手指抬起时
-            LineView.getInstance(context).onClick(this,event.getX(),event.getY());
-            PointView.getInstance(context).onClick(this,event.getX(),event.getY());
+        if (touchEvenHandler!=null){
+            touchEvenHandler.touchEvent(event);
+            if (event.getAction()==MotionEvent.ACTION_UP){
+                //当手指抬起时
+                LineView.getInstance(context).onClick(this,event.getX(),event.getY());
+                PointView.getInstance(context).onClick(this,event.getX(),event.getY());
+            }
+            GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
+        }else {
+            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
         }
-        GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
         return true;
     }
 

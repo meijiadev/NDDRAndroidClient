@@ -408,7 +408,7 @@ public class MessageRoute {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
 
-        } catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e)   {
             e.printStackTrace();
             Logger.e("bytes为空！");
         }
@@ -418,6 +418,7 @@ public class MessageRoute {
 
     /**
      * 以大端模式将int转成byte[]
+     *
      */
     public static byte[] intToBytesBig(int value) {
         byte[] src = new byte[4];

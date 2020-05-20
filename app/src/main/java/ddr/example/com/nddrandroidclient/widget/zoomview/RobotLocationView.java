@@ -128,23 +128,23 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * @return
      */
     public XyEntity toXorY(float x, float y){
-        float x1=(float)( r00*x+r01*y+t0);
-        float y1=(float) (r10*x+r11*y+t1);
+        float x1=(float)( r00*x+r01*y+t0)*touchEvenHandler.getInitRatio();
+        float y1=(float) (r10*x+r11*y+t1)*touchEvenHandler.getInitRatio();
         return new XyEntity(x1,y1);
     }
 
-    /**
+  /*  *//**
      * 从世界坐标直接得到相对于画布的坐标
      * @param x
      * @param y
      * @return
-     */
+     *//*
     public XyEntity toCanvas(float x,float y){
         //世界坐标转成相对于图片位置的像素坐标
         XyEntity xyEntity=toXorY(x,y);
         //再将相对于图片的位置转成相对于画布的位置
         return touchEvenHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
-    }
+    }*/
     /**
      * 将相对于画布坐标转成世界坐标
      * @param x
@@ -192,6 +192,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      */
     public XyEntity getRobotLocationInWindow(){
         XyEntity xyEntity=toXorY(0,0);
+        //Logger.e("---------x"+touchEvenHandler.getOriginalX()+";"+touchEvenHandler.getOriginalY());
         float x=xyEntity.getX()+touchEvenHandler.getOriginalX();
         float y=xyEntity.getY()+touchEvenHandler.getOriginalY();
         xyEntity.setX(x);
@@ -283,7 +284,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         if (obstacleInfos!=null){
             int size =obstacleInfos.size();
             for (int i=0;i<size;i++){
-                double angle=Math.toRadians(-obstacleInfos.get(i).getStartAngle());  //角度转弧度
+                double angle=Math.toRadians(obstacleInfos.get(i).getStartAngle());  //角度转弧度
                 float distance=obstacleInfos.get(i).getDist();
                 if (distance<1950&&distance>1){
                     distance=distance/100*scale;
@@ -328,7 +329,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        touchEvenHandler.touchEvent(event);
+        if (touchEvenHandler!=null){
+            touchEvenHandler.touchEvent(event);
+        }else {
+            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+        }
         return true;
     }
 

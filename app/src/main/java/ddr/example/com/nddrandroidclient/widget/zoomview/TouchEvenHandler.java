@@ -21,7 +21,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public class TouchEvenHandler {
     private View view;
     private Bitmap sourceBitmap;
-    private float initRatio;
+    private float initRatio;             //最初的缩放大小
     // Matrix getValues 矩阵参数
     private float[] values=new float[9];
     private static final int MSCALE_X=0;
@@ -41,6 +41,7 @@ public class TouchEvenHandler {
     private float rotation;                //    正在旋转中变化的角度
     private Matrix matrix = new Matrix();
     private Matrix matrix1 = new Matrix();
+    private Matrix originalMatrix=new Matrix();        //地图最初显示时的矩阵
     //用于保存matrix
     private Matrix savedMatrix = new Matrix();
     // 检测是否出界
@@ -74,6 +75,7 @@ public class TouchEvenHandler {
         }
     }
 
+
     /**
      * 获取最终用于绘制的矩阵变量
      * @return
@@ -88,6 +90,17 @@ public class TouchEvenHandler {
      */
     public void setCanRotate(boolean canRotate) {
         this.canRotate = canRotate;
+        Logger.e("是否可以旋转"+canRotate);
+    }
+
+    /**
+     * 将矩阵还原最初
+     */
+    public void initMatrix(){
+        matrix.set(originalMatrix);
+        if (!isAutoRefresh){
+            view.invalidate();
+        }
     }
 
     /**
@@ -96,6 +109,14 @@ public class TouchEvenHandler {
      */
     public float getOriginalX() {
         return originalX;
+    }
+
+    /**
+     * 获得最初的缩放值
+     * @return
+     */
+    public float getInitRatio() {
+        return initRatio;
     }
 
     /**
@@ -325,6 +346,7 @@ public class TouchEvenHandler {
             }
             matrix.set(matrix1);
             matrix.getValues(values);
+            originalMatrix.set(matrix);
             originalX=getTranslateX();
             originalY=getTranslateY();
         }

@@ -148,8 +148,6 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.47'
     // openGl绘制库
     implementation 'com.github.ChillingVan:android-openGL-canvas:v1.4.2.2'
-     //进度控制条
-    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     //滑块控制
     implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
     // 下拉框
