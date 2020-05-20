@@ -56,7 +56,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
     private void init(){
         holder=getHolder();
         holder.addCallback(this);
-        setZOrderOnTop(true);
+        //setZOrderOnTop(true);
         holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         matrix=new Matrix();
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);

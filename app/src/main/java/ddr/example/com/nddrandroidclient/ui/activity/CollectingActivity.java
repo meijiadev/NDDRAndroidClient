@@ -2,17 +2,13 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.google.protobuf.ByteString;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
@@ -64,6 +60,10 @@ public class CollectingActivity extends DDRActivity {
     CollectingView3 collectingView3;
     @BindView(R.id.process_bar)
     ProgressBar processBar;
+    @BindView(R.id.layout_progress)
+    RelativeLayout layoutProgress;
+    @BindView(R.id.tv_progress)
+    TextView tvProgress;
     @BindView(R.id.tv_speed)
     TextView tvSpeed;
     @BindView(R.id.seek_bar)
@@ -119,6 +119,7 @@ public class CollectingActivity extends DDRActivity {
             case notifyMapGenerateProgress:
                 float progress= (float) mainUpDate.getData();
                 setAnimation(processBar,(int) (progress*100),0);
+                tvProgress.setText((int) (progress*100)+"%");
                 if (progress==1.0f){
                     tvTitle.setText("建图完成");
                     postDelayed(()->{
@@ -272,7 +273,7 @@ public class CollectingActivity extends DDRActivity {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 exitModel();
-                                processBar.setVisibility(View.VISIBLE);
+                                layoutProgress.setVisibility(View.VISIBLE);
                                 stopDraw();
                             }
                             @Override
@@ -297,6 +298,12 @@ public class CollectingActivity extends DDRActivity {
                     clicks++;
                     if (clicks>=6){
                         layoutCollect.setVisibility(View.VISIBLE);
+                        clicks=0;
+                    }
+                }else {
+                    clicks++;
+                    if (clicks>=6){
+                        layoutCollect.setVisibility(View.GONE);
                         clicks=0;
                     }
                 }
