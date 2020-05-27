@@ -266,16 +266,18 @@ public class ZoomImageView extends View {
      * @return
      */
     public boolean onTouchEvent(MotionEvent event) {
-        if (touchEvenHandler!=null){
-            touchEvenHandler.touchEvent(event);
-            if (event.getAction()==MotionEvent.ACTION_UP){
-                //当手指抬起时
-                LineView.getInstance(context).onClick(this,event.getX(),event.getY());
-                PointView.getInstance(context).onClick(this,event.getX(),event.getY());
+        if (sourceBitmap!=null){
+            if (touchEvenHandler!=null){
+                touchEvenHandler.touchEvent(event);
+                if (event.getAction()==MotionEvent.ACTION_UP){
+                    //当手指抬起时
+                    LineView.getInstance(context).onClick(this,event.getX(),event.getY());
+                    PointView.getInstance(context).onClick(this,event.getX(),event.getY());
+                }
+                GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
+            }else {
+                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
             }
-            GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
-        }else {
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
         }
         return true;
     }

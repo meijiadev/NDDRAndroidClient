@@ -329,10 +329,12 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if (touchEvenHandler!=null){
-            touchEvenHandler.touchEvent(event);
-        }else {
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+        if (sourceBitmap!=null){
+            if (touchEvenHandler!=null){
+                touchEvenHandler.touchEvent(event);
+            }else {
+                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            }
         }
         return true;
     }

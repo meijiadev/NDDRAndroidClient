@@ -539,7 +539,9 @@ enum TaskState
 	eTaskError = 0;
 	eTaskWaitingRun = 1; // 等待运行
 	eTaskRuning = 2; // 运行中
-	eTaskRunEnd = 3; // 运行完了或者已终止
+	eTaskRunEnd = 3; // 运行完了
+	eTaskRunTermination = 4; // 已终止
+	eTaskRunHang = 5; // 挂起
 }
 
 /*

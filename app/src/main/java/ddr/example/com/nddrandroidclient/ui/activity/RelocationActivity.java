@@ -205,8 +205,10 @@ public class RelocationActivity extends DDRActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected())
-        netWorkStatusDialog();
+        if (tcpClient!=null&&!tcpClient.isConnected()){
+            Logger.e("网络已断开");
+            netWorkStatusDialog();
+        }
     }
 
     /**

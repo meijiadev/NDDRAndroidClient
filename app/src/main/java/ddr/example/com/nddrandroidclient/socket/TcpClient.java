@@ -76,9 +76,6 @@ public class TcpClient extends BaseSocketConnection {
         return tcpClient;
     }
 
-    public static TcpClient getTcpClient() {
-        return tcpClient;
-    }
 
     private TcpClient(Context context, BaseMessageDispatcher baseMessageDispatcher) {
         this.context=context.getApplicationContext();         //使用Application的context
@@ -122,7 +119,7 @@ public class TcpClient extends BaseSocketConnection {
          */
         @Override
         public void onSocketConnectionSuccess(ConnectionInfo info, String action) {
-            setConnected(true);
+            isConnected=true;
             Logger.e("--------连接成功");
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
             sendHeartBeat();
@@ -141,7 +138,7 @@ public class TcpClient extends BaseSocketConnection {
          */
         @Override
         public void onSocketConnectionFailed(ConnectionInfo info, String action, Exception e) {
-            setConnected(false);
+            isConnected=false;
         }
 
         /**
@@ -152,7 +149,7 @@ public class TcpClient extends BaseSocketConnection {
          */
         @Override
         public void onSocketDisconnection(ConnectionInfo info, String action, Exception e) {
-            setConnected(false);
+            isConnected=false;
             Activity activity=ActivityStackManager.getInstance().getTopActivity();
             if (activity!=null){
                 if (activity.getLocalClassName().contains("LoginActivity")){
@@ -172,6 +169,7 @@ public class TcpClient extends BaseSocketConnection {
          */
         @Override
         public void onSocketReadResponse(ConnectionInfo info, String action, OriginalData data) {
+            isConnected=true;
             byte[] headBytes=data.getHeadBytes();
             System.arraycopy(headBytes,8,heads,0,4);
             int headLength=bytesToIntLittle(heads,0);
@@ -268,7 +266,7 @@ public class TcpClient extends BaseSocketConnection {
         if (manager!=null){
             manager.unRegisterReceiver(socketCallBack);
             manager.disconnect();
-            setConnected(false);
+            isConnected=false;
             manager=null;
         }
     }

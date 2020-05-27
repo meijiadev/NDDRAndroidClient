@@ -162,7 +162,7 @@ message rspObstacleInfo
 {
 	message ObstacleInfo
 	{
-		float startAngle = 1;   //开始角度
+		float startAngle = 1;  
 		float endAngle = 2;
 		float dist = 3;
 	}

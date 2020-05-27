@@ -693,6 +693,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void onResume() {
         super.onResume();
         if (!tcpClient.isConnected()){
+            Logger.e("网络已断开");
             netWorkStatusDialog();
         }
     }

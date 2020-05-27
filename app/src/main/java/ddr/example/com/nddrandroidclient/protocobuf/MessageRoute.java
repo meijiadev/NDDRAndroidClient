@@ -349,7 +349,12 @@ public class MessageRoute {
             byte[]bHeadE=new byte[bHeadLength+5];
             if (Encrypt.Txt_Encrypt(bHead,bHeadLength,bHeadE,bHeadE.length)){
                 bHeadE=Encrypt.getTxt_Encrypt();
-                System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
+                try {
+                    System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
+                }catch (ArrayIndexOutOfBoundsException e){
+                    e.printStackTrace();
+                    return null;
+                }
             }else {
                 Logger.e("Txt_Encrypt Error");
                 return null;
@@ -371,11 +376,16 @@ public class MessageRoute {
                 }
             }
         }else {
-            System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
-            System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
-            System.arraycopy(bHead,0,bytes,12,bHeadLength);
-            System.arraycopy(bBody,0,bytes,12+bHeadLength,bBody.length);
-            return bytes;
+            try {
+                System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
+                System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
+                System.arraycopy(bHead,0,bytes,12,bHeadLength);
+                System.arraycopy(bBody,0,bytes,12+bHeadLength,bBody.length);
+                return bytes;
+            }catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+                return null;
+            }
         }
         return bytes;
 
@@ -398,7 +408,7 @@ public class MessageRoute {
                 Method method=clazz.getDeclaredMethod("parseFrom",byte[].class);
                 return method.invoke(null,bytes);
             }else {
-                Method method=clazz.getMethod("getDefaultInstance",null);
+                Method method=clazz.getMethod("getDefaultInstance", null);
                 return method.invoke(null,null);
             }
         } catch (ClassNotFoundException e) {
@@ -407,8 +417,7 @@ public class MessageRoute {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-
-        } catch (InvocationTargetException e)   {
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
             Logger.e("bytes为空！");
         }

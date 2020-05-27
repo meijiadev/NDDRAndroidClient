@@ -1272,11 +1272,14 @@ public class MapEditActivity extends DDRActivity {
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected())
-        netWorkStatusDialog();
+        if (tcpClient!=null&&!tcpClient.isConnected()){
+            Logger.e("----连接断开");
+            netWorkStatusDialog();
+        }
     }
 
 

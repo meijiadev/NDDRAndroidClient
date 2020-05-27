@@ -49,7 +49,7 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
         return clientMessageDispatcher;
     }
 
-    public ClientMessageDispatcher(){
+    private ClientMessageDispatcher(){
         BaseCmd.HeartBeat heartBeat=BaseCmd.HeartBeat.newBuilder().build();
         m_ProcessorMap.put(heartBeat.getClass().toString(),new RspHeartBeatProcess());
 

@@ -904,7 +904,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         }else{
             reqCmdRelocation1();
         }
-
     }
     private void reqCmdRelocation1(){
         BaseCmd.reqCmdReloc reqCmdReloc=BaseCmd.reqCmdReloc.newBuilder()

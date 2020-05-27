@@ -88,6 +88,8 @@ public class CollectingActivity extends DDRActivity {
     TextView tvSaveMap;
     @BindView(R.id.layout_collect)
     LinearLayout layoutCollect;
+    @BindView(R.id.tv_cs)
+    TextView tvCs;
 
 
     private float lineSpeed, palstance;  //线速度 ，角速度
@@ -144,6 +146,9 @@ public class CollectingActivity extends DDRActivity {
                         break;
                     case 2:                 //  距离太近不需要检测回环
                         toast("距离太近不需要检测回环");
+                        break;
+                    case 3:
+                        toast("正在检测中，请勿重复点击!");
                         break;
                 }
                 break;
@@ -525,13 +530,21 @@ public class CollectingActivity extends DDRActivity {
         task.cancel();
         tcpClient.requestFile();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+        if (collectingView3!=null){
+            if (collectingView3.isRunning){
+                Logger.e("非正常退出采集模式");
+                stopDraw();
+            }
+        }
 
     }
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected())
+        if (tcpClient!=null&&!tcpClient.isConnected()){
+            Logger.e("网络无法连接!");
             netWorkStatusDialog();
+        }
     }
 
     /**
@@ -548,6 +561,12 @@ public class CollectingActivity extends DDRActivity {
         },6000);
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
     @Override
     public boolean statusBarDarkFont() {
         return false;
@@ -558,9 +577,11 @@ public class CollectingActivity extends DDRActivity {
         switch (mainUpDate.getType()){
             case receivePointCloud:
                 if (NotifyBaseStatusEx.getInstance().getSonMode()==6){
+                    //long startTime=System.currentTimeMillis();
                     posX=notifyLidarPtsEntity.getPosX();
                     posY=notifyLidarPtsEntity.getPosY();
                     radian=notifyLidarPtsEntity.getPosdirection();
+                    //tvCs.setText("x:"+posX+"y:"+posY+"radian:"+radian);
                     angle=radianToangle(radian);
                     notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
                     notifyLidarPtsEntity1.setPosX(notifyLidarPtsEntity.getPosX());
@@ -579,6 +600,7 @@ public class CollectingActivity extends DDRActivity {
                 break;
         }
     }
+
     /**
      * 弧度转角度
      */
