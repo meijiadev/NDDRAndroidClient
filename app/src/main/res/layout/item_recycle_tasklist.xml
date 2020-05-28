@@ -2,69 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp">
-    <ddr.example.com.nddrandroidclient.widget.textview.GridImageView
-        android:id="@+id/iv_check"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="10dp"
-        />
+
     <TextView
         android:id="@+id/tv_map_list"
         android:layout_width="122dp"
         android:layout_height="34dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="85dp"
         android:textSize="12sp"
         android:textColor="#eaf1f5"
         android:text="地图列表-1"
         android:gravity="center"
         />
-<!--    android:layout_toRightOf="@+id/iv_check"-->
-
-    <TextView
-        android:id="@+id/tv_task_time"
+    <LinearLayout
+        android:id="@+id/layout_time"
         android:layout_width="175dp"
         android:layout_height="34dp"
-        android:background="#161718"
+        android:orientation="horizontal"
         android:layout_toRightOf="@+id/tv_map_list"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="29dp"
-        android:paddingLeft="18dp"
-        android:paddingTop="7dp"
-        android:textColor="#eaf1f5"
-        />
-    <ImageView
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:src="@mipmap/set_task_time"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="378dp"/>
-    <TextView
-        android:layout_width="1.5dp"
-        android:layout_height="16dp"
-        android:layout_toRightOf="@+id/tv_map_list"
-        android:background="#4d575c"
-        android:layout_marginLeft="165dp"
-        android:layout_marginTop="20dp"
-        />
-
-   <!-- <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
-        android:id="@+id/task_num_check"
-        android:layout_width="106dp"
-        android:layout_height="34dp"
-        android:layout_toRightOf="@id/tv_task_time"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="63dp"
-        android:gravity="center"/>-->
+        android:background="#161718">
+        <TextView
+            android:id="@+id/tv_task_time"
+            android:layout_width="138dp"
+            android:layout_height="34dp"
+            android:background="#161718"
+            android:textColor="#eaf1f5"
+            android:gravity="center"
+            />
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="16dp"
+            android:background="#4d575c"
+            android:layout_marginTop="9dp"
+            />
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@mipmap/set_task_time"
+            />
+    </LinearLayout>
     <TextView
         android:id="@+id/tv_task_status"
         android:layout_width="80dp"
         android:layout_height="34dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/tv_task_time"
+        android:layout_toRightOf="@id/layout_time"
         android:layout_marginLeft="221.5dp"
         android:gravity="center"
         android:text="待命中"

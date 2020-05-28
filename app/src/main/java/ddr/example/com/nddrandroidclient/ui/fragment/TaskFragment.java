@@ -123,10 +123,9 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
 
         onItemClick(1);
     }
+
+
     TextView tv_task_time;
-    TextView tv_task_pause;
-    GridImageView gridImageView;
-    DDREditText task_num_check;
     private int mPosition;
     public void onItemClick(int type){
         switch (type){
@@ -142,31 +141,10 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                     tv_task_time= (TextView) view;
                                     showTimePopupWindow(tv_task_time,1);
                                     break;
-                                case R.id.iv_check:
-                                    gridImageView= (GridImageView) view;
-                                    Logger.e("gggg"+gridImageView.getSelected());
-                                    if (!gridImageView.getSelected()){
-                                        Logger.e("未在列表中");
-                                        gridImageView.setSelected(true);
-                                        gridImageView.setBackgroundResource(R.mipmap.intask_check);
-                                        taskModeList.get(position).setType(2);
-                                        taskModeList.get(position).setTaskState(1);
-                                        toast("加入定时队列，记得点保存哦");
-                                    }else {
-                                        Logger.e("在列表中");
-                                        toast("退出定时队列，记得点保存哦");
-                                        gridImageView.setSelected(false);
-                                        gridImageView.setBackgroundResource(R.mipmap.intask_def);
-                                        taskModeList.get(position).setType(0);
-                                        taskModeList.get(position).setTaskState(3);
-                                    }
-                                    break;
                                     //已修改成“修改”任务
                                 case R.id.tv_task_pause:
-                                    Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
-                                    intent.putExtra("viewType",REVAMP_TASK);
-                                    intent.putExtra("taskMode",position);
-                                    startActivity(intent);
+                                    TextView taskPause= (TextView) view;
+
                                     break;
                                     // 已修改成“删除”任务
                                 case R.id.tv_task_stop:

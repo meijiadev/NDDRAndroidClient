@@ -30,10 +30,11 @@ import ddr.example.com.nddrandroidclient.widget.view.NumEdit;
  * desc : 任务列表适配器
  */
 public class TaskAdapter extends BaseAdapter<TaskMode> {
-    public GridImageView gridImageView;
-    public NumEdit numEdit;
+    //public GridImageView gridImageView;
+   // public NumEdit numEdit;
     public TextView tv_task_status;
     public TextView tv_task_time;
+    public TextView tvPause;
     public TaskAdapter(int layoutResId) {
         super(layoutResId);
     }
@@ -45,7 +46,6 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
     @Override
     public void setNewData(@Nullable List<TaskMode> data) {
         super.setNewData(data);
-        Logger.e("------"+data.size());
     }
 
     /**
@@ -74,37 +74,31 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 }
                 break;
             case R.layout.item_recycle_tasklist:
-                 gridImageView=helper.getView(R.id.iv_check);
                  tv_task_status=helper.getView(R.id.tv_task_status);
                  tv_task_time=helper.getView(R.id.tv_task_time);
-               switch (item.getType()){
-                   case 0:
-                       Logger.e("未在列表中");
-                       gridImageView.setBackgroundResource(R.mipmap.intask_def);
-                       gridImageView.setSelected(false);
-                       break;
-                   case 1:
-                       Logger.e("临时列表中");
-                       gridImageView.setBackgroundResource(R.mipmap.intask_def);
-                       gridImageView.setSelected(false);
-                       break;
-                   case 2:
-                       Logger.e("在列表中");
-                       gridImageView.setBackgroundResource(R.mipmap.intask_check);
-                       gridImageView.setSelected(true);
-                       break;
-               }
+                 tvPause=helper.getView(R.id.tv_task_pause);
+                 Logger.e("-------TaskState:"+item.getTaskState());
                switch (item.getTaskState()){
                    case 0:
+                   case 4:
+                       tv_task_status.setText("已终止");
+                       tvPause.setText("恢复");
                        break;
                    case 1:
-                       tv_task_status.setText("等待运行");
+                       tv_task_status.setText("等待执行");
+                       tvPause.setText("停止");
                        break;
                    case 2:
-                       tv_task_status.setText("运行中");
+                       tv_task_status.setText("正在执行");
+                       tvPause.setText("暂停");
                        break;
                    case 3:
-                       tv_task_status.setText("已终止");
+                       tv_task_status.setText("执行完毕");
+                       tvPause.setText("恢复");
+                       break;
+                   case 5:
+                       tv_task_status.setText("挂起");
+                       tvPause.setText("恢复");
                        break;
                }
                 String starth=null;
@@ -135,7 +129,7 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 taskName1=taskName1.replaceAll("DDRTask_","");
                 taskName1=taskName1.replaceAll(".task","");
                 helper.setText(R.id.tv_map_list,taskName1)
-                        .addOnClickListener(R.id.tv_task_time,R.id.iv_check,R.id.tv_task_pause,R.id.tv_task_stop)
+                        .addOnClickListener(R.id.layout_time,R.id.tv_task_pause,R.id.tv_task_stop)
                         .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
                 break;
         }
@@ -145,7 +139,6 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
     @Nullable
     @Override
     public TaskMode getItem(int position) {
-        Logger.e("---------:"+position);
         return super.getItem(position);
     }
 }
