@@ -83,22 +83,27 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                    case 4:
                        tv_task_status.setText("已终止");
                        tvPause.setText("恢复");
+                       tvPause.setTextColor(Color.WHITE);
                        break;
                    case 1:
                        tv_task_status.setText("等待执行");
                        tvPause.setText("停止");
+                       tvPause.setTextColor(Color.WHITE);
                        break;
                    case 2:
                        tv_task_status.setText("正在执行");
                        tvPause.setText("暂停");
+                       tvPause.setTextColor(Color.WHITE);
                        break;
                    case 3:
                        tv_task_status.setText("执行完毕");
                        tvPause.setText("恢复");
+                       tvPause.setTextColor(Color.parseColor("#99ffffff"));
                        break;
                    case 5:
                        tv_task_status.setText("挂起");
                        tvPause.setText("恢复");
+                       tvPause.setTextColor(Color.WHITE);
                        break;
                }
                 String starth=null;

@@ -10,5 +10,15 @@
     <string name="crash_error_details">错误详情</string>
     <string name="crash_error_info">错误信息</string>
     <string name="crash_copy_log">复制日志</string>
-    <string name="crash_close">关闭</string>
+    <string name="crash_close">关闭</string>\
+    <string name="common_hour">时</string>
+    <string name="common_minute">分</string>
+    <string name="common_second">秒</string>
+
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="time_next">下一步</string>
+    <string name="time_last">上一步</string>
+    <string name="time_start_title">请选择开始时间</string>
+    <string name="time_end_time">请选择结束时间</string>
 </resources>

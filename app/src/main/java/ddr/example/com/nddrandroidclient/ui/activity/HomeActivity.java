@@ -758,7 +758,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         Logger.e("接受AI广播");
         udpClient= UdpClient.getInstance(this,ClientMessageDispatcher.getInstance());
         try {
-                udpClient.connect(aiPort);
+            udpClient.connect(aiPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
