@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ddr.example.com.nddrandroidclient">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,14 +16,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:usesCleartextTraffic="true"
+        tools:ignore="LockedOrientationActivity"
         android:theme="@style/AppTheme">
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.HomeActivity"
-            android:screenOrientation="landscape"
-            >
+            android:screenOrientation="landscape">
         </activity>
         <activity android:name="ddr.example.com.nddrandroidclient.ui.activity.SplashActivity"
             android:theme="@style/SplashTheme"
-            android:screenOrientation="landscape">
+            android:screenOrientation="fullSensor">
             <!--程序入口-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

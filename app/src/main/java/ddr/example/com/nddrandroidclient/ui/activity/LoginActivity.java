@@ -151,6 +151,7 @@ public  class LoginActivity extends DDRActivity {
                 }else {
                     if (isLan){                                   //局域网登录
                         //if (hasReceiveBroadcast){
+                        if (tcpClient.isConnected()) tcpClient.disConnect();
                             tcpClient.createConnect(LAN_IP,tcpPort);
                             waitDialog=new WaitDialog.Builder(this)
                                     .setMessage("登录中...")

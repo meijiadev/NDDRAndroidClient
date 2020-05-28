@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
@@ -46,6 +47,8 @@ import ddr.example.com.nddrandroidclient.widget.zoomview.TouchEvenHandler;
  * time: 2020/5/12
  */
 public class MapImageView extends SurfaceView implements SurfaceHolder.Callback {
+    // Matrix getValues 矩阵参数
+    private float[] values=new float[9];
     private TouchEvenHandler touchEvenHandler;
     private SurfaceHolder holder;
     private int mBackColor = Color.TRANSPARENT;       //背景色透明
@@ -215,8 +218,8 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         startBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.start_default);
         endBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.end_defalut);
-        directionW=directionBitmap.getWidth();
-        directionH=directionBitmap.getHeight();
+        /*directionW=directionBitmap.getWidth();
+        directionH=directionBitmap.getHeight();*/
     }
 
     /**
@@ -225,13 +228,17 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     private void initAffine(){
         touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
         //touchEvenHandler.setCanRotate(false);
-        DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
-        r00=affine_mat.getR11();
-        r01=affine_mat.getR12();
-        t0=affine_mat.getTx();
-        r10=affine_mat.getR21();
-        r11=affine_mat.getR22();
-        t1=affine_mat.getTy();
+        try {
+            DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
+            r00=affine_mat.getR11();
+            r01=affine_mat.getR12();
+            t0=affine_mat.getTx();
+            r10=affine_mat.getR21();
+            r11=affine_mat.getR22();
+            t1=affine_mat.getTy();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
     /**
      * 世界坐标——>相对于图片像素坐标
@@ -264,24 +271,27 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      * @param canvas
      */
     private void drawRadarLine(Canvas canvas){
-        canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
-        canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
-        positionList = notifyLidarPtsEntity.getPositionList();
-        Logger.d("-------点云数量：" + positionList.size());
-        int size = positionList.size();
-        if (positionList != null && size > 0) {
-            XyEntity xyEntity1 = toCanvas(notifyLidarPtsEntity.getPosX(), notifyLidarPtsEntity.getPosY());
-            for (int i = 0; i < size; i++) {
-                XyEntity xyEntity = toCanvas(positionList.get(i).getPtX(), positionList.get(i).getPtY());
-                canvas.drawLine(xyEntity1.getX(), xyEntity1.getY(), xyEntity.getX(), xyEntity.getY(), radarPaint);
+        if (sourceBitmap!=null){
+            canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
+            canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
+            positionList = notifyLidarPtsEntity.getPositionList();
+            //Logger.d("-------点云数量：" + positionList.size());
+            int size = positionList.size();
+            if (positionList != null && size > 0) {
+                XyEntity xyEntity1 = toCanvas(notifyLidarPtsEntity.getPosX(), notifyLidarPtsEntity.getPosY());
+                for (int i = 0; i < size; i++) {
+                    XyEntity xyEntity = toCanvas(positionList.get(i).getPtX(), positionList.get(i).getPtY());
+                    canvas.drawLine(xyEntity1.getX(), xyEntity1.getY(), xyEntity.getX(), xyEntity.getY(), radarPaint);
+                }
+                float angle = -radianToangle(notifyLidarPtsEntity.getPosdirection()) + (float)touchEvenHandler.getAngle();
+                float cx = xyEntity1.getX()-directionBitmap.getWidth()/2;
+                float cy = xyEntity1.getY()-directionBitmap.getHeight()*13/20;
+                mapMatrix.reset();
+                mapMatrix.postTranslate(cx,cy);
+                mapMatrix.postRotate(angle,xyEntity1.getX(),xyEntity1.getY());
+                //Logger.d("------------机器人当前在地图上的位置（像素）:" + cx + ";" + cy);
+                canvas.drawBitmap(directionBitmap,mapMatrix,paint);
             }
-            float angle = -radianToangle(notifyLidarPtsEntity.getPosdirection()) + (float)touchEvenHandler.getAngle();
-            mapMatrix.setRotate(angle);
-            directionBitmap1 = Bitmap.createBitmap(directionBitmap, 0, 0, directionW, directionH, mapMatrix, true);
-            float cx = xyEntity1.getX() - directionW / 2;
-            float cy = xyEntity1.getY() - directionH / 2;
-            Logger.d("------------机器人当前在地图上的位置（像素）:" + cx + ";" + cy);
-            canvas.drawBitmap(directionBitmap1, cx, cy, paint);
         }
     }
 
@@ -380,7 +390,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
                 e.printStackTrace();
             }
         }
-        Logger.i("------------绘制时间："+time);
+        //Logger.i("------------绘制时间："+time);
     }
 
     public boolean isRunning=false;
@@ -462,10 +472,12 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if (touchEvenHandler!=null){
-            touchEvenHandler.touchEvent(event);
-        }else {
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+        if (sourceBitmap!=null){
+            if (touchEvenHandler!=null){
+                touchEvenHandler.touchEvent(event);
+            }else {
+                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+            }
         }
         return true;
     }

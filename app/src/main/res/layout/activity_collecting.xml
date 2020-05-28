@@ -98,6 +98,7 @@
         app:layout_constraintTop_toBottomOf="@id/title_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
         />
     <ddr.example.com.nddrandroidclient.widget.view.CollectingView3
         android:id="@+id/collect3"
@@ -107,6 +108,7 @@
         app:layout_constraintTop_toBottomOf="@id/title_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
         />
     <LinearLayout
         android:id="@+id/layout_collect"
@@ -279,5 +281,20 @@
             android:layout_centerHorizontal="true"
             />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_cs"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:text="123334"
+        android:visibility="gone"
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

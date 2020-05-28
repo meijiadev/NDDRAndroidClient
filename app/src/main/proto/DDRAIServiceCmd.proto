@@ -358,6 +358,7 @@ message reqUpdateSpeechConfig
 message rspUpdateSpeechConfig
 {
     eRspType ret = 1;
+
 }
 
 message reqModuleSpeech

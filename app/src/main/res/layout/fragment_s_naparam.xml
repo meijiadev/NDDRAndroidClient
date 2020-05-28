@@ -269,6 +269,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/view8"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/tv_title1"
@@ -279,7 +280,9 @@
                 android:text="避障半径"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                />
             <TextView
                 android:id="@+id/tv_suggest1"
                 android:layout_width="326dp"
@@ -290,6 +293,7 @@
                 android:textSize="12sp"
                 android:layout_marginTop="14dp"
                 android:layout_below="@id/tv_title1"
+                android:visibility="gone"
                 />
             <EditText
                 android:id="@+id/ed_bzRadius"
@@ -306,7 +310,8 @@
                 android:layout_below="@id/view1"
                 android:inputType="numberSigned|numberDecimal|text"
                 android:imeOptions="actionDone"
-                android:background="@drawable/bg_task_cz"/>
+                android:background="@drawable/bg_task_cz"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/tv_cm"
                 android:layout_width="19dp"
@@ -319,6 +324,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="70dp"
                 android:layout_below="@id/view1"
+                android:visibility="gone"
                 />
             <View
                 android:id="@+id/view2"
@@ -327,6 +333,7 @@
                 android:background="#262728"
                 android:layout_below="@id/tv_suggest1"
                 android:layout_marginTop="24dp"
+                android:visibility="gone"
                 />
 
             <TextView
@@ -344,7 +351,7 @@
                 android:id="@+id/tv_suggest2"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:text="障碍到机器人距离小于此值开始减速"
+                android:text="机器人到的障碍距离小于此值开始减速"
                 android:textStyle="bold"
                 android:textColor="#99ffffff"
                 android:textSize="12sp"
@@ -403,7 +410,7 @@
                 android:id="@+id/tv_suggest3"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:text="当前方障碍到机器人距离小于等于此值停止"
+                android:text="机器人到障碍的距离小于等于此值停止"
                 android:textStyle="bold"
                 android:textColor="#99ffffff"
                 android:textSize="12sp"

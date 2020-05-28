@@ -21,6 +21,7 @@ import java.util.List;
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
@@ -28,6 +29,8 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * desc : 采集时的机器人的位置和激光雷达扫射的范围
  */
 public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callback {
+    // Matrix getValues 矩阵参数
+    private float[] values=new float[9];
     private int measureWidth, measureHeight;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
     public boolean isRunning=false;
@@ -36,8 +39,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
     private float ratio=1;         //地图比例
     private float angle;
     private Matrix matrix;
-    private Bitmap directionBitmap,directionBitmap1;
-    private int directionW,directionH;
+    private Bitmap directionBitmap;
     private Paint paint,lastFrame,pathPaint;
     private int mBackColor=Color.TRANSPARENT;       //背景色透明
     public CollectingView3(Context context) {
@@ -68,8 +70,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         pathPaint=new Paint();
         pathPaint.setColor(Color.BLACK);
         pathPaint.setStrokeWidth(2);
-        directionW=directionBitmap.getWidth();
-        directionH=directionBitmap.getHeight();
+
     }
 
     /**
@@ -150,7 +151,6 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                 try {
                     canvas=holder.lockCanvas();
                     if (canvas!=null){
-                        //drawRadar(canvas);
                         drawRobot(canvas);
                         drawPath(canvas);
                     }
@@ -162,7 +162,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                     }
                 }
                 long endTime=System.currentTimeMillis();
-                Logger.e("------地图绘制耗时："+(endTime-startTime));
+                Logger.i("------地图绘制耗时："+(endTime-startTime));
                 long time=endTime-startTime;
                 if (time<300){
                     try {
@@ -200,10 +200,15 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         }
         path.close();
         canvas.drawPath(path,lastFrame);
-        matrix.setRotate(-angle);
-        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,matrix,true);
-        canvas.drawBitmap(directionBitmap1,x-directionW/2,y-directionH/2,paint);
+        float cx = x-directionBitmap.getWidth()/2;
+        float cy =y-directionBitmap.getHeight()*13/20;
+        matrix.reset();
+        matrix.postTranslate(cx,cy);
+        matrix.postRotate(-angle,x,y);
+        canvas.drawBitmap(directionBitmap,matrix,paint);
     }
+
+
 
     /**
      * 绘制行走路线

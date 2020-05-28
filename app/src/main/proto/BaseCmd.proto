@@ -645,6 +645,7 @@ message notifyBaseStatusEx{
 	eException robotexception = 22; // 异常状态
 	eChargingType chargingType = 23; // 充电类型
 	int32 temporaryTaskCount = 24; // 记录临时任务总次数
+	int64 timestamp = 25;
 }
 
 // Environmental sensor info
@@ -1277,6 +1278,7 @@ message notifyLidarPts{
 	float posx = 2;  // 机器人位置x
 	float posy = 3;  // 机器人位置y
 	float posdirection = 4; // 机器人朝向
+	int64 timestamp = 5;
 }
 
 // 上位机上报的视觉点云数据
@@ -1291,6 +1293,20 @@ message notifyVisionPts{
 	float posx = 2;  // 机器人位置x
 	float posy = 3;  // 机器人位置y
 	float posdirection = 4; // 机器人朝向
+	int64 timestamp = 5;
+}
+
+/*
+	客户端请求采集模式时的点云.
+	采集时上位机实时保存点云，如果客户端异常退出后再进，可以重新拉取点云数据。
+*/
+message reqGetCollectPts{
+	int32 resverse = 1;
+}
+
+message rspGetCollectPts{
+	repeated notifyLidarPts lidarData = 1;
+	repeated notifyVisionPts visionData = 2;
 }
 
 /*

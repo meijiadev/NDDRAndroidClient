@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
@@ -42,6 +43,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
+import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
@@ -245,7 +247,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
-
         if (taskName!=null && !taskName.equals("PathError")){
             String showName=taskName.replaceAll("DDRTask_","");
             showName=showName.replaceAll(".task","");
@@ -258,6 +259,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
+
         mapImageView.startThread();
     }
 
@@ -297,7 +299,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         tv_now_device.setText(robotID);
         tv_work_time.setText(String.valueOf(workTimes)+" 分");
         tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
-        Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
+       // Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
@@ -459,9 +461,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
             case R.id.tv_now_task:
-                showTaskPopupWindow(tv_now_task);
-                tv_now_task.setBackgroundResource(R.drawable.task_check_bg);
-                iv_task_xl.setImageResource(R.mipmap.xl_5);
+                if (notifyBaseStatusEx.isLocationed()){
+                    showTaskPopupWindow(tv_now_task);
+                    tv_now_task.setBackgroundResource(R.drawable.task_check_bg);
+                    iv_task_xl.setImageResource(R.mipmap.xl_5);
+                }else {
+                    showRelocationDialog();
+                }
                 break;
             case R.id.tv_restart_point:
                 float theat= (float) 1.0;
@@ -590,36 +596,98 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case 2:
                 //标记点列表点击事件
                     targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    float x=targetPoints.get(position).getX();
-                    float y=targetPoints.get(position).getY();
-                    float theta=targetPoints.get(position).getTheta();
-                    mapImageView.setTargetPoint(targetPoints.get(position));
-                        new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
-                                .setTitle("是否前往" + targetPoints.get(position).getName())
-                                .setListener(new InputDialog.OnListener() {
-                                    @Override
-                                    public void onConfirm(BaseDialog dialog, String content) {
-                                        goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
-                                        tv_restart_point.setVisibility(View.VISIBLE);
-                                        for (int i = 0; i < targetPoints.size(); i++) {
-                                            targetPoints.get(i).setSelected(false);
+                        if (notifyBaseStatusEx.isLocationed()){
+                            float x=targetPoints.get(position).getX();
+                            float y=targetPoints.get(position).getY();
+                            float theta=targetPoints.get(position).getTheta();
+                            mapImageView.setTargetPoint(targetPoints.get(position));
+                            new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
+                                    .setTitle("是否前往" + targetPoints.get(position).getName())
+                                    .setListener(new InputDialog.OnListener() {
+                                        @Override
+                                        public void onConfirm(BaseDialog dialog, String content) {
+                                            goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
+                                            tv_restart_point.setVisibility(View.VISIBLE);
+                                            for (int i = 0; i < targetPoints.size(); i++) {
+                                                targetPoints.get(i).setSelected(false);
+                                            }
+                                            targetPoints.get(position).setSelected(true);
+                                            targetPointAdapter.setNewData(targetPoints);
+                                            sPoint = targetPoints.get(position).getName();
+                                            isRunabPoint=true;
                                         }
-                                        targetPoints.get(position).setSelected(true);
-                                        targetPointAdapter.setNewData(targetPoints);
-                                        sPoint = targetPoints.get(position).getName();
-                                        isRunabPoint=true;
-                                    }
-                                    @Override
-                                    public void onCancel(BaseDialog dialog) {
-                                        toast("取消去目标点");
-                                    }
-                                })
-                                .show();
+                                        @Override
+                                        public void onCancel(BaseDialog dialog) {
+                                            toast("取消去目标点");
+                                        }
+                                    })
+                                    .show();
+                        }else {
+                            showRelocationDialog();
+                        }
                 });
                 break;
         }
-
     }
+    private BaseDialog locationDialog;
+    /**
+     * 选择一种重定位的方式
+     */
+    private void showRelocationDialog(){
+        locationDialog=new InputDialog.Builder(getAttachActivity())
+                .setTitle("当前无定位，选择重定位方式")
+                .setCancel("手动定位")
+                .setConfirm("自动定位")
+                .setEditVisibility(View.GONE)
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        reqCmdRelocation();
+                    }
+
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                        tcpClient.exitModel();
+                        Intent intent = new Intent(getAttachActivity(), RelocationActivity.class);
+                        intent.putExtra("currentBitmap", mapFileStatus.getCurrentBitmapPath());
+                        intent.putExtra("currentMapName", mapFileStatus.getCurrentMapName());
+                        startActivity(intent);
+                    }
+                })
+                .show();
+    }
+    /**
+     * 发送重定位
+     */
+    private void reqCmdRelocation(){
+        if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
+            toast("正在自标定中,无法进行重定位...");
+        }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
+            switch (notifyBaseStatusEx.getMode()) {
+                case 3:
+                    switch (notifyBaseStatusEx.getSonMode()){
+                        case 15:
+                            toast("正在重定位中,请先退出当前定位...");
+                            break;
+                    }
+                    break;
+                default:
+                    reqCmdRelocation1();
+                    break;
+            }
+        }else{
+            reqCmdRelocation1();
+        }
+    }
+    private void reqCmdRelocation1(){
+        BaseCmd.reqCmdReloc reqCmdReloc=BaseCmd.reqCmdReloc.newBuilder()
+                .setTypeValue(0)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdReloc);
+    }
+
+
+
     @Override
     public void onLeftClick() {
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {

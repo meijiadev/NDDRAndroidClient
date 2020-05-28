@@ -151,7 +151,7 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
                     }
                 }
                 long endTime=System.currentTimeMillis();
-                Logger.e("------地图绘制耗时："+(endTime-startTime));
+                Logger.i("------地图绘制耗时："+(endTime-startTime));
                 long time=endTime-startTime;
                 if (time<300){
                     try {
