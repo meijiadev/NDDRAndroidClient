@@ -6,6 +6,7 @@ import java.util.List;
 public class ComputerEditions {
     public static ComputerEditions computerEditions;
     private List<ComputerEdition> computerEditionList =new ArrayList<>();
+    private int robotType;
     public static ComputerEditions getInstance(){
         if (computerEditions ==null){
             synchronized (ComputerEditions.class){
@@ -23,5 +24,13 @@ public class ComputerEditions {
 
     public List<ComputerEdition> getComputerEditionList() {
         return computerEditionList;
+    }
+
+    public int getRobotType() {
+        return robotType;
+    }
+
+    public void setRobotType(int robotType) {
+        this.robotType = robotType;
     }
 }

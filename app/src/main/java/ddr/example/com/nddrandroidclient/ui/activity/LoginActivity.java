@@ -22,6 +22,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -64,6 +65,7 @@ public  class LoginActivity extends DDRActivity {
     private int port=28888;
     //private boolean hasReceiveBroadcast=false;            //是否接收到广播
     private boolean isLan=true;                                //是否是局域网  默认局域网登录
+    private UdpIp udpIp=new UdpIp();
 
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -73,7 +75,12 @@ public  class LoginActivity extends DDRActivity {
                 //hasReceiveBroadcast=true;
                 break;
             case updatePort:
-                tcpPort= (int) messageEvent.getData();
+                try {
+                    udpIp= (UdpIp) messageEvent.getData();
+                    tcpPort= udpIp.getPort();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             case LoginSuccess:
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();

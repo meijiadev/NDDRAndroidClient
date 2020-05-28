@@ -53,6 +53,9 @@ public class MessageRoute {
         }else if (className.contains("DDRModuleCmd")){
             String sType=className.replaceAll("class DDRModuleProto.DDRModuleCmd\\$","DDRModuleProto.");
             return sType;
+        } else if (className.contains("DDRAIServiceCmd")){
+            String sType=className.replaceAll("class DDRAIServiceProto.DDRAIServiceCmd\\$","DDRAIServiceProto.");
+            return sType;
         }
         return null;
     }
@@ -71,6 +74,9 @@ public class MessageRoute {
             return className;
         }else if (typeName.contains("DDRModuleProto")){
             String className=typeName.replaceAll("DDRModuleProto\\.","class DDRModuleProto.DDRModuleCmd\\$");
+            return className;
+        }else if (typeName.contains("DDRAIServiceProto")){
+            String className=typeName.replaceAll("DDRAIServiceProto\\.","class DDRAIServiceProto.DDRAIServiceCmd\\$");
             return className;
         }
         return null;
@@ -320,9 +326,9 @@ public class MessageRoute {
     public  byte[] serialize(BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg){
         byte[]bBody=msg.toByteArray();
         String sType=msg.getClass().toString();
-        // Logger.e("未转换的stype:"+sType);
+//         Logger.e("未转换的stype:"+sType);
         sType=javaClass2ProtoTypeName(sType);
-        // Logger.e("转换后的stype:"+stype);
+//         Logger.e("转换后的stype:"+sType);
         int bBodyLength=bBody.length;
         BaseCmd.CommonHeader headData;
         if (commonHeader!=null){

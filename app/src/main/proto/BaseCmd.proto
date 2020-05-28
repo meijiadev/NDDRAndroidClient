@@ -164,6 +164,7 @@ enum eCmdIPCMode{
 	eShutDown = 0;		//	close IPC
 	eReStart = 1;		//	restart IPC
 	eVolume = 2;		//	change IPC volume
+	eExitModuleService = 3; // exit moduleService
 } 
 message reqCmdIPC
 {
@@ -1247,7 +1248,9 @@ message rspGetSysVersion{
 		bytes date = 2; // 时间 eg: 2019-09-28 14:30:20
 		ComponentType type = 3; // 类型
 	}
+	
 	repeated ComponentVerItem sysInfo = 1;
+	int32 chassisType = 2; // 底盘类型
 }
 
 // 请求雷达重定位。需要指定左上角和右下角的坐标 都是世界坐标
@@ -1290,6 +1293,19 @@ message notifyVisionPts{
 	float posdirection = 4; // 机器人朝向
 }
 
+/*
+	客户端请求采集模式时的点云.
+	采集时上位机实时保存点云，如果客户端异常退出后再进，可以重新拉取点云数据。
+*/
+message reqGetCollectPts{
+	int32 resverse = 1;
+}
+
+message rspGetCollectPts{
+	repeated notifyLidarPts lidarData = 1;
+	repeated notifyVisionPts visionData = 2;
+}
+
 // 以下为获取2D雷达点云数据相关，
 enum en2DLidarPointData
 {
@@ -1323,8 +1339,8 @@ enum enLidarMapEditorType
 {
 	enLidarMapEditorType_Reserve = 0;
 	
-	// erase the map points in the rectangle range ([top, left], [bottom, right]).
-	enLidarMapEditorType_Erase = 1;
+	// 擦除点，可以指定一堆连续的点。擦除时会按顺序连成多边形。也保留原来的指定左上 右下两个点的坐标。
+	enLidarMapEditorType_Erase = 1; 
 	
 	// back to the previous state.
 	enLidarMapEditorType_Back = 2;
@@ -1335,9 +1351,31 @@ enum enLidarMapEditorType
 	// if bOriginal == false, the map will be reset to the initial state of this time.
 	// else, the map will be reset to the original state.
 	enLidarMapEditorType_Reset = 4;
+	
+	// 添加点，可以指定点多个点。就是 reqEditorLidarMap 中的 optPtSet。
+	enLidarMapEditorType_AddPt = 5;
+	
+	// 添加虚拟墙，由多个线段组成。就是 reqEditorLidarMap 中的 vlSet。
+	enLidarMapEditorType_AddVirtualLines = 6;
+	
+	// 移除虚拟墙，由多个线段组成。就是 reqEditorLidarMap 中的 vlSet。
+	enLidarMapEditorType_EraseVirtualLines = 7;
 }
 
 message reqEditorLidarMap{
+
+	message optPoint
+	{
+		float pt_x = 1;
+		float pt_y = 2;
+	}
+	
+	// 每一个虚拟墙会有多个点。理论上至少会有两个点。
+	message VirtualLineItem
+	{
+		repeated optPoint lineSet = 1;
+	}
+
 	message eraseRange
 	{
 		float top = 1;
@@ -1349,6 +1387,20 @@ message reqEditorLidarMap{
 	repeated eraseRange range = 2; // 只有当 type 为 enLidarMapEditorType_Erase 时才有意义
 	bool bOriginal = 3; // 只有当 type 为 enLidarMapEditorType_Reset 时才有意义
 	bytes oneroutename = 4;
+	
+	/*
+		type为下面两个时有意义：
+			enLidarMapEditorType_Erase：要擦除的点，optPtSet表示一个多边形
+			enLidarMapEditorType_AddPt：要添加的点，optPtSet表示点的集合
+	*/	
+	repeated optPoint optPtSet = 5;
+	
+	/*
+		type为下面两个时有意义：			
+			enLidarMapEditorType_AddVirtualLines：添加的虚拟墙，optPtSet表示多个点连起来的线段
+			enLidarMapEditorType_EraseVirtualLines：擦除的虚拟墙，optPtSet表示多个点连起来的线段
+	*/		
+	repeated VirtualLineItem vlSet = 6;
 }
 
 message rspEditorLidarMap{
@@ -1356,5 +1408,13 @@ message rspEditorLidarMap{
 	reqEditorLidarMap reqData = 2; // 收到的 reqEditorLidarMap 的值
 }
 
+// 获取上位机状态。具体数据不在 rspGetRobotStatusAndEnv 中体现。
+message reqGetRobotStatusAndEnv{
+	int32 nType = 1; // 0:Base 1:Env 2:OBS 3:LidarPt else Send all data.
+}
+
+message rspGetRobotStatusAndEnv{
+	int32 nType = 1;
+}
 
 // +++++++++++++++++++ Common message bodies +++++++++++++++++++ //

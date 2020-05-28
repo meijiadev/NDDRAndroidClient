@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.protocobuf.dispatcher;
 
+import DDRAIServiceProto.DDRAIServiceCmd;
 import DDRCommProto.BaseCmd;
 import DDRCommProto.RemoteCmd;
 import DDRModuleProto.DDRModuleCmd;
@@ -36,6 +37,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRemoteServerLis
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunControlExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunSpecificPoint;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSelectLSProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSpeechConfigProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.ServerInformationProcessor;
 
 
@@ -137,5 +139,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.rspEditorLidarMap rspEditorLidarMap=BaseCmd.rspEditorLidarMap.newBuilder().build();
         m_ProcessorMap.put(rspEditorLidarMap.getClass().toString(),new RspEditorLidarMapProcessor());
+
+        DDRAIServiceCmd.rspSpeechConfig rspSpeechConfig=DDRAIServiceCmd.rspSpeechConfig.newBuilder().build();
+        m_ProcessorMap.put(rspSpeechConfig.getClass().toString(),new RspSpeechConfigProcessor());
     }
 }
