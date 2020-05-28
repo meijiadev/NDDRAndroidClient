@@ -1309,6 +1309,19 @@ message rspGetCollectPts{
 	repeated notifyVisionPts visionData = 2;
 }
 
+/*
+	客户端请求采集模式时的点云.
+	采集时上位机实时保存点云，如果客户端异常退出后再进，可以重新拉取点云数据。
+*/
+message reqGetCollectPts{
+	int32 resverse = 1;
+}
+
+message rspGetCollectPts{
+	repeated notifyLidarPts lidarData = 1;
+	repeated notifyVisionPts visionData = 2;
+}
+
 // 以下为获取2D雷达点云数据相关，
 enum en2DLidarPointData
 {

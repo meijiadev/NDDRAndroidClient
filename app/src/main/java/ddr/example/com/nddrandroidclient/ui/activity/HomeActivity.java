@@ -31,6 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,15 +47,20 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
+import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.socket.TcpAiClient;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
+import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
@@ -121,6 +127,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private String xsu;
     private String jsu;
     private boolean ishaveChecked = false;
+    private String LAN_IP_AI="192.168.0.95";
+    private ComputerEditions computerEditions;
 
 
     /**
@@ -166,6 +174,29 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     vpHomePager.setCurrentItem(0);
                 }
                 break;
+            case updateAiPort:
+                udpIp1= (UdpIp) messageEvent.getData();
+//                Logger.e(globalParameter.isLan()+"是否局域网");
+                Logger.e("AIip"+udpIp1.getIp()+"端口"+udpIp1.getPort());
+                    tcpAiClient.createConnect(LAN_IP_AI,udpIp1.getPort());
+                break;
+            case tcpAiConnected:
+                Logger.e("TcpAI服务开始连接");
+                tcpAiClient.sendData(null, CmdSchedule.localLogin("admin_android","admin_android",4));
+                break;
+            case LoginAiSuccess:
+                toast("AI服务连接成功");
+                UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
+                break;
+            case updateVersion:
+                computerEditions= ComputerEditions.getInstance();
+                if (computerEditions.getRobotType()==3){
+
+                }else {
+                    UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
+                  Logger.e("非消杀无需连接Ai");
+                }
+                break;
         }
 
     }
@@ -194,6 +225,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initData() {
         tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
+        getHostComputerEdition();
+        receiveAiBroadcast();
+        tcpAiClient=TcpAiClient.getInstance(context,ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         ImageLoader.clear(this); //清除图片缓存
         tcpClient.requestFile();     //请求所有地图
@@ -436,6 +470,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.removeOnPageChangeListener(this);
         vpHomePager.setAdapter(null);
         tcpClient.disConnect();
+        tcpAiClient.disConnect();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
         super.onDestroy();
@@ -710,6 +745,32 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 startActivity(LoginActivity.class);
             }
         },6000);
+    }
+
+    public UdpClient udpClient;
+    private int aiPort=18888;
+    public TcpAiClient tcpAiClient;
+    private UdpIp udpIp1=new UdpIp();
+    /**
+     * 接收AIServer广播
+     */
+    private void receiveAiBroadcast(){
+        Logger.e("接受AI广播");
+        udpClient= UdpClient.getInstance(this,ClientMessageDispatcher.getInstance());
+        try {
+                udpClient.connect(aiPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取上位机版本信息
+     */
+    private void getHostComputerEdition() {
+        BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
     }
 
 

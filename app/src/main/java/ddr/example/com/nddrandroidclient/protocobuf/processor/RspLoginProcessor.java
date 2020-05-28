@@ -18,7 +18,13 @@ public class RspLoginProcessor extends BaseProcessor {
         super.process(context, commonHeader, msg);
         BaseCmd.rspLogin rspLogin= (BaseCmd.rspLogin) msg;
         Logger.e("登陆成功");
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.LoginSuccess));
-
+        switch (rspLogin.getYourRoleValue()){
+            case 2:
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.LoginSuccess));
+                break;
+            case 0:
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.LoginAiSuccess));
+                break;
+        }
     }
 }

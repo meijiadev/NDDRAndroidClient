@@ -37,6 +37,7 @@ public class RspGetSysVersionProcessor extends BaseProcessor {
         }
         Logger.e("数量"+ computerEditionList.size());
         computerEditions.setComputerEditionList(computerEditionList);
+        computerEditions.setRobotType(rspGetSysVersion.getChassisType());
         Logger.e("实际数量"+ computerEditions.getComputerEditionList().size());
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateVersion));
     }

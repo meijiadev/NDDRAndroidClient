@@ -351,19 +351,23 @@ message reqUpdateSpeechConfig
 		int32 interval = 2;
 		int32 priority = 3;
 	}
-	message ModuleSpeech
-	{
-	    bytes text = 1;
-		int32 interval = 2;
-		int32 priority = 3;
-	}
 	bool closestatus = 1; //关闭播报时设置为true；其他情况可以设置为false或不设置。
 	ObstacleSpeech obstacle = 2;
 	SustainedSpeech sustained = 3;
-	ModuleSpeech modulespeech = 4;
-	
 }
 message rspUpdateSpeechConfig
+{
+    eRspType ret = 1;
+
+}
+
+message reqModuleSpeech
+{
+    bytes text = 1;
+	int32 interval = 2;
+	int32 priority = 3;
+}
+message rspModuleSpeech
 {
     eRspType ret = 1;
 }
