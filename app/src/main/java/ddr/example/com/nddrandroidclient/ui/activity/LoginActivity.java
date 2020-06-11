@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -52,7 +54,7 @@ public  class LoginActivity extends DDRActivity {
     @BindView(R.id.tv_wan)
     TextView tv_wan;        //广域网
 
-    public  int tcpPort = 0;
+    public  int tcpPort = 88;
     private String accountName = "", passwordName = "";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -87,11 +89,12 @@ public  class LoginActivity extends DDRActivity {
                 editor.putString("password", passwordName);
                 editor.commit();
                 Logger.e("登录成功");
+                toast("登录成功");
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
-                    startActivity(HomeActivity.class);
+                    startActivityFinish(HomeActivity.class);
                 },1000);
                 break;
             case wanLoginSuccess:
@@ -137,7 +140,9 @@ public  class LoginActivity extends DDRActivity {
         editor = sharedPreferences.edit();
         password.setText(sharedPreferences.getString("password", ""));
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
-
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        int memorySize = activityManager.getMemoryClass();
+        Logger.e("分配的内存上限："+memorySize+";"+activityManager.getLargeMemoryClass());
     }
 
     @OnClick({R.id.login_in,R.id.tv_lan,R.id.tv_wan})
@@ -221,6 +226,7 @@ public  class LoginActivity extends DDRActivity {
     protected void onDestroy() {
         super.onDestroy();
         tcpClient=null;
+        Logger.e("销毁登录页面");
         EventBus.getDefault().removeAllStickyEvents();
     }
 

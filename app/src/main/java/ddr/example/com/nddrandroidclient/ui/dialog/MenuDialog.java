@@ -21,6 +21,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 
 /**
  *    time   : 2019/11/20
@@ -47,7 +48,7 @@ public final class MenuDialog {
             mRecyclerView = findViewById(R.id.rv_menu_list);
             mCancelView  = findViewById(R.id.tv_menu_cancel);
 
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            mRecyclerView.setLayoutManager(new NLinearLayoutManager(getContext()));
             mAdapter = new MenuAdapter(R.layout.item_menu);
             mRecyclerView.setAdapter(mAdapter);
             mAdapter.setOnItemClickListener(this);

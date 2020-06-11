@@ -107,7 +107,7 @@ public class MapFileStatus {
                 targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
                 targetPoint.setX(targetPtItems.get(i).getPtData().getX());
                 targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-                targetPoint.setTheta((int) targetPtItems.get(i).getPtData().getTheta());
+                targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
                 cTargetPoints.add(targetPoint);
             }
 
@@ -185,7 +185,7 @@ public class MapFileStatus {
             targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
             targetPoint.setX(targetPtItems.get(i).getPtData().getX());
             targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-            targetPoint.setTheta((int)targetPtItems.get(i).getPtData().getTheta());
+            targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
             targetPoints.add(targetPoint);
         }
         for (int i = 0; i < pathLineItemExes.size(); i++) {

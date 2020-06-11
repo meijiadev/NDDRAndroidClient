@@ -184,6 +184,7 @@ public class CollectingActivity extends DDRActivity {
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
         initWaitDialog();
+
     }
 
     private void initStatusBar() {
@@ -371,22 +372,27 @@ public class CollectingActivity extends DDRActivity {
 
             @Override
             public void direction(RockerView.Direction direction) {
-                if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
-                    //Logger.e("---中心");
-                    lineSpeed = 0;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_base_default);
-                } else if (direction == RockerView.Direction.DIRECTION_DOWN) {     // 当前方向：下
-                    isforward = false;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_backward);
-                    //Logger.e("下");
-                } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
+                try {
+                    if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
+                        //Logger.e("---中心");
+                        lineSpeed = 0;
+                        myRocker.setmAreaBackground(R.mipmap.rocker_base_default);
+                    } else if (direction == RockerView.Direction.DIRECTION_DOWN) {     // 当前方向：下
+                        isforward = false;
+                        myRocker.setmAreaBackground(R.mipmap.rocker_backward);
+                        //Logger.e("下");
+                    } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
 
-                } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
-                    isforward = true;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_forward);
-                    //Logger.e("上");
-                } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
+                    } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
+                        isforward = true;
+                        myRocker.setmAreaBackground(R.mipmap.rocker_forward);
+                        //Logger.e("上");
+                    } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
 
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Logger.e("-----------NullPointerException");
                 }
             }
 
@@ -404,23 +410,28 @@ public class CollectingActivity extends DDRActivity {
 
             @Override
             public void direction(RockerView.Direction direction) {
-                if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
-                    // Logger.e("---中心");
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_default_zy);
-                    palstance = 0;
-                } else if (direction == RockerView.Direction.DIRECTION_DOWN) {
+                try {
+                    if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
+                        // Logger.e("---中心");
+                        myRockerZy.setmAreaBackground(R.mipmap.rocker_default_zy);
+                        palstance = 0;
+                    } else if (direction == RockerView.Direction.DIRECTION_DOWN) {
 
-                } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
-                    isGoRight = false;
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_go_left);
-                    // Logger.e("左");
-                } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
+                    } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
+                        isGoRight = false;
+                        myRockerZy.setmAreaBackground(R.mipmap.rocker_go_left);
+                        // Logger.e("左");
+                    } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
 
-                } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
-                    // mTvShake.setText("当前方向：右");
-                    //Logger.e("右");
-                    isGoRight = true;
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_go_right);
+                    } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
+                        // mTvShake.setText("当前方向：右");
+                        //Logger.e("右");
+                        isGoRight = true;
+                        myRockerZy.setmAreaBackground(R.mipmap.rocker_go_right);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Logger.e("---------NullPointerException");
                 }
             }
 
@@ -543,7 +554,7 @@ public class CollectingActivity extends DDRActivity {
         super.onResume();
         if (tcpClient!=null&&!tcpClient.isConnected()){
             Logger.e("网络无法连接!");
-            netWorkStatusDialog();
+            //netWorkStatusDialog();
         }
     }
 
@@ -571,16 +582,23 @@ public class CollectingActivity extends DDRActivity {
     public boolean statusBarDarkFont() {
         return false;
     }
-
+    private int totalSize=0;
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void upDateDrawMap(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
             case receivePointCloud:
                 if (NotifyBaseStatusEx.getInstance().getSonMode()==6){
+                    if (measureHeight==0){
+                        measureWidth=collectingView4.getWidth();
+                        measureHeight=collectingView4.getHeight();
+                        Logger.e("------绘图控件大小"+measureWidth+";"+measureHeight);
+                    }
                     //long startTime=System.currentTimeMillis();
                     posX=notifyLidarPtsEntity.getPosX();
                     posY=notifyLidarPtsEntity.getPosY();
                     radian=notifyLidarPtsEntity.getPosdirection();
+                    totalSize=totalSize+notifyLidarPtsEntity.getPositionList().size();
+                    Logger.e("------接收到点数总和："+totalSize);
                     //tvCs.setText("x:"+posX+"y:"+posY+"radian:"+radian);
                     angle=radianToangle(radian);
                     notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
@@ -588,13 +606,12 @@ public class CollectingActivity extends DDRActivity {
                     notifyLidarPtsEntity1.setPosY(notifyLidarPtsEntity.getPosY());
                     notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
                     ptsEntityList.add(notifyLidarPtsEntity1);
-                    maxOrmin(notifyLidarPtsEntity.getPositionList());
                     if (!isStartDraw){
                         collectingView4.startThread();
                         collectingView3.startThread();
                     }
-                    collectingView4.setData(ptsEntityList,poiPoints,ratio);
-                    collectingView3.setData(ptsEntityList,ratio,angle);
+                    collectingView4.setData(ptsEntityList,poiPoints);
+                    collectingView3.setData(ptsEntityList,angle);
                     isStartDraw=true;
                 }
                 break;

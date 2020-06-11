@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -20,6 +21,8 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.zoomview.SurfaceTouchEventHandler;
+import ddr.example.com.nddrandroidclient.widget.zoomview.TouchEvenHandler;
 
 /**
  * desc:采集实时绘制地图
@@ -32,9 +35,10 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     private DrawMapThread drawThread;          //绘制线程
     private SurfaceHolder holder;
     private Paint paint,pointPaint,pathPaint;                       //绘制画笔
-    private float ratio=1;         //地图比例
+    private float perMeter =50;         //每米所占的像素
     private List<XyEntity>poiPoints=new ArrayList<>();
     private Bitmap poiBitmap;
+    private SurfaceTouchEventHandler surfaceTouchEventHandler;
 
     public CollectingView4(Context context) {
         super(context);
@@ -54,7 +58,7 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
         holder.addCallback(this);
         paint=new Paint();
         paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(3);
+        paint.setStrokeWidth(8);
         pointPaint=new Paint();
         pointPaint.setColor(Color.BLUE);
         pointPaint.setStrokeWidth(3);
@@ -67,10 +71,9 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     /**
      * 设置参数
      */
-    public void setData(List<NotifyLidarPtsEntity> ptsEntityList,List<XyEntity>poiPoints,float ratio){
+    public void setData(List<NotifyLidarPtsEntity> ptsEntityList,List<XyEntity>poiPoints){
         this.ptsEntityList=ptsEntityList;
         this.poiPoints=poiPoints;
-        this.ratio=ratio;
     }
 
     @Override
@@ -81,13 +84,16 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Logger.e("-------surfaceChanged:"+width+";"+height);
+        surfaceTouchEventHandler=SurfaceTouchEventHandler.getInstance(width,height);
         measureWidth=width;
         measureHeight=height;
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        if (surfaceTouchEventHandler!=null){
+            surfaceTouchEventHandler.onDestroy();
+        }
     }
 
     /**
@@ -139,7 +145,7 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
                 Canvas canvas=null;
                 try {
                     canvas=holder.lockCanvas();
-                    if (canvas!=null){
+                    if (canvas!=null&&surfaceTouchEventHandler!=null){
                        drawMap(canvas);
                        drawPoint(canvas);
                     }
@@ -175,15 +181,17 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
         canvas.drawColor(Color.parseColor("#101112"));
         for (int i=0;i<ptsSize;i++){
-            float y=((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
-            float x=((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
+            float y=((-ptsEntityList.get(i).getPosX())*perMeter+measureHeight/2);
+            float x=((-ptsEntityList.get(i).getPosY())*perMeter+measureWidth/2);
+            XyEntity xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(x,y);
             List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(i).getPositionList();
             int pSize=positions.size();
             for (int j=0;j<pSize;j++){
-                float ptX=(-positions.get(j).getPtY()*ratio+measureWidth/2);
-                float ptY=(-positions.get(j).getPtX()*ratio+measureHeight/2);
-                canvas.drawLine(x,y,ptX,ptY,paint);
-                canvas.drawPoint(ptX,ptY,pointPaint);
+                float ptX=(-positions.get(j).getPtY()*perMeter+measureWidth/2);
+                float ptY=(-positions.get(j).getPtX()*perMeter+measureHeight/2);
+                XyEntity xyEntity1=surfaceTouchEventHandler.coordinatesToCanvas(ptX,ptY);
+                canvas.drawLine(xyEntity.getX(),xyEntity.getY(),xyEntity1.getX(),xyEntity1.getY(),paint);
+                canvas.drawPoint(xyEntity1.getX(),xyEntity1.getY(),pointPaint);
             }
         }
     }
@@ -197,10 +205,21 @@ public class CollectingView4 extends SurfaceView implements SurfaceHolder.Callba
     private void drawPoint(Canvas canvas){
         int pts=poiPoints.size();
         for (int i=0;i<pts;i++){
-            float y=((-poiPoints.get(i).getX())*ratio+measureHeight/2);
-            float x=((-poiPoints.get(i).getY())*ratio+measureWidth/2);
-            canvas.drawBitmap(poiBitmap,x-poiBitmap.getWidth()/2,y-poiBitmap.getHeight()/2,pathPaint);
+            float y=((-poiPoints.get(i).getX())*perMeter+measureHeight/2);
+            float x=((-poiPoints.get(i).getY())*perMeter+measureWidth/2);
+            XyEntity xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(x,y);
+            canvas.drawBitmap(poiBitmap,xyEntity.getX()-poiBitmap.getWidth()/2,xyEntity.getY()-poiBitmap.getHeight()/2,pathPaint);
         }
     }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        if (surfaceTouchEventHandler!=null){
+            Logger.e("---触摸");
+            surfaceTouchEventHandler.touchEvent(event);
+        }
+        return true;
+    }
+
+
 
 }

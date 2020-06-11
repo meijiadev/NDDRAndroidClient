@@ -36,6 +36,7 @@ import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
@@ -78,7 +79,7 @@ public class TcpClient extends BaseSocketConnection {
 
 
     private TcpClient(Context context, BaseMessageDispatcher baseMessageDispatcher) {
-        this.context=context.getApplicationContext();         //使用Application的context
+        this.context=context.getApplicationContext();         //使用Application的context 避免造成内存泄漏
         m_MessageRoute=new MessageRoute(context,this,baseMessageDispatcher);
     }
 
@@ -407,7 +408,7 @@ public class TcpClient extends BaseSocketConnection {
     }
 
     /**
-     * 原图去噪相关功能
+     * 原图去噪相关功能(在地图不旋转的情况下适用)
      */
     public void reqEditMap(List<Rectangle>rectangles,int type,boolean isReset,String mapName){
         List<BaseCmd.reqEditorLidarMap.eraseRange> eraseRanges=new ArrayList<>();
@@ -424,6 +425,49 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllRange(eraseRanges)
                 .setTypeValue(type)
                 .setBOriginal(isReset)
+                .setOneroutename(ByteString.copyFromUtf8(mapName))
+                .build();
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqEditorLidarMap);
+    }
+
+    /**
+     * 编辑噪点（当地图旋转就必须要四个点才能确定矩形）
+     */
+    public void reqEditMapNoise(List<Rectangle>rectangles ,int type,boolean isReset,String mapName){
+        List<BaseCmd.reqEditorLidarMap.VirtualLineItem> noiseList=new ArrayList<>();
+        for (Rectangle rectangle:rectangles){
+            List<BaseCmd.reqEditorLidarMap.optPoint> optPoints=new ArrayList<>();
+            for (XyEntity xyEntity:rectangle.getRectanglePoints()){
+                BaseCmd.reqEditorLidarMap.optPoint optPoint=BaseCmd.reqEditorLidarMap.optPoint.newBuilder()
+                        .setPtX(xyEntity.getX())
+                        .setPtY(xyEntity.getY())
+                        .build();
+                optPoints.add(optPoint);
+            }
+            BaseCmd.reqEditorLidarMap.VirtualLineItem virtualLineItem= BaseCmd.reqEditorLidarMap.VirtualLineItem
+                    .newBuilder()
+                    .addAllLineSet(optPoints)
+                    .build();
+            noiseList.add(virtualLineItem);
+        }
+        BaseCmd.reqEditorLidarMap reqEditorLidarMap=BaseCmd.reqEditorLidarMap.newBuilder()
+                .addAllVlSet(noiseList)
+                .setTypeValue(type)
+                .setBOriginal(isReset)
+                .setOneroutename(ByteString.copyFromUtf8(mapName))
+                .build();
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqEditorLidarMap);
+    }
+
+    /**
+     * 处理虚拟墙（该命令会修改bkPic_obs.png的地图）
+     * type=6 ->添加虚拟墙，由多个线段组成。就是 reqEditorLidarMap 中的 vlSet。
+     * type=7 -> 移除虚拟墙，由多个线段组成。就是 reqEditorLidarMap 中的 vlSet。
+     */
+    private void reqEditMapVirtual(int type,List<BaseCmd.reqEditorLidarMap.VirtualLineItem> virtualLineItems,String mapName){
+        BaseCmd.reqEditorLidarMap reqEditorLidarMap=BaseCmd.reqEditorLidarMap.newBuilder()
+                .setTypeValue(type)
+                .addAllVlSet(virtualLineItems)
                 .setOneroutename(ByteString.copyFromUtf8(mapName))
                 .build();
         sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqEditorLidarMap);

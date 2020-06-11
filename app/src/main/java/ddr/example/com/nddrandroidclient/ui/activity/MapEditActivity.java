@@ -51,6 +51,7 @@ import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
@@ -530,12 +531,26 @@ public class MapEditActivity extends DDRActivity {
                 zmap.invalidate();
                 break;
             case R.id.tv_save_de:
-                tcpClient.reqEditMap(rectangles,1,false,mapFileStatus.getMapName());
+                tcpClient.reqEditMapNoise(rectangles,1,false,mapFileStatus.getMapName());
                 showWaitDialog("正在保存中..."+mapFileStatus.getMapName());
                 break;
             case R.id.tv_init_de:
-                tcpClient.reqEditMap(rectangles,4,true,mapFileStatus.getMapName());
-                showWaitDialog("正在初始化地图...");
+                new InputDialog.Builder(this)
+                        .setEditVisibility(View.GONE)
+                        .setTitle("是否恢复噪点？")
+                        .setListener(new InputDialog.OnListener() {
+                            @Override
+                            public void onConfirm(BaseDialog dialog, String content) {
+                                tcpClient.reqEditMapNoise(rectangles,4,true,mapFileStatus.getMapName());
+                                showWaitDialog("正在初始化地图...");
+                            }
+
+                            @Override
+                            public void onCancel(BaseDialog dialog) {
+
+                            }
+                        })
+                .show();
                 break;
         }
     }
@@ -571,12 +586,14 @@ public class MapEditActivity extends DDRActivity {
                         if (!isFreeHand) {
                             targetPoint.setX(notifyBaseStatusEx.getPosX());
                             targetPoint.setY(notifyBaseStatusEx.getPosY());
+                            Logger.e("--------角度："+radianToangle(notifyBaseStatusEx.getPosDirection()));
+                            targetPoint.setTheta(radianToangle(notifyBaseStatusEx.getPosDirection()));
                         } else {
                             targetPoint.setX(zmap.getTargetPoint().getX());
                             targetPoint.setY(zmap.getTargetPoint().getY());
+                            targetPoint.setTheta(0);
                         }
                         targetPoint.setInTask(true);  //方便显示
-                        targetPoint.setTheta(0);
                         if (checkPointName(targetPoint)){
                             toast("目标点名字重复，请重新命名");
                         }else {
@@ -605,6 +622,12 @@ public class MapEditActivity extends DDRActivity {
                 .show();
 
     }
+    /**
+     * 弧度转角度
+     */
+    public float radianToangle(float angle){
+        return (float)(180/Math.PI*angle);
+    }
 
     private List<DDRVLNMap.space_pointEx> lines=new ArrayList<>();       //线段
     private List<DDRVLNMap.space_pointEx> polygons=new ArrayList<>();    //多边形
@@ -629,6 +652,8 @@ public class MapEditActivity extends DDRActivity {
                 zmap.invalidate();
                 break;
         }
+
+
     }
 
     /**
@@ -680,6 +705,10 @@ public class MapEditActivity extends DDRActivity {
         }
     }
     private List<SpaceItem> spaceItems;
+
+    /**
+     * 保存虚拟墙
+     */
     private void saveVirtualWall(){
         switch (mPosition){
             case 0:
@@ -737,7 +766,7 @@ public class MapEditActivity extends DDRActivity {
         showRecycler = contentView.findViewById(R.id.show_Recycler);
         tv_all_selected=contentView.findViewById(R.id.tv_all_select);
         if(type!=0&&type!=1){ tv_all_selected.setVisibility(View.GONE); }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        NLinearLayoutManager layoutManager = new NLinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
         switch (type){
             case 0:
@@ -864,7 +893,7 @@ public class MapEditActivity extends DDRActivity {
                     break;
                 case 1:
                     isDenoising=true;
-                    zmap.setCanRotate(false);
+                    //zmap.setCanRotate(false);
                     tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);
                     break;
             }
@@ -1161,6 +1190,7 @@ public class MapEditActivity extends DDRActivity {
         switch (messageEvent.getType()){
             case updateBaseStatus:
                 if (isRuning){
+                    Logger.e("-------刷新ZoomImageView");
                     zmap.invalidate();
                 }
                 break;
@@ -1269,6 +1299,7 @@ public class MapEditActivity extends DDRActivity {
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePaths,newPaths));
         }else if (activityType==EDIT_MAP){
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateVirtualWall));
+
         }
     }
 
@@ -1278,7 +1309,7 @@ public class MapEditActivity extends DDRActivity {
         super.onResume();
         if (tcpClient!=null&&!tcpClient.isConnected()){
             Logger.e("----连接断开");
-            netWorkStatusDialog();
+            //netWorkStatusDialog();
         }
     }
 

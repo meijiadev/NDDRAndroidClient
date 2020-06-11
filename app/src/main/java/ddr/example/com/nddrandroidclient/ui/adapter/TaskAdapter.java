@@ -77,32 +77,32 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                  tv_task_status=helper.getView(R.id.tv_task_status);
                  tv_task_time=helper.getView(R.id.tv_task_time);
                  tvPause=helper.getView(R.id.tv_task_pause);
-                 Logger.e("-------TaskState:"+item.getTaskState());
+                 //Logger.e("-------TaskState:"+item.getTaskState());
                switch (item.getTaskState()){
                    case 0:
                    case 4:
-                       tv_task_status.setText("已终止");
-                       tvPause.setText("恢复");
+                       tv_task_status.setText(R.string.common_terminated);
+                       tvPause.setText(R.string.common_recover);
                        tvPause.setTextColor(Color.WHITE);
                        break;
                    case 1:
-                       tv_task_status.setText("等待执行");
-                       tvPause.setText("停止");
+                       tv_task_status.setText(R.string.common_wait_execute);
+                       tvPause.setText(R.string.common_stop);
                        tvPause.setTextColor(Color.WHITE);
                        break;
                    case 2:
-                       tv_task_status.setText("正在执行");
-                       tvPause.setText("暂停");
+                       tv_task_status.setText(R.string.common_executing);
+                       tvPause.setText(R.string.common_pause);
                        tvPause.setTextColor(Color.WHITE);
                        break;
                    case 3:
-                       tv_task_status.setText("执行完毕");
-                       tvPause.setText("恢复");
+                       tv_task_status.setText(R.string.common_executed);
+                       tvPause.setText(R.string.common_recover);
                        tvPause.setTextColor(Color.parseColor("#99ffffff"));
                        break;
                    case 5:
-                       tv_task_status.setText("挂起");
-                       tvPause.setText("恢复");
+                       tv_task_status.setText(R.string.common_put_up);
+                       tvPause.setText(R.string.common_recover);
                        tvPause.setTextColor(Color.WHITE);
                        break;
                }

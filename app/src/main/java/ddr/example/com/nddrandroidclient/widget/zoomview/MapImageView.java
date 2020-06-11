@@ -110,7 +110,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      * @param path
      */
     public void setImageBitmap(String path){
-        Logger.e("设置图片");
+        //Logger.e("设置图片");
         String pngPath = GlobalParameter.ROBOT_FOLDER + path + "/" + "bkPic.png";
         FileInputStream fis = null;
         try {
@@ -456,7 +456,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Logger.e("surfaceView的大小："+width+";"+height);
+        //Logger.e("surfaceView的大小："+width+";"+height);
     }
 
     @Override

@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:text="未加载到正在使用中的地图，请点击此处刷新！"
+            android:text="@string/common_warn"
             android:textSize="18sp"
             android:id="@+id/tv_warn"
             android:layout_centerVertical="true"
@@ -28,6 +28,9 @@
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="18sp"
             />
         <RelativeLayout
             android:id="@+id/shrink_layout"
@@ -51,9 +54,12 @@
                     android:layout_marginLeft="14dp"
                     android:layout_marginTop="14dp"
                     android:gravity="center"
-                    android:text="当前设备:"
+                    android:text="@string/now_device"
                     android:textColor="#ffffff"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="9sp"
+                    android:autoSizeMaxTextSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_now_device"
@@ -65,7 +71,10 @@
                     android:gravity="center"
                     android:text="*****"
                     android:textColor="#ffffff"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="9sp"
+                    android:autoSizeMaxTextSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_now_m"
@@ -77,7 +86,10 @@
                     android:gravity="center"
                     android:text="当前地图:"
                     android:textColor="#ffffff"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="9sp"
+                    android:autoSizeMaxTextSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_now_map"
@@ -90,7 +102,11 @@
                     android:maxLength="19"
                     android:text="*****"
                     android:textColor="#ffffff"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="9sp"
+                    android:autoSizeMaxTextSize="12sp"
+                    />
             </RelativeLayout>
 
             <!--点击是否伸缩-->
@@ -124,17 +140,20 @@
         <TextView
             android:layout_width="66dp"
             android:layout_height="18dp"
-            android:text="当前任务:"
+            android:text="@string/now_task"
             android:textColor="#ccffffff"
             android:textSize="14dp"
             android:layout_marginTop="36dp"
             android:layout_marginLeft="16dp"
             android:id="@+id/tv_now_task_t"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="14sp"
             />
         <TextView
             android:layout_width="160dp"
             android:layout_height="26dp"
-            android:text="未选择"
+            android:text="@string/common_unselected"
             android:textColor="#ffffff"
             android:textSize="12sp"
             android:layout_toRightOf="@id/tv_now_task_t"
@@ -144,6 +163,9 @@
             android:paddingLeft="20dp"
             android:gravity="center|left"
             android:background="@drawable/bt_bg__map"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
 
         <ImageView
@@ -156,18 +178,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:text="工作状态："
+            android:text="@string/work_status"
             android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_marginTop="100dp"
             android:id="@+id/tv_work1"
             android:layout_marginLeft="202dp"
             android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="14sp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:text="任务次数："
+            android:text="@string/task_times"
             android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_below="@id/tv_work1"
@@ -180,7 +205,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:text="工作时长："
+            android:text="@string/working_hours"
             android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_below="@id/tv_work2"
@@ -188,11 +213,14 @@
             android:layout_marginTop="20dp"
             android:id="@+id/tv_work3"
             android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="14sp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:text="任务速度："
+            android:text="@string/task_speed"
             android:textSize="14dp"
             android:textColor="#ccffffff"
             android:layout_below="@id/tv_work3"
@@ -200,6 +228,9 @@
             android:layout_marginTop="20dp"
             android:id="@+id/tv_work4"
             android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="14sp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -208,9 +239,10 @@
             android:layout_marginTop="100dp"
             android:gravity="left"
             android:textColor="#ffffff"
-            android:hint="待命中 "
+            android:hint="@string/common_waiting"
             android:id="@+id/tv_work_statue"
-            android:textSize="14dp"/>
+            android:textSize="14dp"
+           />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -220,7 +252,9 @@
             android:textColor="#ffffff"
             android:textSize="14dp"
             android:layout_below="@id/tv_work_statue"
-            android:id="@+id/tv_task_num"/>
+            android:id="@+id/tv_task_num"
+            android:hint="@string/common_waiting"
+            />
         <TextView
             android:id="@+id/tv_work_time"
             android:layout_width="wrap_content"
@@ -229,9 +263,10 @@
             android:layout_marginTop="20dp"
             android:gravity="left"
             android:textColor="#ffffff"
-            android:hint="待命中"
+            android:hint="@string/common_waiting"
             android:textSize="14dp"
             android:layout_below="@id/tv_task_num"
+
             />
         <TextView
             android:layout_width="wrap_content"
@@ -240,25 +275,29 @@
             android:layout_marginTop="20dp"
             android:gravity="left"
             android:textColor="#ffffff"
-            android:hint="待命中"
+            android:hint="@string/common_waiting"
             android:textSize="14dp"
             android:layout_below="@id/tv_work_time"
-            android:id="@+id/tv_task_speed"/>
+            android:id="@+id/tv_task_speed"
+           />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:text="建立任务步骤："
+            android:text="@string/create_task_steps"
             android:textSize="14dp"
             android:textColor="#ffffff"
             android:layout_marginTop="380dp"
             android:layout_marginLeft="16dp"
             android:gravity="center"
             android:id="@+id/tv_set_go"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10dp"
+            android:autoSizeMaxTextSize="@dimen/sp_14"
             />
         <TextView
             android:layout_width="60dp"
             android:layout_height="18dp"
-            android:text="完成"
+            android:text="@string/common_complete"
             android:textSize="14dp"
             android:textColor="#ffffff"
             android:layout_marginTop="380dp"
@@ -300,41 +339,50 @@
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:drawableTop="@mipmap/newmap"
-                android:text="建立地图"
+                android:text="@string/first_steps"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
                 android:id="@+id/tv_jl_map"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="7sp"
+                android:autoSizeMaxTextSize="10sp"
                 />
             <TextView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
                 android:drawableTop="@mipmap/newpoint"
-                android:text="编辑目标点"
+                android:text="@string/second_steps"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
                 android:id="@+id/tv_bj_point"
                 android:layout_toRightOf="@+id/tv_jl_map"
                 android:layout_marginLeft="40dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="7sp"
+                android:autoSizeMaxTextSize="10sp"
                 />
             <TextView
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:drawableTop="@mipmap/newtask"
-                android:text="建立任务"
+                android:text="@string/thirdly_steps"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
                 android:id="@+id/tv_jl_task"
                 android:layout_toRightOf="@+id/tv_bj_point"
                 android:layout_marginLeft="45dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="7sp"
+                android:autoSizeMaxTextSize="10sp"
                 />
             <TextView
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:drawableTop="@mipmap/run_task"
-                android:text="运行任务"
+                android:text="@string/fourth_steps"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:gravity="center|bottom"
@@ -363,12 +411,15 @@
         android:visibility="gone"
         >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="17dp"
             android:layout_marginTop="42dp"
-            android:text="正在充电，底盘已关闭运动"
-            android:layout_centerHorizontal="true"
+            android:text="@string/common_charging"
+            android:gravity="center"
             android:textColor="#66ffffff"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeMinTextSize="9sp"
             />
         <ImageView
             android:id="@+id/iv_charge"
@@ -395,7 +446,7 @@
             android:layout_below="@id/iv_charge"
             android:layout_marginTop="47dp"
             android:layout_centerHorizontal="true"
-            android:text="退出充电"
+            android:text="@string/common_exit_charge"
             android:textSize="12sp"
             android:textColor="#ccffffff"
             android:background="@drawable/exit_button_bg"

@@ -44,14 +44,14 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
     public  void initSDK(Application application) {
         // 这个过程专门用于堆分析的 leak 金丝雀
         // 你不应该在这个过程中初始化你的应用程序
-      /*  if (LeakCanary.isInAnalyzerProcess(application)) {
+       /* if (LeakCanary.isInAnalyzerProcess(application)) {
             return;
         }*/
         // 图片加载器
         ImageLoader.init(application);
 
-       /* // 内存泄漏检测
-        LeakCanary.install(application);*/
+        // 内存泄漏检测
+        //LeakCanary.install(application);
         // 设置 Toast 拦截器
         ToastUtils.setToastInterceptor(new ToastInterceptor() {
             @Override

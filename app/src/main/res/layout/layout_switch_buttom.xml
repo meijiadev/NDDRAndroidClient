@@ -9,28 +9,38 @@
         android:layout_width="103dp"
         android:layout_height="match_parent"
         android:background="@drawable/bt_switch_button"
-        android:text="执行"
+        android:text="@string/common_execute"
         android:textColor="@color/white"
         android:gravity="center"
         android:textSize="12dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9dp"
+        android:autoSizeMaxTextSize="12dp"
         />
     <TextView
         android:id="@+id/tv_center"
         android:layout_width="103dp"
         android:layout_height="match_parent"
-        android:text="暂停"
+        android:text="@string/common_pause"
         android:textColor="@color/white"
         android:gravity="center"
         android:textSize="12dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9dp"
+        android:autoSizeMaxTextSize="12dp"
+
         />
     <TextView
         android:id="@+id/tv_right"
         android:layout_width="103dp"
         android:layout_height="match_parent"
-        android:text="待命"
+        android:text="@string/common_wait"
         android:textColor="@color/white"
         android:gravity="center"
         android:textSize="12dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9dp"
+        android:autoSizeMaxTextSize="12dp"
         />
 
 </LinearLayout>

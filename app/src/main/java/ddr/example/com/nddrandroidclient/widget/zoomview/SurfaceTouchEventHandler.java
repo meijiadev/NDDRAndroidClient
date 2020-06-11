@@ -14,14 +14,10 @@ import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
- * desc：用于处理缩放平移旋转，并返回转换矩阵
- * 单独抽取出来是为了避免当项目中出现大量需要自定义不同样式缩放平移控件时重复写大量代码
- * time:2020/04/29
+ * 处理SurfaceView的点击事件
  */
-public class TouchEvenHandler {
-    private View view;
-    private Bitmap sourceBitmap;
-    private float initRatio;             //最初的缩放大小
+public class SurfaceTouchEventHandler {
+    private static SurfaceTouchEventHandler surfaceTouchEventHandler;
     // Matrix getValues 矩阵参数
     private float[] values=new float[9];
     private static final int MSCALE_X=0;
@@ -33,6 +29,15 @@ public class TouchEvenHandler {
     private static final int MPERSP_0=6;
     private static final int MPERSP_1=7;
     private static final int MPERSP_2=8;
+    // 当前操作的状态
+    public int currentStatus;
+    public static final int DEFAULT_BITMAP=0;      // 默认状态下
+    public static final int SCALE_BITMAP=1;        //  缩放状态下
+    public static final int TRANSLATE_BITMAP=2;    //  平移
+    public static final int ROTATION_BITMAP=3;    //   旋转
+    public static final int NONE_BITMAP=4;        // 不作任何操作
+    public static final int SCALE_BITMAP_OUT=5;   //放大
+    public static final int SCALE_BITMAP_IN=6;    // 缩小
     private float x_down = 0;
     private float y_down = 0;
     private PointF mid = new PointF();
@@ -49,32 +54,25 @@ public class TouchEvenHandler {
     // 控件的大小
     private int widthScreen;
     private int heightScreen;
-    // 当前操作的状态
-    public int currentStatus;
-    public static final int DEFAULT_BITMAP=0;      // 默认状态下
-    public static final int SCALE_BITMAP=1;        //  缩放状态下
-    public static final int TRANSLATE_BITMAP=2;    //  平移
-    public static final int ROTATION_BITMAP=3;    //   旋转
-    public static final int NONE_BITMAP=4;        // 不作任何操作
-    public static final int SCALE_BITMAP_OUT=5;   //放大
-    public static final int SCALE_BITMAP_IN=6;    // 缩小
-    private boolean isAutoRefresh;
     private boolean canRotate=true;             // 默认可旋转
-    private float originalX,originalY;           //最初时图片左上角位于画布中的位置
 
-    public TouchEvenHandler(@NotNull View view, Bitmap sourceBitmap, boolean isAutoRefresh) {
-        Logger.e("初始化TouchEvenHandler");
-        this.view=view;
-        this.isAutoRefresh=isAutoRefresh;
-        widthScreen=view.getWidth();
-        heightScreen=view.getHeight();
-        this.sourceBitmap=sourceBitmap;
-        initBitmap();
-        if (!isAutoRefresh){
-            view.invalidate();
+
+    public static SurfaceTouchEventHandler getInstance(int widthScreen,int heightScreen){
+        if (surfaceTouchEventHandler==null){
+            synchronized (SurfaceTouchEventHandler.class){
+                if (surfaceTouchEventHandler==null){
+                    surfaceTouchEventHandler=new SurfaceTouchEventHandler(widthScreen,heightScreen);
+                }
+            }
         }
+        return surfaceTouchEventHandler;
     }
 
+    private SurfaceTouchEventHandler(int widthScreen,int heightScreen) {
+        Logger.e("初始化TouchEvenHandler");
+        this.widthScreen=widthScreen;
+        this.heightScreen=heightScreen;
+    }
 
     /**
      * 获取最终用于绘制的矩阵变量
@@ -98,33 +96,7 @@ public class TouchEvenHandler {
      */
     public void initMatrix(){
         matrix.set(originalMatrix);
-        if (!isAutoRefresh){
-            view.invalidate();
-        }
-    }
 
-    /**
-     * 获得最初未变换时图片在画布中的坐标X
-     * @return
-     */
-    public float getOriginalX() {
-        return originalX;
-    }
-
-    /**
-     * 获得最初的缩放值
-     * @return
-     */
-    public float getInitRatio() {
-        return initRatio;
-    }
-
-    /**
-     * 获得最初未变换时图片在画布中的坐标Y
-     * @return
-     */
-    public float getOriginalY() {
-        return originalY;
     }
 
     /**
@@ -198,12 +170,12 @@ public class TouchEvenHandler {
         return Arrays.toString(values);
     }
 
-
     /**
      * 已知原始相对于图片的坐标，计算图片平移缩放或绕某点旋转之后相对于整个画布的坐标
      * @return 画布坐标
      */
     public XyEntity coordinatesToCanvas(float x, float y){
+        matrix.getValues(values);
         double radians= Math.atan2(values[Matrix.MSKEW_Y], values[Matrix.MSCALE_Y]);
         double cosA= Math.cos(radians);
         double sinA= Math.sin(radians);
@@ -213,22 +185,6 @@ public class TouchEvenHandler {
         double y1=cx*sinA+cy*cosA;
         double x2=getTranslateX()+x1;
         double y2=getTranslateY()+y1;
-        return new XyEntity((float) x2,(float) y2);
-    }
-
-    /**
-     * 已知相对于画布的坐标计算出该点相对于图片左上角的坐标，按照上面的方式反着推
-     * @return
-     */
-    public XyEntity coordinatesToImage(float x, float y){
-        double cosA=getCosA();
-        double sinA=getSinA();
-        float x1=x-getTranslateX();
-        float y1=y-getTranslateY();
-        double cx=x1/cosA+sinA/(cosA*cosA+sinA*sinA)*(y1-sinA*x1/cosA);
-        double cy=(y1-x1*sinA/cosA)*cosA/(cosA*cosA+sinA*sinA);
-        double x2=cx/getZoomX();
-        double y2=cy/getZoomY();
         return new XyEntity((float) x2,(float) y2);
     }
 
@@ -271,8 +227,6 @@ public class TouchEvenHandler {
                         currentStatus=SCALE_BITMAP;
                         matrix1.getValues(values);
                         matrix.set(matrix1);
-                        if (!isAutoRefresh)
-                        view.invalidate();
                     }
                 } else if (currentStatus == TRANSLATE_BITMAP) {
                     matrix1.set(savedMatrix);
@@ -283,73 +237,15 @@ public class TouchEvenHandler {
                         currentStatus=TRANSLATE_BITMAP;
                         matrix1.getValues(values);
                         matrix.set(matrix1);
-                        if (!isAutoRefresh)
-                        view.invalidate();
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 currentStatus = NONE_BITMAP;
-                view.invalidate();
                 break;
         }
 
-    }
-
-
-    private void initBitmap(){
-        if (sourceBitmap!=null){
-            matrix.reset();
-            savedMatrix.set(matrix);
-            matrix1.set(savedMatrix);
-            int bitmapWidth=sourceBitmap.getWidth();
-            int bitmapHeight=sourceBitmap.getHeight();
-            Logger.d("图片宽高："+bitmapWidth+";"+bitmapHeight+"控件："+widthScreen+";"+heightScreen);
-            //当图片的宽或者高大于控件的宽高
-            if (bitmapWidth>widthScreen||bitmapHeight>heightScreen){
-                //如果图片的宽大于控件的宽
-                if (bitmapWidth>widthScreen){
-                    Logger.d("图片的宽大于控件的宽");
-                    float ratio=widthScreen/(bitmapWidth*1f);
-                    float translateY = (heightScreen - (bitmapHeight * ratio)) / 2f;
-                    matrix1.postScale(ratio,ratio);
-                    // 在纵坐标方向上进行偏移，以保证图片居中显示
-                    matrix1.postTranslate(0, translateY);
-                    initRatio=ratio;
-                }else if(bitmapHeight>heightScreen) {
-                    Logger.d("图片的高大于控件的高");
-                    float ratio=heightScreen/(bitmapHeight*1f);
-                    matrix1.postScale(ratio,ratio);
-                    float translateX=(widthScreen-(bitmapWidth*ratio))/2f;
-                    //在横坐标上偏移，保证图片居中显示
-                    matrix1.postTranslate(translateX,0);
-                    Logger.e("------ratio"+ratio+";"+translateX);
-                    initRatio=ratio;
-                }else {
-                    //当图片宽高都大于控件宽高
-                    Logger.d("当图片宽高都大于控件宽高");
-                    float ratio= Math.max((bitmapWidth*1f)/widthScreen,(bitmapHeight*1f)/heightScreen);
-                    matrix1.postScale(ratio,ratio);
-                    float translateX=(widthScreen-(bitmapWidth*ratio))/2f;
-                    float translateY=(heightScreen-(bitmapHeight*ratio))/2f;
-                    matrix1.postTranslate(translateX,translateY);
-                    initRatio=ratio;
-                }
-            }else {
-                //当图片的宽高都小于控件的宽高，则按照原图比例居中显示
-                Logger.d("图片的宽高都小于控件的宽高");
-                float translateX=(widthScreen-bitmapWidth)/2f;
-                float translateY=(heightScreen-bitmapHeight)/2f;
-                matrix1.postTranslate(translateX,translateY);
-                initRatio=1f;
-            }
-            matrix.set(matrix1);
-            matrix.getValues(values);
-            originalMatrix.set(matrix);
-            originalX=getTranslateX();
-            originalY=getTranslateY();
-        }
     }
 
     /**
@@ -362,16 +258,16 @@ public class TouchEvenHandler {
         // 图片4个顶点的坐标
         float x1 = f[0] * 0 + f[1] * 0 + f[2];
         float y1 = f[3] * 0 + f[4] * 0 + f[5];
-        float x2 = f[0] * sourceBitmap.getWidth() + f[1] * 0 + f[2];
-        float y2 = f[3] * sourceBitmap.getWidth() + f[4] * 0 + f[5];
-        float x3 = f[0] * 0 + f[1] * sourceBitmap.getHeight() + f[2];
-        float y3 = f[3] * 0 + f[4] * sourceBitmap.getHeight() + f[5];
-        float x4 = f[0] * sourceBitmap.getWidth() + f[1] * sourceBitmap.getHeight() + f[2];
-        float y4 = f[3] * sourceBitmap.getWidth() + f[4] * sourceBitmap.getHeight() + f[5];
+        float x2 = f[0] * widthScreen+ f[1] * 0 + f[2];
+        float y2 = f[3] * widthScreen + f[4] * 0 + f[5];
+        float x3 = f[0] * 0 + f[1] * heightScreen + f[2];
+        float y3 = f[3] * 0 + f[4] * heightScreen+ f[5];
+        float x4 = f[0] * widthScreen + f[1] * heightScreen + f[2];
+        float y4 = f[3] * widthScreen + f[4] * heightScreen + f[5];
         // 图片现宽度
         double width = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         // 缩放比率判断
-        if (width < sourceBitmap.getWidth()*initRatio-1 || width > widthScreen * 9) {
+        if (width < widthScreen/3|| width > widthScreen * 6) {
             return true;
         }
         // 出界判断
@@ -410,4 +306,14 @@ public class TouchEvenHandler {
         // Logger.e("取弧度："+radians);
         return (float) Math.toDegrees(radians);
     }
+
+
+    /**
+     * 重置销毁当前类
+     */
+    public void onDestroy(){
+        surfaceTouchEventHandler=null;
+        matrix.reset();
+    }
+
 }

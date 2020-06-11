@@ -26,6 +26,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.RobotTestAdapter;
 
 /**
@@ -67,7 +68,7 @@ public class RobotTestSetFragment extends DDRLazyFragment {
     @Override
     protected void initView() {
         robotTestAdapter = new RobotTestAdapter(R.layout.item_robot_test);
-        LinearLayoutManager layoutManager =new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager =new NLinearLayoutManager(getAttachActivity());
         recycle_robot_test.setLayoutManager(layoutManager);
         recycle_robot_test.setAdapter(robotTestAdapter);
     }

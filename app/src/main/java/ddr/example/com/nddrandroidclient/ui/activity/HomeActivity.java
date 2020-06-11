@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -236,6 +238,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         editor = sharedPreferences.edit();
 
 
+
+
     }
 
 
@@ -266,7 +270,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
                 break;
             case R.id.status:
-                Logger.e("---------setCurrentItem");
+                //Logger.e("---------setCurrentItem");
                 vpHomePager.setCurrentItem(0);
                 break;
             case R.id.mapmanager:
@@ -497,7 +501,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         }).start();
 
     }
-
 
     /**
      * 遥控弹窗
@@ -730,7 +733,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         super.onResume();
         if (!tcpClient.isConnected()){
             Logger.e("网络已断开");
-            netWorkStatusDialog();
+            //netWorkStatusDialog();
         }
     }
 

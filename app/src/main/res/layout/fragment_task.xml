@@ -7,21 +7,27 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:gravity="center"
-        android:text="任务列表"
+        android:text="@string/task_title"
         android:textColor="#eaf1f5"
         android:textSize="14sp"
-        android:background="#161718"/>
+        android:background="#161718"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"/>
     <TextView
         android:layout_width="90dp"
         android:layout_height="32dp"
         android:background="@drawable/bt_bg__map"
-        android:text="同步任务"
+        android:text="@string/save_task"
         android:textSize="10sp"
         android:textColor="#ccffffff"
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:layout_marginTop="6dp"
         android:layout_marginRight="24dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="7sp"
+        android:autoSizeMaxTextSize="10sp"
         android:id="@+id/tv_task_save"
         />
     <TextView
@@ -30,9 +36,12 @@
         android:layout_height="32dp"
         android:layout_marginLeft="21dp"
         android:layout_marginTop="5dp"
-        android:text="新建任务"
+        android:text="@string/new_create_task"
         android:textColor="@color/white"
         android:textSize="12sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMinTextSize="9sp"
         android:gravity="center"
         android:background="@drawable/bt_bg__map"
         />
@@ -54,7 +63,10 @@
                 android:id="@+id/tv_task_name1"
                 android:textSize="12sp"
                 android:textColor="#eaf1f5"
-                android:text="任务名称"
+                android:text="@string/task_name"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 />
@@ -67,8 +79,11 @@
                 android:layout_marginLeft="117.5dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="执行时段"
+                android:text="@string/execute_time"
                 android:textSize="12sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="9sp"
                 android:textColor="#eaf1f5"
                 />
             <TextView
@@ -79,8 +94,11 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:textSize="12sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="@dimen/text_size_12sp"
                 android:textColor="#eaf1f5"
-                android:text="任务状态"
+                android:text="@string/task_status"
                 android:id="@+id/tv_task_status"/>
             <TextView
                 android:layout_width="60dp"
@@ -90,8 +108,11 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:textSize="12sp"
+                android:autoSizeMaxTextSize="@dimen/text_size_12sp"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeTextType="uniform"
                 android:textColor="#eaf1f5"
-                android:text="操作"/>
+                android:text="@string/operator_task"/>
 
         </RelativeLayout>
 
