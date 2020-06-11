@@ -35,6 +35,7 @@ import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 
@@ -104,7 +105,9 @@ public class MapSettingActivity extends DDRActivity {
         switch (view.getId()) {
             case R.id.tv_title:
                 new InputDialog.Builder(this)
-                        .setTitle("是否保存本次编辑？")
+                        .setTitle("是否保存当前设置并退出？")
+                        .setConfirm("保存")
+                        .setCancel("不保存")
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
@@ -129,6 +132,7 @@ public class MapSettingActivity extends DDRActivity {
                             public void onCancel(BaseDialog dialog) {
                                 //tcpClient.requestFile();
                                 finish();
+
                             }
                         }).show();
                 break;
@@ -238,7 +242,7 @@ public class MapSettingActivity extends DDRActivity {
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(this, 0), 5);
         showRecycler =contentView.findViewById(R.id.recycler_task_check);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter.setNewData(targetPoints);
@@ -342,7 +346,7 @@ public class MapSettingActivity extends DDRActivity {
         super.onResume();
         if (tcpClient!=null&&!tcpClient.isConnected()){
             Logger.e("网络已断开");
-            netWorkStatusDialog();
+           // netWorkStatusDialog();
         }
     }
 

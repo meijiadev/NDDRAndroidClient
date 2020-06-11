@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.widget.view;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +58,17 @@ public class RectangleView extends Shape {
         zoomImageView= (ZoomImageView) o;
         if (rectangles!=null&&rectangles.size()>0){
             for (Rectangle rectangle:rectangles){
+                Path path=new Path();
                 XyEntity xyEntity1=zoomImageView.toCanvas(rectangle.getFirstPoint().getX(),rectangle.getFirstPoint().getY());
-                XyEntity xyEntity2=zoomImageView.toCanvas(rectangle.getSecondPoint().getX(),rectangle.getSecondPoint().getY());
-                canvas.drawRect(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),paint1);
+                XyEntity xyEntity2=zoomImageView.toCanvas(rectangle.getFirstPoint_1().getX(),rectangle.getFirstPoint_1().getY());
+                XyEntity xyEntity3=zoomImageView.toCanvas(rectangle.getSecondPoint().getX(),rectangle.getSecondPoint().getY());
+                XyEntity xyEntity4=zoomImageView.toCanvas(rectangle.getSecondPoint_1().getX(),rectangle.getSecondPoint_1().getY());
+                path.moveTo(xyEntity1.getX(),xyEntity1.getY());
+                path.lineTo(xyEntity2.getX(),xyEntity2.getY());
+                path.lineTo(xyEntity3.getX(),xyEntity3.getY());
+                path.lineTo(xyEntity4.getX(),xyEntity4.getY());
+                path.close();
+                canvas.drawPath(path,paint1);
 
             }
         }

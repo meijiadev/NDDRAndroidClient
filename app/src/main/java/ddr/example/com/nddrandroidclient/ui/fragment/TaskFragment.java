@@ -39,6 +39,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.NewTaskActivity;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.TimeDialog;
@@ -99,7 +100,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
     @Override
     protected void initView() {
         taskAdapter=new TaskAdapter(R.layout.item_recycle_tasklist);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         recycle_task_list.setLayoutManager(layoutManager);
         recycle_task_list.setAdapter(taskAdapter);
 
@@ -149,20 +150,25 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                                     break;
                                     // 已修改成“删除”任务
                                 case R.id.tv_task_stop:
-                                    new InputDialog.Builder(getAttachActivity())
-                                            .setEditVisibility(View.GONE)
-                                            .setTitle("是否要删除该任务")
-                                            .setListener(new InputDialog.OnListener() {
-                                                @Override
-                                                public void onConfirm(BaseDialog dialog, String content) {
-                                                    taskModeList.remove(position);
-                                                    tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
-                                                }
-                                                @Override
-                                                public void onCancel(BaseDialog dialog) {
+                                    if (taskModeList.get(position).getTaskState()==2){
+                                        toast("正在运行的任务无法删除!");
+                                    }else {
+                                        new InputDialog.Builder(getAttachActivity())
+                                                .setEditVisibility(View.GONE)
+                                                .setTitle("是否要删除该任务")
+                                                .setListener(new InputDialog.OnListener() {
+                                                    @Override
+                                                    public void onConfirm(BaseDialog dialog, String content) {
+                                                        taskModeList.remove(position);
+                                                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                                                    }
+                                                    @Override
+                                                    public void onCancel(BaseDialog dialog) {
 
-                                                }
-                                            }).show();
+                                                    }
+                                                }).show();
+
+                                    }
                                     break;
                             }
 
@@ -224,14 +230,29 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                             taskModeList.get(mPosition).setStartMin(temporaryMinute);
                             taskModeList.get(mPosition).setEndHour(hour);
                             taskModeList.get(mPosition).setEndMin(minute);
+                            taskModeList.get(mPosition).setType(2);
+                            taskModeList.get(mPosition).setTaskState(1);
                             dialog.dismiss();
                             taskAdapter.setNewData(taskModeList);
                             submissionTask();
+                        }else if (hour==temporaryHour){
+                            if (minute>temporaryMinute){
+                                taskModeList.get(mPosition).setStartHour(temporaryHour);
+                                taskModeList.get(mPosition).setStartMin(temporaryMinute);
+                                taskModeList.get(mPosition).setEndHour(hour);
+                                taskModeList.get(mPosition).setEndMin(minute);
+                                taskModeList.get(mPosition).setType(2);
+                                taskModeList.get(mPosition).setTaskState(1);
+                                dialog.dismiss();
+                                taskAdapter.setNewData(taskModeList);
+                                submissionTask();
+                            }else {
+                                toast("结束时间必须大于开始时间，请重新设置");
+                            }
                         }else {
                             toast("结束时间必须大于开始时间，请重新设置");
                         }
                     }
-
                     @Override
                     public void onCancel(BaseDialog dialog) {
                         //返回上一步
@@ -254,7 +275,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
             case 4:
                 taskModeList.get(position).setTaskState(1);       //  从终止状态改为等待执行
                 taskModeList.get(position).setType(2);            // 从不在队列中改为在队列中
-
                 break;
             case 1:
                 taskModeList.get(position).setTaskState(4);       //  终止
@@ -266,7 +286,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                 taskModeList.get(position).setType(2);       //在队列中
                 break;
             case 3:
-                toast("无法恢复");
+                toast("不在时间段内，无法恢复！");
                 break;
             case 5:
                 taskModeList.get(position).setTaskState(2);  //从挂起状态改为运行

@@ -18,6 +18,7 @@ import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 
@@ -132,7 +133,7 @@ public final class SelectDialog {
                     .create()
                     .showAsDropDown(view, DpOrPxUtils.dip2px(fragmentActivity, 0), 5);
             showRecycler =contentView.findViewById(R.id.recycler_task_check);
-            LinearLayoutManager layoutManager=new LinearLayoutManager(fragmentActivity);
+            NLinearLayoutManager layoutManager=new NLinearLayoutManager(fragmentActivity);
             showRecycler.setLayoutManager(layoutManager);
             mAdapter=new SelectAdapter(R.layout.item_recycle_task_check);
             showRecycler.setAdapter(mAdapter);

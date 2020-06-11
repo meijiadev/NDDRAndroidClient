@@ -57,6 +57,8 @@ import ddr.example.com.nddrandroidclient.ui.activity.MapSettingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.ActionAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.NGridLayoutManager;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
@@ -211,17 +213,17 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapDetailLayout.setVisibility(View.GONE);
         mapAdapter = new MapAdapter(R.layout.item_map_recycler, getAttachActivity());
         @SuppressLint("WrongConstant")
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4);
+        NGridLayoutManager gridLayoutManager = new NGridLayoutManager(getAttachActivity(), 4);
         mapRecycler.setLayoutManager(gridLayoutManager);
         mapRecycler.setAdapter(mapAdapter);
         //目标点(路径或任务)的列表初始化
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager linearLayoutManager = new NLinearLayoutManager(getAttachActivity());
         recyclerDetail.setLayoutManager(linearLayoutManager);
         targetPointAdapter = new TargetPointAdapter(R.layout.item_target_point);
         pathAdapter = new PathAdapter(R.layout.item_target_point);
         actionAdapter = new ActionAdapter(R.layout.item_path_action);
         recyclerDetail.setAdapter(targetPointAdapter);
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager linearLayoutManager1 = new NLinearLayoutManager(getAttachActivity());
         actionRecycler.setLayoutManager(linearLayoutManager1);
         actionRecycler.setAdapter(actionAdapter);     //给动作Recycler设置适配器
         selectPointAdapter = new TargetPointAdapter(R.layout.item_task_select);
@@ -231,7 +233,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     @Override
     protected void initData() {
-        tcpClient = TcpClient.getInstance(getAttachActivity(), ClientMessageDispatcher.getInstance());
+        tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         mapFileStatus = MapFileStatus.getInstance();
         downloadMapNames = mapFileStatus.getMapNames();
         checkFilesAllName(downloadMapNames);
@@ -426,7 +428,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     targetPoints.get(mPosition).setName(etPointName.getText().toString());
                     targetPoints.get(mPosition).setX(etX.getFloatText());
                     targetPoints.get(mPosition).setY(etY.getFloatText());
-                    targetPoints.get(mPosition).setTheta(etToward.getIntegerText());
+                    targetPoints.get(mPosition).setTheta(etToward.getFloatText());
                     targetPointAdapter.setNewData(targetPoints);
                     etX.setText(targetPoints.get(mPosition).getX());
                     etY.setText(targetPoints.get(mPosition).getY());
@@ -573,7 +575,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                 etY.setText(targetPoints.get(0).getY());
                                                 etToward.setText(targetPoints.get(0).getTheta());
                                             }
-                                            tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                                            tvTargetPoint.setText(getString(R.string.target_point_label) + "(" + targetPoints.size() + ")");
                                             PointView.getInstance(getAttachActivity()).setPoint(null);
                                             zoomMap.invalidate();
                                         } else {
@@ -603,7 +605,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                 tvConfig.setText(pathLines.get(0).getConfig());
                                                 actionAdapter.setNewData(selectActionList(pathLines.get(0).getPathPoints()));
                                             }
-                                            tvPath.setText("路径" + "(" + pathLines.size() + ")");
+                                            tvPath.setText(getString(R.string.path_label)+ "(" + pathLines.size() + ")");
                                             LineView.getInstance(getAttachActivity()).setPoints(null);
                                             zoomMap.invalidate();
                                         } else {
@@ -1037,7 +1039,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 .create()
                 .showAsDropDown(view, 0, 5);
         pathModeRecycler = contentView.findViewById(R.id.path_mode_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager = new NLinearLayoutManager(getAttachActivity());
         pathModeRecycler.setLayoutManager(layoutManager);
         pathModeRecycler.setAdapter(stringAdapter);
     }
@@ -1277,11 +1279,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
      */
     private void handleRecycler(){
         targetReferenceAdapter=new TargetPointAdapter(R.layout.item_show_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager = new NLinearLayoutManager(getAttachActivity());
         recyclerPoints.setLayoutManager(layoutManager);
         recyclerPoints.setAdapter(targetReferenceAdapter);
         pathReferenceAdapter=new PathAdapter(R.layout.item_show_recycler);
-        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager1 = new NLinearLayoutManager(getAttachActivity());
         recyclerPaths.setLayoutManager(layoutManager1);
         recyclerPaths.setAdapter(pathReferenceAdapter);
         targetReferenceAdapter.setNewData(targetPoints);
@@ -1549,7 +1551,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         break;
                     case 2:
                         Logger.e("进入重定位...");
-                        relocationDialog = new RelocationDialog.Builder(getActivity())
+                        relocationDialog = new RelocationDialog.Builder(getAttachActivity())
                                 .setAutoDismiss(true)
                                 .setListener(new RelocationDialog.OnListener() {
                                     @Override

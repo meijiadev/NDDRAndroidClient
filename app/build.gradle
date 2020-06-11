@@ -130,9 +130,9 @@ dependencies {
     // 标题栏：https://github.com/getActivity/TitleBar
     implementation 'com.hjq:titlebar:6.0'
 
-    // 内存泄漏捕捉：https://github.com/square/leakcanary
-    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    //releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+ /*   // 内存泄漏捕捉：https://github.com/square/leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'*/
 
     // EventBus 事件总线：https://github.com/greenrobot/EventBus
     implementation "org.greenrobot:eventbus:3.1.1"

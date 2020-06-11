@@ -1420,4 +1420,16 @@ message rspGetRobotStatusAndEnv{
 	int32 nType = 1;
 }
 
+/*
+客户端调试用的。
+*/
+message reqClientDebutInfo{
+	int32 notifyLidarPtsWaittime = 1; // 发送雷达点云数据间隔时间，单位ms。一般在100-1000之间。
+	int32 notifyBaseStatusExWaittime = 2; // 发送基础数据间隔时间，单位ms。目前在500
+}
+
+message rspClientDebutInfo{
+	eCmdRspType type = 1;
+}
+
 // +++++++++++++++++++ Common message bodies +++++++++++++++++++ //

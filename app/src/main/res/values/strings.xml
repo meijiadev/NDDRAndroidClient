@@ -21,4 +21,97 @@
     <string name="time_last">上一步</string>
     <string name="time_start_title">请选择开始时间</string>
     <string name="time_end_time">请选择结束时间</string>
+
+    <!--登录页-->
+    <string name="left_button">局域网</string>
+    <string name="right_button">广域网</string>
+    <string name="password_hint">密码</string>
+    <string name="login_button">登录</string>
+    
+    <!--Home页-->
+    <string name="home_status">基础状态</string>
+    <string name="home_map_manager">地图管理</string>
+    <string name="home_task">时段管理</string>
+    <string name="home_setting">高级设置</string>
+    <string name="scram_status">急停</string>
+    <string name="control_status">遥控</string>
+    <string name="robot_shutdown">关机</string>
+    <string name="app_quit">退出</string>
+
+    <!--地图管理-->
+    <string name="new_create_map">新建地图</string>
+    <string name="batch_delete">批量删除</string>
+    <string name="common_exit">退出</string>
+    <string name="common_delete">删除</string>
+    <string name="no_map_notify">未发现地图信息,请新建地图</string>
+    <string name="target_point_label">目标点</string>
+    <string name="path_label">路径</string>
+    <string name="map_edit">地图编辑</string>
+    <string name="common_reference">参考层</string>
+    <string name="common_create">新建</string>
+    <string name="common_point_name">点名称:</string>
+    <string name="common_point_toward">点朝向：</string>
+    <string name="common_path_name">路径名称：</string>
+    <string name="common_save">保存</string>
+    <string name="common_path_mode">路线模式: </string>
+    <string name="common_cs">延边距离：</string>
+    <string name="run_speed">行驶速度：</string>
+    <string name="action_recycler">动作列表：</string>
+    <string name="add_action">添加</string>
+    <string name="file_setting">文件配置：</string>
+    <string name="map_size">地图面积：</string>
+    <string name="create_time">建立日期：</string>
+    
+    <!--基础状态-->
+    <string name="common_warn">未加载到正在使用中的地图，请点击此处刷新！</string>
+    <string name="now_device">当前设备:</string>
+    <string name="now_map">当前地图：</string>
+    <string name="now_task">当前任务：</string>
+    <string name="common_unselected">未选择</string>
+    <string name="work_status">工作状态：</string>
+    <string name="task_times">任务次数：</string>
+    <string name="working_hours">工作时长：</string>
+    <string name="task_speed">任务速度：</string>
+    <string name="common_waiting">待命中</string>
+    <string name="create_task_steps">建立任务步骤：</string>
+    <string name="first_steps">建立地图</string>
+    <string name="second_steps">编辑目标点</string>
+    <string name="thirdly_steps">建立任务</string>
+    <string name="fourth_steps">运行任务</string>
+    <string name="common_complete">完成</string>
+    <string name="common_execute">执行</string>
+    <string name="common_pause">暂停</string>
+    <string name="common_wait">待命</string>
+    <string name="common_charging">正在充电，底盘已关闭运动</string>
+    <string name="common_exit_charge">退出充电</string>
+
+    <!--时段任务-->
+    <string name="task_title">任务列表</string>
+    <string name="save_task">同步任务</string>
+    <string name="new_create_task">新建任务</string>
+    <string name="task_name">任务名称</string>
+    <string name="execute_time">执行时段</string>
+    <string name="task_status">任务状态</string>
+    <string name="operator_task">操作</string>
+    <string name="common_modification">修改</string>
+    <string name="common_terminated">已终止</string>
+    <string name="common_recover">恢复</string>
+    <string name="common_wait_execute">等待执行</string>
+    <string name="common_stop">停止</string>
+    <string name="common_executing">正在执行</string>
+    <string name="common_executed">执行完毕</string>
+    <string name="common_put_up">挂起</string>
+    
+
+    
+
+
+
+
+
+    
+
+    
+
+    
 </resources>

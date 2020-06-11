@@ -44,6 +44,8 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
+import ddr.example.com.nddrandroidclient.ui.adapter.NGridLayoutManager;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
@@ -142,7 +144,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     //private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
     private int modeType;
-    public String sPoint;
+    public String sPoint="未知点";
     private boolean isRunabPoint;               //是否在跑ab点
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -187,7 +189,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast("无任务，原地待命");
                 break;
             case getSpecificPoint11:
-                toast("开始前往"+sPoint);
+                toast("即将开始前往"+sPoint);
                 break;
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {
@@ -200,7 +202,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
-                    Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
+                    //Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setImageBitmap(mapName);
                     tvWarn.setVisibility(View.GONE);
                     groupList = new ArrayList<>();
@@ -234,7 +236,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         chargeAnimation= (AnimationDrawable) ivCharge.getBackground();
         taskCheckAdapter=new StringAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getAttachActivity(), 4);
+        NGridLayoutManager gridLayoutManager = new NGridLayoutManager(getAttachActivity(), 4);
         recyclerGoPoint.setLayoutManager(gridLayoutManager);
         recyclerGoPoint.setAdapter(targetPointAdapter);
         onItemClick(2);
@@ -424,7 +426,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
         recycler_task_check =contentView.findViewById(R.id.recycler_task_check);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         recycler_task_check.setLayoutManager(layoutManager);
         recycler_task_check.setAdapter(taskCheckAdapter);
         onItemClick(1);
@@ -606,6 +608,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                     .setListener(new InputDialog.OnListener() {
                                         @Override
                                         public void onConfirm(BaseDialog dialog, String content) {
+                                            sPoint = targetPoints.get(position).getName();
                                             goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
                                             tv_restart_point.setVisibility(View.VISIBLE);
                                             for (int i = 0; i < targetPoints.size(); i++) {
@@ -613,7 +616,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                             }
                                             targetPoints.get(position).setSelected(true);
                                             targetPointAdapter.setNewData(targetPoints);
-                                            sPoint = targetPoints.get(position).getName();
                                             isRunabPoint=true;
                                         }
                                         @Override
@@ -768,10 +770,14 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                         toast("正在待命中");
                         break;
                     case 3:
-                        toast("请稍等，正在退出");
-                        tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
-                        for (int i = 0; i < targetPoints.size(); i++) {
-                            targetPoints.get(i).setSelected(false);
+                        try {
+                            toast("请稍等，正在退出");
+                            tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
+                            for (int i = 0; i < targetPoints.size(); i++) {
+                                targetPoints.get(i).setSelected(false);
+                            }
+                        }catch (NullPointerException e){
+                            e.printStackTrace();
                         }
                         break;
                 }

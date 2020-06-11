@@ -199,10 +199,12 @@ public class PointView extends Shape {
         }
         if (isRuning){
             XyEntity xyEntity=zoomImageView.toCanvas(x,y);
-            matrix.setRotate(-angle+zoomImageView.getDegrees());
-            directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionW,matrix,true);
-            canvas.drawBitmap(directionBitmap1,xyEntity.getX()-directionW/2,
-                    xyEntity.getY()-directionH/2,pointPaint);
+            float cx=xyEntity.getX()-directionBitmap.getWidth()/2;
+            float cy=xyEntity.getY()-directionBitmap.getHeight()/2;
+            matrix.reset();
+            matrix.postTranslate(cx,cy);
+            matrix.postRotate(-angle+zoomImageView.getDegrees(),xyEntity.getX(),xyEntity.getY());
+            canvas.drawBitmap(directionBitmap,matrix,pointPaint);
         }
 
         if (selectPoints != null) {

@@ -77,7 +77,7 @@ public class MyEditTextChangeListener implements TextWatcher {
                         }else {
                             targetPoint1.setX(x);
                             targetPoint1.setY(editTextY.getFloatText());
-                            targetPoint1.setTheta(editTextC.getIntegerText());
+                            targetPoint1.setTheta(editTextC.getFloatText());
                             pointView.setPoint(targetPoint1);
                             zoomImageView.invalidate();
                         }
@@ -94,7 +94,7 @@ public class MyEditTextChangeListener implements TextWatcher {
                    }else {
                        targetPoint1.setY(y);
                        targetPoint1.setX(editTextX.getFloatText());
-                       targetPoint1.setTheta(editTextC.getIntegerText());
+                       targetPoint1.setTheta(editTextC.getFloatText());
                        pointView.setPoint(targetPoint1);
                        zoomImageView.invalidate();
                    }
@@ -111,7 +111,7 @@ public class MyEditTextChangeListener implements TextWatcher {
                         float angle=Float.valueOf(s.toString());
                         targetPoint1.setX(editTextX.getFloatText());
                         targetPoint1.setY(editTextY.getFloatText());
-                        targetPoint1.setTheta((int) angle);
+                        targetPoint1.setTheta(angle);
                         pointView.setPoint(targetPoint1);
                         zoomImageView.invalidate();
                     }
