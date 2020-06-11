@@ -6,7 +6,12 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
 
@@ -26,12 +31,16 @@ import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
 import ddr.example.com.nddrandroidclient.entity.other.Sensor;
 import ddr.example.com.nddrandroidclient.entity.other.Sensors;
+import ddr.example.com.nddrandroidclient.entity.other.Ultrasonic;
 import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.RobotTestAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.UltrasonicAdapter;
+
 /**
  * time: 2020/03/24
  * desc: 高级设置传感器设置界面
@@ -39,34 +48,12 @@ import ddr.example.com.nddrandroidclient.socket.TcpClient;
 public class SensorSetFragment extends DDRLazyFragment {
     @BindView(R.id.slideButton)
     SlideButton slideButton;
-    @BindView(R.id.ed_cs1)
-    EditText ed_cs1;
-    @BindView(R.id.ed_cs2)
-    EditText ed_cs2;
-    @BindView(R.id.ed_cs3)
-    EditText ed_cs3;
-    @BindView(R.id.ed_cs4)
-    EditText ed_cs4;
-    @BindView(R.id.ed_cs5)
-    EditText ed_cs5;
-    @BindView(R.id.ed_cs6)
-    EditText ed_cs6;
-    @BindView(R.id.ed_cs7)
-    EditText ed_cs7;
-    @BindView(R.id.ed_cs8)
-    EditText ed_cs8;
-    @BindView(R.id.ed_cs9)
-    EditText ed_cs9;
-    @BindView(R.id.ed_cs10)
-    EditText ed_cs10;
-    @BindView(R.id.ed_cs11)
-    EditText ed_cs11;
-    @BindView(R.id.ed_cs12)
-    EditText ed_cs12;
     @BindView(R.id.ed_imu)
     EditText ed_imu;
     @BindView(R.id.tv_save_sensor)
     TextView tv_save_sensor;
+    @BindView(R.id.rl_ul_cs)
+    RecyclerView rl_ul_cs;
 
 
 
@@ -78,6 +65,11 @@ public class SensorSetFragment extends DDRLazyFragment {
     private List<Parameter> parameterList=new ArrayList<>();
     private String sensorKey="Emb_Params.ENABLE_SERSOR_AVOIDANCE";
     private String imuKey="Emb_Params.TARGET_IMU_WORKING_TEMP";
+
+    private UltrasonicAdapter ultrasonicAdapter;
+    private Ultrasonic ultrasonic;
+    private List<Ultrasonic> ultrasonicList;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
@@ -111,6 +103,10 @@ public class SensorSetFragment extends DDRLazyFragment {
 
     @Override
     protected void initView() {
+        ultrasonicAdapter = new UltrasonicAdapter(R.layout.item_recycle_ulrcs);
+        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),4);
+        rl_ul_cs.setLayoutManager(gridLayoutManager);
+        rl_ul_cs.setAdapter(ultrasonicAdapter);
         slideButton.setSmallCircleModel(
                 Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
@@ -142,59 +138,75 @@ public class SensorSetFragment extends DDRLazyFragment {
     //设置传感器参数
     private void setSensorParam(){
         sensorList=sensors.getSensorList();
+        ultrasonicList=new ArrayList<>();
         for (int i=0;i<sensorList.size();i++){
-            if (sensorList.get(i).getKey().equals("1")){
-                int cs1=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs1.setText(String.valueOf(cs1));
+            int cs=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
+            switch (Integer.parseInt(sensorList.get(i).getKey())){
+                case 1:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("1号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 2:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("2号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 3:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("3号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 4:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("4号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 5:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("5号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 6:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("6号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 7:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("7号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 8:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("8号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 9:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("9号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 10:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("10号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 11:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("11号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 12:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("12号");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
             }
-            if (sensorList.get(i).getKey().equals("2")){
-                int cs2=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                Logger.e("超声数据"+cs2);
-                ed_cs2.setText(String.valueOf(cs2));
-            }
-            if (sensorList.get(i).getKey().equals("3")){
-                int cs3=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs3.setText(String.valueOf(cs3));
-            }
-            if (sensorList.get(i).getKey().equals("4")){
-                int cs4=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs4.setText(String.valueOf(cs4));
-            }
-            if (sensorList.get(i).getKey().equals("5")){
-                int cs5=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs5.setText(String.valueOf(cs5));
-            }
-            if (sensorList.get(i).getKey().equals("6")){
-                Logger.e("数值："+sensorList.get(i).getStaticdistance());
-                int cs6=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs6.setText(String.valueOf(cs6));
-            }
-            if (sensorList.get(i).getKey().equals("7")){
-                Logger.e("数值："+sensorList.get(i).getStaticdistance());
-                int cs7=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs7.setText(String.valueOf(cs7));
-            }
-            if (sensorList.get(i).getKey().equals("8")){
-                int cs8=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs8.setText(String.valueOf(cs8));
-            }
-            if (sensorList.get(i).getKey().equals("9")){
-                int cs9=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs9.setText(String.valueOf(cs9));
-            }
-            if (sensorList.get(i).getKey().equals("10")){
-                int cs10=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs10.setText(String.valueOf(cs10));
-            }
-            if (sensorList.get(i).getKey().equals("11")){
-                int cs11=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs11.setText(String.valueOf(cs11));
-            }
-            if (sensorList.get(i).getKey().equals("12")){
-                int cs12=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
-                ed_cs12.setText(String.valueOf(cs12));
-            }
+            ultrasonicList.add(ultrasonic);
+
         }
+        ultrasonicAdapter.setNewData(ultrasonicList);
     }
     //发送传感器参数
     private void postSensorParam(List<BaseCmd.sensorConfigItem> sensorConfigItems,int type){
@@ -312,90 +324,91 @@ public class SensorSetFragment extends DDRLazyFragment {
         List<Sensor> sensorList1=new ArrayList<>();
         for (int i=0;i<sensorList.size();i++){
             Sensor sensor1=new Sensor();
+            String tcontant=ultrasonicList.get(i).getTextContant();
             switch (i){
                 case 0:
-                    if (ed_cs1.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(1));
-                        sensor1.setStaticdistance(ed_cs1.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 1:
-                    if (ed_cs2.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(2));
-                        sensor1.setStaticdistance(ed_cs2.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 2:
-                    if (ed_cs3.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(3));
-                        sensor1.setStaticdistance(ed_cs3.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 3:
-                    if (ed_cs4.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(4));
-                        sensor1.setStaticdistance(ed_cs4.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 4:
-                    if (ed_cs5.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(5));
-                        sensor1.setStaticdistance(ed_cs5.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 5:
-                    if (ed_cs6.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(6));
-                        Logger.e("上传数值"+ed_cs6.getText().toString());
-                        sensor1.setStaticdistance(ed_cs6.getText().toString());
+                        Logger.e("上传数值"+tcontant);
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 6:
-                    if (ed_cs7.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(7));
-                        sensor1.setStaticdistance(ed_cs7.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 7:
-                    if (ed_cs8.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(8));
-                        sensor1.setStaticdistance(ed_cs8.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
 
                     break;
                 case 8:
-                    if (ed_cs9.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(9));
-                        sensor1.setStaticdistance(ed_cs9.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 9:
-                    if (ed_cs10.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(10));
-                        sensor1.setStaticdistance(ed_cs10.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 10:
-                    if (ed_cs11.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(11));
-                        sensor1.setStaticdistance(ed_cs11.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
                     break;
                 case 11:
-                    if (ed_cs12.getText()!=null){
+                    if (tcontant!=null){
                         sensor1.setKey(String.valueOf(12));
-                        sensor1.setStaticdistance(ed_cs12.getText().toString());
+                        sensor1.setStaticdistance(tcontant);
                         sensor1.setDydistance(sensorList.get(i).getDydistance());
                     }
 

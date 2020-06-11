@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp" android:layout_height="54dp">
+    <TextView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:text="1号"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:layout_marginTop="29.5dp"
+        android:gravity="center"
+        android:id="@+id/tv_text_num"
+        />
+    <EditText
+        android:layout_width="62dp"
+        android:layout_height="34dp"
+        android:textSize="12sp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="24.5dp"
+        android:layout_marginLeft="46.5dp"
+        android:gravity="center"
+        android:digits="1234567890"
+        android:maxLength="3"
+        android:inputType="numberSigned|numberDecimal|text"
+        android:imeOptions="actionDone"
+        android:id="@+id/ed_cs_content"
+        android:background="@drawable/bg_task_cz"/>
+    <TextView
+        android:layout_width="19dp"
+        android:layout_height="24dp"
+        android:text="cm"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="29.5dp"
+        android:gravity="center"
+        />
+
+</RelativeLayout>
