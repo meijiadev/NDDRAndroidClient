@@ -190,6 +190,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case updateVersion:
                 computerEditions= ComputerEditions.getInstance();
+                Logger.e("机器类型"+computerEditions.getRobotType());
                 if (computerEditions.getRobotType()==3){
 
                 }else {
