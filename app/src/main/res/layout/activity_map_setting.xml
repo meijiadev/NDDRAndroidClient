@@ -10,7 +10,7 @@
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-       >
+        >
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -308,7 +308,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="180dp"
         android:layout_marginBottom="14dp"
-    />
+        />
     <TextView
         android:id="@+id/tv_confirm"
         android:layout_width="112dp"

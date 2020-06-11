@@ -22,6 +22,8 @@
     <string name="time_start_title">请选择开始时间</string>
     <string name="time_end_time">请选择结束时间</string>
 
+
+
     <!--登录页-->
     <string name="left_button">局域网</string>
     <string name="right_button">广域网</string>
@@ -101,9 +103,67 @@
     <string name="common_executing">正在执行</string>
     <string name="common_executed">执行完毕</string>
     <string name="common_put_up">挂起</string>
-    
 
-    
+    <!--采集页面-->
+    <string name="collect_title_one">扫描环境中...</string>
+    <string name="collect_title_two">正在自标定中...</string>
+    <string name="collect_title_three">正在采集中...</string>
+    <string name="common_detection">回环检测</string>
+    <string name="gauge_point">标记点</string>
+
+    <!--地图编辑页面-->
+    <string name="mark_current">标记机器人当前位置</string>
+    <string name="select_point">点击选择目标点建路径</string>
+    <string name="common_gridlayout">网格：</string>
+    <string name="common_add_point">添加点</string>
+    <string name="common_revocation">撤销</string>
+    <string name="common_delete_point">删除点</string>
+    <string name="common_init">初始化</string>
+    <string name="common_virtual_wall">虚拟墙</string>
+    <string name="common_denoising">原图去噪</string>
+    <string name="common_line">直线</string>
+
+
+
+
+
+    <!--吐司提示-->
+    <string name="network_not_connect">网络无法连接，请退出重连！</string>
+    <string name="loop_status_one">检测错误，请重新检测</string>
+    <string name="loop_status_two">没有检测到回环</string>
+    <string name="loop_status_three">回环已存在</string>
+    <string name="loop_status_four">新采集基准构成回环</string>
+    <string name="loop_status_five">距离太近不需要检测回环</string>
+    <string name="loop_status_six">正在检测中，请勿重复点击!</string>
+    <string name="create_map_error">建图异常,即将退出当前模式，本次地图无效</string>
+    <string name="gauge_succeed">标记成功</string>
+    <string name="common_lock">锁定</string>
+    <string name="common_cancel_lock">取消锁定</string>
+    <string name="do_not_repeat_marks">请勿重复标记</string>
+    <string name="please_add_point">请先添加点</string>
+    <string name="name_repetition">名字重复，请重新命名！</string>
+    <string name="save_succeed">保存成功！</string>
+    <string name="cancel_add">取消添加</string>
+    <string name="select_two_point">请至少选择两个点</string>
+    <string name="please_select_virtual">请先选择要删除的虚拟墙</string>
+    <string name="nothing_revocation">当前无可撤销内容</string>
+    <string name="operation_failure">操作失败</string>
+    <string name="load_succeed">加载成功</string>
+
+
+    <!--Dialog-->
+    <string name="common_network_connecting">网络正在连接...</string>
+    <string name="waiting_dialog">正在定位中，请勿挪动机器人...</string>
+    <string name="exit_collecting_dialog">是否退出采集</string>
+    <string name="save_map_dialog">是否保存当前采集</string>
+    <string name="add_path_name_dialog">添加路径名</string>
+    <string name="please_enter">请输入名称</string>
+    <string name="is_delete">是否删除</string>
+    <string name="in_storage">正在保存中...</string>
+    <string name="is_recover_denoising">是否恢复噪点？</string>
+    <string name="init_map">正在初始化地图...</string>
+    <string name="add_gauge_name">添加目标名</string>
+    <string name="reload_map">重新加载地图...</string>
 
 
 
