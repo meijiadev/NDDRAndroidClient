@@ -133,22 +133,22 @@ public class CollectingActivity extends DDRActivity {
                 int loopStatus= (int) mainUpDate.getData();
                 switch (loopStatus){
                     case -2:                    // 检测错误
-                        toast("检测错误，请重新检测");
+                        toast(R.string.loop_status_one);
                         break;
                     case -1:                   // 没有检测到回环
-                        toast("没有检测到回环");
+                        toast(R.string.loop_status_two);
                         break;
                     case 0:                   // 回环已存在
-                        toast("回环已存在");
+                        toast(R.string.loop_status_three);
                         break;
                     case 1:                  // 新采集基准构成回环
-                        toast("新采集基准构成回环");
+                        toast(R.string.loop_status_four);
                         break;
                     case 2:                 //  距离太近不需要检测回环
-                        toast("距离太近不需要检测回环");
+                        toast(R.string.loop_status_five);
                         break;
                     case 3:
-                        toast("正在检测中，请勿重复点击!");
+                        toast(R.string.loop_status_six);
                         break;
                 }
                 break;
@@ -189,18 +189,18 @@ public class CollectingActivity extends DDRActivity {
 
     private void initStatusBar() {
         if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
-            tvTitle.setText("正在自标定中...");
+            tvTitle.setText(R.string.collect_title_two);
         } else {
             if (notifyBaseStatusEx.getMode() == 2) {
                 switch (notifyBaseStatusEx.getSonMode()) {
                     case 2:
-                        toast("建图异常,即将退出当前模式，本次地图无效");
+                        toast(R.string.create_map_error);
                         exitModel();
                         finish();
                         break;
                     case 6:
                         waitDialog.dismiss();
-                        tvTitle.setText("正在采集中...");
+                        tvTitle.setText(R.string.collect_title_three);
                         myRockerZy.setVisibility(View.VISIBLE);
                         myRocker.setVisibility(View.VISIBLE);
                         addPoi.setVisibility(View.VISIBLE);
@@ -222,7 +222,7 @@ public class CollectingActivity extends DDRActivity {
      */
     public void initWaitDialog(){
         waitDialog= new WaitDialog.Builder(this)
-        .setMessage("正在定位中，请勿挪动机器人...")
+        .setMessage(R.string.waiting_dialog)
         .show();
     }
 
@@ -256,7 +256,7 @@ public class CollectingActivity extends DDRActivity {
         switch (view.getId()){
             case R.id.iv_back:
                 new InputDialog.Builder(getActivity())
-                        .setTitle("是否退出采集")
+                        .setTitle(R.string.exit_collecting_dialog)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
@@ -273,7 +273,7 @@ public class CollectingActivity extends DDRActivity {
                 break;
             case R.id.tv_save_map:
                 new InputDialog.Builder(getActivity())
-                        .setTitle("是否保存当前采集")
+                        .setTitle(R.string.save_map_dialog)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
@@ -292,7 +292,7 @@ public class CollectingActivity extends DDRActivity {
                 tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqAddPathPointWhileCollecting);
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
                 poiPoints.add(new XyEntity(posX,posY));
-                toast("标记成功");
+                toast(R.string.gauge_succeed);
                 break;
             case R.id.tv_detection:
                 BaseCmd.reqDetectLoop reqDetectLoop=BaseCmd.reqDetectLoop.newBuilder()
@@ -331,13 +331,13 @@ public class CollectingActivity extends DDRActivity {
                 Logger.e("-----" + maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 seekBar.setEnabled(false);
-                toast("锁定");
+                toast(R.string.common_lock);
             } else {
                 seekBar.setEnabled(true);
                 ishaveChecked = isChecked;
                 seekBar.setProgress((float) maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
-                toast("取消锁定");
+                toast(R.string.common_cancel_lock);
 
             }
         }));
@@ -562,10 +562,10 @@ public class CollectingActivity extends DDRActivity {
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog1=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog1=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
             if (waitDialog1.isShowing()){
-                toast("网络无法连接，请退出重连！");
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }
