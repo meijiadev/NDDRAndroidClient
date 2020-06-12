@@ -187,6 +187,30 @@
     <string name="common_denoising">原图去噪</string>
     <string name="common_line">直线</string>
 
+    <!--地图设置页面-->
+    <string name="map_setting">地图设置</string>
+    <string name="map_name">地图名称：</string>
+    <string name="wait_point">待机点设置：</string>
+    <string name="ab_mode">目标点呼叫运动模式：</string>
+    <string name="static_mode">静态避障</string>
+    <string name="dynamic_mode">动态避障</string>
+    <string name="target_speed">目标点运动速度：</string>
+    <string name="nav_notify">导航策略（注意：切换自主巡线后，需绘制行驶路径）</string>
+    <string name="navigation_mode">自主导航模式</string>
+    <string name="line_patrol">自主巡线模式</string>
+    <string name="nav_notify_1">(自主规划行驶路线，无需人工指引操作)</string>
+    <string name="nav_notify_2">(规划预设行驶路线，前往目标点时，寻找预设路径的最优路线）</string>
+    <string name="map_recover">原图恢复</string>
+    <string name="stay_put">原地待命</string>
+    
+
+    <!--新建task页面-->
+    <string name="create_task_hint">点击左侧目标点、路径添加.</string>
+    <string name="create_task_hint_1">可通过拖拽对列表进行排序.</string>
+    <string name="create_task_hint_2">请选择相应的路径和目标点组建路径</string>
+    
+    
+
 
 
     <!--吐司提示-->
@@ -205,13 +229,17 @@
     <string name="please_add_point">请先添加点</string>
     <string name="name_repetition">名字重复，请重新命名！</string>
     <string name="save_succeed">保存成功！</string>
+    <string name="save_failed">保存失败！</string>
     <string name="cancel_add">取消添加</string>
     <string name="select_two_point">请至少选择两个点</string>
     <string name="please_select_virtual">请先选择要删除的虚拟墙</string>
     <string name="nothing_revocation">当前无可撤销内容</string>
     <string name="operation_failure">操作失败</string>
     <string name="load_succeed">加载成功</string>
-
+    <string name="current_map_using">当前地图正在使用中，无法修改</string>
+    <string name="under_revision">正在修改中...</string>
+    <string name="modification_failed">修改失败！</string>
+    <string name="point_set_notify">任务结束后，机器人将自动返回指定的待机点待命</string>
 
     <!--Dialog-->
     <string name="common_network_connecting">网络正在连接...</string>
@@ -226,6 +254,12 @@
     <string name="init_map">正在初始化地图...</string>
     <string name="add_gauge_name">添加目标名</string>
     <string name="reload_map">重新加载地图...</string>
+    <string name="is_save_setting">是否保存当前设置并退出？</string>
+    <string name="save_dialog">保存</string>
+    <string name="not_save_dialog">不保存</string>
+    <string name="empty_map_data">将清空全部地图数据，确认操作</string>
+
+
 
 
 

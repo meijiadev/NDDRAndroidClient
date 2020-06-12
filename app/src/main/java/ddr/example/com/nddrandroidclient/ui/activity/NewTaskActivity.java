@@ -171,15 +171,15 @@ public class NewTaskActivity extends DDRActivity {
             if (mapInfo.isUsing()){
                 String name = mapInfo.getMapName();
                 name = name.replaceAll("OneRoute_", "");
-                tvMapName.setText("地图名称：" + name);
-                tvMapSize.setText("地图面积：" + (int) mapInfo.getWidth() + "x" + (int)mapInfo.getHeight() + "m²");
-                tvCreateTime.setText("建立日期：" + mapInfo.getTime());
+                tvMapName.setText(getString(R.string.map_name) + name);
+                tvMapSize.setText(getString(R.string.map_size) + (int) mapInfo.getWidth() + "x" + (int)mapInfo.getHeight() + "m²");
+                tvCreateTime.setText(getString(R.string.create_time) + mapInfo.getTime());
                 //设置图片
                 zoomView.setImageBitmap(mapInfo.getBitmap());
             }
         }
         if (baseModes.size() > 0) {
-            tvSuggest.setText("可通过拖拽对列表进行排序.");
+            tvSuggest.setText(R.string.create_task_hint_1);
         }
     }
 
@@ -206,16 +206,16 @@ public class NewTaskActivity extends DDRActivity {
                     taskModes.add(taskMode);
                     tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModes);
                     waitDialog=new WaitDialog.Builder(this)
-                            .setMessage("正在保存中...")
+                            .setMessage(R.string.in_storage)
                             .show();
                     postDelayed(()->{
                         if (waitDialog!=null&&waitDialog.isShowing()){
                             waitDialog.dismiss();
-                            toast("保存失败,请重试或者检查网络!");
+                            toast(R.string.save_failed);
                         }
                     },5000);
                 }else {
-                    toast("请选择相应的路径和目标点组建路径");
+                    toast(R.string.create_task_hint_2);
                 }
                 break;
             case R.id.tv_task_name:
