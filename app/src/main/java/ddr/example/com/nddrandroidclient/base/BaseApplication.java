@@ -4,6 +4,8 @@ package ddr.example.com.nddrandroidclient.base;
 import android.app.Application;
 
 
+import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 
@@ -24,6 +26,8 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.CrashHandlerManager;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
+import ddr.example.com.nddrandroidclient.language.LanguageUtil;
+import ddr.example.com.nddrandroidclient.language.SpUtil;
 import ddr.example.com.nddrandroidclient.ui.activity.CrashActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.LoginActivity;
@@ -35,9 +39,18 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  * desc :  项目中的 application 基类
  */
 public class BaseApplication extends Application implements FloatView.OnFloatViewListener {
+    private static Context context;
     @Override
     public void onCreate() {
         super.onCreate();
+        context=this;
+        /**
+         * 对于7.0以下，需要在Application创建的时候进行语言切换
+         */
+        String language = SpUtil.getInstance(this).getString(SpUtil.LANGUAGE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            LanguageUtil.changeAppLanguage(BaseApplication.getContext(), language);
+        }
         initSDK(this);
     }
 
@@ -114,7 +127,9 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         }
     }
 
-
+    public static Context getContext() {
+        return context;
+    }
 
 
 

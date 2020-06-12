@@ -6,6 +6,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import butterknife.BindView;
 
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
@@ -54,6 +56,9 @@ import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
+import ddr.example.com.nddrandroidclient.language.LanguageType;
+import ddr.example.com.nddrandroidclient.language.LanguageUtil;
+import ddr.example.com.nddrandroidclient.language.SpUtil;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -105,6 +110,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     LinearLayout drawerLayoutLeft;
     @BindView(R.id.iv_menu)
     ImageView ivMenu;
+    @BindView(R.id.tv_switch_language)
+    TextView tv_switch_language;
 
 
 
@@ -131,7 +138,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private boolean ishaveChecked = false;
     private String LAN_IP_AI="192.168.0.95";
     private ComputerEditions computerEditions;
-
+    private String language;
 
     /**
      * ViewPage 适配器
@@ -222,6 +229,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
         vpHomePager.addOnPageChangeListener(this);
         isChecked();
+        language = SpUtil.getInstance(this).getString(SpUtil.LANGUAGE);
+        Logger.e("当前的语言："+language);
+        if (language.equals(LanguageType.CHINESE.getLanguage())){
+            tv_switch_language.setText(R.string.switch_to_en);
+            language=LanguageType.ENGLISH.getLanguage();
+        }else if (language.equals(LanguageType.ENGLISH.getLanguage())){
+            language=LanguageType.CHINESE.getLanguage();
+            tv_switch_language.setText(R.string.switch_to_cn);
+        }else {
+            language=LanguageType.ENGLISH.getLanguage();
+            tv_switch_language.setText(R.string.switch_to_en);
+        }
     }
 
 
@@ -243,6 +262,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
+
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
@@ -259,7 +280,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.iv_menu,R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown})
+    @OnClick({R.id.iv_menu,R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown,R.id.tv_switch_language})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_menu:
@@ -311,11 +332,29 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     }
                 }).show();
                 break;
+            case R.id.tv_switch_language:
+                changeLanguage(language);
+                break;
         }
         isChecked();
     }
 
-
+    /**
+     * 如果是7.0以下，我们需要调用changeAppLanguage方法，
+     * 如果是7.0及以上系统，直接把我们想要切换的语言类型保存在SharedPreferences中即可
+     * 然后重新启动MainActivity
+     * @param language
+     */
+    private void changeLanguage(String language) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            LanguageUtil.changeAppLanguage(BaseApplication.getContext(), language);
+        }
+        SpUtil.getInstance(this).putString(SpUtil.LANGUAGE, language);
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
     /**
      * 判断哪个页面是否被选中
      */

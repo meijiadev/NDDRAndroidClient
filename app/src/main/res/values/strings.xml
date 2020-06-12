@@ -40,6 +40,8 @@
     <string name="control_status">遥控</string>
     <string name="robot_shutdown">关机</string>
     <string name="app_quit">退出</string>
+    <string name="switch_to_cn">切换成中文</string>
+    <string name="switch_to_en">切换成英文</string>
 
     <!--地图管理-->
     <string name="new_create_map">新建地图</string>
@@ -210,6 +212,11 @@
     <string name="create_task_hint">点击左侧目标点、路径添加.</string>
     <string name="create_task_hint_1">可通过拖拽对列表进行排序.</string>
     <string name="create_task_hint_2">请选择相应的路径和目标点组建路径</string>
+    <string name="create_task_hint_3">请避免连续添加同一个点！</string>
+    <string name="create_task_hint_4">请避免连续添加同一条路径!</string>
+    <string name="task_rename">任务重命名</string>
+    <string name="name_already_exists">名称已存在，请重新命名。</string>
+    <string name="cancel_rename">取消重命名!</string>
     
     
 
