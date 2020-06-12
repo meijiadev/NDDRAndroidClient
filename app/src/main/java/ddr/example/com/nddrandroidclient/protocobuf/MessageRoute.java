@@ -414,7 +414,7 @@ public class MessageRoute {
                 Method method=clazz.getDeclaredMethod("parseFrom",byte[].class);
                 return method.invoke(null,bytes);
             }else {
-                Method method=clazz.getMethod("getDefaultInstance", null);
+                Method method=clazz.getMethod("getDefaultInstance",null);
                 return method.invoke(null,null);
             }
         } catch (ClassNotFoundException e) {

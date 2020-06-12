@@ -50,6 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         //获取我们存储的语言环境 比如 "en","zh",等等
         String language = SpUtil.getInstance(BaseApplication.getContext()).getString(SpUtil.LANGUAGE);
+        Logger.e("BaseActivity:"+language);
         /**
          * attach对应语言环境下的context
          */

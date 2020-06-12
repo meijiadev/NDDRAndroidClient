@@ -31,6 +31,7 @@
     <string name="password_hint">密码</string>
     <string name="login_button">登录</string>
     
+    
     <!--Home页-->
     <string name="home_status">基础状态</string>
     <string name="home_map_manager">地图管理</string>
@@ -42,6 +43,9 @@
     <string name="app_quit">退出</string>
     <string name="switch_to_cn">切换成中文</string>
     <string name="switch_to_en">切换成英文</string>
+    <string name="line_speed">线速度：</string>
+    <string name="angulau_speed">角速度：</string>
+    <string name="angulau_speed_1">弧度/秒</string>
 
     <!--地图管理-->
     <string name="new_create_map">新建地图</string>
@@ -66,6 +70,14 @@
     <string name="file_setting">文件配置：</string>
     <string name="map_size">地图面积：</string>
     <string name="create_time">建立日期：</string>
+    <string name="ai_connected">AI服务连接成功</string>
+    <string name="initial_point">初始点</string>
+    <string name="no_point">无目标点</string>
+    <string name="no_path">无路径</string>
+    <string name="is_relocation">是否重定位</string>
+    <string name="is_switch_map">是否切换地图</string>
+    <string name="common_relocation">重定位</string>
+    <string name="common_switch_map">切换地图</string>
     
     <!--基础状态-->
     <string name="common_warn">未加载到正在使用中的地图，请点击此处刷新！</string>
@@ -89,6 +101,16 @@
     <string name="common_wait">待命</string>
     <string name="common_charging">正在充电，底盘已关闭运动</string>
     <string name="common_exit_charge">退出充电</string>
+    <string name="no_task">无任务</string>
+    <string name="go_target_point">前往目标点</string>
+    <string name="common_times">次</string>
+    <string name="in_the_calibration">自标定中</string>
+    <string name="common_runing">运动中</string>
+    <string name="common_collecting">采集中</string>
+    <string name="common_error">异常</string>
+    <string name="common_relocationing">重定位中</string>
+
+    
 
     <!--时段任务-->
     <string name="task_title">任务列表</string>
@@ -218,9 +240,16 @@
     <string name="name_already_exists">名称已存在，请重新命名。</string>
     <string name="cancel_rename">取消重命名!</string>
     
+    <!--重定位页面-->
+    <string name="manually_locate">手动定位</string>
+    <string name="location_notify">提示：请通过平移旋转地图匹配雷达扫描形状确定机器人当前位置</string>
+    <string name="common_relocation">重定位</string>
+    <string name="look_location_data">点击查看机器人位姿</string>
+    <string name="relocation_failed">重新定位失败，请重新设置机器人位姿</string>
+    <string name="relocation_succeed">定位成功!</string>
+    <string name="the_relocation">正在重新定位中可能需要1~3分钟时间...</string>
     
-
-
+    
 
     <!--吐司提示-->
     <string name="network_not_connect">网络无法连接，请退出重连！</string>
@@ -249,6 +278,26 @@
     <string name="under_revision">正在修改中...</string>
     <string name="modification_failed">修改失败！</string>
     <string name="point_set_notify">任务结束后，机器人将自动返回指定的待机点待命</string>
+    <string name="robot_is_shutdown">机器人正在关机中...</string>
+    <string name="robot_is_restart">机器人正在重启中，请退出到登陆页面等待重启完成后再重新连接</string>
+    <string name="login_succeed">登陆成功</string>
+    <string name="account_not_empty">用户名和密码不能为空</string>
+    <string name="in_login">登录中...</string>
+    <string name="login_failed">登录失败，请检查网络后重新登录</string>
+    <string name="please_anter_name">请输入地图名字</string>
+    <string name="not_wait_collect">非待命模式下无法采图，请先退回到待命模式</string>
+    <string name="batch_collect">当前批量删除状态，无法进入采集模式</string>
+    <string name="please_delete_selected">请先选择要删除的图片</string>
+    <string name="the_point_inexistence">该目标点不存在!</string>
+    <string name="the_path_inexistence">该路径不存在！</string>
+    <string name="please_select_point">请先选择一个目标点再删除</string>
+    <string name="please_select_path">请先选择路径再删除</string>
+    <string name="current_map_unable_delete">当前使用地图无法删除</string>
+    <string name="load_failed">加载失败</string>
+    <string name="can_not_relocation">正在自标定中,无法进行重定位...</string>
+    <string name="in_relocation">正在重定位中,请先退出当前定位...</string>
+    <string name="not_map_using">当前并无正在使用中的地图，请确定有采集的地图并选择一张地图使用！</string>
+    <string name="cancel_go_point">取消去目标点</string>
 
     <!--Dialog-->
     <string name="common_network_connecting">网络正在连接...</string>
@@ -263,10 +312,29 @@
     <string name="init_map">正在初始化地图...</string>
     <string name="add_gauge_name">添加目标名</string>
     <string name="reload_map">重新加载地图...</string>
+    <string name="in_load_map">正在加载地图！</string>
     <string name="is_save_setting">是否保存当前设置并退出？</string>
     <string name="save_dialog">保存</string>
     <string name="not_save_dialog">不保存</string>
     <string name="empty_map_data">将清空全部地图数据，确认操作</string>
+    <string name="is_back">是否退出</string>
+    <string name="collect_map">采集地图</string>
+    <string name="enter_map_name">输入地图名称</string>
+    <string name="please_delete">是否删除所选</string>
+    <string name="common_deleting">正在删除...</string>
+    <string name="common_load">加载</string>
+    <string name="common_loading">地图信息中</string>
+    <string name="in_switch">正在切换中...</string>
+    <string name="switch_failed">切换失败！</string>
+    <string name="relocation_failed_1">自动定位失败，是否进入手动定位</string>
+    <string name="common_yes">是</string>
+    <string name="common_no">否</string>
+
+    <string name="enter_run_times">请输入循环次数</string>
+    <string name="is_go">是否前往</string>
+    <string name="current_not_location">当前无定位，请选择重定位方式</string>
+    <string name="hand_location">手动定位</string>
+    <string name="auto_location">自动定位</string>
 
 
 
