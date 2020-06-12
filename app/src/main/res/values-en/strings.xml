@@ -1,26 +1,107 @@
 <resources>
     <string name="app_name">NDDRAndroidClient</string>
     <!-- 主页 -->
-    <string name="home_exit_hint">再按一次退出</string>
+    <string name="home_exit_hint">Press again to exit</string>
 
     <!-- 异常捕捉 -->
-    <string name="crash_error_hint">发生意外错误\n抱歉，给您带来不便</string>
-    <string name="crash_error_restart">重新启动</string>
-    <string name="crash_error_log">错误日志</string>
-    <string name="crash_error_details">错误详情</string>
-    <string name="crash_error_info">错误信息</string>
-    <string name="crash_copy_log">复制日志</string>
-    <string name="crash_close">关闭</string>\
-    <string name="common_hour">时</string>
-    <string name="common_minute">分</string>
-    <string name="common_second">秒</string>
+    <string name="crash_error_hint">An unexpected error has occurred  sorry for the inconvenience</string>
+    <string name="crash_error_restart">Restart</string>
+    <string name="crash_error_log">Error log</string>
+    <string name="crash_error_details">Error details</string>
+    <string name="crash_error_info">Error message</string>
+    <string name="crash_copy_log">Copy log</string>
+    <string name="crash_close">Close</string>\
+    <string name="common_hour">Hour</string>
+    <string name="common_minute">minute</string>
+    <string name="common_second">second</string>
 
-    <string name="common_confirm">确定</string>
-    <string name="common_cancel">取消</string>
-    <string name="time_next">下一步</string>
-    <string name="time_last">上一步</string>
-    <string name="time_start_title">请选择开始时间</string>
-    <string name="time_end_time">请选择结束时间</string>
+    <string name="common_confirm">Determine</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="time_next">next step</string>
+    <string name="time_last">Previous step</string>
+    <string name="time_start_title">Please select a start time</string>
+    <string name="time_end_time">Please select the end time</string>
+
+    <!--登录页-->
+    <string name="left_button">LAN</string>
+    <string name="right_button">WAN</string>
+    <string name="account_name">Account</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Login</string>
+
+    <!--Home页-->
+    <string name="home_status">Console</string>
+    <string name="home_map_manager">Map</string>
+    <string name="home_task">Timetask</string>
+    <string name="home_setting">Settings</string>
+    <string name="scram_status">Stop</string>
+    <string name="control_status">RC</string>
+    <string name="robot_shutdown">Shut down</string>
+    <string name="app_quit">Quit</string>
+
+    <!--地图管理-->
+    <string name="new_create_map">New map</string>
+    <string name="batch_delete">Bulk delete</string>
+    <string name="common_exit">Quit</string>
+    <string name="common_delete">Delete</string>
+    <string name="no_map_notify">No map information found, please create a new map</string>
+    <string name="target_point_label">POI</string>
+    <string name="path_label">Path</string>
+    <string name="map_edit">Map editor</string>
+    <string name="common_reference">Reference layer</string>
+    <string name="common_create">New</string>
+    <string name="common_point_name">Point name:</string>
+    <string name="common_point_toward">Point yaw：</string>
+    <string name="common_path_name">Path name：</string>
+    <string name="common_save">Save</string>
+    <string name="common_path_mode">Path mode: </string>
+    <string name="common_cs">Extension distance：</string>
+    <string name="run_speed">Speed：</string>
+    <string name="action_recycler">Action list：</string>
+    <string name="add_action">Add</string>
+    <string name="file_setting">File configuration：</string>
+    <string name="map_size">Map area：</string>
+    <string name="create_time">Creation date：</string>
+
+    <!--基础状态-->
+    <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
+    <string name="now_device">Current device:</string>
+    <string name="now_map">Current map：</string>
+    <string name="now_task">Current task：</string>
+    <string name="common_unselected">Not selected</string>
+    <string name="work_status">System status：</string>
+    <string name="task_times">Times of task：</string>
+    <string name="working_hours">Working hours：</string>
+    <string name="task_speed">Task speed：</string>
+    <string name="common_waiting">Idle</string>
+    <string name="create_task_steps">Establish task steps：</string>
+    <string name="first_steps">New map</string>
+    <string name="second_steps">Edit target point</string>
+    <string name="thirdly_steps">Create task</string>
+    <string name="fourth_steps">Run task</string>
+    <string name="common_complete">Complete</string>
+    <string name="common_execute">Do</string>
+    <string name="common_pause">Pause</string>
+    <string name="common_wait">Idle</string>
+    <string name="common_charging">Charging, chassis off motion</string>
+    <string name="common_exit_charge">Exit charging</string>
+
+    <!--时段任务-->
+    <string name="task_title">Task list</string>
+    <string name="save_task">Upload tasks</string>
+    <string name="new_create_task">New</string>
+    <string name="task_name">Task name</string>
+    <string name="execute_time">Execution period</string>
+    <string name="task_status">Task status</string>
+    <string name="operator_task">Operating</string>
+    <string name="common_modification">modify</string>
+    <string name="common_terminated">Cancel</string>
+    <string name="common_recover">Recover</string>
+    <string name="common_wait_execute">Waiting for execution</string>
+    <string name="common_stop">Stop</string>
+    <string name="common_executing">Executing</string>
+    <string name="common_executed">Completion of enforcement</string>
+    <string name="common_put_up">Hanging</string>
 
     <!-- 高级设置-导航参数-->
     <string name="navigation_para">Navigation parameters</string>
@@ -86,5 +167,96 @@
     <string name="au_vision_module">Vision module</string>
     <string name="au_equipment_management">Equipment management</string>
     <string name="au_embedded">Embedded</string>
+
+    <!--采集页面-->
+    <string name="collect_title_one">Scanning environment...</string>
+    <string name="collect_title_two">Self-calibration...</string>
+    <string name="collect_title_three">Mapping</string>
+    <string name="common_detection">Detecte loop</string>
+    <string name="gauge_point">Mark</string>
+
+    <!--地图编辑页面-->
+    <string name="mark_current">Mark the robot is current position</string>
+    <string name="select_point">Click to select target point to build path</string>
+    <string name="common_gridlayout">Grid：</string>
+    <string name="common_add_point">Draw</string>
+    <string name="common_revocation">Undo</string>
+    <string name="common_delete_point">Undo</string>
+    <string name="common_init">Initialize</string>
+    <string name="common_virtual_wall">Virtual wall</string>
+    <string name="common_denoising">Eraser</string>
+    <string name="common_line">Straight line</string>
+
+    <!--地图设置页面-->
+    <string name="map_setting">Map settings</string>
+    <string name="map_name">Map name：</string>
+    <string name="wait_point">Standby point：</string>
+    <string name="ab_mode">POI mode：</string>
+    <string name="static_mode">Static mode</string>
+    <string name="dynamic_mode">Dynamic mode</string>
+    <string name="target_speed">POI speed：</string>
+    <string name="nav_notify">Navigation strategy  (note: switch to path patrol mode, the path needs to be drawn)</string>
+    <string name="navigation_mode">Autonomous navigation mode</string>
+    <string name="line_patrol">Path patrol mode </string>
+    <string name="nav_notify_1"> (automatically plan the route without manual intervention)</string>
+    <string name="nav_notify_2">(find the optimal route based on the preset paths when going to the POI）</string>
+    <string name="map_recover">Recovery the map</string>
+    <string name="stay_put">Stand by</string>
+
+
+    <!--新建task页面-->
+    <string name="create_task_hint">Click the POI or path to add into task.</string>
+    <string name="create_task_hint_1">Reorder the list by dragging.</string>
+    <string name="create_task_hint_2">Please select the corresponding path and target point construction path</string>
+
+
+
+
+
+    <!--吐司提示-->
+    <string name="network_not_connect">The network cannot be connected. Please exit reconnection！</string>
+    <string name="loop_status_one">Detection error, please re detect</string>
+    <string name="loop_status_two">No loopback detected</string>
+    <string name="loop_status_three">Loopback already exists</string>
+    <string name="loop_status_four">The new acquisition datum forms a loop</string>
+    <string name="loop_status_five">Too close to detect loopback</string>
+    <string name="loop_status_six">In the process of detection, please do not click repeatedly!</string>
+    <string name="create_map_error">Abnormal map building, about to exit the current mode, this map is invalid</string>
+    <string name="gauge_succeed">Mark successful</string>
+    <string name="common_lock">locking</string>
+    <string name="common_cancel_lock">Unlock</string>
+    <string name="do_not_repeat_marks">Do not repeat marking</string>
+    <string name="please_add_point">Please add some more</string>
+    <string name="name_repetition">Duplicate name, please rename！</string>
+    <string name="save_succeed">Saved successfully！</string>
+    <string name="save_failed">Save failed！</string>
+    <string name="cancel_add">Cancel adding</string>
+    <string name="select_two_point">Please select at least two points</string>
+    <string name="please_select_virtual">Please select the virtual wall to delete first</string>
+    <string name="nothing_revocation">There is currently no revocable content</string>
+    <string name="operation_failure">operation failed</string>
+    <string name="load_succeed">Loading succeeded</string>
+    <string name="current_map_using">The current map is in use and cannot be modified</string>
+    <string name="under_revision">Modifying...</string>
+    <string name="modification_failed">Modification failed！</string>
+    <string name="point_set_notify">After the task, the robot will automatically return to the designated standby point for standby</string>
+
+    <!--Dialog-->
+    <string name="common_network_connecting">Network connecting...</string>
+    <string name="waiting_dialog">Please do not move the robot while positioning...</string>
+    <string name="exit_collecting_dialog">Exit collection or not</string>
+    <string name="save_map_dialog">Save current collection or not</string>
+    <string name="add_path_name_dialog">Add pathname</string>
+    <string name="please_enter">Please enter a name</string>
+    <string name="is_delete">Delete or not</string>
+    <string name="in_storage">Saving...</string>
+    <string name="is_recover_denoising">Restore noise or not？</string>
+    <string name="init_map">Initializing map...</string>
+    <string name="add_gauge_name">Add target name</string>
+    <string name="reload_map">Reload map...</string>
+    <string name="is_save_setting">Save current settings and exit？</string>
+    <string name="save_dialog">Save</string>
+    <string name="not_save_dialog">Do not save</string>
+    <string name="empty_map_data">All map data will be cleared, confirm the operation?</string>
 
 </resources>

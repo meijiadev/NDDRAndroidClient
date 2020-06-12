@@ -27,6 +27,7 @@
     <!--登录页-->
     <string name="left_button">局域网</string>
     <string name="right_button">广域网</string>
+    <string name="account_name">账号</string>
     <string name="password_hint">密码</string>
     <string name="login_button">登录</string>
     
