@@ -8,15 +8,18 @@
         android:layout_height="24dp"
         android:textSize="12sp"
         android:textColor="#ffffff"
-        android:text="传感器配置"
+        android:text="@string/sensor_set"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
     <TextView
         android:layout_width="48dp"
         android:layout_height="24dp"
-        android:text="保存"
+        android:text="@string/height_set_save"
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:gravity="center"
@@ -24,6 +27,9 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="40dp"
         android:layout_marginTop="24dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"
         android:id="@+id/tv_save_sensor"/>
     <TextView
         android:layout_width="748dp"
@@ -38,11 +44,14 @@
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="超声波配置"
+        android:text="@string/ultrasonic_set"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
     <ddr.example.com.nddrandroidclient.other.SlideButton
         android:layout_width="55.5dp"
@@ -54,13 +63,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（静态模式下，触发超声波，机器人会停止运动）"
+        android:text="@string/ultrasonic_set_tip"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="63dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"/>
     <TextView
         android:id="@+id/tv_secondBack"
         android:layout_width="748dp"
@@ -80,13 +92,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（设置前务必知晓安装位置，超声波数值为0表示功能关闭）"
+        android:text="@string/ultrasonic_set_title"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_below="@id/rl_ul_cs"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="10dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"/>
 
     <TextView
         android:layout_width="748dp"
@@ -102,11 +117,14 @@
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="IMU温度设置"
+        android:text="@string/imu_temperature"
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
 
     <EditText
@@ -138,12 +156,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（建议设置比环境温度高10℃左右）"
+        android:text="@string/imu_temperature_tip"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="63dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"/>
 
 </RelativeLayout>
