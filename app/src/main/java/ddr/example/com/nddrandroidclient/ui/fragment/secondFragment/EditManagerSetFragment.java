@@ -66,7 +66,7 @@ public class EditManagerSetFragment extends DDRLazyFragment {
 
     @Override
     protected void initView() {
-        versionAdapter=new VersionAdapter(R.layout.item_computer_version);
+        versionAdapter=new VersionAdapter(R.layout.item_computer_version,getAttachActivity());
         NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         computer_type_recycle.setLayoutManager(layoutManager);
         computer_type_recycle.setAdapter(versionAdapter);

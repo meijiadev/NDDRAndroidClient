@@ -38,11 +38,11 @@ public class RobotTestAdapter extends BaseAdapter<RobotTest> {
                 .setText(R.id.tv_test_time,item.getTime());
         switch (item.getRnum()){
             case 0:
-                helper.setText(R.id.tv_test_num,"自检完成");
+                helper.setText(R.id.tv_test_num,R.string.self_tested);
                 tv_t_rnum.setBackgroundResource(R.drawable.status_button);
                 break;
             case 1:
-                helper.setText(R.id.tv_test_num,"自检完成");
+                helper.setText(R.id.tv_test_num,R.string.self_tested);
                 tv_t_rnum.setBackgroundResource(R.drawable.robot_test_bg);
                 break;
         }

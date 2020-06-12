@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.ui.adapter;
 
 
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -18,9 +20,14 @@ public class VersionAdapter extends BaseAdapter<ComputerEdition> {
     public VersionAdapter(int layoutResId) {
         super(layoutResId);
     }
-
+    private Context context;
     public VersionAdapter(int layoutResId, @Nullable List<ComputerEdition> data) {
         super(layoutResId, data);
+    }
+
+    public VersionAdapter(int layoutResId, Context context) {
+        super(layoutResId);
+        this.context=context;
     }
 
     @Override
@@ -42,24 +49,25 @@ public class VersionAdapter extends BaseAdapter<ComputerEdition> {
         String type = null;
         switch (item.getType()){
             case 0:
-                type="上位机";
+                type=context.getString(R.string.au_host_computer);
                 break;
             case 1:
-                type="雷达模块";
+                type=context.getString(R.string.au_lidar_module);
                 break;
             case 2:
-                type="视觉模块";
+                type=context.getString(R.string.au_vision_module);
                 break;
             case 3:
-                type="路径规划";
+                type=context.getString(R.string.au_route_plan);
                 break;
             case 4:
-                type="设备管理";
+                type=context.getString(R.string.au_equipment_management);
                 break;
             case 5:
-                type="嵌入式";
+                type=context.getString(R.string.au_embedded);
                 break;
         }
+//        Logger.e("类型"+type);
         helper.setText(R.id.tv_type,type)
                 .setText(R.id.tv_version,String.valueOf(item.getVersion()))
                 .setText(R.id.tv_data,String.valueOf(item.getData()));

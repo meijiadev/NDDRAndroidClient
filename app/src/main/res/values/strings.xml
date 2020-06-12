@@ -152,6 +152,7 @@
     <string name="st_dual_cameras">摄像头</string>
     <string name="st_embedded_system">嵌入式</string>
     <string name="st_normal">正常</string>
+    <string name="st_abnormal">异常</string>
     <string name="self_tested">自检完成</string>
     
     <!--高级设置-关于我们-->
