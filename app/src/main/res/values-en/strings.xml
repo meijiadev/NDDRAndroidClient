@@ -23,54 +23,55 @@
     <string name="time_end_time">请选择结束时间</string>
 
     <!-- 高级设置-导航参数-->
-    <string name="navigation_para">导航参数</string>
-    <string name="navigation_para_set">导航参数设置</string>
-    <string name="height_set_save">保存</string>
-    <string name="navigation_loop">导航循环</string>
-    <string name="n_return_auto">自主返回循环</string>
-    <string name="n_return_along">原路返回循环</string>
-    <string name="n_return_auto_tip">当任务终点和起点非同一目标点时，机器人自动规划路径完成循环</string>
-    <string name="n_return_along_tip">按设定任务，起点至终点往返循环，往返一次视为一次循环结束，适合较小场景使用</string>
-    <string name="n_way_turn">路径转弯方式</string>
-    <string name="n_point_turn">目标点转弯</string>
-    <string name="n_arc_turn">智能平滑转弯</string>
-    <string name="n_point_turn_tip">抵达点，按路径转弯，继续执行任务，适合较窄场景使用</string>
-    <string name="n_arc_turn_tip">导航路径有折角时，自动计算转弯半径，提升执行效率，建议较大场景使用</string>
-    <string name="n_speed_down">避障开始减速距离</string>
-    <string name="n_speed_down_tip">机器人到障碍的距离小于此值开始减速</string>
-    <string name="n_stop_distance">避障停止距离</string>
-    <string name="n_stop_distance_tip">机器人到障碍的距离小于等于此值停止</string>
-    <string name="n_restore_default">恢复默认</string>
+    <string name="navigation_para">Navigation parameters</string>
+    <string name="navigation_para_set">Navigation parameters set</string>
+    <string name="height_set_save">Save</string>
+    <string name="navigation_loop">Navigation loop</string>
+    <string name="n_return_auto">Return automatically</string>
+    <string name="n_return_along">Return along the paths</string>
+    <string name="n_return_auto_tip">Robot plans the route to complete the task loop when end point and starting point are not the same position</string>
+    <string name="n_return_along_tip">Move from start point to  end point and back to the start point consider as one time, suitable for smaller scenes</string>
+    <string name="n_way_turn">Way turn</string>
+    <string name="n_point_turn">Point turning</string>
+    <string name="n_arc_turn">Arc turning</string>
+    <string name="n_point_turn_tip">Reach the point then rotate, suitable for narrow scenes</string>
+    <string name="n_arc_turn_tip">If the path has corners, robot calculates the turning radius to improves the efficiency, suitable for large scenes</string>
+    <string name="n_speed_down">Speed down distance</string>
+    <string name="n_speed_down_tip">When the distance between robot and obstacle is less than this value, robot speeds down</string>
+    <string name="n_stop_distance">Stop distance</string>
+    <string name="n_stop_distance_tip">When the distance between the robot and the obstacle is less than or equal to this value, robot stops</string>
+    <string name="n_restore_default">Reset parameter</string>
 
     <!-- 高级设置-自动充电 -->
-    <string name="auto_charging">自动充电</string>
-    <string name="auto_charging_set">自动充电设置</string>
-    <string name="ac_open">开启自动充电</string>
-    <string name="ac_open_tip">（当电池电量低于触发值，机器人自动返回充电）</string>
-    <string name="ac_trig_auto_charge">触发自动充电电量</string>
-    <string name="ac_stop_auto_charge">退出自动充电电量</string>
-    <string name="height_set_open">开</string>
-    <string name="height_set_close">关</string>
+    <string name="auto_charging">Automatic charging</string>
+    <string name="auto_charging_set">Automatic charging set</string>
+    <string name="ac_open">Turn on automatic charging</string>
+    <string name="ac_open_tip">When battery power is lower than trigger value, robot returns to autocharge</string>
+    <string name="ac_trig_auto_charge">Power trig autocharge</string>
+    <string name="ac_stop_auto_charge">Power stop autocharge</string>
+    <string name="height_set_open">ON</string>
+    <string name="height_set_close">OFF</string>
 
     <!-- 高级设置-传感器配置 -->
-    <string name="sensor_set">传感器配置</string>
-    <string name="ultrasonic_set">超声波配置</string>
-    <string name="ultrasonic_set_tip">（静态模式下触发超声波，机器人会停止运动）</string>
-    <string name="ultrasonic_set_title">（设置前务必知晓安装位置，超声波数值为0表示功能关闭）</string>
-    <string name="imu_temperature">IMU温度设置</string>
-    <string name="imu_temperature_tip">（建议设置比环境温度高10℃左右）</string>
+    <string name="sensor_set">Sensor configuration</string>
+    <string name="ultrasonic_set">Ultrasonic configuration</string>
+    <string name="ultrasonic_set_tip">When sonar is triggered in static mode, the robot will stop moving</string>
+    <string name="ultrasonic_set_title">Be sure you have known the installation position before setting, the ultrasonic value is 0 means the function is closed</string>
+    <string name="imu_temperature">IMU temperature</string>
+    <string name="imu_temperature_tip">It is recommended to set about 10℃ higher than the space</string>
 
     <!-- 高级设置-硬件检测-->
-    <string name="hardware_detection">硬件检测</string>
-    <string name="hardware_name">硬件名称</string>
-    <string name="self_test_results">自检结果</string>
-    <string name="self_test_time">自检时间</string>
-    <string name="self_test">一键自检</string>
-    <string name="st_lidar">激光雷达</string>
-    <string name="st_dual_cameras">摄像头</string>
-    <string name="st_embedded_system">嵌入式</string>
-    <string name="st_normal">正常</string>
-    <string name="self_tested">自检完成</string>
+    <string name="hardware_detection">Hardware detection</string>
+    <string name="hardware_name">Hardware name</string>
+    <string name="self_test_results">Self-test results</string>
+    <string name="self_test_time">Self-test time</string>
+    <string name="self_test">Self-test</string>
+    <string name="st_lidar">Lidar</string>
+    <string name="st_dual_cameras">Dual cameras</string>
+    <string name="st_embedded_system">Embedded system</string>
+    <string name="st_normal">Normal</string>
+    <string name="st_abnormal">Abnormal</string>
+    <string name="self_tested">Self-tested</string>
 
     <!--高级设置-关于我们-->
     <string name="about_us">About us</string>

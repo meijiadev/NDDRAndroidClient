@@ -113,20 +113,20 @@ public class RobotTestSetFragment extends DDRLazyFragment {
             robotTest=new RobotTest();
                 switch (notifyHardState.getHardwareStatItemList().get(i).getTypeValue()) {
                     case 1://嵌入式
-                        robotTest.setName("嵌入式");
+                        robotTest.setName(getResources().getString(R.string.st_embedded_system));
                         break;
                     case 2://激光雷达
-                        robotTest.setName("激光雷达");
+                        robotTest.setName(getResources().getString(R.string.st_lidar));
                         break;
                     case 3://摄像头
-                        robotTest.setName("摄像头");
+                        robotTest.setName(getResources().getString(R.string.st_dual_cameras));
                         break;
                 }
                 if (notifyHardState.getHardwareStatItemList().get(i).getStatValue()==1){
-                    robotTest.setResult("正常");
+                    robotTest.setResult(getResources().getString(R.string.st_normal));
                     robotTest.setRnum(0);
                 }else {
-                    robotTest.setResult("异常");
+                    robotTest.setResult(getResources().getString(R.string.st_abnormal));
                     robotTest.setRnum(1);
                 }
                 Logger.e("时间"+notifyHardState.getHardwareStatItemList().get(i).getDate().toStringUtf8());
