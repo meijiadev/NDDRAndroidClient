@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -22,6 +24,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -51,7 +54,7 @@ public  class LoginActivity extends DDRActivity {
     @BindView(R.id.tv_wan)
     TextView tv_wan;        //广域网
 
-    public  int tcpPort = 0;
+    public  int tcpPort = 88;
     private String accountName = "", passwordName = "";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -62,29 +65,36 @@ public  class LoginActivity extends DDRActivity {
     private BaseDialog waitDialog;
     private static final String LAN_IP="192.168.0.95";    //局域网IP
     private int port=28888;
-    private boolean hasReceiveBroadcast=false;            //是否接收到广播
+    //private boolean hasReceiveBroadcast=false;            //是否接收到广播
     private boolean isLan=true;                                //是否是局域网  默认局域网登录
+    private UdpIp udpIp=new UdpIp();
 
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void upDate(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateIPList:
-                hasReceiveBroadcast=true;
+                //hasReceiveBroadcast=true;
                 break;
             case updatePort:
-                tcpPort= (int) messageEvent.getData();
+                try {
+                    udpIp= (UdpIp) messageEvent.getData();
+                    tcpPort= udpIp.getPort();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             case LoginSuccess:
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
                 editor.putString("password", passwordName);
                 editor.commit();
                 Logger.e("登录成功");
+                toast(R.string.login_succeed);
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
-                    startActivity(HomeActivity.class);
+                    startActivityFinish(HomeActivity.class);
                 },1000);
                 break;
             case wanLoginSuccess:
@@ -130,7 +140,9 @@ public  class LoginActivity extends DDRActivity {
         editor = sharedPreferences.edit();
         password.setText(sharedPreferences.getString("password", ""));
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
-
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        int memorySize = activityManager.getMemoryClass();
+        Logger.e("分配的内存上限："+memorySize+";"+activityManager.getLargeMemoryClass());
     }
 
     @OnClick({R.id.login_in,R.id.tv_lan,R.id.tv_wan})
@@ -139,34 +151,35 @@ public  class LoginActivity extends DDRActivity {
             case R.id.login_in:
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
-                if (accountName.equals("")&passwordName.equals("")){
-                    toast("用户名和密码不能为空");
+                if (accountName.equals("")|passwordName.equals("")){
+                    toast(R.string.account_not_empty);
                 }else {
                     if (isLan){                                   //局域网登录
-                        if (hasReceiveBroadcast){
+                        //if (hasReceiveBroadcast){
+                        if (tcpClient.isConnected()) tcpClient.disConnect();
                             tcpClient.createConnect(LAN_IP,tcpPort);
                             waitDialog=new WaitDialog.Builder(this)
-                                    .setMessage("登录中...")
+                                    .setMessage(R.string.in_login)
                                     .show();
                             postDelayed(()->{
                                 if (waitDialog.isShowing()){
-                                    toast("登录失败，请检查网络后重新登录");
+                                    toast(R.string.login_failed);
                                     waitDialog.dismiss();
                                 }
                                 },5000);
-                        }else {
-                            toast("无法连接，请检查机器人服务是否正常开启！");
-                        }
+                       // }else {
+                            //toast("无法连接，请检查机器人服务是否正常开启！");
+                       // }
                     }else {                                     //广域网登录
                         if (tcpClient.isConnected())
                             tcpClient.disConnect();
                         tcpClient.createConnect(CmdSchedule.broadcastServerIP,CmdSchedule.broadcastServerPort);      //连接地方服务器
                         waitDialog=new WaitDialog.Builder(this)
-                                    .setMessage("登录中...")
+                                    .setMessage(R.string.in_login)
                                     .show();
                         postDelayed(()->{
                             if (waitDialog.isShowing()){
-                                toast("登录失败，请检查网络后重新登录");
+                                toast(R.string.login_failed);
                                 waitDialog.dismiss();
                             }
                             },5000);
@@ -213,6 +226,7 @@ public  class LoginActivity extends DDRActivity {
     protected void onDestroy() {
         super.onDestroy();
         tcpClient=null;
+        Logger.e("销毁登录页面");
         EventBus.getDefault().removeAllStickyEvents();
     }
 

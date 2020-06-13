@@ -26,6 +26,8 @@ import java.util.Random;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import ddr.example.com.nddrandroidclient.language.LanguageUtil;
+import ddr.example.com.nddrandroidclient.language.SpUtil;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
@@ -40,7 +42,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     public final Object mHandlerToken = hashCode();
     public Context context;
     public Runnable mRunnable;
-
+    /**
+     * 此方法先于 onCreate()方法执行
+     * @param newBase
+     */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        //获取我们存储的语言环境 比如 "en","zh",等等
+        String language = SpUtil.getInstance(BaseApplication.getContext()).getString(SpUtil.LANGUAGE);
+        Logger.e("BaseActivity:"+language);
+        /**
+         * attach对应语言环境下的context
+         */
+        super.attachBaseContext(LanguageUtil.attachBaseContext(newBase, language));
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
     }
+
 
     /**
      * 初始化布局

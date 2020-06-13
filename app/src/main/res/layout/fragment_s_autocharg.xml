@@ -10,15 +10,18 @@
         android:layout_height="24dp"
         android:textSize="12sp"
         android:textColor="#ffffff"
-        android:text="自动充电设置"
+        android:text="@string/auto_charging_set"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
     <TextView
         android:layout_width="48dp"
         android:layout_height="24dp"
-        android:text="保存"
+        android:text="@string/height_set_save"
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:gravity="center"
@@ -26,6 +29,9 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="40dp"
         android:layout_marginTop="24dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"
         android:id="@+id/tv_save_auto_char"/>
     <TextView
         android:layout_width="748dp"
@@ -40,11 +46,14 @@
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="开启自动充电"
+        android:text="@string/ac_open"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
     <ddr.example.com.nddrandroidclient.other.SlideButton
         android:layout_width="55.5dp"
@@ -56,13 +65,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:text="（当电池电量低于触发值，机器人自动返回充电）"
+        android:text="@string/ac_open_tip"
         android:textSize="12sp"
         android:textColor="#99ffffff"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="63dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"/>
     <TextView
         android:layout_width="748dp"
         android:layout_height="1dp"
@@ -76,11 +88,14 @@
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="触发自动充电电量"
+        android:text="@string/ac_trig_auto_charge"
         android:layout_alignTop="@id/tv_secondBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
     <EditText
         android:layout_width="62dp"
@@ -121,11 +136,14 @@
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"
-        android:text="退出自动充电电量"
+        android:text="@string/ac_stop_auto_charge"
         android:layout_alignTop="@id/tv_thirdBack"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="48dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
         />
     <EditText
         android:layout_width="62dp"

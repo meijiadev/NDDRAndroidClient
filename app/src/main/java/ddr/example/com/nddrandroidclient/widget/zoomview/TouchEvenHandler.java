@@ -21,7 +21,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public class TouchEvenHandler {
     private View view;
     private Bitmap sourceBitmap;
-    private float initRatio;
+    private float initRatio;             //最初的缩放大小
     // Matrix getValues 矩阵参数
     private float[] values=new float[9];
     private static final int MSCALE_X=0;
@@ -35,13 +35,13 @@ public class TouchEvenHandler {
     private static final int MPERSP_2=8;
     private float x_down = 0;
     private float y_down = 0;
-    private PointF start = new PointF();
     private PointF mid = new PointF();
     private float oldDist = 1f;              //  平移的距离
     private float oldRotation = 0;          //   手指第一次放上去的角度
     private float rotation;                //    正在旋转中变化的角度
     private Matrix matrix = new Matrix();
     private Matrix matrix1 = new Matrix();
+    private Matrix originalMatrix=new Matrix();        //地图最初显示时的矩阵
     //用于保存matrix
     private Matrix savedMatrix = new Matrix();
     // 检测是否出界
@@ -58,10 +58,12 @@ public class TouchEvenHandler {
     public static final int NONE_BITMAP=4;        // 不作任何操作
     public static final int SCALE_BITMAP_OUT=5;   //放大
     public static final int SCALE_BITMAP_IN=6;    // 缩小
-    private boolean isAutoRefresh=false;
+    private boolean isAutoRefresh;
     private boolean canRotate=true;             // 默认可旋转
+    private float originalX,originalY;           //最初时图片左上角位于画布中的位置
 
     public TouchEvenHandler(@NotNull View view, Bitmap sourceBitmap, boolean isAutoRefresh) {
+        Logger.e("初始化TouchEvenHandler");
         this.view=view;
         this.isAutoRefresh=isAutoRefresh;
         widthScreen=view.getWidth();
@@ -88,6 +90,41 @@ public class TouchEvenHandler {
      */
     public void setCanRotate(boolean canRotate) {
         this.canRotate = canRotate;
+        Logger.e("是否可以旋转"+canRotate);
+    }
+
+    /**
+     * 将矩阵还原最初
+     */
+    public void initMatrix(){
+        matrix.set(originalMatrix);
+        if (!isAutoRefresh){
+            view.invalidate();
+        }
+    }
+
+    /**
+     * 获得最初未变换时图片在画布中的坐标X
+     * @return
+     */
+    public float getOriginalX() {
+        return originalX;
+    }
+
+    /**
+     * 获得最初的缩放值
+     * @return
+     */
+    public float getInitRatio() {
+        return initRatio;
+    }
+
+    /**
+     * 获得最初未变换时图片在画布中的坐标Y
+     * @return
+     */
+    public float getOriginalY() {
+        return originalY;
     }
 
     /**
@@ -129,6 +166,15 @@ public class TouchEvenHandler {
     }
 
     /**
+     * 返回图片旋转的角度
+     * @return
+     */
+    public double getAngle(){
+        double radians= Math.atan2(values[Matrix.MSKEW_Y], values[Matrix.MSCALE_Y]);
+        return Math.toDegrees(radians);
+    }
+
+    /**
      * 返回图片弧度的余弦值
      * @return
      */
@@ -146,7 +192,7 @@ public class TouchEvenHandler {
 
     /**
      * 将values数组变成字符串输出
-     * @return
+     * @returnhai
      */
     public String getValuesToString(){
         return Arrays.toString(values);
@@ -158,21 +204,15 @@ public class TouchEvenHandler {
      * @return 画布坐标
      */
     public XyEntity coordinatesToCanvas(float x, float y){
-        //Logger.e("-------矩阵:"+getValuesToString());
         double radians= Math.atan2(values[Matrix.MSKEW_Y], values[Matrix.MSCALE_Y]);
         double cosA= Math.cos(radians);
         double sinA= Math.sin(radians);
-        //Logger.e("-----cosA:"+cosA+";sinA:"+sinA);
-        //Logger.e("-------旋转的角度："+Math.toDegrees(radians));
         double cx=x*getZoomX();
         double cy=y*getZoomY();
-        //Logger.e("-------图片缩放值："+getZoomX());
-        //Logger.e("-----cx:"+cx+"--cy:"+cy);
         double x1=cx*cosA-cy*sinA;
         double y1=cx*sinA+cy*cosA;
         double x2=getTranslateX()+x1;
         double y2=getTranslateY()+y1;
-        //Logger.e("------x1:"+x1+"y1:"+y1+"--x2:"+x2+"--y2:"+y2);
         return new XyEntity((float) x2,(float) y2);
     }
 
@@ -181,8 +221,6 @@ public class TouchEvenHandler {
      * @return
      */
     public XyEntity coordinatesToImage(float x, float y){
-        x=widthScreen/2;
-        y=heightScreen/2;
         double cosA=getCosA();
         double sinA=getSinA();
         float x1=x-getTranslateX();
@@ -308,6 +346,9 @@ public class TouchEvenHandler {
             }
             matrix.set(matrix1);
             matrix.getValues(values);
+            originalMatrix.set(matrix);
+            originalX=getTranslateX();
+            originalY=getTranslateY();
         }
     }
 
@@ -330,7 +371,7 @@ public class TouchEvenHandler {
         // 图片现宽度
         double width = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         // 缩放比率判断
-        if (width < sourceBitmap.getWidth()*initRatio-1 || width > widthScreen * 3) {
+        if (width < sourceBitmap.getWidth()*initRatio-1 || width > widthScreen * 9) {
             return true;
         }
         // 出界判断

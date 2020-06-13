@@ -35,6 +35,7 @@ import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 
@@ -104,23 +105,25 @@ public class MapSettingActivity extends DDRActivity {
         switch (view.getId()) {
             case R.id.tv_title:
                 new InputDialog.Builder(this)
-                        .setTitle("是否保存本次编辑？")
+                        .setTitle(R.string.is_save_setting)
+                        .setConfirm(R.string.save_dialog)
+                        .setCancel(R.string.not_save_dialog)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 waitDialog2=new WaitDialog.Builder(getActivity())
-                                        .setMessage("正在保存...")
+                                        .setMessage(R.string.in_storage)
                                         .show();
                                 postDelayed(() -> {
                                     if (waitDialog2.isShowing()) {
                                         waitDialog2.dismiss();
-                                        toast("保存失败！");
+                                        toast(R.string.save_failed);
                                     }
                                 }, 4000);
                                 abSpeed= Float.parseFloat(etABSpeed.getText().toString());
                                 String name=tvSwitchPoint.getText().toString().trim();
-                                if (name.equals("原地待命")){
+                                if (name.equals(getString(R.string.stay_put))){
                                     name="";
                                 }
                                 tcpClient.saveDataToServer(modeType,name,abMode,abSpeed);
@@ -129,18 +132,19 @@ public class MapSettingActivity extends DDRActivity {
                             public void onCancel(BaseDialog dialog) {
                                 //tcpClient.requestFile();
                                 finish();
+
                             }
                         }).show();
                 break;
             case R.id.tv_recover:
                 new InputDialog.Builder(this)
-                        .setTitle("将清空全部地图数据，确认操作？")
+                        .setTitle(R.string.empty_map_data)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 if (NotifyBaseStatusEx.getInstance().getCurroute().equals(mapName)){
-                                    toast("当前地图正在使用中，无法修改");
+                                    toast(R.string.current_map_using);
                                 }else {
                                     List<DDRVLNMap.reqMapOperational.OptItem> optItems1=new ArrayList<>();
                                     DDRVLNMap.reqMapOperational.OptItem optItem1=DDRVLNMap.reqMapOperational.OptItem.newBuilder()
@@ -150,12 +154,12 @@ public class MapSettingActivity extends DDRActivity {
                                     optItems1.add(optItem1);
                                     tcpClient.reqMapOperational(optItems1);
                                     waitDialog=new WaitDialog.Builder(getActivity())
-                                            .setMessage("正在修改中")
+                                            .setMessage(R.string.under_revision)
                                             .show();
                                    postDelayed(() -> {
                                         if (waitDialog.isShowing()) {
                                             waitDialog.dismiss();
-                                            toast("修改失败！");
+                                            toast(R.string.modification_failed);
                                         }
                                     }, 4000);
                                 }
@@ -166,7 +170,7 @@ public class MapSettingActivity extends DDRActivity {
                         }).show();
                 break;
             case R.id.tv_point_set:
-                toast("任务结束后，机器人将自动返回指定的待机点待命");
+                toast(R.string.point_set_notify);
                 break;
             case R.id.tv_switch_point:
                 showListPopupWindow(tvSwitchPoint);
@@ -198,17 +202,17 @@ public class MapSettingActivity extends DDRActivity {
                 break;
             case R.id.tv_confirm:
                 waitDialog1=new WaitDialog.Builder(this)
-                        .setMessage("正在保存...")
+                        .setMessage(R.string.in_storage)
                         .show();
                 postDelayed(() -> {
                     if (waitDialog1.isShowing()) {
                         waitDialog1.dismiss();
-                        toast("保存失败！");
+                        toast(R.string.save_failed);
                     }
                 }, 4000);
                 abSpeed= Float.parseFloat(etABSpeed.getText().toString());
                 String name=tvSwitchPoint.getText().toString().trim();
-                if (name.equals("原地待命")){
+                if (name.equals(getString(R.string.stay_put))){
                     name="";
                 }
                 newMapName=etMapName.getText().toString().trim();
@@ -238,7 +242,7 @@ public class MapSettingActivity extends DDRActivity {
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(this, 0), 5);
         showRecycler =contentView.findViewById(R.id.recycler_task_check);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
         targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter.setNewData(targetPoints);
@@ -273,7 +277,7 @@ public class MapSettingActivity extends DDRActivity {
                 try {
                     targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
                     TargetPoint targetPoint=new TargetPoint();
-                    targetPoint.setName("原地待命");
+                    targetPoint.setName(getString(R.string.stay_put));
                     targetPoints.add(0,targetPoint);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -282,7 +286,7 @@ public class MapSettingActivity extends DDRActivity {
                 }
                 String pointName=ddrMapBaseData.getTargetPtName().toStringUtf8();
                 if (pointName.equals("")){
-                    pointName="原地待命";
+                    pointName=getString(R.string.stay_put);
                 }
                 tvSwitchPoint.setText(pointName);
                 abSpeed=ddrMapBaseData.getAbPathSpeed();
@@ -307,7 +311,7 @@ public class MapSettingActivity extends DDRActivity {
                     if (waitDialog1!=null){
                         if (waitDialog1.isShowing()){
                             waitDialog1.dismiss();
-                            toast("保存成功");
+                            toast(R.string.save_succeed);
                             tcpClient.requestFile();
                             finish();
                         }
@@ -340,18 +344,20 @@ public class MapSettingActivity extends DDRActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected())
-        netWorkStatusDialog();
+        if (tcpClient!=null&&!tcpClient.isConnected()){
+            Logger.e("网络已断开");
+           // netWorkStatusDialog();
+        }
     }
 
     /**
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
             if (waitDialog.isShowing()){
-                toast("网络无法连接，请退出重连！");
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }

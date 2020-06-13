@@ -14,6 +14,8 @@ import android.widget.Scroller;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import ddr.example.com.nddrandroidclient.R;
+
 
 public class SlideButton extends View {
 
@@ -81,20 +83,28 @@ public class SlideButton extends View {
     private int circleStrokeColor_int;
     private int circleChecked_int;
     private int circleNoCheckedColor_int;
+    private String open;
+    private String close;
 
     public SlideButton(Context context) {
         super(context);
         init(context);
+        close=context.getString(R.string.height_set_close);
+        open = context.getString(R.string.height_set_open);
     }
 
     public SlideButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
+        close=context.getString(R.string.height_set_close);
+        open = context.getString(R.string.height_set_open);
     }
 
     public SlideButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+        close=context.getString(R.string.height_set_close);
+        open = context.getString(R.string.height_set_open);
     }
 
     /**
@@ -299,10 +309,10 @@ public class SlideButton extends View {
         tpaint.setStrokeWidth(1);
         tpaint.setTextSize(28);
         if (isChecked){
-            canvas.drawText("开",circle_x-14, centerY+10,tpaint);
+            canvas.drawText(open,circle_x-14, centerY+10,tpaint);
         }else {
             tpaint.setColor(Color.parseColor("#999999"));
-            canvas.drawText("关",circle_x-14, centerY+10,tpaint);
+            canvas.drawText(close,circle_x-14, centerY+10,tpaint);
         }
 
     }

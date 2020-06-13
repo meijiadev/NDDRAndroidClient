@@ -12,10 +12,12 @@
         >
         <TextView
             android:id="@+id/bt_create_map"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
+            android:minWidth="110dp"
+            android:maxWidth="150dp"
             android:background="@drawable/bt_bg__map"
-            android:text="新建地图"
+            android:text="@string/new_create_map"
             android:textSize="@dimen/text_size_12sp"
             android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
@@ -24,22 +26,30 @@
             android:drawableLeft="@mipmap/add_map"
             android:paddingLeft="12dp"
             android:drawablePadding="4dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
         <TextView
             android:id="@+id/bt_batch_delete"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
+            android:minWidth="110dp"
             android:background="@drawable/bt_bg__map"
             android:layout_toRightOf="@id/bt_create_map"
             android:layout_marginTop="24dp"
             android:layout_marginLeft="23dp"
-            android:text="批量管理"
+            android:text="@string/batch_delete"
             android:textSize="@dimen/text_size_12sp"
             android:gravity="center_vertical"
             android:textColor="#ccffffff"
             android:drawableLeft="@mipmap/iv_batch"
             android:paddingLeft="12dp"
             android:drawablePadding="4dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
+            android:paddingRight="5dp"
             />
         <TextView
             android:id="@+id/tv_back_batch"
@@ -48,7 +58,7 @@
             android:background="@drawable/bt_bg__map"
             android:layout_marginTop="24dp"
             android:layout_marginRight="23dp"
-            android:text="退出"
+            android:text="@string/common_exit"
             android:gravity="center_vertical"
             android:textSize="@dimen/text_size_12sp"
             android:textColor="#ccffffff"
@@ -57,6 +67,9 @@
             android:drawablePadding="4dp"
             android:layout_toLeftOf="@id/tv_delete_all"
             android:visibility="gone"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
         <TextView
             android:id="@+id/tv_delete_all"
@@ -66,7 +79,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="24dp"
             android:layout_marginRight="24dp"
-            android:text="删除"
+            android:text="@string/common_delete"
             android:gravity="center_vertical"
             android:textSize="@dimen/text_size_12sp"
             android:textColor="#ccffffff"
@@ -74,16 +87,22 @@
             android:paddingLeft="10dp"
             android:drawablePadding="4dp"
             android:visibility="gone"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="未发现地图信息,请新建地图"
+            android:text="@string/no_map_notify"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_16sp"
             android:layout_centerInParent="true"
             android:visibility="gone"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="16sp"
             />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_map"
@@ -118,38 +137,47 @@
                 android:id="@+id/tv_target_point"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="目标点 (0)"
+                android:text="@string/target_point_label"
                 android:textSize="@dimen/text_size_12sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/blue01"
                 android:layout_marginLeft="44dp"
                 android:drawableLeft="@mipmap/iv_target_blue"
                 android:layout_toRightOf="@id/iv_back"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
                 />
             <TextView
                 android:id="@+id/tv_path"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="路径 (0)"
+                android:text="@string/path_label"
                 android:textSize="@dimen/text_size_12sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
                 android:layout_marginLeft="44dp"
                 android:drawableLeft="@mipmap/iv_path_gray"
                 android:layout_toRightOf="@id/tv_target_point"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
                 />
 
             <TextView
                 android:id="@+id/tv_edit_map"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="地图编辑"
+                android:text="@string/map_edit"
                 android:textSize="@dimen/text_size_12sp"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
                 android:drawableLeft="@mipmap/iv_edit_gray"
                 android:layout_marginLeft="44dp"
                 android:layout_toRightOf="@id/tv_path"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
                 />
             <TextView
                 android:id="@+id/tv_reference"
@@ -160,12 +188,15 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/bt_bg__map"
                 android:paddingLeft="20dp"
-                android:text="参考层"
+                android:text="@string/common_reference"
                 android:textSize="@dimen/text_size_12sp"
                 android:textColor="@color/white"
                 android:gravity="center_vertical"
                 android:drawablePadding="5dp"
                 android:layout_marginRight="17dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
 
                 />
         </RelativeLayout>
@@ -194,11 +225,15 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center_vertical"
-                android:text="  新建"
+                android:text="@string/common_create"
                 android:textColor="@color/white"
                 android:drawableLeft="@mipmap/add_map"
-                android:paddingLeft="10dp"
-                android:textSize="10sp" />
+                android:paddingLeft="15dp"
+                android:textSize="10sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="10sp"
+                />
 
             <TextView
                 android:id="@+id/tv_delete"
@@ -209,11 +244,14 @@
                 android:layout_marginLeft="12dp"
                 android:background="@drawable/bt_bg__map"
                 android:gravity="center_vertical"
-                android:text="  删除"
+                android:text="@string/common_delete"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 android:drawableLeft="@mipmap/iv_delete_01"
-                android:paddingLeft="10dp"
+                android:paddingLeft="15dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeMaxTextSize="10sp"
                 />
 
             <View
@@ -240,11 +278,14 @@
                         android:id="@+id/tv_point_name"
                         android:layout_width="54.5dp"
                         android:layout_height="18.5dp"
-                        android:text="点名称:"
+                        android:text="@string/common_point_name"
                         android:textSize="13sp"
                         android:textColor="@color/white"
                         android:layout_marginLeft="17dp"
                         android:layout_marginTop="27dp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="8sp"
+                        android:autoSizeMaxTextSize="13sp"
                         />
                     <ddr.example.com.nddrandroidclient.widget.edit.RegexEditText
                         android:id="@+id/et_point_name"
@@ -276,6 +317,9 @@
                             android:textSize="13sp"
                             android:layout_marginLeft="17dp"
                             android:layout_marginTop="22dp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="8sp"
+                            android:autoSizeMaxTextSize="13sp"
                             />
                         <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                             android:id="@+id/et_x"
@@ -295,7 +339,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="18.5dp"
-                            android:layout_marginLeft="5dp"/>
+                            android:layout_marginLeft="5dp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="8sp"
+                            android:autoSizeMaxTextSize="13sp"/>
                         <TextView
                             android:id="@+id/tv_y"
                             android:layout_width="23dp"
@@ -330,12 +377,15 @@
                             android:id="@+id/tv_point_toward"
                             android:layout_width="54.5dp"
                             android:layout_height="18.5dp"
-                            android:text="点朝向："
+                            android:text="@string/common_point_toward"
                             android:textColor="@color/white"
                             android:textSize="13sp"
                             android:layout_marginLeft="17dp"
                             android:layout_below="@id/tv_y"
                             android:layout_marginTop="22dp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="8sp"
+                            android:autoSizeMaxTextSize="13sp"
                             />
                         <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                             android:id="@+id/et_toward"
@@ -363,12 +413,15 @@
                             android:background="@drawable/bt_bg__map"
                             android:textSize="12sp"
                             android:textColor="@color/white"
-                            android:text="保存"
+                            android:text="@string/common_save"
                             android:gravity="center"
                             android:layout_below="@id/et_toward"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="30dp"
                             android:layout_marginTop="40dp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="9sp"
+                            android:autoSizeMaxTextSize="12sp"
                             />
                     </RelativeLayout>
                     <TextView
@@ -378,13 +431,16 @@
                         android:background="@drawable/bt_bg__map"
                         android:textSize="12sp"
                         android:textColor="@color/white"
-                        android:text="保存"
+                        android:text="@string/common_save"
                         android:gravity="center"
                         android:layout_below="@id/et_point_name"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="30dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"
                         />
 
 
@@ -399,11 +455,14 @@
                         android:id="@+id/tv_path_name"
                         android:layout_width="62.5dp"
                         android:layout_height="18.5dp"
-                        android:text="路径名称:"
+                        android:text="@string/common_path_name"
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:layout_marginLeft="17dp"
                         android:layout_marginTop="27dp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"
                         />
                     <ddr.example.com.nddrandroidclient.widget.edit.RegexEditText
                         android:id="@+id/et_path_name"
@@ -425,12 +484,15 @@
                         android:id="@+id/tv_mode"
                         android:layout_width="62.5dp"
                         android:layout_height="18.5dp"
-                        android:text="路线模式:"
+                        android:text="@string/common_path_mode"
                         android:textSize="12sp"
                         android:textColor="@color/white"
                         android:layout_marginLeft="17dp"
                         android:layout_marginTop="30dp"
                         android:layout_below="@id/tv_path_name"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"
                         />
                     <ddr.example.com.nddrandroidclient.widget.textview.DDRTextView
                         android:id="@+id/spinner_mode"
@@ -445,6 +507,9 @@
                         android:paddingLeft="14dp"
                         android:drawableRight="@mipmap/iv_down"
                         android:gravity="center_vertical"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="11sp"
                         />
 
                     <TextView
@@ -454,10 +519,13 @@
                         android:layout_below="@id/tv_mode"
                         android:layout_alignLeft="@id/tv_path_name"
                         android:layout_marginTop="30dp"
-                        android:text="延边距离："
+                        android:text="@string/common_cs"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"/>
                     <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                         android:id="@+id/et_parameter"
                         android:layout_width="105.5dp"
@@ -466,6 +534,7 @@
                         android:layout_below="@id/spinner_mode"
                         android:layout_marginTop="23dp"
                         android:visibility="gone"
+
                         />
                     <TextView
                         android:id="@+id/tv_cm"
@@ -483,12 +552,15 @@
                         android:id="@+id/tv_speed"
                         android:layout_width="62.5dp"
                         android:layout_height="18.5dp"
-                        android:text="行驶速度："
+                        android:text="@string/run_speed"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:layout_alignLeft="@id/tv_cs"
                         android:layout_below="@id/tv_cs"
-                        android:layout_marginTop="30dp" />
+                        android:layout_marginTop="30dp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"/>
                     <ddr.example.com.nddrandroidclient.widget.edit.DDREditText
                         android:id="@+id/et_speed"
                         android:layout_width="105.5dp"
@@ -515,10 +587,13 @@
                         android:layout_below="@id/tv_speed"
                         android:layout_marginTop="26.5dp"
                         android:layout_marginLeft="16dp"
-                        android:text="动作列表:"
+                        android:text="@string/action_recycler"
                         android:textSize="12sp"
                         android:textColor="@color/white"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"/>
                     <TextView
                         android:id="@+id/bt_add_action"
                         android:layout_width="64dp"
@@ -528,10 +603,13 @@
                         android:layout_below="@id/tv_speed"
                         android:layout_marginTop="26.5dp"
                         android:layout_marginLeft="85dp"
-                        android:text="添加"
+                        android:text="@string/add_action"
                         android:textSize="10sp"
                         android:gravity="center"
                         android:textColor="#ccffffff"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"
                         />
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/action_recycler"
@@ -544,7 +622,7 @@
                         android:id="@+id/tv_cf"
                         android:layout_width="67dp"
                         android:layout_height="24dp"
-                        android:text="文件配置："
+                        android:text="@string/file_setting"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:layout_below="@id/action_recycler"
@@ -552,6 +630,9 @@
                         android:layout_alignLeft="@id/tv_action_recycler"
                         android:gravity="center_vertical"
                         android:visibility="gone"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"
                         />
                     <TextView
                         android:id="@+id/tv_config"
@@ -575,12 +656,15 @@
                         android:background="@drawable/bt_bg__map"
                         android:textSize="12sp"
                         android:textColor="@color/white"
-                        android:text="保存"
+                        android:text="@string/common_save"
                         android:gravity="center"
                         android:layout_below="@id/tv_config"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="30dp"
                         android:layout_marginTop="40dp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="9sp"
+                        android:autoSizeMaxTextSize="12sp"
                         />
                 </RelativeLayout>
             </RelativeLayout>
@@ -593,7 +677,7 @@
             android:layout_below="@id/title_layout"
             android:layout_toRightOf="@id/left_detail_layout">
 
-            <ddr.example.com.nddrandroidclient.widget.view.ZoomImageView
+            <ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView
                 android:id="@+id/zoom_map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -610,25 +694,31 @@
                 android:layout_marginBottom="6dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="35dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
 
                 />
             <TextView
                 android:id="@+id/tv_map_size"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="地图面积：32x65m"
+                android:text="@string/map_size"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:layout_above="@id/tv_create_time"
                 android:layout_marginRight="35dp"
                 android:layout_marginBottom="6dp"
                 android:layout_alignParentRight="true"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="12sp"
                 />
             <TextView
                 android:id="@+id/tv_create_time"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="建立日期：2019-11-11"
+                android:text="@string/create_time"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                android:layout_alignParentRight="true"

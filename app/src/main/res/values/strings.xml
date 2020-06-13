@@ -10,5 +10,344 @@
     <string name="crash_error_details">错误详情</string>
     <string name="crash_error_info">错误信息</string>
     <string name="crash_copy_log">复制日志</string>
-    <string name="crash_close">关闭</string>
+    <string name="crash_close">关闭</string>\
+    <string name="common_hour">时</string>
+    <string name="common_minute">分</string>
+    <string name="common_second">秒</string>
+
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="time_next">下一步</string>
+    <string name="time_last">上一步</string>
+    <string name="time_start_title">请选择开始时间</string>
+    <string name="time_end_time">请选择结束时间</string>
+
+
+
+    <!--登录页-->
+    <string name="left_button">局域网</string>
+    <string name="right_button">广域网</string>
+    <string name="account_name">账号</string>
+    <string name="password_hint">密码</string>
+    <string name="login_button">登录</string>
+    
+    
+    <!--Home页-->
+    <string name="home_status">基础状态</string>
+    <string name="home_map_manager">地图管理</string>
+    <string name="home_task">时段管理</string>
+    <string name="home_setting">高级设置</string>
+    <string name="scram_status">急停</string>
+    <string name="control_status">遥控</string>
+    <string name="robot_shutdown">关机</string>
+    <string name="app_quit">退出</string>
+    <string name="switch_to_cn">切换成中文</string>
+    <string name="switch_to_en">切换成英文</string>
+    <string name="line_speed">线速度：</string>
+    <string name="angulau_speed">角速度：</string>
+    <string name="angulau_speed_1">弧度/秒</string>
+
+    <!--地图管理-->
+    <string name="new_create_map">新建地图</string>
+    <string name="batch_delete">批量删除</string>
+    <string name="common_exit">退出</string>
+    <string name="common_delete">删除</string>
+    <string name="no_map_notify">未发现地图信息,请新建地图</string>
+    <string name="target_point_label">目标点</string>
+    <string name="path_label">路径</string>
+    <string name="map_edit">地图编辑</string>
+    <string name="common_reference">参考层</string>
+    <string name="common_create">新建</string>
+    <string name="common_point_name">点名称:</string>
+    <string name="common_point_toward">点朝向：</string>
+    <string name="common_path_name">路径名称：</string>
+    <string name="common_save">保存</string>
+    <string name="common_path_mode">路线模式: </string>
+    <string name="common_cs">延边距离：</string>
+    <string name="run_speed">行驶速度：</string>
+    <string name="action_recycler">动作列表：</string>
+    <string name="add_action">添加</string>
+    <string name="file_setting">文件配置：</string>
+    <string name="map_size">地图面积：</string>
+    <string name="create_time">建立日期：</string>
+    <string name="ai_connected">AI服务连接成功</string>
+    <string name="initial_point">初始点</string>
+    <string name="no_point">无目标点</string>
+    <string name="no_path">无路径</string>
+    <string name="is_relocation">是否重定位</string>
+    <string name="is_switch_map">是否切换地图</string>
+    <string name="common_relocation">重定位</string>
+    <string name="common_switch_map">切换地图</string>
+    
+    <!--基础状态-->
+    <string name="common_warn">未加载到正在使用中的地图，请点击此处刷新！</string>
+    <string name="now_device">当前设备:</string>
+    <string name="now_map">当前地图：</string>
+    <string name="now_task">当前任务：</string>
+    <string name="common_unselected">未选择</string>
+    <string name="work_status">工作状态：</string>
+    <string name="task_times">任务次数：</string>
+    <string name="working_hours">工作时长：</string>
+    <string name="task_speed">任务速度：</string>
+    <string name="common_waiting">待命中</string>
+    <string name="create_task_steps">建立任务步骤：</string>
+    <string name="first_steps">建立地图</string>
+    <string name="second_steps">编辑目标点</string>
+    <string name="thirdly_steps">建立任务</string>
+    <string name="fourth_steps">运行任务</string>
+    <string name="common_complete">完成</string>
+    <string name="common_execute">执行</string>
+    <string name="common_pause">暂停</string>
+    <string name="common_wait">待命</string>
+    <string name="common_charging">正在充电，底盘已关闭运动</string>
+    <string name="common_exit_charge">退出充电</string>
+    <string name="no_task">无任务</string>
+    <string name="go_target_point">前往目标点</string>
+    <string name="common_times">次</string>
+    <string name="in_the_calibration">自标定中</string>
+    <string name="common_runing">运动中</string>
+    <string name="common_collecting">采集中</string>
+    <string name="common_error">异常</string>
+    <string name="common_relocationing">重定位中</string>
+
+    
+
+    <!--时段任务-->
+    <string name="task_title">任务列表</string>
+    <string name="save_task">同步任务</string>
+    <string name="new_create_task">新建任务</string>
+    <string name="task_name">任务名称</string>
+    <string name="execute_time">执行时段</string>
+    <string name="task_status">任务状态</string>
+    <string name="operator_task">操作</string>
+    <string name="common_modification">修改</string>
+    <string name="common_terminated">已终止</string>
+    <string name="common_recover">恢复</string>
+    <string name="common_wait_execute">等待执行</string>
+    <string name="common_stop">停止</string>
+    <string name="common_executing">正在执行</string>
+    <string name="common_executed">执行完毕</string>
+    <string name="common_put_up">挂起</string>
+
+    <!-- 高级设置-导航参数-->
+    <string name="navigation_para">导航参数</string>
+    <string name="navigation_para_set">导航参数设置</string>
+    <string name="height_set_save">保存</string>
+    <string name="navigation_loop">导航循环</string>
+    <string name="n_return_auto">自主返回循环</string>
+    <string name="n_return_along">原路返回循环</string>
+    <string name="n_return_auto_tip">当任务终点和起点非同一目标点时，机器人自动规划路径完成循环</string>
+    <string name="n_return_along_tip">按设定任务，起点至终点往返循环，往返一次视为一次循环结束，适合较小场景使用</string>
+    <string name="n_way_turn">路径转弯方式</string>
+    <string name="n_point_turn">目标点转弯</string>
+    <string name="n_arc_turn">智能平滑转弯</string>
+    <string name="n_point_turn_tip">抵达点，按路径转弯，继续执行任务，适合较窄场景使用</string>
+    <string name="n_arc_turn_tip">导航路径有折角时，自动计算转弯半径，提升执行效率，建议较大场景使用</string>
+    <string name="n_speed_down">避障开始减速距离</string>
+    <string name="n_speed_down_tip">机器人到障碍的距离小于此值开始减速</string>
+    <string name="n_stop_distance">避障停止距离</string>
+    <string name="n_stop_distance_tip">机器人到障碍的距离小于等于此值停止</string>
+    <string name="n_restore_default">恢复默认</string>
+    
+    <!-- 高级设置-自动充电 -->
+    <string name="auto_charging">自动充电</string>
+    <string name="auto_charging_set">自动充电设置</string>
+    <string name="ac_open">开启自动充电</string>
+    <string name="ac_open_tip">（当电池电量低于触发值，机器人自动返回充电）</string>
+    <string name="ac_trig_auto_charge">触发自动充电电量</string>
+    <string name="ac_stop_auto_charge">退出自动充电电量</string>
+    <string name="height_set_open">开</string>
+    <string name="height_set_close">关</string>
+    
+    <!-- 高级设置-传感器配置 -->
+    <string name="sensor_set">传感器配置</string>
+    <string name="ultrasonic_set">超声波配置</string>
+    <string name="ultrasonic_set_tip">（静态模式下触发超声波，机器人会停止运动）</string>
+    <string name="ultrasonic_set_title">（设置前务必知晓安装位置，超声波数值为0表示功能关闭）</string>
+    <string name="imu_temperature">IMU温度设置</string>
+    <string name="imu_temperature_tip">（建议设置比环境温度高10℃左右）</string>
+    
+    <!-- 高级设置-硬件检测-->
+    <string name="hardware_detection">硬件检测</string>
+    <string name="hardware_name">硬件名称</string>
+    <string name="self_test_results">自检结果</string>
+    <string name="self_test_time">自检时间</string>
+    <string name="self_test">一键自检</string>
+    <string name="st_lidar">激光雷达</string>
+    <string name="st_dual_cameras">摄像头</string>
+    <string name="st_embedded_system">嵌入式</string>
+    <string name="st_normal">正常</string>
+    <string name="st_abnormal">异常</string>
+    <string name="self_tested">自检完成</string>
+    
+    <!--高级设置-关于我们-->
+    <string name="about_us">关于我们</string>
+    <string name="au_app_version">安卓客户端版本</string>
+    <string name="au_server_software_version">机器人服务端软件版本信息</string>
+    <string name="au_module">模块</string>
+    <string name="au_version">版本信息</string>
+    <string name="au_update_time">版本更新时间</string>
+    <string name="au_host_computer">上位机</string>
+    <string name="au_lidar_module">雷达模块</string>
+    <string name="au_route_plan">路径规划</string>
+    <string name="au_vision_module">视觉模块</string>
+    <string name="au_equipment_management">设备管理</string>
+    <string name="au_embedded">嵌入式</string>
+
+    <!--采集页面-->
+    <string name="collect_title_one">扫描环境中...</string>
+    <string name="collect_title_two">正在自标定中...</string>
+    <string name="collect_title_three">正在采集中...</string>
+    <string name="common_detection">回环检测</string>
+    <string name="gauge_point">标记点</string>
+
+    <!--地图编辑页面-->
+    <string name="mark_current">标记机器人当前位置</string>
+    <string name="select_point">点击选择目标点建路径</string>
+    <string name="common_gridlayout">网格：</string>
+    <string name="common_add_point">添加点</string>
+    <string name="common_revocation">撤销</string>
+    <string name="common_delete_point">删除点</string>
+    <string name="common_init">初始化</string>
+    <string name="common_virtual_wall">虚拟墙</string>
+    <string name="common_denoising">原图去噪</string>
+    <string name="common_line">直线</string>
+
+    <!--地图设置页面-->
+    <string name="map_setting">地图设置</string>
+    <string name="map_name">地图名称：</string>
+    <string name="wait_point">待机点设置：</string>
+    <string name="ab_mode">目标点呼叫运动模式：</string>
+    <string name="static_mode">静态避障</string>
+    <string name="dynamic_mode">动态避障</string>
+    <string name="target_speed">目标点运动速度：</string>
+    <string name="nav_notify">导航策略（注意：切换自主巡线后，需绘制行驶路径）</string>
+    <string name="navigation_mode">自主导航模式</string>
+    <string name="line_patrol">自主巡线模式</string>
+    <string name="nav_notify_1">(自主规划行驶路线，无需人工指引操作)</string>
+    <string name="nav_notify_2">(规划预设行驶路线，前往目标点时，寻找预设路径的最优路线）</string>
+    <string name="map_recover">原图恢复</string>
+    <string name="stay_put">原地待命</string>
+    
+
+    <!--新建task页面-->
+    <string name="create_task_hint">点击左侧目标点、路径添加.</string>
+    <string name="create_task_hint_1">可通过拖拽对列表进行排序.</string>
+    <string name="create_task_hint_2">请选择相应的路径和目标点组建路径</string>
+    <string name="create_task_hint_3">请避免连续添加同一个点！</string>
+    <string name="create_task_hint_4">请避免连续添加同一条路径!</string>
+    <string name="task_rename">任务重命名</string>
+    <string name="name_already_exists">名称已存在，请重新命名。</string>
+    <string name="cancel_rename">取消重命名!</string>
+    
+    <!--重定位页面-->
+    <string name="manually_locate">手动定位</string>
+    <string name="location_notify">提示：请通过平移旋转地图匹配雷达扫描形状确定机器人当前位置</string>
+    <string name="common_relocation">重定位</string>
+    <string name="look_location_data">点击查看机器人位姿</string>
+    <string name="relocation_failed">重新定位失败，请重新设置机器人位姿</string>
+    <string name="relocation_succeed">定位成功!</string>
+    <string name="the_relocation">正在重新定位中可能需要1~3分钟时间...</string>
+    
+    
+
+    <!--吐司提示-->
+    <string name="network_not_connect">网络无法连接，请退出重连！</string>
+    <string name="loop_status_one">检测错误，请重新检测</string>
+    <string name="loop_status_two">没有检测到回环</string>
+    <string name="loop_status_three">回环已存在</string>
+    <string name="loop_status_four">新采集基准构成回环</string>
+    <string name="loop_status_five">距离太近不需要检测回环</string>
+    <string name="loop_status_six">正在检测中，请勿重复点击!</string>
+    <string name="create_map_error">建图异常,即将退出当前模式，本次地图无效</string>
+    <string name="gauge_succeed">标记成功</string>
+    <string name="common_lock">锁定</string>
+    <string name="common_cancel_lock">取消锁定</string>
+    <string name="do_not_repeat_marks">请勿重复标记</string>
+    <string name="please_add_point">请先添加点</string>
+    <string name="name_repetition">名字重复，请重新命名！</string>
+    <string name="save_succeed">保存成功！</string>
+    <string name="save_failed">保存失败！</string>
+    <string name="cancel_add">取消添加</string>
+    <string name="select_two_point">请至少选择两个点</string>
+    <string name="please_select_virtual">请先选择要删除的虚拟墙</string>
+    <string name="nothing_revocation">当前无可撤销内容</string>
+    <string name="operation_failure">操作失败</string>
+    <string name="load_succeed">加载成功</string>
+    <string name="current_map_using">当前地图正在使用中，无法修改</string>
+    <string name="under_revision">正在修改中...</string>
+    <string name="modification_failed">修改失败！</string>
+    <string name="point_set_notify">任务结束后，机器人将自动返回指定的待机点待命</string>
+    <string name="robot_is_shutdown">机器人正在关机中...</string>
+    <string name="robot_is_restart">机器人正在重启中，请退出到登陆页面等待重启完成后再重新连接</string>
+    <string name="login_succeed">登陆成功</string>
+    <string name="account_not_empty">用户名和密码不能为空</string>
+    <string name="in_login">登录中...</string>
+    <string name="login_failed">登录失败，请检查网络后重新登录</string>
+    <string name="please_anter_name">请输入地图名字</string>
+    <string name="not_wait_collect">非待命模式下无法采图，请先退回到待命模式</string>
+    <string name="batch_collect">当前批量删除状态，无法进入采集模式</string>
+    <string name="please_delete_selected">请先选择要删除的图片</string>
+    <string name="the_point_inexistence">该目标点不存在!</string>
+    <string name="the_path_inexistence">该路径不存在！</string>
+    <string name="please_select_point">请先选择一个目标点再删除</string>
+    <string name="please_select_path">请先选择路径再删除</string>
+    <string name="current_map_unable_delete">当前使用地图无法删除</string>
+    <string name="load_failed">加载失败</string>
+    <string name="can_not_relocation">正在自标定中,无法进行重定位...</string>
+    <string name="in_relocation">正在重定位中,请先退出当前定位...</string>
+    <string name="not_map_using">当前并无正在使用中的地图，请确定有采集的地图并选择一张地图使用！</string>
+    <string name="cancel_go_point">取消去目标点</string>
+    <string name="please_wait_self_calibration">请稍等，正在自标定</string>
+    <string name="please_wait_in">请稍等，正在进入</string>
+    <string name="please_create_task">请先建立任务</string>
+
+
+
+
+    <!--Dialog-->
+    <string name="common_network_connecting">网络正在连接...</string>
+    <string name="waiting_dialog">正在定位中，请勿挪动机器人...</string>
+    <string name="exit_collecting_dialog">是否退出采集</string>
+    <string name="save_map_dialog">是否保存当前采集</string>
+    <string name="add_path_name_dialog">添加路径名</string>
+    <string name="please_enter">请输入名称</string>
+    <string name="is_delete">是否删除</string>
+    <string name="in_storage">正在保存中...</string>
+    <string name="is_recover_denoising">是否恢复噪点？</string>
+    <string name="init_map">正在初始化地图...</string>
+    <string name="add_gauge_name">添加目标名</string>
+    <string name="reload_map">重新加载地图...</string>
+    <string name="in_load_map">正在加载地图！</string>
+    <string name="is_save_setting">是否保存当前设置并退出？</string>
+    <string name="save_dialog">保存</string>
+    <string name="not_save_dialog">不保存</string>
+    <string name="empty_map_data">将清空全部地图数据，确认操作</string>
+    <string name="is_back">是否退出</string>
+    <string name="collect_map">采集地图</string>
+    <string name="enter_map_name">输入地图名称</string>
+    <string name="please_delete">是否删除所选</string>
+    <string name="common_deleting">正在删除...</string>
+    <string name="common_load">加载</string>
+    <string name="common_loading">地图信息中</string>
+    <string name="in_switch">正在切换中...</string>
+    <string name="switch_failed">切换失败！</string>
+    <string name="relocation_failed_1">自动定位失败，是否进入手动定位</string>
+    <string name="common_yes">是</string>
+    <string name="common_no">否</string>
+
+    <string name="enter_run_times">请输入循环次数</string>
+    <string name="is_go">是否前往</string>
+    <string name="current_not_location">当前无定位，请选择重定位方式</string>
+    <string name="hand_location">手动定位</string>
+    <string name="auto_location">自动定位</string>
+
+
+
+
+
+
+
+
+
 </resources>

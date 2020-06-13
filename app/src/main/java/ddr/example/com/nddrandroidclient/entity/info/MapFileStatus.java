@@ -21,6 +21,8 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public class MapFileStatus {
     public static MapFileStatus mapFileStatus;
     private List<String> mapNames=new ArrayList<>();                    // 服务端返回的地图名字列表
+    private String currentBitmapPath,currentMapName;
+    private byte[] currentBitmap;
     private List<String> pictureUrls;                 //激光地图的http连接列表
     private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
     private DDRVLNMap.reqDDRVLNMapEx currentMapEx;      //当前地图信息对象
@@ -105,7 +107,7 @@ public class MapFileStatus {
                 targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
                 targetPoint.setX(targetPtItems.get(i).getPtData().getX());
                 targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-                targetPoint.setTheta((int) targetPtItems.get(i).getPtData().getTheta());
+                targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
                 cTargetPoints.add(targetPoint);
             }
 
@@ -183,7 +185,7 @@ public class MapFileStatus {
             targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
             targetPoint.setX(targetPtItems.get(i).getPtData().getX());
             targetPoint.setY(targetPtItems.get(i).getPtData().getY());
-            targetPoint.setTheta((int)targetPtItems.get(i).getPtData().getTheta());
+            targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
             targetPoints.add(targetPoint);
         }
         for (int i = 0; i < pathLineItemExes.size(); i++) {
@@ -276,12 +278,38 @@ public class MapFileStatus {
             }
             if (dirName.equals(NotifyBaseStatusEx.getInstance().getCurroute())) {
                 mapInfos.get(i).setUsing(true);
+                currentBitmapPath=mapInfos.get(i).getBitmap();
+                currentMapName=mapInfos.get(i).getMapName();
+                currentBitmap=mapInfos.get(i).getBytes();
                 Collections.swap(mapInfos,0,i);
             } else {
                 mapInfos.get(i).setUsing(false);
             }
         }
         this.mapInfos = mapInfos;
+    }
+
+    /**
+     * 获取当前正在使用的地图存储路径
+     * @return
+     */
+    public String getCurrentBitmapPath() {
+        return currentBitmapPath;
+    }
+    /**
+     * 获取正在使用中的地图名
+     * @return
+     */
+    public String getCurrentMapName() {
+        return currentMapName;
+    }
+
+    /**
+     * 获取正在使用中的地图字节流
+     * @return
+     */
+    public byte[] getCurrentBitmap() {
+        return currentBitmap;
     }
 
     public List<MapInfo> getMapInfos() {

@@ -38,6 +38,30 @@ public class CmdSchedule {
     }
 
     /**
+     * 局域网登录
+     * @param password
+     * @param account
+     * @return
+     */
+    public static BaseCmd.reqLogin localLogin(String account, String password,int type){
+        BaseCmd.eCltType eCltType;
+        switch (type){
+            case 2:
+                eCltType=BaseCmd.eCltType.eLocalAndroidClient;
+                break;
+            case 4:
+                eCltType=BaseCmd.eCltType.eLocalAIClient;
+                break;
+        }
+        BaseCmd.reqLogin mreqLogin=BaseCmd.reqLogin.newBuilder()
+                .setUsername(account)
+                .setUserpwd(password)
+                .setType(BaseCmd.eCltType.eLocalAndroidClient)
+                .build();
+        return mreqLogin;
+    }
+
+    /**
      * 广域网登陆
      * @param password
      * @param account

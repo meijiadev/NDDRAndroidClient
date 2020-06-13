@@ -17,6 +17,7 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.other.HelpAndBack;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.ui.adapter.HelpBackAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 
 /**
  * time: 2020/03/24
@@ -42,7 +43,7 @@ public class HelpFeedbackSetFragment extends DDRLazyFragment {
     @Override
     protected void initView() {
         helpBackAdapter=new HelpBackAdapter(R.layout.item_recycle_help);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         recycle_help.setLayoutManager(layoutManager);
         recycle_help.setAdapter(helpBackAdapter);
 

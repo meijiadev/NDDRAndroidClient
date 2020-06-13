@@ -255,4 +255,11 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
     public void onCheckedChangeListener(boolean isChecked) {
         Logger.e("状态"+isChecked);
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getNaparmeter(1);
+        getChosseStatus();
+    }
 }

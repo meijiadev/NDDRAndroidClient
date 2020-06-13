@@ -12,68 +12,79 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#101112">
-        <!--大道智创客户端-->
-        <TextView
-            android:layout_width= "136dp"
-            android:layout_height="22.5dp"
-            android:text=""
-            android:textSize="16dp"
-            android:layout_centerVertical="true"
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/menu"
+            android:scaleType="center"
             android:layout_marginLeft="16dp"
-            android:textColor="#ffffff"/>
+            />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/status"
-            android:layout_width="83dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
-            android:text="基础状态"
+            android:text="@string/home_status"
             android:textSize="12sp"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/mapmanager"
-            android:layout_marginRight="34dp"
+            android:layout_marginLeft="100dp"
             android:textColor="#ffffff"
             android:gravity="center"
+            android:layout_toRightOf="@id/iv_menu"
             android:drawableLeft="@mipmap/status_def"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/mapmanager"
-            android:layout_width="82dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:layout_marginRight="34dp"
-            android:layout_toLeftOf="@id/taskmanager"
+            android:layout_marginLeft="44dp"
+            android:layout_toRightOf="@id/status"
             android:drawableLeft="@mipmap/map_def"
             android:gravity="center"
-            android:text="地图管理"
+            android:text="@string/home_map_manager"
             android:textColor="#ffffff"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/taskmanager"
-            android:layout_width="83dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
-            android:text="时段管理"
+            android:text="@string/home_task"
             android:textSize="12sp"
-            android:layout_centerInParent="true"
+            android:layout_toRightOf="@id/mapmanager"
+            android:layout_marginLeft="44dp"
             android:textColor="#ffffff"
             android:gravity="center"
-            android:drawableLeft="@mipmap/task_def"/>
+            android:drawableLeft="@mipmap/task_def"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"/>
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:id="@+id/highset"
-            android:layout_width="83dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
-            android:text="高级设置"
+            android:text="@string/home_setting"
             android:textSize="12sp"
             android:layout_toRightOf="@id/taskmanager"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="34dp"
+            android:layout_marginLeft="44dp"
             android:textColor="#ffffff"
             android:gravity="center"
             android:drawableLeft="@mipmap/hightset_def"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
         <TextView
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:drawableTop="@mipmap/yk_default"
-            android:text="遥控"
+            android:text="@string/control_status"
             android:textColor="@color/white"
             android:textSize="11sp"
             android:layout_toLeftOf="@id/view1"
@@ -84,11 +95,16 @@
             android:drawablePadding="5dp"
             android:gravity="center_horizontal"
             android:visibility="visible"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="11sp"
+
             />
         <TextView
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="急停"
+            android:minWidth="40dp"
+            android:text="@string/scram_status"
             android:textSize="11sp"
             android:textColor="@color/white"
             android:drawableTop="@mipmap/jt_default"
@@ -100,44 +116,19 @@
             android:gravity="center_horizontal"
             android:drawablePadding="5dp"
             android:visibility="visible"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="11sp"
             />
         <View
             android:id="@+id/view1"
-            android:layout_width="1dp"
+            android:layout_width="0dp"
             android:layout_height="31dp"
             android:background="#262728"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_shutdown"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="18dp"
             ></View>
-        <TextView
-            android:id="@+id/tv_shutdown"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:text="关机"
-            android:gravity="center_horizontal"
-            android:textSize="11sp"
-            android:textColor="@color/white"
-            android:layout_toLeftOf="@id/tv_quit"
-            android:layout_marginRight="18dp"
-            android:layout_centerVertical="true"
-            android:drawableTop="@mipmap/iv_shutdown"
-            android:drawablePadding="5dp"
-
-            />
-        <TextView
-            android:id="@+id/tv_quit"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:drawableTop="@mipmap/tv_quit"
-            android:text="退出"
-            android:textSize="11sp"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="24dp"
-            android:drawablePadding="5dp"
-            />
 
         <View
             android:layout_width="match_parent"
@@ -147,12 +138,85 @@
             android:id="@+id/line_view"
             />
     </RelativeLayout>
-    <ddr.example.com.nddrandroidclient.widget.view.DDRViewPager
-        android:id="@+id/vp_home_pager"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-		android:layout_below="@id/title_layout"
+        android:layout_below="@id/title_layout"
         >
-    </ddr.example.com.nddrandroidclient.widget.view.DDRViewPager>
+        <ddr.example.com.nddrandroidclient.widget.view.DDRViewPager
+            android:id="@+id/vp_home_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <LinearLayout
+            android:id="@+id/drawer_layout_left"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#101112"
+            android:clickable="true"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/tv_shutdown"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/robot_shutdown"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:drawableLeft="@mipmap/iv_shutdown"
+                android:drawablePadding="50dp"
+                android:layout_marginLeft="16dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="14sp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#262728"
+                />
+            <TextView
+                android:id="@+id/tv_quit"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:drawableLeft="@mipmap/tv_quit"
+                android:text="@string/app_quit"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:drawablePadding="50dp"
+                android:layout_marginLeft="16dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="14sp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#262728"
+                />
+            <TextView
+                android:id="@+id/tv_switch_language"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:drawableLeft="@mipmap/iv_switch"
+                android:text="@string/switch_to_en"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:drawablePadding="50dp"
+                android:layout_marginLeft="10dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="14sp"
+                />
+        </LinearLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </RelativeLayout>

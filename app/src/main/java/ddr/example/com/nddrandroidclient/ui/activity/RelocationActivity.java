@@ -1,14 +1,10 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 
@@ -34,35 +30,25 @@ import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
-import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
-import ddr.example.com.nddrandroidclient.widget.view.MapEditView;
-import ddr.example.com.nddrandroidclient.widget.view.RobotLocationView;
-import ddr.example.com.nddrandroidclient.widget.layout.ZoomLayout;
+import ddr.example.com.nddrandroidclient.widget.zoomview.RobotLocationView;
 
 /**
  * time : 2019/12/25
  * desc : 手动定位
  */
 public class RelocationActivity extends DDRActivity {
-    @BindView(R.id.zoom_view)
-    ZoomLayout zoomView;
-    @BindView(R.id.iv_content)
-    MapEditView ivContent;
     @BindView(R.id.robot_location)
     RobotLocationView robotLocationView;         //当前机器人的位置
     @BindView(R.id.map_layout)
     RelativeLayout mapLayout;
     @BindView(R.id.iv_back)
     ImageView ivBack;
-  /*  @BindView(R.id.tv_robot_position)
-    TextView tvRobotPosition;*/
     private Bitmap currentBitmap;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
-    private int mapLayoutW,mapLayoutH;
-    private int marginLeft,marginTop;
+
 
     @Override
     protected int getLayoutId() {
@@ -86,15 +72,13 @@ public class RelocationActivity extends DDRActivity {
         try {
             fis = new FileInputStream(bitmap);
             currentBitmap= BitmapFactory.decodeStream(fis);
-            ivContent.setBitmap(currentBitmap);
-            robotLocationView.setBitmapSize(zoomView,ivContent,mapName);
+            robotLocationView.setImageBitmap(currentBitmap);
             tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-
         realTimeRequest();
         //reqObstacleInfo();
         robotLocationView.startThread();
@@ -115,53 +99,23 @@ public class RelocationActivity extends DDRActivity {
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.tv_finish:
-                setCenterTouch();
-                XyEntity xyEntity=ivContent.getCenterCoordinate();
-                Logger.e("-x:"+xyEntity.getX()+";"+xyEntity.getY());
-                XyEntity xyEntity1=robotLocationView.toPathXy(xyEntity.getX(),xyEntity.getY());
-                float rotation=(float) Math.toRadians(zoomView.getRotation());
-                Logger.e("-x:"+xyEntity1.getX()+";"+xyEntity1.getY()+"弧度："+rotation);
-                ivContent.invalidate();
+                XyEntity xyEntity=robotLocationView.getRobotLocationInWindow();
+                XyEntity xyEntity1=robotLocationView.toWorld(xyEntity.getX(),xyEntity.getY());
+                float rotation=robotLocationView.getRadians();
                 reqCmdReloc(xyEntity1.getX(),xyEntity1.getY(),rotation);
                 break;
             case R.id.iv_back:
                 onBackPressed();
                 break;
             case R.id.tv_look:
-                setCenterTouch();
-                XyEntity xyEntity2=ivContent.getCenterCoordinate();
-                Logger.e("-x:"+xyEntity2.getX()+";"+xyEntity2.getY());
-                XyEntity xyEntity3=robotLocationView.toPathXy(xyEntity2.getX(),xyEntity2.getY());
-                float rotation1=(float) Math.toRadians(zoomView.getRotation());
-                Logger.e("-x:"+xyEntity3.getX()+";"+xyEntity3.getY()+"弧度："+rotation1);
-                toast("X:"+xyEntity3.getX()+",Y:"+xyEntity3.getY()+",弧度："+rotation1);
-                ivContent.refreshMap();
+                XyEntity original=robotLocationView.getRobotLocationInWindow();
+                XyEntity worldXY=robotLocationView.toWorld(original.getX(),original.getY());
+                float rotation1=robotLocationView.getRadians();
+                toast("X:"+worldXY.getX()+",Y:"+worldXY.getY()+",弧度："+rotation1);
                 break;
         }
     }
 
-    /**
-     * 模拟中心处（机器人当前位置处的点击事件）
-     */
-    private void setCenterTouch(){
-        int [] location=new int[2];
-        mapLayout.getLocationOnScreen(location); //布局在整个屏幕中的位置
-        marginLeft=location[0];             // 距离屏幕左边的距离
-        marginTop=location[1];             //  距离屏幕上方的距离
-        Logger.e("marginLeft:"+marginLeft+";"+"marginTop:"+marginTop);
-        XyEntity xyEntity=robotLocationView.getRobotLocationInWindow();
-        float x=xyEntity.getX();
-        float y=xyEntity.getY();
-        Logger.e("机器人在布局中的位置："+x+";"+y);
-        MotionEvent eventDown =MotionEvent.obtain(System.currentTimeMillis(),
-                System.currentTimeMillis(), MotionEvent.ACTION_DOWN, x+marginLeft, y+marginTop, 0);
-        dispatchTouchEvent(eventDown);
-        MotionEvent eventUp=MotionEvent.obtain(System.currentTimeMillis(),
-                System.currentTimeMillis(), MotionEvent.ACTION_UP,x+marginLeft, y+marginTop, 0);
-        dispatchTouchEvent(eventUp);
-        eventDown.recycle();
-        eventUp.recycle();
-    }
 
     /**
      * 发送重定位
@@ -219,13 +173,13 @@ public class RelocationActivity extends DDRActivity {
                 relocationStatus= (int) messageEvent.getData();
                 switch (relocationStatus){
                     case 0:
-                        toast("重新定位失败，请重新设置机器人位姿");
+                        toast(R.string.relocation_failed);
                         if (waitDialog!=null&&waitDialog.isShowing()){
                             waitDialog.dismiss();
                         }
                         break;
                     case 1:
-                        toast("定位成功");
+                        toast(R.string.relocation_succeed);
                         if (waitDialog!=null&&waitDialog.isShowing()){
                             waitDialog.dismiss();
                         }
@@ -234,7 +188,7 @@ public class RelocationActivity extends DDRActivity {
                         break;
                     case 2:
                         waitDialog=new WaitDialog.Builder(this)
-                                .setMessage("正在重新定位中可能需要1~3分钟时间...")
+                                .setMessage(R.string.the_relocation)
                                 .show();
                         break;
                 }
@@ -251,18 +205,20 @@ public class RelocationActivity extends DDRActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected())
-        netWorkStatusDialog();
+        if (tcpClient!=null&&!tcpClient.isConnected()){
+            Logger.e("网络已断开");
+            //netWorkStatusDialog();
+        }
     }
 
     /**
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
             if (waitDialog.isShowing()){
-                toast("网络无法连接，请退出重连！");
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }

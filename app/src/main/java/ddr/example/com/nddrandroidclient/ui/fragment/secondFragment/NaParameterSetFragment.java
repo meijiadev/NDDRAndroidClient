@@ -39,7 +39,6 @@ import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
  * desc: 高级设置导航参数界面
  */
 public class NaParameterSetFragment extends DDRLazyFragment  {
-
     @BindView(R.id.tv_restartDefault)
     TextView tv_restartDefault;
     @BindView(R.id.tv_save_param)
@@ -61,14 +60,15 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     @BindView(R.id.tv_cm)
     TextView tvCm;
     @BindView(R.id.et_deceleration_distance)
-    EditText etDecelerationDistance;
+    EditText etDecelerationDistance;          //避障开始减速距离
     @BindView(R.id.et_stop_distance)
-    EditText etStopDistance;
+    EditText etStopDistance;                 //避障停止距离
 
+    public static NaParameterSetFragment naParameterSetFragment;
     private Naparam naparam;
     private List<Naparam> naparamList;
 
-    private TcpClient tcpClient;
+    private static TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private NotifyEnvInfo notifyEnvInfo;
     private MapFileStatus mapFileStatus;
@@ -83,9 +83,21 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private String isOriginalWayBack="Common_Params.AUTOMODE_RETURN";           // 是否原路返回                1-原路返回
     private List<BaseCmd.configData> configDataList = new ArrayList<>();
     private BaseDialog waitDialog;
+    public static boolean isShow;
 
     public static NaParameterSetFragment newInstance() {
         return new NaParameterSetFragment();
+    }
+
+    public static NaParameterSetFragment getInstance(){
+        if (naParameterSetFragment==null){
+            synchronized (NaParameterSetFragment.class){
+                if (naParameterSetFragment==null){
+                    naParameterSetFragment=new NaParameterSetFragment();
+                }
+            }
+        }
+        return naParameterSetFragment;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -109,6 +121,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
 
     @Override
     protected void initData() {
+        isShow=true;
         tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
@@ -117,7 +130,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
         getNaParmeter(1);
         setNaparmeter();
     }
-
+    float decelerationDistance,stopDistance;
     @OnClick({R.id.tv_restartDefault, R.id.tv_save_param,R.id.tv_task_origin, R.id.tv_task_nearby, R.id.tv_navigation_loop, R.id.tv_return_to_loop, R.id.tv_target_corner, R.id.tv_smart_smooth_turn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -126,18 +139,28 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 getNaParmeter(1);
                 break;
             case R.id.tv_save_param:
-                postAndGet(1);
-                postAndGet(2);
-                //getNaParmeter(1);
-                waitDialog=new WaitDialog.Builder(getAttachActivity())
-                        .setMessage("正在保存...")
-                        .show();
-                getAttachActivity().postDelayed(()->{
-                    if (waitDialog!=null){
-                        waitDialog.dismiss();
-                        toast("保存成功");
-                    }
-                },1500);
+                try {
+                     decelerationDistance=Float.parseFloat(etDecelerationDistance.getText().toString().trim());
+                     stopDistance=Float.parseFloat(etStopDistance.getText().toString().trim());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                if (decelerationDistance<=stopDistance){
+                    toast("避障开始减速距离不得小于避障停止距离，请重新输入");
+                }else {
+                    postAndGet(1);
+                    postAndGet(2);
+                    //getNaParmeter(1);
+                    waitDialog=new WaitDialog.Builder(getAttachActivity())
+                            .setMessage("正在保存...")
+                            .show();
+                    getAttachActivity().postDelayed(()->{
+                        if (waitDialog!=null){
+                            waitDialog.dismiss();
+                            toast("保存成功");
+                        }
+                    },1500);
+                }
                 break;
             case R.id.tv_task_origin:
                 tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
@@ -176,7 +199,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
      * 获取导航参数
      *
      */
-    private void getNaParmeter(int type) {
+    public void getNaParmeter(int type) {
         BaseCmd.eConfigItemOptType eConfigItemOptType;
         switch (type) {
             case 0:
@@ -203,6 +226,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
+        if (tcpClient!=null)
         tcpClient.sendData(commonHeader, reqConfigOperational);
     }
 
@@ -244,10 +268,10 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     /**
      * 筛选配置参数
      */
-    private void setNaparmeter() {
-        parameterList = parameters.getParameterList();
-        Logger.e("数量" + parameterList.size());
+    public void setNaparmeter() {
         try {
+            parameterList = parameters.getParameterList();
+            Logger.e("数量" + parameterList.size());
             for (int i = 0; i < parameterList.size(); i++) {
                 if (parameterList.get(i).getKey().contains(bzRadiusKey)) {
                     bz_ra = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
@@ -264,69 +288,69 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 //是否从第一段开始--》任务启动方式 1-任务起点启动
                 if (parameterList.get(i).getKey().contains(isFormOneKey)) {
                     isFrom = Integer.parseInt(parameterList.get(i).getValue());
-                    Logger.e("是否从第一端开始："+isFrom);
-                    if (isFrom==1){
-                        tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                        tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                    }else {
-                        tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                        tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    Logger.e("是否从第一端开始：" + isFrom);
+                    if (isFrom == 1) {
+                        tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
+                        tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+                    } else {
+                        tvTaskOrigin.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+                        tvTaskNearby.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                     }
                 }
                 // 是否不画弧   1-不画弧
                 if (parameterList.get(i).getKey().contains(isPainHuKey)) {
                     isPain = Integer.parseInt(parameterList.get(i).getValue());
-                    Logger.e("是否从画弧："+isPain);
-                    if (isPain==1){
-                        tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                        tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                    }else {
-                        tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                        tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                    Logger.e("是否从画弧：" + isPain);
+                    if (isPain == 1) {
+                        tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
+                        tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+                    } else {
+                        tvTargetCorner.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+                        tvSmartSmoothTurn.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                     }
                 }
                 // 是否原路返回 1-表示原路返回
-                if (parameterList.get(i).getKey().equals(isOriginalWayBack)){
-                    isOriginal= Integer.parseInt(parameterList.get(i).getValue());
-                    Logger.e("是否原路返回："+isOriginal);
-                    if (isOriginal==1){
-                        tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                        tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                    }else {
-                        tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                        tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+                if (parameterList.get(i).getKey().equals(isOriginalWayBack)) {
+                    isOriginal = Integer.parseInt(parameterList.get(i).getValue());
+                    Logger.e("是否原路返回：" + isOriginal);
+                    if (isOriginal == 1) {
+                        tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
+                        tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+                    } else {
+                        tvReturnToLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg), null, null, null);
+                        tvNavigationLoop.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                     }
                 }
             }
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        int number = 6;
-        naparamList = new ArrayList<>();
-        for (int i = 0; i < number; i++) {
-            naparam = new Naparam();
-            switch (i) {
-                case 0:
-                    naparam.setValue(String.valueOf(bz_ra));
-                    break;
-                case 1:
-                    naparam.setValue(String.valueOf(bz_sl));
-                    break;
-                case 2:
-                    naparam.setValue(String.valueOf(bz_st));
-                    break;
-                case 3:
-                    naparam.setValue(String.valueOf(isFrom));
-                    break;
-                case 4:
-                    naparam.setValue(String.valueOf(isPain));
-                    break;
-                case 5:
-                    naparam.setValue(String.valueOf(isOriginal));
-                    break;
+            int number = 6;
+            naparamList = new ArrayList<>();
+            for (int i = 0; i < number; i++) {
+                naparam = new Naparam();
+                switch (i) {
+                    case 0:
+                        naparam.setValue(String.valueOf(bz_ra));
+                        break;
+                    case 1:
+                        naparam.setValue(String.valueOf(bz_sl));
+                        break;
+                    case 2:
+                        naparam.setValue(String.valueOf(bz_st));
+                        break;
+                    case 3:
+                        naparam.setValue(String.valueOf(isFrom));
+                        break;
+                    case 4:
+                        naparam.setValue(String.valueOf(isPain));
+                        break;
+                    case 5:
+                        naparam.setValue(String.valueOf(isOriginal));
+                        break;
+                }
+                naparamList.add(naparam);
             }
-            naparamList.add(naparam);
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
@@ -421,6 +445,13 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     }
 
     @Override
+    public void onRestart() {
+        getNaParmeter(1);
+        setNaparmeter();
+        super.onRestart();
+    }
+
+    @Override
     public void onResume() {
         Logger.e("-----------------跳转");
         super.onResume();
@@ -430,6 +461,12 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     public void onPause() {
         Logger.e("-----------------跳转");
         super.onPause();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Logger.e("---------:"+isVisibleToUser);
     }
 
     @Override

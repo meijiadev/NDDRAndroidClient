@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,6 +21,7 @@ import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 /**
  * time ：2019/11/13
@@ -157,8 +157,7 @@ public class PointView extends Shape {
         if (targetPoints!=null){
             for (int i=0;i<targetPoints.size();i++){
                 if (targetPoints.get(i).isInTask()){
-                    XyEntity xyEntity=zoomImageView.toXorY(targetPoints.get(i).getX(),targetPoints.get(i).getY());
-                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    XyEntity xyEntity=zoomImageView.toCanvas(targetPoints.get(i).getX(),targetPoints.get(i).getY());
                     float x= xyEntity.getX();
                     float y= xyEntity.getY();
                     canvas.drawBitmap(autoBitmap,x-autoBitmap.getWidth()/2,y-autoBitmap.getHeight()/2,pointPaint);
@@ -169,11 +168,10 @@ public class PointView extends Shape {
         if (targetPoints1 != null) {
             for (int i=0;i<targetPoints1.size();i++){
                 if (targetPoints1.get(i).isMultiple()){
-                    XyEntity xyEntity=zoomImageView.toXorY(targetPoints1.get(i).getX(),targetPoints1.get(i).getY());
-                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    XyEntity xyEntity=zoomImageView.toCanvas(targetPoints1.get(i).getX(),targetPoints1.get(i).getY());
                     float x= xyEntity.getX();
                     float y=  xyEntity.getY();
-                    matrix.setRotate(-targetPoints1.get(i).getTheta());
+                    matrix.setRotate(-targetPoints1.get(i).getTheta()+zoomImageView.getDegrees());
                     targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getWidth()  ,matrix,true);
                     canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
                     canvas.drawText(targetPoints1.get(i).getName(),x,y+15,textPaint);
@@ -182,41 +180,39 @@ public class PointView extends Shape {
         }
 
         if (targetPoint!=null){
-            XyEntity xyEntity=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());
-            xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+            XyEntity xyEntity=zoomImageView.toCanvas(targetPoint.getX(),targetPoint.getY());
             float x=  xyEntity.getX();
             float y=  xyEntity.getY();
-            matrix.setRotate(-targetPoint.getTheta());
+            matrix.setRotate(-targetPoint.getTheta()+zoomImageView.getDegrees());
             targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getHeight(),matrix,true);
             canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
             canvas.drawText(targetPoint.getName(),x,y+15,textPaint);
         }
 
         if (pathPoint!=null){
-            XyEntity xyEntity=zoomImageView.toXorY(pathPoint.getX(),pathPoint.getY());
-            xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+            XyEntity xyEntity=zoomImageView.toCanvas(pathPoint.getX(),pathPoint.getY());
             float x=  xyEntity.getX();
             float y=  xyEntity.getY();
-            matrix.setRotate(-pathPoint.getRotationAngle());
+            matrix.setRotate(-pathPoint.getRotationAngle()+zoomImageView.getDegrees());
             targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getWidth(),matrix,true);
             canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
         }
         if (isRuning){
-            XyEntity xyEntity=zoomImageView.toXorY(x,y);
-            xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
-            matrix.setRotate(-angle);
-            directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionW,matrix,true);
-            canvas.drawBitmap(directionBitmap1,xyEntity.getX()-directionW/2,
-                    xyEntity.getY()-directionH/2,pointPaint);
+            XyEntity xyEntity=zoomImageView.toCanvas(x,y);
+            float cx=xyEntity.getX()-directionBitmap.getWidth()/2;
+            float cy=xyEntity.getY()-directionBitmap.getHeight()/2;
+            matrix.reset();
+            matrix.postTranslate(cx,cy);
+            matrix.postRotate(-angle+zoomImageView.getDegrees(),xyEntity.getX(),xyEntity.getY());
+            canvas.drawBitmap(directionBitmap,matrix,pointPaint);
         }
 
         if (selectPoints != null) {
             for (int i=0;i<selectPoints.size();i++){
-                    XyEntity xyEntity=zoomImageView.toXorY(selectPoints.get(i).getX(),selectPoints.get(i).getY());
-                    xyEntity=zoomImageView.coordinate2View(xyEntity.getX(),xyEntity.getY());
+                    XyEntity xyEntity=zoomImageView.toCanvas(selectPoints.get(i).getX(),selectPoints.get(i).getY());
                     float x= (int) xyEntity.getX();
                     float y= (int) xyEntity.getY();
-                    matrix.setRotate(-selectPoints.get(i).getTheta());
+                    matrix.setRotate(-selectPoints.get(i).getTheta()+zoomImageView.getDegrees());
                     targetBitmap1=Bitmap.createBitmap(targetBitmap,0,0,targetBitmap.getWidth(),targetBitmap.getHeight(),matrix,true);
                     canvas.drawBitmap(targetBitmap1,x-bitmapW/2,y-bitmapH/2,pointPaint);
                     canvas.drawText(selectPoints.get(i).getName(),x,y+15,textPaint);
@@ -231,13 +227,12 @@ public class PointView extends Shape {
      * @param x
      * @param y
      */
-    public void onClick(ZoomImageView zoomImageView,float x,float y){
+    public void onClick(ZoomImageView zoomImageView, float x, float y){
         if (isCheckPoint){
             if (selectPoints!=null){
                 for (int i=0;i<selectPoints.size();i++){
                     TargetPoint targetPoint=selectPoints.get(i);
-                    XyEntity xyEntity1=zoomImageView.toXorY(targetPoint.getX(),targetPoint.getY());
-                    xyEntity1=zoomImageView.coordinate2View(xyEntity1.getX(),xyEntity1.getY());
+                    XyEntity xyEntity1=zoomImageView.toCanvas(targetPoint.getX(),targetPoint.getY());
                     float x1=xyEntity1.getX(); float y1=xyEntity1.getY();
                     double L=Math.sqrt(Math.pow(x1-x,2)+Math.pow(y1-y,2));
                     if (L<25){

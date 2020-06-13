@@ -2,8 +2,11 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -26,9 +30,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import DDRCommProto.BaseCmd;
 
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +43,7 @@ import butterknife.BindView;
 
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
@@ -44,15 +51,23 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
+import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
+import ddr.example.com.nddrandroidclient.language.LanguageType;
+import ddr.example.com.nddrandroidclient.language.LanguageUtil;
+import ddr.example.com.nddrandroidclient.language.SpUtil;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
 import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.socket.TcpAiClient;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
+import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
@@ -89,14 +104,22 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     TextView iv_jt_def;
     @BindView(R.id.iv_yk_def)
     TextView iv_yk_def;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.drawer_layout_left)
+    LinearLayout drawerLayoutLeft;
+    @BindView(R.id.iv_menu)
+    ImageView ivMenu;
+    @BindView(R.id.tv_switch_language)
+    TextView tv_switch_language;
+
+
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private String currentMap;     //当前运行的地图名
     private String currentTask;   //当前运行的任务
     private CustomPopuWindow customPopuWindow;
-    private DpOrPxUtils dpOrPxUtils;
-    private NotifyEnvInfo notifyEnvInfo;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private float lineSpeed, palstance;  //线速度 ，角速度
@@ -113,7 +136,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private String xsu;
     private String jsu;
     private boolean ishaveChecked = false;
-
+    private String LAN_IP_AI="192.168.0.95";
+    private ComputerEditions computerEditions;
+    private String language;
 
     /**
      * ViewPage 适配器
@@ -152,6 +177,36 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("----------断开连接页面：HomeActivity");
                 netWorkStatusDialog();
                 break;
+            case updateRelocationStatus:
+                int relocationStatus= (int) messageEvent.getData();
+                if (relocationStatus==1&&vpHomePager!=null){
+                    vpHomePager.setCurrentItem(0);
+                }
+                break;
+            case updateAiPort:
+                udpIp1= (UdpIp) messageEvent.getData();
+//                Logger.e(globalParameter.isLan()+"是否局域网");
+                Logger.e("AIip"+udpIp1.getIp()+"端口"+udpIp1.getPort());
+                    tcpAiClient.createConnect(LAN_IP_AI,udpIp1.getPort());
+                break;
+            case tcpAiConnected:
+                Logger.e("TcpAI服务开始连接");
+                tcpAiClient.sendData(null, CmdSchedule.localLogin("admin_android","admin_android",4));
+                break;
+            case LoginAiSuccess:
+                toast(R.string.ai_connected);
+                UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
+                break;
+            case updateVersion:
+                computerEditions= ComputerEditions.getInstance();
+                Logger.e("机器类型"+computerEditions.getRobotType());
+                if (computerEditions.getRobotType()==3){
+
+                }else {
+                    UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
+                  Logger.e("非消杀无需连接Ai");
+                }
+                break;
         }
 
     }
@@ -174,12 +229,27 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setOffscreenPageLimit(mPagerAdapter.getCount());
         vpHomePager.addOnPageChangeListener(this);
         isChecked();
+        language = SpUtil.getInstance(this).getString(SpUtil.LANGUAGE);
+        Logger.e("当前的语言："+language);
+        if (language.equals(LanguageType.CHINESE.getLanguage())){
+            tv_switch_language.setText(R.string.switch_to_en);
+            language=LanguageType.ENGLISH.getLanguage();
+        }else if (language.equals(LanguageType.ENGLISH.getLanguage())){
+            language=LanguageType.CHINESE.getLanguage();
+            tv_switch_language.setText(R.string.switch_to_cn);
+        }else {
+            language=LanguageType.ENGLISH.getLanguage();
+            tv_switch_language.setText(R.string.switch_to_en);
+        }
     }
 
 
     @Override
     protected void initData() {
         tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
+        getHostComputerEdition();
+        receiveAiBroadcast();
+        tcpAiClient=TcpAiClient.getInstance(context,ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         ImageLoader.clear(this); //清除图片缓存
         tcpClient.requestFile();     //请求所有地图
@@ -187,7 +257,11 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         editor = sharedPreferences.edit();
 
 
+
+
     }
+
+
 
 
     @Override
@@ -206,11 +280,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown})
+    @OnClick({R.id.iv_menu,R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown,R.id.tv_switch_language})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.iv_menu:
+                if (drawerLayout.isDrawerOpen(drawerLayoutLeft)){
+                    drawerLayout.closeDrawer(drawerLayoutLeft);
+                }else {
+                    drawerLayout.openDrawer(drawerLayoutLeft);
+                }
+                break;
             case R.id.status:
-                Logger.e("---------setCurrentItem");
+                //Logger.e("---------setCurrentItem");
                 vpHomePager.setCurrentItem(0);
                 break;
             case R.id.mapmanager:
@@ -224,7 +305,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case R.id.tv_quit:
                 new InputDialog.Builder(getActivity())
-                        .setTitle("是否退出")
+                        .setTitle(R.string.is_back)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
@@ -242,20 +323,38 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
                         tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eShutDown);
-                        toast("机器人正在关机中...");
+                        toast(R.string.robot_is_shutdown);
                     }
                     @Override
                     public void onCancel(BaseDialog dialog) {
                         tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eReStart);
-                        toast("机器人正在重启中，请退出到登陆页面等待重启完成后再重新连接");
+                        toast(R.string.robot_is_restart);
                     }
                 }).show();
+                break;
+            case R.id.tv_switch_language:
+                changeLanguage(language);
                 break;
         }
         isChecked();
     }
 
-
+    /**
+     * 如果是7.0以下，我们需要调用changeAppLanguage方法，
+     * 如果是7.0及以上系统，直接把我们想要切换的语言类型保存在SharedPreferences中即可
+     * 然后重新启动MainActivity
+     * @param language
+     */
+    private void changeLanguage(String language) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            LanguageUtil.changeAppLanguage(BaseApplication.getContext(), language);
+        }
+        SpUtil.getInstance(this).putString(SpUtil.LANGUAGE, language);
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
     /**
      * 判断哪个页面是否被选中
      */
@@ -313,8 +412,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
             jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
             if(tv_xsu!=null && tv_jsu!=null){
-                tv_xsu.setText("线速度："+xsu+" m/s");
-                tv_jsu.setText("角速度："+jsu+" 弧度/秒");
+                tv_xsu.setText(getString(R.string.line_speed)+xsu+" m/s");
+                tv_jsu.setText(getString(R.string.angulau_speed)+jsu+getString(R.string.angulau_speed_1));
             }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
@@ -386,7 +485,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
             }, 300);
         } else {
-            toast("再按一次退出");
+            toast(R.string.home_exit_hint);
         }
     }
 
@@ -415,6 +514,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.removeOnPageChangeListener(this);
         vpHomePager.setAdapter(null);
         tcpClient.disConnect();
+        tcpAiClient.disConnect();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
         super.onDestroy();
@@ -440,7 +540,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         }).start();
 
     }
-
 
     /**
      * 遥控弹窗
@@ -645,14 +744,14 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("-----" + maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 seekBar.setEnabled(false);
-                toast("锁定");
+                toast(R.string.common_lock);
             } else {
                 seekBar.setEnabled(true);
                 ishaveChecked = isChecked;
                 maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 seekBar.setProgress((float) maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
-                toast("取消锁定");
+                toast(R.string.common_cancel_lock);
 
             }
         }));
@@ -672,7 +771,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void onResume() {
         super.onResume();
         if (!tcpClient.isConnected()){
-            netWorkStatusDialog();
+            Logger.e("网络已断开");
+            //netWorkStatusDialog();
         }
     }
 
@@ -680,14 +780,40 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
             if (waitDialog.isShowing()){
-                toast("网络无法连接，请退出重连！");
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }
         },6000);
+    }
+
+    public UdpClient udpClient;
+    private int aiPort=18888;
+    public TcpAiClient tcpAiClient;
+    private UdpIp udpIp1=new UdpIp();
+    /**
+     * 接收AIServer广播
+     */
+    private void receiveAiBroadcast(){
+        Logger.e("接受AI广播");
+        udpClient= UdpClient.getInstance(this,ClientMessageDispatcher.getInstance());
+        try {
+            udpClient.connect(aiPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取上位机版本信息
+     */
+    private void getHostComputerEdition() {
+        BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
     }
 
 

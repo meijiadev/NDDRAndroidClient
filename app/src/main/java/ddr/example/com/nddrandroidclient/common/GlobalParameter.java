@@ -8,7 +8,7 @@ import android.os.Environment;
  */
 public class GlobalParameter {
     public static final int DEFAULT=0;
-    public static final String ROBOT_FOLDER=Environment.getExternalStorageDirectory().getPath()+"/"+"大道智创机器人"+"/";
+    public static final String ROBOT_FOLDER=Environment.getExternalStorageDirectory().getPath()+"/"+"DDRMap"+"/";
 
 
 

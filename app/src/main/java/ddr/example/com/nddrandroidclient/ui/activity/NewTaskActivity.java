@@ -1,7 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
@@ -39,13 +37,14 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.BaseModeDraggableAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
-import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 
 /**
@@ -127,10 +126,10 @@ public class NewTaskActivity extends DDRActivity {
         taskModes=mapFileStatus.getcTaskModes();
         targetPointAdapter = new TargetPointAdapter(R.layout.item_select_to_task);
         pathAdapter = new PathAdapter(R.layout.item_select_to_task);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        NLinearLayoutManager layoutManager = new NLinearLayoutManager(this);
         recyclerTarget.setLayoutManager(layoutManager);
         recyclerTarget.setAdapter(targetPointAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        NLinearLayoutManager linearLayoutManager = new NLinearLayoutManager(this);
         recyclerPath.setLayoutManager(linearLayoutManager);
         recyclerPath.setAdapter(pathAdapter);
         targetPointAdapter.setNewData(targetPoints);
@@ -142,7 +141,7 @@ public class NewTaskActivity extends DDRActivity {
         itemTouchHelper.attachToRecyclerView(recycleTaskItem);
         baseModeDraggableAdapter.enableDragItem(itemTouchHelper, R.id.item_sort_task, true);
         baseModeDraggableAdapter.setOnItemDragListener(onItemDragListener);
-        LinearLayoutManager linearLayoutManager0 = new LinearLayoutManager(this);
+        NLinearLayoutManager linearLayoutManager0 = new NLinearLayoutManager(this);
         recycleTaskItem.setLayoutManager(linearLayoutManager0);
         recycleTaskItem.setAdapter(baseModeDraggableAdapter);
         onItemClick();
@@ -172,15 +171,15 @@ public class NewTaskActivity extends DDRActivity {
             if (mapInfo.isUsing()){
                 String name = mapInfo.getMapName();
                 name = name.replaceAll("OneRoute_", "");
-                tvMapName.setText("地图名称：" + name);
-                tvMapSize.setText("地图面积：" + (int) mapInfo.getWidth() + "x" + (int)mapInfo.getHeight() + "m²");
-                tvCreateTime.setText("建立日期：" + mapInfo.getTime());
+                tvMapName.setText(getString(R.string.map_name) + name);
+                tvMapSize.setText(getString(R.string.map_size) + (int) mapInfo.getWidth() + "x" + (int)mapInfo.getHeight() + "m²");
+                tvCreateTime.setText(getString(R.string.create_time) + mapInfo.getTime());
                 //设置图片
                 zoomView.setImageBitmap(mapInfo.getBitmap());
             }
         }
         if (baseModes.size() > 0) {
-            tvSuggest.setText("可通过拖拽对列表进行排序.");
+            tvSuggest.setText(R.string.create_task_hint_1);
         }
     }
 
@@ -197,7 +196,8 @@ public class NewTaskActivity extends DDRActivity {
                     TaskMode taskMode=new TaskMode();
                     taskMode.setName(name);
                     taskMode.setBaseModes(baseModes);
-                    taskMode.setType(0);
+                    taskMode.setType(2);
+                    taskMode.setTaskState(1);
                     taskMode.setRunCounts(999);
                     taskMode.setStartHour(0);
                     taskMode.setStartMin(0);
@@ -206,16 +206,16 @@ public class NewTaskActivity extends DDRActivity {
                     taskModes.add(taskMode);
                     tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModes);
                     waitDialog=new WaitDialog.Builder(this)
-                            .setMessage("正在保存中...")
+                            .setMessage(R.string.in_storage)
                             .show();
                     postDelayed(()->{
                         if (waitDialog!=null&&waitDialog.isShowing()){
                             waitDialog.dismiss();
-                            toast("保存失败,请重试或者检查网络!");
+                            toast(R.string.save_failed);
                         }
                     },5000);
                 }else {
-                    toast("请选择相应的路径和目标点组建路径");
+                    toast(R.string.create_task_hint_2);
                 }
                 break;
             case R.id.tv_task_name:
@@ -272,7 +272,7 @@ public class NewTaskActivity extends DDRActivity {
             if (size>0&&baseModes.get(size-1).getType()==2){
                 TargetPoint targetPoint1= (TargetPoint) baseModes.get(size-1);
                 if (targetPoint.getName().equals(targetPoint1.getName())){
-                    toast("请避免连续添加同一个点！");
+                    toast(R.string.create_task_hint_3);
                 }else {
                     baseModes.add(targetPoint);
                     baseModeDraggableAdapter.setNewData(baseModes);
@@ -283,7 +283,7 @@ public class NewTaskActivity extends DDRActivity {
             }
             LineView.getInstance(context).setBaseModes(baseModes);
             zoomView.invalidate();
-            tvSuggest.setText("可通过拖拽对列表进行排序.");
+            tvSuggest.setText(R.string.create_task_hint_1);
         });
 
         pathAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -293,7 +293,7 @@ public class NewTaskActivity extends DDRActivity {
             if (size>0&&baseModes.get(size-1).getType()==1){
                 PathLine pathLine1= (PathLine) baseModes.get(size-1);
                 if (pathLine.getName().equals(pathLine1.getName())){
-                    toast("请避免连续添加同一条路径!");
+                    toast(R.string.create_task_hint_4);
                 }else {
                     baseModes.add(pathLine);
                     baseModeDraggableAdapter.setNewData(baseModes);
@@ -302,7 +302,7 @@ public class NewTaskActivity extends DDRActivity {
                 baseModes.add(pathLine);
                 baseModeDraggableAdapter.setNewData(baseModes);
             }
-            tvSuggest.setText("可通过拖拽对列表进行排序.");
+            tvSuggest.setText(R.string.create_task_hint_1);
             LineView.getInstance(context).setBaseModes(baseModes);
             zoomView.invalidate();
         });
@@ -312,7 +312,7 @@ public class NewTaskActivity extends DDRActivity {
             baseModes.remove(position);
             baseModeDraggableAdapter.setNewData(baseModes);
             if (baseModes.size() == 0) {
-                tvSuggest.setText("点击左侧目标点、路径添加.");
+                tvSuggest.setText(R.string.create_task_hint);
             }
             LineView.getInstance(context).setBaseModes(baseModes);
             zoomView.invalidate();
@@ -353,7 +353,7 @@ public class NewTaskActivity extends DDRActivity {
                     public void onConfirm(BaseDialog dialog, String content) {
                         String name="DDRTask_" +content+ ".task";
                         if (checkTaskName(name)){
-                            toast("名称已存在，请重新命名。");
+                            toast(R.string.name_already_exists);
                         }else {
                             tvTaskName.setText(content);
                             inputDialog.dismiss();
@@ -362,7 +362,7 @@ public class NewTaskActivity extends DDRActivity {
 
                     @Override
                     public void onCancel(BaseDialog dialog) {
-                        toast("取消重命名!");
+                        toast(R.string.cancel_rename);
                         inputDialog.dismiss();
                     }
                 }).show();
@@ -381,7 +381,7 @@ public class NewTaskActivity extends DDRActivity {
             case updateRevamp:
                 if (waitDialog!=null){
                     waitDialog.dismiss();
-                    toast("保存成功");
+                    toast(R.string.save_succeed);
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                     finish();
                 }

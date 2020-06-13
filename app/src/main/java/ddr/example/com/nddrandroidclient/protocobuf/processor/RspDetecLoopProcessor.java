@@ -19,8 +19,12 @@ public class RspDetecLoopProcessor extends BaseProcessor {
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         BaseCmd.rspDetectLoop rspDetectLoop= (BaseCmd.rspDetectLoop) msg;
-        loopStatus=rspDetectLoop.getLoopStat();
+        int type=rspDetectLoop.getTypeValue();
+        if (type==1){
+            loopStatus=3;
+        }else if (type==0){
+            loopStatus=rspDetectLoop.getLoopStat();
+        }
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateDetectionLoopStatus,loopStatus));
-
     }
 }

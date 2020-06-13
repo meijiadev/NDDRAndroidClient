@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.PointF;
@@ -16,7 +15,7 @@ import android.view.View;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
-import java.util.Arrays;
+
 
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.annotation.Nullable;
@@ -28,39 +27,36 @@ import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.view.RectangleView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.TouchEvenHandler;
 
 /**
  * desc :  通过Matrix实现可缩放、平移、旋转图片的控件
  * time ： 2020/04/29
  * author：EZReal.mei
  */
-public class ZoomImageView1 extends View {
+public class ZoomImageView extends View {
     private Context context;
-
     // 绘制的图片
     private Bitmap sourceBitmap;
-    // 当前操作的状态
-    private int currentStatus;
-    private static final int DEFAULT_BITMAP=0;      // 默认状态下
-
+    private int width;//ZoomImageView控件的宽度
+    private int height;//ZoomImageView控件的高度
     private Paint pointPaint;
-
     private NotifyBaseStatusEx notifyBaseStatusEx;
     public double r00=0;
     public double r01=-61.5959;
     public double t0=375.501;
-
     public double r10=-61.6269;
     public double r11=0;
     public double t1=410.973;
     private TouchEvenHandler touchEvenHandler;
+    private float scale=1f;   //当前地图的缩放值
 
-    public ZoomImageView1(Context context) {
+    public ZoomImageView(Context context) {
         super(context);
         init(context);
     }
 
-    public ZoomImageView1(Context context, @Nullable AttributeSet attrs) {
+    public ZoomImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
@@ -68,10 +64,8 @@ public class ZoomImageView1 extends View {
     private void init(Context context){
         this.context=context;
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
-        currentStatus=DEFAULT_BITMAP;
         pointPaint=new Paint();
         pointPaint.setColor(Color.RED);
-        Logger.e("------图片的大小："+sourceBitmap.getWidth()+";"+sourceBitmap.getHeight());
     }
 
     /**
@@ -91,11 +85,28 @@ public class ZoomImageView1 extends View {
                     e.printStackTrace();
                 }
                 Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
+                initAffine();
             }catch (Exception e){
                 e.printStackTrace();
             }
-           initAffine();
         }
+    }
+
+    /**
+     * 获取图片缩放值
+     * @return
+     */
+    public float getScale() {
+        scale=(float) touchEvenHandler.getZoomX();
+        return scale;
+    }
+
+    /**
+     * 获取图片旋转的度数
+     * @return
+     */
+    public float getDegrees(){
+        return (float) touchEvenHandler.getAngle();
     }
 
     /**
@@ -109,7 +120,11 @@ public class ZoomImageView1 extends View {
         initAffine();
     }
 
+    /**
+     *初始化参数
+     */
     private void initAffine(){
+        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
         r00=affine_mat.getR11();
@@ -118,8 +133,27 @@ public class ZoomImageView1 extends View {
         r10=affine_mat.getR21();
         r11=affine_mat.getR22();
         t1=affine_mat.getTy();
-        currentStatus=DEFAULT_BITMAP;
         invalidate();
+    }
+
+    /**
+     * 设置图片是否可以旋转
+     * @param canRotate
+     */
+    public void setCanRotate(boolean canRotate){
+        if (touchEvenHandler!=null){
+            touchEvenHandler.setCanRotate(canRotate);
+            touchEvenHandler.initMatrix();
+        }
+    }
+
+    /**
+     * 重置矩阵
+     */
+    public void initMatrix(){
+        if (touchEvenHandler!=null){
+            touchEvenHandler.initMatrix();
+        }
     }
 
 
@@ -129,7 +163,7 @@ public class ZoomImageView1 extends View {
      * @param y
      * @return
      */
-    public XyEntity toXorY(float x, float y){
+    private XyEntity toXorY(float x, float y){
         float x1=(float)( r00*x+r01*y+t0);
         float y1=(float) (r10*x+r11*y+t1);
         return new XyEntity(x1,y1);
@@ -174,14 +208,36 @@ public class ZoomImageView1 extends View {
         XyEntity xyEntity=touchEvenHandler.coordinatesToImage(x,y);
         return toPathXy(xyEntity.getX(),xyEntity.getY());
     }
+    /**
+     * 获取目标点的坐标
+     * @return
+     */
+    public XyEntity getGaugePoint(){
+        float x=width/2;
+        float y=height/2;
+        return toWorld(x,y);
+    }
 
+    /**
+     * 获取中心标签处在地图上的点
+     * @return 返回的是世界坐标
+     */
+    public XyEntity getTargetPoint(){
+        float x=width/2;
+        float y=height/2;
+        return toWorld(x,y);
+    }
+
+    /**
+     * 设置保留小数点位数的除法
+     * @param a
+     * @param b
+     * @return
+     */
     private float txfloat(float a,float b) {
         DecimalFormat df=new DecimalFormat("0.0000");//设置保留位数
         return Float.parseFloat(df.format((float)a/b));
     }
-
-
-
 
 
     @Override
@@ -189,22 +245,44 @@ public class ZoomImageView1 extends View {
         super.onLayout(changed, left, top, right, bottom);
         if (changed){
             // 分别获取到ImageView的宽度和高度
+            width=getWidth();
+            height=getHeight();
             touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            Logger.e("布局大小发生改变");
         }
     }
 
     protected void onDraw(Canvas canvas) {
-        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG| Paint.FILTER_BITMAP_FLAG));
         canvas.drawBitmap(sourceBitmap, touchEvenHandler.getMatrix(), null);
-       // PointView.getInstance(context).drawPoint(canvas,this);
-        //LineView.getInstance(context).drawLine(canvas,this);
-        //GridLayerView.getInstance(context).drawGrid(canvas);
+        PointView.getInstance(context).drawPoint(canvas,this);
+        LineView.getInstance(context).drawLine(canvas,this);
+        GridLayerView.getInstance(this).drawGrid(canvas);
         RectangleView.getRectangleView().draw(canvas,this);
     }
 
+    /**
+     * 处理点击事件
+     * @param event
+     * @return
+     */
     public boolean onTouchEvent(MotionEvent event) {
-        touchEvenHandler.touchEvent(event);
+        if (sourceBitmap!=null){
+            if (touchEvenHandler!=null){
+                touchEvenHandler.touchEvent(event);
+                if (event.getAction()==MotionEvent.ACTION_UP){
+                    //当手指抬起时
+                    LineView.getInstance(context).onClick(this,event.getX(),event.getY());
+                    PointView.getInstance(context).onClick(this,event.getX(),event.getY());
+                }
+                GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
+            }else {
+                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            }
+        }
         return true;
     }
+
+
+
 
 }

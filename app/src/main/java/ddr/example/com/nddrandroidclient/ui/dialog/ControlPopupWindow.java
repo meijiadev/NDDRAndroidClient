@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hjq.toast.ToastUtils;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
@@ -44,6 +45,7 @@ public class ControlPopupWindow {
     private ImageView iv_quit_yk;
     private CustomPopuWindow customPopuWindow;
     private TcpClient tcpClient;
+    private boolean isShowToast;
 
     private Context context;
     public ControlPopupWindow(Context context) {
@@ -82,7 +84,7 @@ public class ControlPopupWindow {
         initTimer();
         setFixedSpeed();
         seekBar.setProgress((float) maxSpeed);
-        tvSpeed.setText(String.valueOf(maxSpeed));
+        tvSpeed.setText(showSpeed(maxSpeed));
         iv_quit_yk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +108,14 @@ public class ControlPopupWindow {
             public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
                 Logger.e("------" + seekBar.getLeftSeekBar().getProgress());
                 maxSpeed = seekBar.getLeftSeekBar().getProgress();
+                if (maxSpeed<=0){
+                    isShowToast=true;
+                }else {
+                    isShowToast=false;
+
+                }
+                tvSpeed.setText(showSpeed(maxSpeed));
+
             }
 
             @Override
@@ -118,6 +128,11 @@ public class ControlPopupWindow {
 
             }
         });
+    }
+
+    private String showSpeed(double speed){
+        DecimalFormat df=new DecimalFormat("0.00");//设置保留位数
+        return df.format(speed);
     }
 
     /**
@@ -216,7 +231,7 @@ public class ControlPopupWindow {
     int a = 0;
 
     /**
-     * 定时器，每90毫秒执行一次
+     * 定时器，每50毫秒执行一次
      */
     private void initTimer() {
         timer = new Timer();
@@ -230,6 +245,9 @@ public class ControlPopupWindow {
                     if (a <= 5) {
                         //Logger.e("----a:" + a);
                         tcpClient.sendSpeed(lineSpeed, palstance);
+                    }
+                    if (isShowToast){
+                        ToastUtils.show("当前速度为0，无法移动");
                     }
                 } else {
                     a = 0;
@@ -249,13 +267,13 @@ public class ControlPopupWindow {
         fixedSpeed.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             if (isChecked) {
                 Logger.e("-----" + maxSpeed);
-                tvSpeed.setText(String.valueOf(maxSpeed));
+                tvSpeed.setText(showSpeed(maxSpeed));
                 seekBar.setEnabled(false);
 
             } else {
                 seekBar.setEnabled(true);
                 seekBar.setProgress((float) maxSpeed);
-                tvSpeed.setText(String.valueOf(maxSpeed));
+                tvSpeed.setText(showSpeed(maxSpeed));
             }
         }));
     }

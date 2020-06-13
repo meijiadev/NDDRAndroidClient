@@ -1,7 +1,10 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,19 +39,22 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.NewTaskActivity;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.TaskAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.TimeDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
 import ddr.example.com.nddrandroidclient.widget.textview.GridImageView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.PickValueView;
+import me.jessyan.autosize.utils.ScreenUtils;
 
 /**
  * time：2019/10/28
  * desc：任务管理界面
  * author: ----
  */
-public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickValueView.onSelectedChangeListener {
+public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
 
     @BindView(R.id.recycle_task_list)
     RecyclerView recycle_task_list;
@@ -94,13 +100,14 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     @Override
     protected void initView() {
         taskAdapter=new TaskAdapter(R.layout.item_recycle_tasklist);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         recycle_task_list.setLayoutManager(layoutManager);
         recycle_task_list.setAdapter(taskAdapter);
 
 
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void initData() {
         tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
@@ -119,11 +126,11 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
 
         onItemClick(1);
     }
-    TextView tv_task_time;
-    TextView tv_task_pause;
-    GridImageView gridImageView;
-    DDREditText task_num_check;
+
+
+    //TextView tv_task_time;
     private int mPosition;
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onItemClick(int type){
         switch (type){
             case 1:
@@ -133,53 +140,35 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                     mPosition=position;
                     Logger.e("task列表对应"+taskModeList.get(position).getName());
                             switch (view.getId()){
-                                case R.id.tv_task_time:
-                                    Logger.e("点击----");
-                                    tv_task_time= (TextView) view;
-                                    showTimePopupWindow(tv_task_time,1);
-                                    break;
-                                case R.id.iv_check:
-                                    gridImageView= (GridImageView) view;
-                                    Logger.e("gggg"+gridImageView.getSelected());
-                                    if (!gridImageView.getSelected()){
-                                        Logger.e("未在列表中");
-                                        gridImageView.setSelected(true);
-                                        gridImageView.setBackgroundResource(R.mipmap.intask_check);
-                                        taskModeList.get(position).setType(2);
-                                        taskModeList.get(position).setTaskState(1);
-                                        toast("加入定时队列，记得点保存哦");
-                                    }else {
-                                        Logger.e("在列表中");
-                                        toast("退出定时队列，记得点保存哦");
-                                        gridImageView.setSelected(false);
-                                        gridImageView.setBackgroundResource(R.mipmap.intask_def);
-                                        taskModeList.get(position).setType(0);
-                                        taskModeList.get(position).setTaskState(3);
-                                    }
+                                case R.id.layout_time:
+                                    selectStartTime(taskModeList.get(position).getStartHour(),taskModeList.get(position).getStartMin());
                                     break;
                                     //已修改成“修改”任务
                                 case R.id.tv_task_pause:
-                                    Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
-                                    intent.putExtra("viewType",REVAMP_TASK);
-                                    intent.putExtra("taskMode",position);
-                                    startActivity(intent);
+                                    handleTask(position);
+                                    submissionTask();
                                     break;
                                     // 已修改成“删除”任务
                                 case R.id.tv_task_stop:
-                                    new InputDialog.Builder(getAttachActivity())
-                                            .setEditVisibility(View.GONE)
-                                            .setTitle("是否要删除该任务")
-                                            .setListener(new InputDialog.OnListener() {
-                                                @Override
-                                                public void onConfirm(BaseDialog dialog, String content) {
-                                                    taskModeList.remove(position);
-                                                    tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
-                                                }
-                                                @Override
-                                                public void onCancel(BaseDialog dialog) {
+                                    if (taskModeList.get(position).getTaskState()==2){
+                                        toast("正在运行的任务无法删除!");
+                                    }else {
+                                        new InputDialog.Builder(getAttachActivity())
+                                                .setEditVisibility(View.GONE)
+                                                .setTitle("是否要删除该任务")
+                                                .setListener(new InputDialog.OnListener() {
+                                                    @Override
+                                                    public void onConfirm(BaseDialog dialog, String content) {
+                                                        taskModeList.remove(position);
+                                                        tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
+                                                    }
+                                                    @Override
+                                                    public void onCancel(BaseDialog dialog) {
 
-                                                }
-                                            }).show();
+                                                    }
+                                                }).show();
+
+                                    }
                                     break;
                             }
 
@@ -188,6 +177,125 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
         }
         taskAdapter.setNewData(taskModeList);
     }
+
+    // 临时设置的时间，在没有点击确定前不会设置到参数列表中
+    private int temporaryHour,temporaryMinute;
+    /**
+     * 选择开始时间
+     */
+    private void selectStartTime(int hour,int minute){
+        new TimeDialog.Builder(getAttachActivity())
+                .setTitle(getString(R.string.time_start_title))
+                .setCancel(getString(R.string.common_cancel))
+                .setConfirm(getString(R.string.time_next))
+                .setHour(hour)
+                .setMinute(minute)
+                .setIgnoreSecond()
+                .setListener(new TimeDialog.OnListener() {
+                    @Override
+                    public void onSelected(BaseDialog dialog, int hour, int minute, int second) {
+                        temporaryHour=hour;
+                        temporaryMinute=minute;
+                        selectEndTime();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                        toast("取消设置时间");
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 选择结束时间
+     */
+    private void selectEndTime(){
+        new TimeDialog.Builder(getAttachActivity())
+                .setTitle(getString(R.string.time_end_time))
+                .setCancel(getString(R.string.time_last))
+                .setConfirm(getString(R.string.common_confirm))
+                .setHour(taskModeList.get(mPosition).getEndHour())
+                .setMinute(taskModeList.get(mPosition).getEndMin())
+                .setIgnoreSecond()
+                .setListener(new TimeDialog.OnListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onSelected(BaseDialog dialog, int hour, int minute, int second) {
+                        // 确定
+                        if (hour>temporaryHour){
+                            taskModeList.get(mPosition).setStartHour(temporaryHour);
+                            taskModeList.get(mPosition).setStartMin(temporaryMinute);
+                            taskModeList.get(mPosition).setEndHour(hour);
+                            taskModeList.get(mPosition).setEndMin(minute);
+                            taskModeList.get(mPosition).setType(2);
+                            taskModeList.get(mPosition).setTaskState(1);
+                            dialog.dismiss();
+                            taskAdapter.setNewData(taskModeList);
+                            submissionTask();
+                        }else if (hour==temporaryHour){
+                            if (minute>temporaryMinute){
+                                taskModeList.get(mPosition).setStartHour(temporaryHour);
+                                taskModeList.get(mPosition).setStartMin(temporaryMinute);
+                                taskModeList.get(mPosition).setEndHour(hour);
+                                taskModeList.get(mPosition).setEndMin(minute);
+                                taskModeList.get(mPosition).setType(2);
+                                taskModeList.get(mPosition).setTaskState(1);
+                                dialog.dismiss();
+                                taskAdapter.setNewData(taskModeList);
+                                submissionTask();
+                            }else {
+                                toast("结束时间必须大于开始时间，请重新设置");
+                            }
+                        }else {
+                            toast("结束时间必须大于开始时间，请重新设置");
+                        }
+                    }
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                        //返回上一步
+                        selectStartTime(temporaryHour,temporaryMinute);
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+    }
+
+    /**
+     * 处理操作下面的点击事件，根据当前任务不同的状态发送不同的命令
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void handleTask(int position){
+        int taskState=taskModeList.get(position).getTaskState();
+        switch (taskState){
+            case 0:
+            case 4:
+                taskModeList.get(position).setTaskState(1);       //  从终止状态改为等待执行
+                taskModeList.get(position).setType(2);            // 从不在队列中改为在队列中
+                break;
+            case 1:
+                taskModeList.get(position).setTaskState(4);       //  终止
+                taskModeList.get(position).setType(0);            // 不在队列中
+                break;
+            case 2:
+                tcpClient.exitModel();
+                taskModeList.get(position).setTaskState(5);  //改为挂起状态
+                taskModeList.get(position).setType(2);       //在队列中
+                break;
+            case 3:
+                toast("不在时间段内，无法恢复！");
+                break;
+            case 5:
+                taskModeList.get(position).setTaskState(2);  //从挂起状态改为运行
+                taskModeList.get(position).setType(2);       //在队列中
+                break;
+
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @OnClick({R.id.tv_task_save,R.id.tv_create_task})
     public void onViewClicked(View view) {
@@ -204,7 +312,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
                                 submissionTask();
                                 toast("保存成功");
                         }
-
                             @Override
                             public void onCancel(BaseDialog dialog) {
                                 toast("取消提交任务");
@@ -265,77 +372,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     }
 
     /**
-     * 时间弹窗
-     * @param view
-     */
-    private void showTimePopupWindow(View view,int type) {
-        Integer value[] = new Integer[24];
-        for (int i = 0; i < value.length; i++) {
-            value[i] = i + 1;
-        }
-        Integer middle[] = new Integer[60];
-        for (int i = 0; i < middle.length; i++) {
-            middle[i] = i ;
-        }
-        Integer right[] = new Integer[60];
-        for (int i = 0; i < right.length; i++) {
-            right[i] = i;
-        }
-        Integer three[] = new Integer[24];
-        for (int i = 0; i < three.length; i++) {
-            three[i] = i;
-        }
-        View contentView = null;
-        switch (type){
-            case 1:
-                contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.dialog_num_check, null);
-                customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
-                        .setView(contentView)
-                        .create()
-                        .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
-                pickValueViewNum =contentView.findViewById(R.id.pickValueNum);
-                pickValueViewNum.setOnSelectedChangeListener(this);
-                pickValueViewNum.setValueData(three, (int)taskModeList.get(mPosition).getStartHour(), middle, (int)taskModeList.get(mPosition).getStartMin(),
-                        right, (int)taskModeList.get(mPosition).getEndMin(),three,(int)taskModeList.get(mPosition).getEndHour());
-                break;
-
-        }
-
-    }
-
-    /**
-     * 机器人暂停/重新运动
-     * @param value
-     *//*
-    private void pauseOrResume(String value){
-        BaseCmd.reqCmdPauseResume reqCmdPauseResume=BaseCmd.reqCmdPauseResume.newBuilder()
-                .setError(value)
-                .build();
-        BaseCmd.CommonHeader commonHeader=BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader,reqCmdPauseResume);
-        Logger.e("机器人暂停/重新运动");
-    }
-*/
-   /* *//**
-     * 退出当前模式
-     *//*
-    private void exitModel() {
-        BaseCmd.reqCmdEndActionMode reqCmdEndActionMode = BaseCmd.reqCmdEndActionMode.newBuilder()
-                .setError("noError")
-                .build();
-        BaseCmd.CommonHeader commonHeader = BaseCmd.CommonHeader.newBuilder()
-                .setFromCltType(BaseCmd.eCltType.eLocalAndroidClient)
-                .setToCltType(BaseCmd.eCltType.eLSMSlamNavigation)
-                .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
-                .build();
-        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
-    }*/
-
-    /**
      * 上传任务列表
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -355,9 +391,19 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
             Logger.e("选中列数"+j);
             if (j>1){
                 for (int i=0;i<j-1;i++){
+                    boolean isTrueTime;
                     if (taskModeList.get(i+1).getStartHour()>taskModeList.get(i).getEndHour()){
+                        isTrueTime=true;
+                    }else if (taskModeList.get(i+1).getStartHour()==taskModeList.get(i).getEndHour() &&
+                            taskModeList.get(i+1).getStartMin()>taskModeList.get(i).getEndMin()){
+                        isTrueTime=true;
+                    }else {
+                        isTrueTime=false;
+                    }
+                    if (isTrueTime){
                         isCheckTime=true;
                     }else {
+                        Logger.e("前"+taskModeList.get(i).getEndHour()+"后"+taskModeList.get(i+1).getStartHour());
                         isCheckTime=false;
                         toast("定时列表第"+(i+2)+"行时间设置有误");
                     }
@@ -400,31 +446,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity> implements PickV
     public void onPause() {
         super.onPause();
         Logger.e("------onPause");
-    }
-
-    @Override
-    public void onSelected(PickValueView view, Object leftValue, Object middleValue, Object rightValue, Object threeValue) {
-       if (view == pickValueViewNum) {
-            int starth = (int) leftValue;
-            int startm = (int) middleValue;
-            int endh = (int) threeValue;
-            int endm = (int) rightValue;
-            TaskMode taskMode1=taskModeList.get(mPosition);
-                taskMode1.setStartHour(starth);
-                taskMode1.setStartMin(startm);
-            if (endh==starth && endm > startm){
-                taskMode1.setEndHour(endh);
-                taskMode1.setEndMin(endm);
-            }else if (endh > starth){
-                taskMode1.setEndHour(endh);
-                taskMode1.setEndMin(endm);
-            }else {
-                toast("结束时间必须大于开始时间");
-            }
-            taskAdapter.setData(mPosition,taskMode1);
-        } else {
-            String selectedStr = (String) leftValue;
-        }
     }
 
 }

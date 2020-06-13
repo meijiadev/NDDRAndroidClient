@@ -20,11 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:id="@+id/tv_bb"
-            android:text="安卓客户端版本"
+            android:text="@string/au_app_version"
             android:textSize="16sp"
             android:textColor="#ffffff"
             android:layout_marginTop="90dp"
             android:layout_marginLeft="442dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="16sp"
             />
 
         <TextView
@@ -40,12 +43,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="机器人服务端软件版本信息"
+            android:text="@string/au_server_software_version"
             android:textSize="16sp"
             android:textColor="#ffffff"
             android:id="@+id/computer_type"
             android:layout_marginTop="190dp"
             android:layout_marginLeft="442dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="16sp"
             />
         <RelativeLayout
             android:layout_width="360dp"
@@ -60,30 +66,39 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="模块"
+                android:text="@string/au_module"
                 android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="16sp"/>
 
             <TextView
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_version1"
                 android:layout_toRightOf="@id/tv_type1"
-                android:text="版本信息"
+                android:text="@string/au_version"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:textColor="#ffffff"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="16sp"
                 />
             <TextView
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_data1"
                 android:layout_toRightOf="@id/tv_version1"
-                android:text="版本更新时间"
+                android:text="@string/au_update_time"
                 android:gravity="center|left"
                 android:paddingLeft="30dp"
                 android:textSize="16sp"
                 android:textColor="#ffffff"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="16sp"
                 />
         </RelativeLayout>
 

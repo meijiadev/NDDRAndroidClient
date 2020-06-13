@@ -10,9 +10,12 @@ public class MessageEvent {
     public enum Type{
         updateIPList,          //更新IP列表
         updatePort,           // 更新端口号
+        updateAiPort,          //更新AI端口号
         tcpConnected,         //tcp已连接
+        tcpAiConnected,        //AItcp已连接
         receiveServerList,        //获取到地区服务信息
         LoginSuccess,        //登陆成功
+        LoginAiSuccess,      //登陆AI成功
         wanLoginSuccess,     //广域网登陆成功
         connectedToRobot,    //连接上机器人
         updateMapList,      //获取地图列表
@@ -67,6 +70,7 @@ public class MessageEvent {
 
         notifyEditorMapResult,
         notifyTCPDisconnected,
+        updataVoice,//获取语音播报结果
 
 
 

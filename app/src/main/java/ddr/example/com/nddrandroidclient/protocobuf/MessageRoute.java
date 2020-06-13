@@ -21,16 +21,12 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.BaseSocketConnection;
 import ddr.example.com.nddrandroidclient.socket.StreamBuffer;
-
-
-
 /**
  * 负责解析和包装数据（序列化）
  */
 public class MessageRoute {
     private Context context;
     public  String headString="pbh\0";
-
     private BaseSocketConnection m_BaseSocketConnection;
     private BaseMessageDispatcher m_MessageDispatcher=null;
     public  static StreamBuffer streamBuffer;
@@ -57,6 +53,9 @@ public class MessageRoute {
         }else if (className.contains("DDRModuleCmd")){
             String sType=className.replaceAll("class DDRModuleProto.DDRModuleCmd\\$","DDRModuleProto.");
             return sType;
+        } else if (className.contains("DDRAIServiceCmd")){
+            String sType=className.replaceAll("class DDRAIServiceProto.DDRAIServiceCmd\\$","DDRAIServiceProto.");
+            return sType;
         }
         return null;
     }
@@ -76,6 +75,9 @@ public class MessageRoute {
         }else if (typeName.contains("DDRModuleProto")){
             String className=typeName.replaceAll("DDRModuleProto\\.","class DDRModuleProto.DDRModuleCmd\\$");
             return className;
+        }else if (typeName.contains("DDRAIServiceProto")){
+            String className=typeName.replaceAll("DDRAIServiceProto\\.","class DDRAIServiceProto.DDRAIServiceCmd\\$");
+            return className;
         }
         return null;
     }
@@ -94,13 +96,11 @@ public class MessageRoute {
 
     }
 
-
     public  byte []head=new byte[4];
     public  byte[] bTotalLen=new byte[4];
     public  byte[]bHeadLen=new byte[4];
     public Thread parseThread;
     public int where=0x00;   //标志位
-
     /**
      * 解析数据
      * @param （闲置）
@@ -318,8 +318,6 @@ public class MessageRoute {
         }
     }
 
-
-
     /**
      * 序列化要发送的信息
      * @param msg
@@ -328,9 +326,9 @@ public class MessageRoute {
     public  byte[] serialize(BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg){
         byte[]bBody=msg.toByteArray();
         String sType=msg.getClass().toString();
-        // Logger.e("未转换的stype:"+sType);
+//         Logger.e("未转换的stype:"+sType);
         sType=javaClass2ProtoTypeName(sType);
-        // Logger.e("转换后的stype:"+stype);
+//         Logger.e("转换后的stype:"+sType);
         int bBodyLength=bBody.length;
         BaseCmd.CommonHeader headData;
         if (commonHeader!=null){
@@ -347,7 +345,7 @@ public class MessageRoute {
         byte[] bHead=headData.toByteArray();//头部信息
         int bHeadLength=bHead.length;
         int totalLen=8+bHeadLength+bBodyLength;
-        byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
+          byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
         System.arraycopy(bsHead,0,bytes,0,4);
         boolean needEncrypt=true;
         if (needEncrypt)
@@ -357,7 +355,12 @@ public class MessageRoute {
             byte[]bHeadE=new byte[bHeadLength+5];
             if (Encrypt.Txt_Encrypt(bHead,bHeadLength,bHeadE,bHeadE.length)){
                 bHeadE=Encrypt.getTxt_Encrypt();
-                System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
+                try {
+                    System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
+                }catch (ArrayIndexOutOfBoundsException e){
+                    e.printStackTrace();
+                    return null;
+                }
             }else {
                 Logger.e("Txt_Encrypt Error");
                 return null;
@@ -379,11 +382,16 @@ public class MessageRoute {
                 }
             }
         }else {
-            System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
-            System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
-            System.arraycopy(bHead,0,bytes,12,bHeadLength);
-            System.arraycopy(bBody,0,bytes,12+bHeadLength,bBody.length);
-            return bytes;
+            try {
+                System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
+                System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
+                System.arraycopy(bHead,0,bytes,12,bHeadLength);
+                System.arraycopy(bBody,0,bytes,12+bHeadLength,bBody.length);
+                return bytes;
+            }catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+                return null;
+            }
         }
         return bytes;
 
@@ -415,7 +423,6 @@ public class MessageRoute {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-
         } catch (InvocationTargetException e) {
             e.printStackTrace();
             Logger.e("bytes为空！");
@@ -424,12 +431,9 @@ public class MessageRoute {
     }
 
 
-
-
-
-
     /**
      * 以大端模式将int转成byte[]
+     *
      */
     public static byte[] intToBytesBig(int value) {
         byte[] src = new byte[4];
@@ -442,7 +446,6 @@ public class MessageRoute {
 
     /**
      * 以小端模式将int转成byte[]
-     *
      * @param value
      * @return
      */

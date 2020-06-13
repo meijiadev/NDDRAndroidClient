@@ -2,15 +2,13 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.google.protobuf.ByteString;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
@@ -61,7 +59,11 @@ public class CollectingActivity extends DDRActivity {
     @BindView(R.id.collect3)
     CollectingView3 collectingView3;
     @BindView(R.id.process_bar)
-    NumberProgressBar processBar;
+    ProgressBar processBar;
+    @BindView(R.id.layout_progress)
+    RelativeLayout layoutProgress;
+    @BindView(R.id.tv_progress)
+    TextView tvProgress;
     @BindView(R.id.tv_speed)
     TextView tvSpeed;
     @BindView(R.id.seek_bar)
@@ -76,13 +78,18 @@ public class CollectingActivity extends DDRActivity {
     RockerView myRockerZy;
     @BindView(R.id.tv_detection)
     TextView tvDetection;                   //回环检测
-
+    @BindView(R.id.tv_stop_move)
+    TextView tvStopMove;                    //急停
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_save_map)
     TextView tvSaveMap;
+    @BindView(R.id.layout_collect)
+    LinearLayout layoutCollect;
+    @BindView(R.id.tv_cs)
+    TextView tvCs;
 
 
     private float lineSpeed, palstance;  //线速度 ，角速度
@@ -90,11 +97,8 @@ public class CollectingActivity extends DDRActivity {
     private boolean isforward, isGoRight; //左右摇杆当前的方向
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private TcpClient tcpClient;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private String collectName;                  //采集的地图名
-    private BaseDialog waitDialog;
-
+    private BaseDialog waitDialog,waitDialog1;
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
     private NotifyLidarPtsEntity notifyLidarPtsEntity1;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
@@ -106,35 +110,18 @@ public class CollectingActivity extends DDRActivity {
     private float ratio=1;         //地图比例
     private int measureWidth=1000, measureHeight=1000;
     private boolean isStartDraw=false;        //是否开始绘制
+    private int clicks;                       //点击次数
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
                 //Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
-                if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
-                    tvTitle.setText("正在自标定中...");
-                } else {
-                    if (notifyBaseStatusEx.getMode() == 2) {
-                        switch (notifyBaseStatusEx.getSonMode()) {
-                            case 2:
-                                toast("建图异常,即将退出当前模式，本次地图无效");
-                                exitModel();
-                                finish();
-                                break;
-                            case 6:
-                                tvTitle.setText("正在采集中...");
-                                waitDialog.dismiss();
-                                myRockerZy.setVisibility(View.VISIBLE);
-                                myRocker.setVisibility(View.VISIBLE);
-                                addPoi.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                    }
-                }
+                initStatusBar();
                 break;
             case notifyMapGenerateProgress:
                 float progress= (float) mainUpDate.getData();
                 setAnimation(processBar,(int) (progress*100),0);
+                tvProgress.setText((int) (progress*100)+"%");
                 if (progress==1.0f){
                     tvTitle.setText("建图完成");
                     postDelayed(()->{
@@ -146,19 +133,22 @@ public class CollectingActivity extends DDRActivity {
                 int loopStatus= (int) mainUpDate.getData();
                 switch (loopStatus){
                     case -2:                    // 检测错误
-                        toast("检测错误，请重新检测");
+                        toast(R.string.loop_status_one);
                         break;
                     case -1:                   // 没有检测到回环
-                        toast("没有检测到回环");
+                        toast(R.string.loop_status_two);
                         break;
                     case 0:                   // 回环已存在
-                        toast("回环已存在");
+                        toast(R.string.loop_status_three);
                         break;
                     case 1:                  // 新采集基准构成回环
-                        toast("新采集基准构成回环");
+                        toast(R.string.loop_status_four);
                         break;
                     case 2:                 //  距离太近不需要检测回环
-                        toast("距离太近不需要检测回环");
+                        toast(R.string.loop_status_five);
+                        break;
+                    case 3:
+                        toast(R.string.loop_status_six);
                         break;
                 }
                 break;
@@ -191,15 +181,40 @@ public class CollectingActivity extends DDRActivity {
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         processBar.setMax(100);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = sharedPreferences.edit();
-        maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
         initWaitDialog();
+
     }
 
-
+    private void initStatusBar() {
+        if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
+            tvTitle.setText(R.string.collect_title_two);
+        } else {
+            if (notifyBaseStatusEx.getMode() == 2) {
+                switch (notifyBaseStatusEx.getSonMode()) {
+                    case 2:
+                        toast(R.string.create_map_error);
+                        exitModel();
+                        finish();
+                        break;
+                    case 6:
+                        waitDialog.dismiss();
+                        tvTitle.setText(R.string.collect_title_three);
+                        myRockerZy.setVisibility(View.VISIBLE);
+                        myRocker.setVisibility(View.VISIBLE);
+                        addPoi.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        }
+        if (notifyBaseStatusEx.getStopStat()==4|notifyBaseStatusEx.getStopStat()==12){
+            tvStopMove.setVisibility(View.VISIBLE);
+            tvStopMove.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(R.mipmap.jt_nodef),null,null);
+        }else {
+            tvStopMove.setVisibility(View.GONE);
+        }
+    }
 
 
     /**
@@ -207,7 +222,7 @@ public class CollectingActivity extends DDRActivity {
      */
     public void initWaitDialog(){
         waitDialog= new WaitDialog.Builder(this)
-        .setMessage("正在定位中，请勿挪动机器人...")
+        .setMessage(R.string.waiting_dialog)
         .show();
     }
 
@@ -218,8 +233,6 @@ public class CollectingActivity extends DDRActivity {
             @Override
             public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
                 if (!ishaveChecked) {
-                    editor.putFloat("speed", (float) maxSpeed);                 //保存最近的改变速度
-                    editor.commit();
                     tvSpeed.setText(String.valueOf(maxSpeed));
                 }
                 Logger.e("------" + seekBar.getLeftSeekBar().getProgress());
@@ -238,12 +251,12 @@ public class CollectingActivity extends DDRActivity {
         });
     }
 
-    @OnClick({R.id.add_poi,R.id.tv_detection,R.id.tv_save_map,R.id.iv_back})
+    @OnClick({R.id.add_poi,R.id.tv_detection,R.id.tv_save_map,R.id.iv_back,R.id.tv_hide})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_back:
                 new InputDialog.Builder(getActivity())
-                        .setTitle("是否退出采集")
+                        .setTitle(R.string.exit_collecting_dialog)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
@@ -260,13 +273,13 @@ public class CollectingActivity extends DDRActivity {
                 break;
             case R.id.tv_save_map:
                 new InputDialog.Builder(getActivity())
-                        .setTitle("是否保存当前采集")
+                        .setTitle(R.string.save_map_dialog)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 exitModel();
-                                processBar.setVisibility(View.VISIBLE);
+                                layoutProgress.setVisibility(View.VISIBLE);
                                 stopDraw();
                             }
                             @Override
@@ -279,12 +292,27 @@ public class CollectingActivity extends DDRActivity {
                 tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqAddPathPointWhileCollecting);
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
                 poiPoints.add(new XyEntity(posX,posY));
-                toast("标记成功");
+                toast(R.string.gauge_succeed);
                 break;
             case R.id.tv_detection:
                 BaseCmd.reqDetectLoop reqDetectLoop=BaseCmd.reqDetectLoop.newBuilder()
                         .build();
                 tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDetectLoop);
+                break;
+            case R.id.tv_hide:
+                if (layoutCollect.getVisibility()==View.GONE){
+                    clicks++;
+                    if (clicks>=6){
+                        layoutCollect.setVisibility(View.VISIBLE);
+                        clicks=0;
+                    }
+                }else {
+                    clicks++;
+                    if (clicks>=6){
+                        layoutCollect.setVisibility(View.GONE);
+                        clicks=0;
+                    }
+                }
                 break;
         }
 
@@ -300,18 +328,16 @@ public class CollectingActivity extends DDRActivity {
         fixedSpeed.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             if (isChecked) {
                 ishaveChecked = isChecked;
-                maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 Logger.e("-----" + maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 seekBar.setEnabled(false);
-                toast("锁定");
+                toast(R.string.common_lock);
             } else {
                 seekBar.setEnabled(true);
                 ishaveChecked = isChecked;
-                maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 seekBar.setProgress((float) maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
-                toast("取消锁定");
+                toast(R.string.common_cancel_lock);
 
             }
         }));
@@ -320,12 +346,11 @@ public class CollectingActivity extends DDRActivity {
 
     /**
      * 设置进度条的 进度和动画效果
-     *
      * @param view
      *
      * @param mProgressBar
      */
-    private void setAnimation(final NumberProgressBar view, final int mProgressBar, int time) {
+    private void setAnimation(final ProgressBar view, final int mProgressBar, int time) {
         ValueAnimator animator = ValueAnimator.ofInt(0, mProgressBar).setDuration(time);
 
         animator.addUpdateListener((valueAnimator) -> {
@@ -347,22 +372,27 @@ public class CollectingActivity extends DDRActivity {
 
             @Override
             public void direction(RockerView.Direction direction) {
-                if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
-                    //Logger.e("---中心");
-                    lineSpeed = 0;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_base_default);
-                } else if (direction == RockerView.Direction.DIRECTION_DOWN) {     // 当前方向：下
-                    isforward = false;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_backward);
-                    //Logger.e("下");
-                } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
+                try {
+                    if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
+                        //Logger.e("---中心");
+                        lineSpeed = 0;
+                        myRocker.setmAreaBackground(R.mipmap.rocker_base_default);
+                    } else if (direction == RockerView.Direction.DIRECTION_DOWN) {     // 当前方向：下
+                        isforward = false;
+                        myRocker.setmAreaBackground(R.mipmap.rocker_backward);
+                        //Logger.e("下");
+                    } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
 
-                } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
-                    isforward = true;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_forward);
-                    //Logger.e("上");
-                } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
+                    } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
+                        isforward = true;
+                        myRocker.setmAreaBackground(R.mipmap.rocker_forward);
+                        //Logger.e("上");
+                    } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
 
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Logger.e("-----------NullPointerException");
                 }
             }
 
@@ -380,23 +410,28 @@ public class CollectingActivity extends DDRActivity {
 
             @Override
             public void direction(RockerView.Direction direction) {
-                if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
-                    // Logger.e("---中心");
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_default_zy);
-                    palstance = 0;
-                } else if (direction == RockerView.Direction.DIRECTION_DOWN) {
+                try {
+                    if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
+                        // Logger.e("---中心");
+                        myRockerZy.setmAreaBackground(R.mipmap.rocker_default_zy);
+                        palstance = 0;
+                    } else if (direction == RockerView.Direction.DIRECTION_DOWN) {
 
-                } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
-                    isGoRight = false;
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_go_left);
-                    // Logger.e("左");
-                } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
+                    } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
+                        isGoRight = false;
+                        myRockerZy.setmAreaBackground(R.mipmap.rocker_go_left);
+                        // Logger.e("左");
+                    } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
 
-                } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
-                    // mTvShake.setText("当前方向：右");
-                    //Logger.e("右");
-                    isGoRight = true;
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_go_right);
+                    } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
+                        // mTvShake.setText("当前方向：右");
+                        //Logger.e("右");
+                        isGoRight = true;
+                        myRockerZy.setmAreaBackground(R.mipmap.rocker_go_right);
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    Logger.e("---------NullPointerException");
                 }
             }
 
@@ -432,7 +467,7 @@ public class CollectingActivity extends DDRActivity {
     int a = 0;
 
     /**
-     * 定时器，每90毫秒执行一次
+     * 定时器，每50毫秒执行一次
      */
     private void initTimer() {
         timer = new Timer();
@@ -455,7 +490,7 @@ public class CollectingActivity extends DDRActivity {
 
             }
         };
-        timer.schedule(task, 0, 90);
+        timer.schedule(task, 0, 50);
     }
 
 
@@ -502,66 +537,87 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor.putFloat("speed", (float) maxSpeed);
-        editor.commit();
         timer.cancel();
         task.cancel();
         tcpClient.requestFile();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+        if (collectingView3!=null){
+            if (collectingView3.isRunning){
+                Logger.e("非正常退出采集模式");
+                stopDraw();
+            }
+        }
 
     }
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected())
-            netWorkStatusDialog();
+        if (tcpClient!=null&&!tcpClient.isConnected()){
+            Logger.e("网络无法连接!");
+            //netWorkStatusDialog();
+        }
     }
 
     /**
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog1=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
-            if (waitDialog.isShowing()){
-                toast("网络无法连接，请退出重连！");
+            if (waitDialog1.isShowing()){
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }
         },6000);
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
     @Override
     public boolean statusBarDarkFont() {
         return false;
     }
-
+    private int totalSize=0;
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void upDateDrawMap(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
             case receivePointCloud:
                 if (NotifyBaseStatusEx.getInstance().getSonMode()==6){
+                    if (measureHeight==0){
+                        measureWidth=collectingView4.getWidth();
+                        measureHeight=collectingView4.getHeight();
+                        Logger.e("------绘图控件大小"+measureWidth+";"+measureHeight);
+                    }
+                    //long startTime=System.currentTimeMillis();
                     posX=notifyLidarPtsEntity.getPosX();
                     posY=notifyLidarPtsEntity.getPosY();
                     radian=notifyLidarPtsEntity.getPosdirection();
+                    totalSize=totalSize+notifyLidarPtsEntity.getPositionList().size();
+                    Logger.e("------接收到点数总和："+totalSize);
+                    //tvCs.setText("x:"+posX+"y:"+posY+"radian:"+radian);
                     angle=radianToangle(radian);
                     notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
                     notifyLidarPtsEntity1.setPosX(notifyLidarPtsEntity.getPosX());
                     notifyLidarPtsEntity1.setPosY(notifyLidarPtsEntity.getPosY());
                     notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
                     ptsEntityList.add(notifyLidarPtsEntity1);
-                    maxOrmin(notifyLidarPtsEntity.getPositionList());
                     if (!isStartDraw){
                         collectingView4.startThread();
                         collectingView3.startThread();
                     }
-                    collectingView4.setData(ptsEntityList,poiPoints,ratio);
-                    collectingView3.setData(ptsEntityList,ratio,angle);
+                    collectingView4.setData(ptsEntityList,poiPoints);
+                    collectingView3.setData(ptsEntityList,angle);
                     isStartDraw=true;
                 }
                 break;
         }
     }
+
     /**
      * 弧度转角度
      */

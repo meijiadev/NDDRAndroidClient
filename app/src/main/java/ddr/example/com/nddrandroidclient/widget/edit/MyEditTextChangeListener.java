@@ -2,14 +2,13 @@ package ddr.example.com.nddrandroidclient.widget.edit;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
 
 
 import com.hjq.toast.ToastUtils;
 
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
-import ddr.example.com.nddrandroidclient.widget.view.ZoomImageView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 /**
  * time :  2019/11/27
@@ -78,7 +77,7 @@ public class MyEditTextChangeListener implements TextWatcher {
                         }else {
                             targetPoint1.setX(x);
                             targetPoint1.setY(editTextY.getFloatText());
-                            targetPoint1.setTheta(editTextC.getIntegerText());
+                            targetPoint1.setTheta(editTextC.getFloatText());
                             pointView.setPoint(targetPoint1);
                             zoomImageView.invalidate();
                         }
@@ -95,7 +94,7 @@ public class MyEditTextChangeListener implements TextWatcher {
                    }else {
                        targetPoint1.setY(y);
                        targetPoint1.setX(editTextX.getFloatText());
-                       targetPoint1.setTheta(editTextC.getIntegerText());
+                       targetPoint1.setTheta(editTextC.getFloatText());
                        pointView.setPoint(targetPoint1);
                        zoomImageView.invalidate();
                    }
@@ -112,7 +111,7 @@ public class MyEditTextChangeListener implements TextWatcher {
                         float angle=Float.valueOf(s.toString());
                         targetPoint1.setX(editTextX.getFloatText());
                         targetPoint1.setY(editTextY.getFloatText());
-                        targetPoint1.setTheta((int) angle);
+                        targetPoint1.setTheta(angle);
                         pointView.setPoint(targetPoint1);
                         zoomImageView.invalidate();
                     }

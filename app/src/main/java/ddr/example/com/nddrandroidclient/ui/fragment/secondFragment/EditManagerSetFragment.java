@@ -27,6 +27,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
 
 /**
@@ -65,8 +66,8 @@ public class EditManagerSetFragment extends DDRLazyFragment {
 
     @Override
     protected void initView() {
-        versionAdapter=new VersionAdapter(R.layout.item_computer_version);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getAttachActivity());
+        versionAdapter=new VersionAdapter(R.layout.item_computer_version,getAttachActivity());
+        NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         computer_type_recycle.setLayoutManager(layoutManager);
         computer_type_recycle.setAdapter(versionAdapter);
     }

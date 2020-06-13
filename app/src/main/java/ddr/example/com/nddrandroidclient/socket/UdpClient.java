@@ -47,6 +47,7 @@ public class UdpClient extends BaseSocketConnection {
             datagramSocket.close();
             udpLife=false;
             readThread=null;
+            Logger.e("断开UDP广播");
         }
     }
 

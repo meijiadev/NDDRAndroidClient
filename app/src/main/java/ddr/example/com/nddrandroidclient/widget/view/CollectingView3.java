@@ -21,25 +21,29 @@ import java.util.List;
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
+import ddr.example.com.nddrandroidclient.widget.zoomview.SurfaceTouchEventHandler;
 
 /**
  * time : 2019/12/25
  * desc : 采集时的机器人的位置和激光雷达扫射的范围
  */
 public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callback {
+    // Matrix getValues 矩阵参数
+    private float[] values=new float[9];
     private int measureWidth, measureHeight;
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
     public boolean isRunning=false;
     private DrawRobotThread drawRobotThread;          //绘制线程
     private SurfaceHolder holder;
-    private float ratio=1;         //地图比例
+    private float perMeter =50;         //每米所占的像素
     private float angle;
     private Matrix matrix;
-    private Bitmap directionBitmap,directionBitmap1;
-    private int directionW,directionH;
+    private Bitmap directionBitmap,targetBitmap;
     private Paint paint,lastFrame,pathPaint;
     private int mBackColor=Color.TRANSPARENT;       //背景色透明
+    private SurfaceTouchEventHandler surfaceTouchEventHandler;
     public CollectingView3(Context context) {
         super(context);
         init();
@@ -56,10 +60,11 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
     private void init(){
         holder=getHolder();
         holder.addCallback(this);
-        setZOrderOnTop(true);
+        //setZOrderOnTop(true);
         holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         matrix=new Matrix();
         directionBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
+        targetBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
         paint=new Paint();
         lastFrame=new Paint();
         lastFrame.setStrokeWidth(1);
@@ -68,16 +73,14 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         pathPaint=new Paint();
         pathPaint.setColor(Color.BLACK);
         pathPaint.setStrokeWidth(2);
-        directionW=directionBitmap.getWidth();
-        directionH=directionBitmap.getHeight();
+
     }
 
     /**
      * 设置参数
      */
-    public void setData(List<NotifyLidarPtsEntity> ptsEntityList,float ratio,float angle){
+    public void setData(List<NotifyLidarPtsEntity> ptsEntityList,float angle){
         this.ptsEntityList=ptsEntityList;
-        this.ratio=ratio;
         this.angle=angle;
     }
 
@@ -91,6 +94,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         Logger.e("-------surfaceChanged:"+width+";"+height);
         measureWidth=width;
         measureHeight=height;
+        surfaceTouchEventHandler=SurfaceTouchEventHandler.getInstance(measureWidth,measureHeight);
     }
 
     @Override
@@ -110,7 +114,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
      * 停止绘制
      */
     public void onStop(){
-        if (drawRobotThread!=null){
+        if (drawRobotThread!=null&&isRunning){
             drawRobotThread.stopThread();
         }
     }
@@ -149,8 +153,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                 Canvas canvas=null;
                 try {
                     canvas=holder.lockCanvas();
-                    if (canvas!=null){
-                        //drawRadar(canvas);
+                    if (canvas!=null&&surfaceTouchEventHandler!=null){
                         drawRobot(canvas);
                         drawPath(canvas);
                     }
@@ -162,7 +165,7 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
                     }
                 }
                 long endTime=System.currentTimeMillis();
-                Logger.e("------地图绘制耗时："+(endTime-startTime));
+                Logger.i("------地图绘制耗时："+(endTime-startTime));
                 long time=endTime-startTime;
                 if (time<300){
                     try {
@@ -186,24 +189,31 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
         int size=ptsEntityList.size();
         float posY=ptsEntityList.get(size-1).getPosY();
         float posX=ptsEntityList.get(size-1).getPosX();
-        float x= (-posY*ratio+measureWidth/2);
-        float y= (-posX*ratio+measureHeight/2);
+        float x= (-posY*perMeter+measureWidth/2);
+        float y= (-posX*perMeter+measureHeight/2);
+        XyEntity xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(x,y);
         List<BaseCmd.notifyLidarPts.Position> positions=ptsEntityList.get(size-1).getPositionList();
         int pSize=positions.size();
         Path path=new Path();
-        path.moveTo(x,y);
+        path.moveTo(xyEntity.getX(),xyEntity.getY());
         for (int j=0;j<pSize;j++){
-            float ptX=(-positions.get(j).getPtY()*ratio+measureWidth/2);
-            float ptY=(-positions.get(j).getPtX()*ratio+measureHeight/2);
-            path.lineTo(ptX,ptY);
+            float ptX=(-positions.get(j).getPtY()*perMeter+measureWidth/2);
+            float ptY=(-positions.get(j).getPtX()*perMeter+measureHeight/2);
+            XyEntity xyEntity1=surfaceTouchEventHandler.coordinatesToCanvas(ptX,ptY);
+            path.lineTo(xyEntity1.getX(),xyEntity1.getY());
             //canvas.drawLine(x,y,ptX,ptY,lastFrame);
         }
         path.close();
         canvas.drawPath(path,lastFrame);
-        matrix.setRotate(-angle);
-        directionBitmap1=Bitmap.createBitmap(directionBitmap,0,0,directionW,directionH,matrix,true);
-        canvas.drawBitmap(directionBitmap1,x-directionW/2,y-directionH/2,paint);
+        float cx = xyEntity.getX()-directionBitmap.getWidth()/2;
+        float cy =xyEntity.getY()-directionBitmap.getHeight()*13/20;
+        matrix.reset();
+        matrix.postTranslate(cx,cy);
+        matrix.postRotate(-angle+(float) surfaceTouchEventHandler.getAngle(),xyEntity.getX(),xyEntity.getY());
+        canvas.drawBitmap(directionBitmap,matrix,paint);
     }
+
+
 
     /**
      * 绘制行走路线
@@ -214,17 +224,26 @@ public class CollectingView3 extends SurfaceView implements SurfaceHolder.Callba
             try {
                 for (int i=0;i<ptsSize;i++){
                     if (i<ptsSize-2){
-                        float y=((-ptsEntityList.get(i).getPosX())*ratio+measureHeight/2);
-                        float x=((-ptsEntityList.get(i).getPosY())*ratio+measureWidth/2);
-                        float y1=((-ptsEntityList.get(i+1).getPosX())*ratio+measureHeight/2);
-                        float x1=((-ptsEntityList.get(i+1).getPosY())*ratio+measureWidth/2);
-                        canvas.drawLine(x,y,x1,y1,pathPaint);
+                        float y=((-ptsEntityList.get(i).getPosX())*perMeter+measureHeight/2);
+                        float x=((-ptsEntityList.get(i).getPosY())*perMeter+measureWidth/2);
+                        XyEntity xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(x,y);
+                        float y1=((-ptsEntityList.get(i+1).getPosX())*perMeter+measureHeight/2);
+                        float x1=((-ptsEntityList.get(i+1).getPosY())*perMeter+measureWidth/2);
+                        XyEntity xyEntity1=surfaceTouchEventHandler.coordinatesToCanvas(x1,y1);
+                        canvas.drawLine(xyEntity.getX(),xyEntity.getY(),xyEntity1.getX(),xyEntity1.getY(),pathPaint);
                     }
                 }
             }catch ( IndexOutOfBoundsException e){
                 e.printStackTrace();
             }
         }
+        XyEntity xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(measureWidth/2,measureHeight/2);
+        float cx=xyEntity.getX()-targetBitmap.getWidth()/2;
+        float cy=xyEntity.getY()-targetBitmap.getHeight()/2;
+        matrix.reset();
+        matrix.postTranslate(cx,cy);
+        matrix.postRotate((float) surfaceTouchEventHandler.getAngle(),xyEntity.getX(),xyEntity.getY());
+        canvas.drawBitmap(targetBitmap,matrix,paint);
     }
 
 
