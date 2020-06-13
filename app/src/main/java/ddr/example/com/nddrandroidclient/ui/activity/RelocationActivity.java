@@ -173,13 +173,13 @@ public class RelocationActivity extends DDRActivity {
                 relocationStatus= (int) messageEvent.getData();
                 switch (relocationStatus){
                     case 0:
-                        toast("重新定位失败，请重新设置机器人位姿");
+                        toast(R.string.relocation_failed);
                         if (waitDialog!=null&&waitDialog.isShowing()){
                             waitDialog.dismiss();
                         }
                         break;
                     case 1:
-                        toast("定位成功");
+                        toast(R.string.relocation_succeed);
                         if (waitDialog!=null&&waitDialog.isShowing()){
                             waitDialog.dismiss();
                         }
@@ -188,7 +188,7 @@ public class RelocationActivity extends DDRActivity {
                         break;
                     case 2:
                         waitDialog=new WaitDialog.Builder(this)
-                                .setMessage("正在重新定位中可能需要1~3分钟时间...")
+                                .setMessage(R.string.the_relocation)
                                 .show();
                         break;
                 }
@@ -215,10 +215,10 @@ public class RelocationActivity extends DDRActivity {
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
             if (waitDialog.isShowing()){
-                toast("网络无法连接，请退出重连！");
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }

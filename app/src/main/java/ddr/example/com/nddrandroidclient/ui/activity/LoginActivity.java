@@ -89,7 +89,7 @@ public  class LoginActivity extends DDRActivity {
                 editor.putString("password", passwordName);
                 editor.commit();
                 Logger.e("登录成功");
-                toast("登录成功");
+                toast(R.string.login_succeed);
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
                         waitDialog.dismiss();
@@ -151,19 +151,19 @@ public  class LoginActivity extends DDRActivity {
             case R.id.login_in:
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
-                if (accountName.equals("")&passwordName.equals("")){
-                    toast("用户名和密码不能为空");
+                if (accountName.equals("")|passwordName.equals("")){
+                    toast(R.string.account_not_empty);
                 }else {
                     if (isLan){                                   //局域网登录
                         //if (hasReceiveBroadcast){
                         if (tcpClient.isConnected()) tcpClient.disConnect();
                             tcpClient.createConnect(LAN_IP,tcpPort);
                             waitDialog=new WaitDialog.Builder(this)
-                                    .setMessage("登录中...")
+                                    .setMessage(R.string.in_login)
                                     .show();
                             postDelayed(()->{
                                 if (waitDialog.isShowing()){
-                                    toast("登录失败，请检查网络后重新登录");
+                                    toast(R.string.login_failed);
                                     waitDialog.dismiss();
                                 }
                                 },5000);
@@ -175,11 +175,11 @@ public  class LoginActivity extends DDRActivity {
                             tcpClient.disConnect();
                         tcpClient.createConnect(CmdSchedule.broadcastServerIP,CmdSchedule.broadcastServerPort);      //连接地方服务器
                         waitDialog=new WaitDialog.Builder(this)
-                                    .setMessage("登录中...")
+                                    .setMessage(R.string.in_login)
                                     .show();
                         postDelayed(()->{
                             if (waitDialog.isShowing()){
-                                toast("登录失败，请检查网络后重新登录");
+                                toast(R.string.login_failed);
                                 waitDialog.dismiss();
                             }
                             },5000);

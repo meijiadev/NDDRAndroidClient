@@ -194,7 +194,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 tcpAiClient.sendData(null, CmdSchedule.localLogin("admin_android","admin_android",4));
                 break;
             case LoginAiSuccess:
-                toast("AI服务连接成功");
+                toast(R.string.ai_connected);
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
                 break;
             case updateVersion:
@@ -305,7 +305,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case R.id.tv_quit:
                 new InputDialog.Builder(getActivity())
-                        .setTitle("是否退出")
+                        .setTitle(R.string.is_back)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
@@ -323,12 +323,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
                         tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eShutDown);
-                        toast("机器人正在关机中...");
+                        toast(R.string.robot_is_shutdown);
                     }
                     @Override
                     public void onCancel(BaseDialog dialog) {
                         tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eReStart);
-                        toast("机器人正在重启中，请退出到登陆页面等待重启完成后再重新连接");
+                        toast(R.string.robot_is_restart);
                     }
                 }).show();
                 break;
@@ -412,8 +412,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
             jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
             if(tv_xsu!=null && tv_jsu!=null){
-                tv_xsu.setText("线速度："+xsu+" m/s");
-                tv_jsu.setText("角速度："+jsu+" 弧度/秒");
+                tv_xsu.setText(getString(R.string.line_speed)+xsu+" m/s");
+                tv_jsu.setText(getString(R.string.angulau_speed)+jsu+getString(R.string.angulau_speed_1));
             }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
@@ -485,7 +485,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
             }, 300);
         } else {
-            toast("再按一次退出");
+            toast(R.string.home_exit_hint);
         }
     }
 
@@ -744,14 +744,14 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("-----" + maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
                 seekBar.setEnabled(false);
-                toast("锁定");
+                toast(R.string.common_lock);
             } else {
                 seekBar.setEnabled(true);
                 ishaveChecked = isChecked;
                 maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
                 seekBar.setProgress((float) maxSpeed);
                 tvSpeed.setText(String.valueOf(maxSpeed));
-                toast("取消锁定");
+                toast(R.string.common_cancel_lock);
 
             }
         }));
@@ -780,10 +780,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      * 显示网络连接弹窗
      */
     private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage("网络正在连接...").show();
+        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
         postDelayed(()->{
             if (waitDialog.isShowing()){
-                toast("网络无法连接，请退出重连！");
+                toast(R.string.network_not_connect);
                 ActivityStackManager.getInstance().finishAllActivities();
                 startActivity(LoginActivity.class);
             }

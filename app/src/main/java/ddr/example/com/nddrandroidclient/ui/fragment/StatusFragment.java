@@ -254,7 +254,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             showName=showName.replaceAll(".task","");
             tv_now_task.setText(showName);
         }else {
-            tv_now_task.setText("无任务");
+            tv_now_task.setText(R.string.no_task);
         }
         for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
             groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
@@ -283,7 +283,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             showName=showName.replaceAll(".task","");
             tv_now_task.setText(showName);
         }else {
-            tv_now_task.setText("无任务");
+            tv_now_task.setText(R.string.no_task);
         }
         workTimes=Integer.parseInt(df.format( times/h));
         taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
@@ -292,26 +292,26 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         if (mapName!=null){
             rel_step_description.setVisibility(View.GONE);
             recyclerGoPoint.setVisibility(View.VISIBLE);
-            tv_set_go.setText("前往目标点");
+            tv_set_go.setText(R.string.go_target_point);
         }else {
             rel_step_description.setVisibility(View.VISIBLE);
             recyclerGoPoint.setVisibility(View.GONE);
-            tv_set_go.setText("建立任务步骤：");
+            tv_set_go.setText(R.string.create_task_steps);
         }
         tv_now_device.setText(robotID);
-        tv_work_time.setText(String.valueOf(workTimes)+" 分");
-        tv_task_speed.setText(String.valueOf(taskSpeed)+" m/s");
+        tv_work_time.setText(workTimes+getString(R.string.common_minute));
+        tv_task_speed.setText(taskSpeed+" m/s");
        // Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
-                tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+" 次");
+                tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+getString(R.string.common_times));
                 if (mapImageView !=null&&isRunabPoint){
                     isRunabPoint=false;
                     mapImageView.setABPointLine(false);
                 }
                 break;
             case 2:
-                tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+" 次");
+                tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+getString(R.string.common_times));
                 if (mapImageView !=null&&isRunabPoint){
                     isRunabPoint=false;
                     mapImageView.setABPointLine(false);
@@ -331,7 +331,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
-                tv_work_statue.setText("自标定中");
+                tv_work_statue.setText(R.string.in_the_calibration);
                 //自标定
                 break;
             case 1:
@@ -339,28 +339,28 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
                         if (taskName.equals("PathError")){
-                            tv_work_statue.setText("待命中");
+                            tv_work_statue.setText(R.string.common_waiting);
                             tv_now_task.setClickable(true);
                             tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
                             iv_task_xl.setVisibility(View.VISIBLE);
                         }else {
-                            tv_work_statue.setText("运动中");
+                            tv_work_statue.setText(R.string.common_runing);
                         }
                         break;
                     case 2:
-                        tv_work_statue.setText("正在采集中...");
+                        tv_work_statue.setText(R.string.common_collecting);
                         break;
                     case 3:
-                        tv_work_statue.setText("运动中");
+                        tv_work_statue.setText(R.string.common_runing);
                         tv_now_task.setClickable(false);
                         tv_now_task.setBackgroundResource(0);
                         iv_task_xl.setVisibility(View.GONE);
                         switch (notifyBaseStatusEx.getSonMode()){
                             case 3:
-                                tv_work_statue.setText("异常");
+                                tv_work_statue.setText(R.string.common_error);
                                 break;
                             case 15:
-                                tv_work_statue.setText("重定位中");
+                                tv_work_statue.setText(R.string.common_relocationing);
                                 break;
                         }
                         break;
@@ -457,9 +457,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 Logger.e("点击");
                 if (!notifyBaseStatusEx.getCurroute().equals("")){
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-                    toast("正在加载地图！");
+                    toast(R.string.in_load_map);
                 }else {
-                    toast("当前并无正在使用中的地图，请确定有采集的地图并选择一张地图使用！");
+                    toast(R.string.not_map_using);
                 }
                 break;
             case R.id.tv_now_task:
@@ -560,9 +560,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
                 taskCheckAdapter.setOnItemClickListener((adapter, view, position) ->  {
                     new InputDialog.Builder(getAttachActivity())
-                            .setTitle("请输入循环次数")
+                            .setTitle(R.string.enter_run_times)
                             .setHint("1")
-                            .setConfirm("执行")
+                            .setConfirm(R.string.common_execute)
                             .setEditNumAndSize(3)
                             .setListener(new InputDialog.OnListener() {
                                 @Override
@@ -587,7 +587,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                 }
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
-                                    toast("取消添加");
+                                    toast(R.string.cancel_add);
                                 }
                             }).show();
                     customPopWindow.dissmiss();
@@ -604,7 +604,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             float theta=targetPoints.get(position).getTheta();
                             mapImageView.setTargetPoint(targetPoints.get(position));
                             new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
-                                    .setTitle("是否前往" + targetPoints.get(position).getName())
+                                    .setTitle(getString(R.string.is_go) + targetPoints.get(position).getName())
                                     .setListener(new InputDialog.OnListener() {
                                         @Override
                                         public void onConfirm(BaseDialog dialog, String content) {
@@ -620,7 +620,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                         }
                                         @Override
                                         public void onCancel(BaseDialog dialog) {
-                                            toast("取消去目标点");
+                                            toast(R.string.cancel_go_point);
                                         }
                                     })
                                     .show();
@@ -637,9 +637,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
      */
     private void showRelocationDialog(){
         locationDialog=new InputDialog.Builder(getAttachActivity())
-                .setTitle("当前无定位，选择重定位方式")
-                .setCancel("手动定位")
-                .setConfirm("自动定位")
+                .setTitle(R.string.current_not_location)
+                .setCancel(R.string.hand_location)
+                .setConfirm(R.string.auto_location)
                 .setEditVisibility(View.GONE)
                 .setListener(new InputDialog.OnListener() {
                     @Override
@@ -663,13 +663,13 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
      */
     private void reqCmdRelocation(){
         if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
-            toast("正在自标定中,无法进行重定位...");
+            toast(R.string.can_not_relocation);
         }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
             switch (notifyBaseStatusEx.getMode()) {
                 case 3:
                     switch (notifyBaseStatusEx.getSonMode()){
                         case 15:
-                            toast("正在重定位中,请先退出当前定位...");
+                            toast(R.string.in_relocation);
                             break;
                     }
                     break;
