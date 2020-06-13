@@ -10,6 +10,8 @@ import java.util.Map;
 
 import androidx.annotation.Nullable;
 
+import ddr.example.com.nddrandroidclient.R;
+
 /**
  * time  : 2019/11/12
  * desc :  输入值自动判断内容
@@ -27,15 +29,15 @@ public class DDRTextView extends TextView {
         /*** 点动作类型*/
         /*map.put(1,"必到点");
         map.put(2,"投影点");
-        map.put(3,"闸机点");
+        map.put(3,"闸机点");lianjie
         map.put(4,"电梯点");
         map.put(5,"充点电");
         map.put(6,"QR点");*/
         map.put(7,"旋转点");
        /* map.put(8,"默认点");*/
         /**路径的模式**/
-        map.put(64,"动态避障");
-        map.put(65,"静态避障");
+        map.put(64,context.getString(R.string.dynamic_mode));
+        map.put(65,context.getString(R.string.static_mode));
        /* map.put(66,"延边模式");*/
     }
 

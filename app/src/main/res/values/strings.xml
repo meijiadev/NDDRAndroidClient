@@ -78,6 +78,9 @@
     <string name="is_switch_map">是否切换地图</string>
     <string name="common_relocation">重定位</string>
     <string name="common_switch_map">切换地图</string>
+    <string name="common_View_details">查看详情</string>
+    <string name="common_map_set">地图设置</string>
+    
     
     <!--基础状态-->
     <string name="common_warn">未加载到正在使用中的地图，请点击此处刷新！</string>
@@ -243,7 +246,6 @@
     <!--重定位页面-->
     <string name="manually_locate">手动定位</string>
     <string name="location_notify">提示：请通过平移旋转地图匹配雷达扫描形状确定机器人当前位置</string>
-    <string name="common_relocation">重定位</string>
     <string name="look_location_data">点击查看机器人位姿</string>
     <string name="relocation_failed">重新定位失败，请重新设置机器人位姿</string>
     <string name="relocation_succeed">定位成功!</string>

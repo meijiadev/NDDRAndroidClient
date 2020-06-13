@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#101112">
     <TextView
-        android:layout_width="51dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:textSize="12sp"
         android:textColor="#ffffff"
@@ -18,7 +18,7 @@
         android:id="@+id/tv_yj_name"
         />
     <TextView
-        android:layout_width="51.5dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_toRightOf="@+id/tv_yj_name"
         android:layout_marginLeft="147dp"

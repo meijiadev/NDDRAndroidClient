@@ -38,6 +38,11 @@
     <string name="control_status">RC</string>
     <string name="robot_shutdown">Shut down</string>
     <string name="app_quit">Quit</string>
+    <string name="switch_to_cn">Switch to Chinese</string>
+    <string name="switch_to_en">Switch to English</string>
+    <string name="line_speed">Linear velocity：</string>
+    <string name="angulau_speed">Angular velocity：</string>
+    <string name="angulau_speed_1">radian/second</string>
 
     <!--地图管理-->
     <string name="new_create_map">New map</string>
@@ -62,6 +67,16 @@
     <string name="file_setting">File configuration：</string>
     <string name="map_size">Map area：</string>
     <string name="create_time">Creation date：</string>
+    <string name="ai_connected">AI service connection successful</string>
+    <string name="initial_point">Initial point</string>
+    <string name="no_point">No target point</string>
+    <string name="no_path">No path</string>
+    <string name="is_relocation">Repositioning or not</string>
+    <string name="is_switch_map">Switch map or not</string>
+    <string name="common_relocation">Repositioning</string>
+    <string name="common_switch_map">Switch map</string>
+    <string name="common_View_details">View details</string>
+    <string name="common_map_set">Map set</string>
 
     <!--基础状态-->
     <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
@@ -85,6 +100,14 @@
     <string name="common_wait">Idle</string>
     <string name="common_charging">Charging, chassis off motion</string>
     <string name="common_exit_charge">Exit charging</string>
+    <string name="no_task">No task</string>
+    <string name="go_target_point">Go to the target point</string>
+    <string name="common_times"> </string>
+    <string name="in_the_calibration">In self calibration</string>
+    <string name="common_runing">In motion</string>
+    <string name="common_collecting">Collecting</string>
+    <string name="common_error">abnormal</string>
+    <string name="common_relocationing">Repositioning</string>
 
     <!--时段任务-->
     <string name="task_title">Task list</string>
@@ -208,6 +231,19 @@
     <string name="create_task_hint">Click the POI or path to add into task.</string>
     <string name="create_task_hint_1">Reorder the list by dragging.</string>
     <string name="create_task_hint_2">Please select the corresponding path and target point construction path</string>
+    <string name="create_task_hint_3">Please avoid adding the same point continuously！</string>
+    <string name="create_task_hint_4">Please avoid adding the same path continuously!</string>
+    <string name="task_rename">Task rename</string>
+    <string name="name_already_exists">Name already exists, please rename。</string>
+    <string name="cancel_rename">Cancel rename!</string>
+
+    <!--重定位页面-->
+    <string name="manually_locate">Manual positioning</string>
+    <string name="location_notify">Tip: please determine the current position of the robot by translating and rotating the map to match the radar scanning shape</string>
+    <string name="look_location_data">Click to view the robot position</string>
+    <string name="relocation_failed">Repositioning failed, please reset robot posture</string>
+    <string name="relocation_succeed">Positioning successful!</string>
+    <string name="the_relocation">Relocation may take 1-3 minutes...</string>
 
 
 
@@ -240,6 +276,26 @@
     <string name="under_revision">Modifying...</string>
     <string name="modification_failed">Modification failed！</string>
     <string name="point_set_notify">After the task, the robot will automatically return to the designated standby point for standby</string>
+    <string name="robot_is_shutdown">The robot is shutting down...</string>
+    <string name="robot_is_restart">The robot is rebooting, please exit to the landing page and wait for the reboot to complete before reconnecting</string>
+    <string name="login_succeed">Login succeeded</string>
+    <string name="account_not_empty">User name and password cannot be empty</string>
+    <string name="in_login">Logging in...</string>
+    <string name="login_failed">Login failed, please check the network and log in again</string>
+    <string name="please_anter_name">Please enter the map name</string>
+    <string name="not_wait_collect">Drawing cannot be collected in non standby mode. Please return to standby mode first</string>
+    <string name="batch_collect">Current batch deletion status, unable to enter collection mode</string>
+    <string name="please_delete_selected">Please select a picture to delete first</string>
+    <string name="the_point_inexistence">The target point does not exist!</string>
+    <string name="the_path_inexistence">The path does not exist！</string>
+    <string name="please_select_point">Please select a target point before deleting</string>
+    <string name="please_select_path">Please select a path before deleting</string>
+    <string name="current_map_unable_delete">The current map cannot be deleted</string>
+    <string name="load_failed">Load failed</string>
+    <string name="can_not_relocation">Self calibration in progress, unable to relocate...</string>
+    <string name="in_relocation">Relocating, please exit the current location first...</string>
+    <string name="not_map_using">There is no map currently in use. Please make sure there is a map collected and select a map to use！</string>
+    <string name="cancel_go_point">Cancel target point removal</string>
 
     <!--Dialog-->
     <string name="common_network_connecting">Network connecting...</string>
@@ -254,9 +310,28 @@
     <string name="init_map">Initializing map...</string>
     <string name="add_gauge_name">Add target name</string>
     <string name="reload_map">Reload map...</string>
+    <string name="in_load_map">Automatic positioning！</string>
     <string name="is_save_setting">Save current settings and exit？</string>
     <string name="save_dialog">Save</string>
     <string name="not_save_dialog">Do not save</string>
     <string name="empty_map_data">All map data will be cleared, confirm the operation?</string>
+    <string name="is_back">Exit or not</string>
+    <string name="collect_map">Collecting maps</string>
+    <string name="enter_map_name">Enter map name</string>
+    <string name="please_delete">Delete selected?</string>
+    <string name="common_deleting">Deleting...</string>
+    <string name="common_load">load</string>
+    <string name="common_loading">In map information</string>
+    <string name="in_switch">Switching...</string>
+    <string name="switch_failed">Switch failed！</string>
+    <string name="relocation_failed_1">Automatic positioning failed, enter manual positioning or not</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_no">No</string>
+
+    <string name="enter_run_times">Please enter the number of cycles</string>
+    <string name="is_go">Whether to go ?</string>
+    <string name="current_not_location">There is currently no positioning, please select the relocation method</string>
+    <string name="hand_location">Manual</string>
+    <string name="auto_location">Automatic</string>
 
 </resources>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#101112">
     <TextView
-        android:layout_width="64dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:textSize="12sp"
         android:textColor="#ffffff"
@@ -40,7 +40,7 @@
         android:id="@+id/tv_firstBack"
         />
     <TextView
-        android:layout_width="64dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:textColor="#ffffff"
         android:textSize="12sp"

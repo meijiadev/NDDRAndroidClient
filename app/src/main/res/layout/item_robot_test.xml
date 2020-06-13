@@ -19,7 +19,7 @@
         android:id="@+id/tv_test_name"
         />
     <TextView
-        android:layout_width="25.5dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"

@@ -84,7 +84,7 @@
                     android:layout_marginTop="14dp"
                     android:layout_toRightOf="@id/tv_now_device"
                     android:gravity="center"
-                    android:text="当前地图:"
+                    android:text="@string/now_map"
                     android:textColor="#ffffff"
                     android:textSize="12sp"
                     android:autoSizeTextType="uniform"
