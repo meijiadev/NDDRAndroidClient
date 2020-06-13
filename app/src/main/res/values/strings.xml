@@ -298,6 +298,12 @@
     <string name="in_relocation">正在重定位中,请先退出当前定位...</string>
     <string name="not_map_using">当前并无正在使用中的地图，请确定有采集的地图并选择一张地图使用！</string>
     <string name="cancel_go_point">取消去目标点</string>
+    <string name="please_wait_self_calibration">请稍等，正在自标定</string>
+    <string name="please_wait_in">请稍等，正在进入</string>
+    <string name="please_create_task">请先建立任务</string>
+
+
+
 
     <!--Dialog-->
     <string name="common_network_connecting">网络正在连接...</string>

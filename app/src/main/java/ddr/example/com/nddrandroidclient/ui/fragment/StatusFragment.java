@@ -694,7 +694,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     public void onLeftClick() {
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
-                toast("请稍等，正在自标定");
+                toast(R.string.please_wait_self_calibration);
                 //自标定
                 break;
             case 1:
@@ -702,10 +702,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 1:
                         Logger.e("----mapName:"+mapName+"taskName:"+taskName);
                         if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
-                            toast("请稍等，正在进入");
+                            toast(R.string.please_wait_in);
                             tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
                         }else {
-                            toast("请先建立任务");
+                            toast(R.string.please_create_task);
                         }
                         break;
                     case 3:
