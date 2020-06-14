@@ -151,11 +151,11 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                                     // 已修改成“删除”任务
                                 case R.id.tv_task_stop:
                                     if (taskModeList.get(position).getTaskState()==2){
-                                        toast("正在运行的任务无法删除!");
+                                        toast(R.string.in_runing_task);
                                     }else {
                                         new InputDialog.Builder(getAttachActivity())
                                                 .setEditVisibility(View.GONE)
-                                                .setTitle("是否要删除该任务")
+                                                .setTitle(R.string.is_delete_task)
                                                 .setListener(new InputDialog.OnListener() {
                                                     @Override
                                                     public void onConfirm(BaseDialog dialog, String content) {
@@ -202,7 +202,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
 
                     @Override
                     public void onCancel(BaseDialog dialog) {
-                        toast("取消设置时间");
+                        toast(R.string.cancel_setting_time);
                         dialog.dismiss();
                     }
                 })
@@ -247,10 +247,10 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                                 taskAdapter.setNewData(taskModeList);
                                 submissionTask();
                             }else {
-                                toast("结束时间必须大于开始时间，请重新设置");
+                                toast(R.string.setting_time);
                             }
                         }else {
-                            toast("结束时间必须大于开始时间，请重新设置");
+                            toast(R.string.setting_time);
                         }
                     }
                     @Override
@@ -286,7 +286,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                 taskModeList.get(position).setType(2);       //在队列中
                 break;
             case 3:
-                toast("不在时间段内，无法恢复！");
+                toast(R.string.not_in_time);
                 break;
             case 5:
                 taskModeList.get(position).setTaskState(2);  //从挂起状态改为运行
@@ -304,17 +304,17 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                 for (int i=0;i<taskModeList.size();i++){
                     Logger.e("队列"+taskModeList.get(i).getType());
                 }
-                new InputDialog.Builder(getAttachActivity()).setTitle("提交任务")
+                new InputDialog.Builder(getAttachActivity()).setTitle(R.string.submit_task)
                         .setEditVisibility(View.GONE)
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 submissionTask();
-                                toast("保存成功");
+                                toast(R.string.save_succeed);
                         }
                             @Override
                             public void onCancel(BaseDialog dialog) {
-                                toast("取消提交任务");
+                                toast(R.string.cancel_sunmit_task);
                             }
                         }).show();
                 break;
@@ -331,7 +331,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
      */
     private void showCreateTaskDialog(){
        inputDialog= new InputDialog.Builder(getAttachActivity())
-                .setTitle("输入任务名")
+                .setTitle(R.string.enter_task_name)
                 .setAutoDismiss(false)
                 .setListener(new InputDialog.OnListener() {
                     @Override
@@ -339,7 +339,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                         if (!content.equals("")){
                             String name="DDRTask_" +content+ ".task";
                             if (checkTaskName(name)){
-                                toast("名称已存在，请重新命名。");
+                                toast(R.string.name_is_exist);
                             }else {
                                 Intent intent=new Intent(getAttachActivity(),NewTaskActivity.class);
                                 intent.putExtra("viewType",CREATE_NEW_TASK);
@@ -351,7 +351,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                     }
                     @Override
                     public void onCancel(BaseDialog dialog) {
-                        toast("取消新建任务");
+                        toast(R.string.cancel_create_task);
                         inputDialog.dismiss();
                     }
                 }).show();
@@ -405,7 +405,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                     }else {
                         Logger.e("前"+taskModeList.get(i).getEndHour()+"后"+taskModeList.get(i+1).getStartHour());
                         isCheckTime=false;
-                        toast("定时列表第"+(i+2)+"行时间设置有误");
+                        //toast("定时列表第"+(i+2)+"行时间设置有误");
                     }
                     if (isCheckTime){
                         tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
@@ -419,7 +419,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
         }else if (taskModeList.size()==1){
             tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModeList);
         }else {
-            toast("暂无定时任务");
+            toast(R.string.no_timing_task);
         }
 
     }
