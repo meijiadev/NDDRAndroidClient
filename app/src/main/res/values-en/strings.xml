@@ -338,7 +338,7 @@
 
     <string name="under_way">Under way</string>
     <string name="common_start">Start</string>
-    <string name="in_wait_please">正在待命，请先进入执行状态</string>
+    <string name="in_wait_please">Standing by, please enter the execution state first</string>
     <string name="in_wait">Standing by, please enter the execution state first</string>
     <string name="please_wait_back">Just a moment, please. Exiting</string>
     <string name="cancel_setting_time">Unset time</string>

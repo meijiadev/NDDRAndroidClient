@@ -355,6 +355,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         startActivity(intent);
         finish();
     }
+
     /**
      * 判断哪个页面是否被选中
      */

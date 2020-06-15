@@ -9,7 +9,22 @@ import android.os.Environment;
 public class GlobalParameter {
     public static final int DEFAULT=0;
     public static final String ROBOT_FOLDER=Environment.getExternalStorageDirectory().getPath()+"/"+"DDRMap"+"/";
+    private static String account;
+    private static String password;
 
+    public static void setAccount(String account) {
+        GlobalParameter.account = account;
+    }
 
+    public static void setPassword(String password) {
+        GlobalParameter.password = password;
+    }
 
+    public static String getAccount() {
+        return account;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
 }

@@ -16,6 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastWhiteStyle;
 import com.yhao.floatwindow.FloatWindow;
 import com.yhao.floatwindow.MoveType;
 import com.yhao.floatwindow.PermissionListener;
@@ -38,7 +40,7 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     // 不在主线程中实例化Handle, Looper.getMainLooper()表示放到主UI线程去处理。
-    private static final Handler HANDLER = new Handler(Looper.getMainLooper());
+    private  final Handler HANDLER = new Handler(Looper.getMainLooper());
     public final Object mHandlerToken = hashCode();
     public Context context;
     public Runnable mRunnable;
@@ -61,6 +63,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initState(this);
         context=getApplicationContext();            //使用Application的防止内存泄漏
+        /*// 吐司工具类
+        ToastUtils.init(getApplication(),new ToastWhiteStyle(getApplication()));*/
         initActivity();
     }
 

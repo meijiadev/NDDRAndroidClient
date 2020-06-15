@@ -116,7 +116,8 @@ dependencies {
     api 'com.tonystark.android:socket:latest.release'
 
     // 吐司工具类：https://github.com/getActivity/ToastUtils
-    implementation 'com.hjq:toast:8.0'
+    implementation 'com.hjq:toast:8.2'
+    implementation 'com.hjq:xtoast:5.5'
 
     // 状态栏沉浸：https://github.com/gyf-dev/ImmersionBar
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0'

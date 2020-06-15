@@ -133,22 +133,22 @@ public class CollectingActivity extends DDRActivity {
                 int loopStatus= (int) mainUpDate.getData();
                 switch (loopStatus){
                     case -2:                    // 检测错误
-                        toast(R.string.loop_status_one);
+                        toast(getString(R.string.loop_status_one));
                         break;
                     case -1:                   // 没有检测到回环
-                        toast(R.string.loop_status_two);
+                        toast(getString(R.string.loop_status_two));
                         break;
                     case 0:                   // 回环已存在
-                        toast(R.string.loop_status_three);
+                        toast(getString(R.string.loop_status_three));
                         break;
                     case 1:                  // 新采集基准构成回环
-                        toast(R.string.loop_status_four);
+                        toast(getString(R.string.loop_status_four));
                         break;
                     case 2:                 //  距离太近不需要检测回环
-                        toast(R.string.loop_status_five);
+                        toast(getString(R.string.loop_status_five));
                         break;
                     case 3:
-                        toast(R.string.loop_status_six);
+                        toast(getString(R.string.loop_status_six));
                         break;
                 }
                 break;
