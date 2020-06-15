@@ -19,8 +19,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
-        // 仅保留 xxhdpi 图片资源（目前主流分辨率 1920 * 1080）
-        resConfig 'xxhdpi'
     }
     buildTypes {
         release {
