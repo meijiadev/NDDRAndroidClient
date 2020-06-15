@@ -472,6 +472,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        naParameterSetFragment=null;
         Logger.e("-----------------跳转");
     }
 

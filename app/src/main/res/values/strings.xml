@@ -206,7 +206,8 @@
     <string name="au_equipment_management">设备管理</string>
     <string name="au_embedded">嵌入式</string>
 
-    <!-- 高级设置 -->
+    <!-- 高级设置 语料播报-->
+    <string name="voice_yl">语料播报</string>
     <string name="yl_voice_select">语料播报选项</string>
     <string name="Selecting">已选择</string>
     <string name="close_voice">关闭播报</string>

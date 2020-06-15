@@ -6,7 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
     <TextView
-        android:layout_width="86.5dp"
+        android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:textSize="14sp"
         android:textColor="#ffffff"
@@ -15,6 +15,9 @@
         android:layout_marginLeft="48dp"
         android:gravity="center"
         android:id="@+id/tv_yl_choose"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"
         />
     <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
         android:id="@+id/tv_v_close"
@@ -22,13 +25,15 @@
         android:layout_height="wrap_content"
         android:text="@string/close_voice"
         android:textColor="#ffffff"
-        android:textSize="14sp"
         android:gravity="center"
         android:drawableLeft="@mipmap/nocheckedwg"
         android:drawablePadding="6dp"
         android:layout_below="@id/tv_yl_choose"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="48dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"
         />
     <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
         android:id="@+id/tv_v_obstacle"
@@ -43,6 +48,9 @@
         android:layout_below="@id/tv_yl_choose"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="148dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"
         />
     <ddr.example.com.nddrandroidclient.widget.textview.GridTextView
         android:id="@+id/tv_v_last"
@@ -57,6 +65,9 @@
         android:layout_below="@id/tv_yl_choose"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="248dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="14sp"
         />
     <TextView
         android:layout_width="48dp"
