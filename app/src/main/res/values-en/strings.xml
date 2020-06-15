@@ -133,6 +133,7 @@
     <string name="common_executing">Executing</string>
     <string name="common_executed">Completion of enforcement</string>
     <string name="common_put_up">Hanging</string>
+    <string name="in_runing_task">Unable to delete while running</string>
 
     <!-- 高级设置-导航参数-->
     <string name="navigation_para">Navigation parameters</string>
@@ -334,8 +335,21 @@
     <string name="about_to_start">About to start</string>
     <string name="please_select_rpoint">Please select path point first</string>
     <string name="please_select_atype">Please select action type first</string>
+
+    <string name="under_way">Under way</string>
+    <string name="common_start">Start</string>
+    <string name="in_wait_please">正在待命，请先进入执行状态</string>
+    <string name="in_wait">Standing by, please enter the execution state first</string>
+    <string name="please_wait_back">Just a moment, please. Exiting</string>
+    <string name="cancel_setting_time">Unset time</string>
+    <string name="setting_time">The end time must be greater than the start time, please reset</string>
+    <string name="not_in_time">Not within the time period, unable to recover!</string>
+    <string name="cancel_sunmit_task">Cancel the commit task</string>
+    <string name="no_timing_task">There is no scheduled task</string>
+
     <string name="n_setting_distance">The deceleration distance at the beginning of obstacle avoidance shall not be less than the stopping distance. Please input again</string>
     <string name="n_num_between">The value entered must be between 30-65!</string>
+
 
     <!--Dialog-->
     <string name="common_network_connecting">Network connecting...</string>
@@ -373,5 +387,10 @@
     <string name="current_not_location">There is currently no positioning, please select the relocation method</string>
     <string name="hand_location">Manual</string>
     <string name="auto_location">Automatic</string>
+    <string name="is_delete_task">Whether to delete the task</string>
+    <string name="submit_task">Submit a task</string>
+    <string name="enter_task_name">Enter the task name</string>
+    <string name="name_is_exist">The name already exists, please rename it.</string>
+    <string name="cancel_create_task">Cancel new task</string>
 
 </resources>
