@@ -127,6 +127,7 @@
     <string name="common_executing">Executing</string>
     <string name="common_executed">Completion of enforcement</string>
     <string name="common_put_up">Hanging</string>
+    <string name="in_runing_task">Unable to delete while running</string>
 
     <!-- 高级设置-导航参数-->
     <string name="navigation_para">Navigation parameters</string>
