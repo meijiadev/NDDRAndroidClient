@@ -206,6 +206,16 @@
     <string name="au_equipment_management">设备管理</string>
     <string name="au_embedded">嵌入式</string>
 
+    <!-- 高级设置 -->
+    <string name="yl_voice_select">语料播报选项</string>
+    <string name="Selecting">已选择</string>
+    <string name="close_voice">关闭播报</string>
+    <string name="obstacle_voice">遇障播报</string>
+    <string name="last_voice">持续播报</string>
+    <string name="voice_contant">语料播报内容:</string>
+    <string name="voive_time">语料播报间隔:</string>
+
+
     <!--采集页面-->
     <string name="collect_title_one">扫描环境中...</string>
     <string name="collect_title_two">正在自标定中...</string>
@@ -337,6 +347,8 @@
     <string name="not_in_time">不在时间段内，无法恢复！</string>
     <string name="cancel_sunmit_task">取消提交任务</string>
     <string name="no_timing_task">暂无定时任务</string>
+    <string name="n_setting_distance">避障开始减速距离不得小于避障停止距离，请重新输入</string>
+    <string name="n_num_between">输入的值必须在30-65！</string>
 
 
     <!--Dialog-->

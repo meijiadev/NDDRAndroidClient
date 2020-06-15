@@ -146,7 +146,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                     e.printStackTrace();
                 }
                 if (decelerationDistance<=stopDistance){
-                    toast("避障开始减速距离不得小于避障停止距离，请重新输入");
+                    toast(R.string.n_setting_distance);
                 }else {
                     postAndGet(1);
                     postAndGet(2);
@@ -157,7 +157,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                     getAttachActivity().postDelayed(()->{
                         if (waitDialog!=null){
                             waitDialog.dismiss();
-                            toast("保存成功");
+                            toast(R.string.save_succeed);
                         }
                     },1500);
                 }
