@@ -51,7 +51,7 @@ public class MapAdapter extends BaseAdapter<MapInfo>{
         mapName=mapName.replaceAll("OneRoute_","");
         helper.setText(R.id.tv_map_name,mapName)
                 .setText(R.id.tv_size,String.valueOf(item.getWidth())+"x"+String.valueOf(item.getHeight())+"m²")
-                .setText(R.id.tv_selected_centre,"使用中")
+                .setText(R.id.tv_selected_centre,R.string.common_using)
                 .setGone(R.id.tv_selected_centre,item.isUsing())
                 .addOnClickListener(R.id.iv_more)
                 .setBackgroundRes(R.id.item_head_layout,R.drawable.item_map_head_dark);

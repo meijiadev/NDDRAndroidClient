@@ -113,10 +113,10 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
     @Override
     public void noPermission(List<String> denied, boolean quick) {
         if (quick){
-            toast("授权失败");
+            toast(R.string.privilege_faild);
             XXPermissions.gotoPermissionSettings(SplashActivity.this, true);
         }else {
-            toast("请先授予权限");
+            toast(R.string.please_privilege);
             postDelayed(this::requestPermission, 1000);
         }
     }

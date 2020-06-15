@@ -105,9 +105,9 @@ public final class SelectDialog {
                 case R.id.tv_confirm:
                     Logger.e("点击确定");
                     if (tv_point_name.getText().toString().equals("选择路径点")){
-                        toast("请先选择路径点!");
+                        toast(R.string.please_select_rpoint);
                     }else if (tv_action_name.getText().toString().equals("选择动作类型")){
-                        toast("请先选择动作类型!");
+                        toast(R.string.please_select_atype);
                     }else {
                         PathLine.PathPoint pathPoint= (PathLine.PathPoint) pathPoints.get(mPosition);
                         pathPoint.setRotationAngle(et_toward.getFloatText());

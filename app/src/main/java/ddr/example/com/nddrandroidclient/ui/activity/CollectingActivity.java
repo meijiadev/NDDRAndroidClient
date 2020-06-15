@@ -123,7 +123,7 @@ public class CollectingActivity extends DDRActivity {
                 setAnimation(processBar,(int) (progress*100),0);
                 tvProgress.setText((int) (progress*100)+"%");
                 if (progress==1.0f){
-                    tvTitle.setText("建图完成");
+                    tvTitle.setText(R.string.conmon_collect_success);
                     postDelayed(()->{
                         finish();
                     },1000);
