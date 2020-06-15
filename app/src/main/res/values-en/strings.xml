@@ -3,6 +3,10 @@
     <!-- 主页 -->
     <string name="home_exit_hint">Press again to exit</string>
 
+    <!-- 闪屏页 -->
+    <string name="privilege_faild">Privilege grant failed</string>
+    <string name="please_privilege">Please grant permission first</string>
+
     <!-- 异常捕捉 -->
     <string name="crash_error_hint">An unexpected error has occurred  sorry for the inconvenience</string>
     <string name="crash_error_restart">Restart</string>
@@ -77,6 +81,7 @@
     <string name="common_switch_map">Switch map</string>
     <string name="common_View_details">View details</string>
     <string name="common_map_set">Map set</string>
+    <string name="common_using">In use</string>
 
     <!--基础状态-->
     <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
@@ -108,6 +113,7 @@
     <string name="common_collecting">Collecting</string>
     <string name="common_error">abnormal</string>
     <string name="common_relocationing">Repositioning</string>
+    <string name="common_Disconnect">Disconnect</string>
 
     <!--时段任务-->
     <string name="task_title">Task list</string>
@@ -197,6 +203,7 @@
     <string name="collect_title_three">Mapping</string>
     <string name="common_detection">Detecte loop</string>
     <string name="gauge_point">Mark</string>
+    <string name="conmon_collect_success">Completion of drawing</string>
 
     <!--地图编辑页面-->
     <string name="mark_current">Mark the robot is current position</string>
@@ -296,6 +303,23 @@
     <string name="in_relocation">Relocating, please exit the current location first...</string>
     <string name="not_map_using">There is no map currently in use. Please make sure there is a map collected and select a map to use！</string>
     <string name="cancel_go_point">Cancel target point removal</string>
+    <string name="please_wait_self_calibration">Please wait, self calibration in progress</string>
+    <string name="please_wait_in">Please wait a moment, entering</string>
+    <string name="please_create_task">Please create a task first</string>
+    <string name="add_task_success">Add temporary task succeeded</string>
+    <string name="add_task_faild">Failed to add temporary task</string>
+    <string name="start_goto">Start going</string>
+    <string name="add_s_d_goto">Add task succeeded, waiting to go</string>
+    <string name="now_no_task">No task currently</string>
+    <string name="now_no_location">There is currently no location</string>
+    <string name="build_task_faild">Build path failed</string>
+    <string name="now_Self_calibration">Currently in self calibration</string>
+    <string name="back_Standby">Return to standby point</string>
+    <string name="s_now_task">Complete current task, start period task</string>
+    <string name="no_task_yd">No mission, stand by</string>
+    <string name="about_to_start">About to start</string>
+    <string name="please_select_rpoint">Please select path point first</string>
+    <string name="please_select_atype">Please select action type first</string>
 
     <!--Dialog-->
     <string name="common_network_connecting">Network connecting...</string>

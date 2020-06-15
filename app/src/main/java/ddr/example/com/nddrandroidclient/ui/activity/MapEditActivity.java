@@ -1154,7 +1154,7 @@ public class MapEditActivity extends DDRActivity {
                 tvDeletePoint.setVisibility(View.VISIBLE);
                 tvSavePath.setVisibility(View.VISIBLE);
                 tvSelectedPoint.setVisibility(View.VISIBLE);
-                tvTargetPoint.setText("目标点" + "(" + targetPoints.size() + ")");
+                tvTargetPoint.setText(getString(R.string.target_point_label) + "(" + targetPoints.size() + ")");
                 tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
                 LineView.getInstance(this).clearDraw();
                 zmap.invalidate();

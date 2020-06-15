@@ -108,7 +108,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
                 postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
                 postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
                 getNaparmeter(1);
-                toast("保存成功");
+                toast(R.string.save_succeed);
                 break;
         }
     }

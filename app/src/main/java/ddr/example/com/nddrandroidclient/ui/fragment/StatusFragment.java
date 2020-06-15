@@ -154,42 +154,42 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 initStatusBar();
                 break;
             case getSwitchTaskSuccess:
-                toast("添加临时任务成功");
+                toast(R.string.add_task_success);
                 break;
             case getSwitchTaskFaild:
-                toast("添加临时任务失败");
+                toast(R.string.add_task_faild);
                 break;
             case getSpecificPoint:
-                toast("开始前往"+sPoint);
+                toast(R.string.start_goto+sPoint);
                 break;
             case getSpecificPoint1:
-                toast("添加任务成功，等待前往"+sPoint);
+                toast(R.string.add_s_d_goto+sPoint);
                 break;
             case getSpecificPoint2:
-                toast("当前无任务！");
+                toast(R.string.now_no_task);
                 break;
             case getSpecificPoint3:
-                toast("当前没有定位");
+                toast(R.string.now_no_location);
                 break;
             case getSpecificPoint4:
-                toast("生成路径失败");
+                toast(R.string.build_task_faild);
                 isRunabPoint=false;
                 break;
             case getSpecificPoint5:
-                toast("当前处于自标定");
+                toast(R.string.now_Self_calibration);
                 break;
             case getSpecificPoint8:
-                toast("返回待机点");
+                toast(R.string.back_Standby);
                 break;
             case getSpecificPoint9:
-                toast("完成当前任务，开始时段任务");
+                toast(R.string.s_now_task);
                 isRunabPoint=false;
                 break;
             case getSpecificPoint10:
-                toast("无任务，原地待命");
+                toast(R.string.no_task_yd);
                 break;
             case getSpecificPoint11:
-                toast("即将开始前往"+sPoint);
+                toast(R.string.about_to_start+sPoint);
                 break;
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {
@@ -487,7 +487,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
 
                             @Override
                             public void onCancel(BaseDialog dialog) {
-                                toast("取消");
+                                toast(R.string.common_cancel);
                             }
                         }).show();
 
@@ -841,7 +841,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             }
             //当服务断开时
             if (tcpClient!=null&&!tcpClient.isConnected()){
-                tv_work_statue.setText("断开连接");
+                tv_work_statue.setText(R.string.common_Disconnect);
             }
         }else {
             // 相当于onpause()方法---失去焦点
