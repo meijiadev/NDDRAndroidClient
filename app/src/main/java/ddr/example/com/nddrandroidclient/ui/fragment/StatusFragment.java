@@ -711,10 +711,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     case 3:
                         switch (notifyBaseStatusEx.getSonMode()){
                             case 16:
-                                toast("正在执行中");
+                                toast(R.string.under_way);
                                 break;
                             case 17:
-                                toast("开始");
+                                toast(R.string.common_start);
                                 pauseOrResume("Resume");
                                 break;
                         }
@@ -730,23 +730,23 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     public void onCentreClick() {
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
-                toast("请稍等，正在自标定");
+                toast(R.string.please_wait_self_calibration);
                 //自标定
                 break;
             case 1:
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
-                        toast("正在待命，请先进入执行状态");
+                        toast(R.string.in_wait_please);
                         break;
                     case 3:
                         switch (notifyBaseStatusEx.getSonMode()){
                             case 16:
-                                toast("暂停");
+                                toast(R.string.common_pause);
                                 pauseOrResume("Pause");
                                 break;
                             case 17:
-                                toast("暂停状态中");
+                                toast(R.string.common_pause);
                                 break;
                         }
                         break;
@@ -760,18 +760,18 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     public void onRightClick() {
         switch (notifyBaseStatusEx.geteSelfCalibStatus()) {
             case 0:
-                toast("请稍等，正在自标定");
+                toast(R.string.please_wait_self_calibration);
                 //自标定
                 break;
             case 1:
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
-                        toast("正在待命中");
+                        toast(R.string.in_wait);
                         break;
                     case 3:
                         try {
-                            toast("请稍等，正在退出");
+                            toast(R.string.please_wait_back);
                             tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
                             for (int i = 0; i < targetPoints.size(); i++) {
                                 targetPoints.get(i).setSelected(false);

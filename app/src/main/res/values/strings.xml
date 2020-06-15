@@ -131,6 +131,9 @@
     <string name="common_executing">正在执行</string>
     <string name="common_executed">执行完毕</string>
     <string name="common_put_up">挂起</string>
+    <string name="in_runing_task">正在运行的任务无法删除</string>
+
+
 
     <!-- 高级设置-导航参数-->
     <string name="navigation_para">导航参数</string>
@@ -303,6 +306,19 @@
     <string name="please_wait_self_calibration">请稍等，正在自标定</string>
     <string name="please_wait_in">请稍等，正在进入</string>
     <string name="please_create_task">请先建立任务</string>
+    <string name="under_way">正在执行中</string>
+    <string name="common_start">开始</string>
+    <string name="in_wait_please">正在待命，请先进入执行状态</string>
+    <string name="in_wait">正在待命中</string>
+    <string name="please_wait_back">请稍等，正在退出</string>
+    <string name="cancel_setting_time">取消设置时间</string>
+    <string name="setting_time">结束时间必须大于开始时间，请重新设置</string>
+    <string name="not_in_time">不在时间段内，无法恢复！</string>
+    <string name="cancel_sunmit_task">取消提交任务</string>
+    <string name="no_timing_task">暂无定时任务</string>
+
+
+
 
 
 
@@ -343,6 +359,12 @@
     <string name="current_not_location">当前无定位，请选择重定位方式</string>
     <string name="hand_location">手动定位</string>
     <string name="auto_location">自动定位</string>
+    <string name="is_delete_task">是否要删除该任务</string>
+    <string name="submit_task">提交任务</string>
+    <string name="enter_task_name">输入任务名</string>
+    <string name="name_is_exist">名称已存在，请重新命名。</string>
+    <string name="cancel_create_task">取消新建任务</string>
+
 
 
 
