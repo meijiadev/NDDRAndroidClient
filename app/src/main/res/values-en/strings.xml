@@ -200,7 +200,8 @@
     <string name="au_embedded">Embedded</string>
 
 
-    <!-- 高级设置 -->
+    <!-- 高级设置-语料播报 -->
+    <string name="voice_yl">Corpus broadcast</string>
     <string name="yl_voice_select">Corpus broadcast options</string>
     <string name="Selecting">Selected</string>
     <string name="close_voice">Turn off advertisement</string>

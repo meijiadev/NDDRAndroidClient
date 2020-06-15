@@ -100,7 +100,7 @@
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
             android:layout_height="33dp"
-            android:text="语料播报"
+            android:text="@string/voice_yl"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="55dp"
@@ -109,6 +109,9 @@
             android:layout_alignTop="@id/tv_editionManager"
             android:id="@+id/tv_voice"
             android:visibility="gone"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="12sp"
             />
 
     </RelativeLayout>
