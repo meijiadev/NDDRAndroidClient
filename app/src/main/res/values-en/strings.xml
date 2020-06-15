@@ -200,6 +200,17 @@
     <string name="au_equipment_management">Equipment management</string>
     <string name="au_embedded">Embedded</string>
 
+
+    <!-- 高级设置 -->
+    <string name="yl_voice_select">Corpus broadcast options</string>
+    <string name="Selecting">Selected</string>
+    <string name="close_voice">Turn off advertisement</string>
+    <string name="obstacle_voice">Broadcast in case of obstacle</string>
+    <string name="last_voice">Continuous broadcast</string>
+    <string name="voice_contant">Corpus broadcast content</string>
+    <string name="voive_time">Corpus broadcast interval</string>
+
+
     <!--采集页面-->
     <string name="collect_title_one">Scanning environment...</string>
     <string name="collect_title_two">Self-calibration...</string>
@@ -323,6 +334,7 @@
     <string name="about_to_start">About to start</string>
     <string name="please_select_rpoint">Please select path point first</string>
     <string name="please_select_atype">Please select action type first</string>
+
     <string name="under_way">Under way</string>
     <string name="common_start">Start</string>
     <string name="in_wait_please">正在待命，请先进入执行状态</string>
@@ -333,6 +345,10 @@
     <string name="not_in_time">Not within the time period, unable to recover!</string>
     <string name="cancel_sunmit_task">Cancel the commit task</string>
     <string name="no_timing_task">There is no scheduled task</string>
+
+    <string name="n_setting_distance">The deceleration distance at the beginning of obstacle avoidance shall not be less than the stopping distance. Please input again</string>
+    <string name="n_num_between">The value entered must be between 30-65!</string>
+
 
     <!--Dialog-->
     <string name="common_network_connecting">Network connecting...</string>

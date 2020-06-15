@@ -101,7 +101,7 @@ public class VoiceSetFragment extends DDRLazyFragment {
                     tvVClose.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                     tvVClose.setSelected(true);
                 } else {
-                    toast("已选择");
+                    toast(R.string.Selecting);
                 }
                 voice_num = 0;
                 break;
@@ -111,7 +111,7 @@ public class VoiceSetFragment extends DDRLazyFragment {
                     tvVObstacle.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                     tvVObstacle.setSelected(true);
                 } else {
-                    toast("已选择");
+                    toast(R.string.Selecting);
                 }
                 voice_num = 1;
                 break;
@@ -121,7 +121,7 @@ public class VoiceSetFragment extends DDRLazyFragment {
                     tvVLast.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg), null, null, null);
                     tvVLast.setSelected(true);
                 } else {
-                    toast("已选择");
+                    toast(R.string.Selecting);
                 }
                 voice_num = 2;
                 break;
@@ -148,7 +148,7 @@ public class VoiceSetFragment extends DDRLazyFragment {
                         postVoiceResult(content,time,1,2);
                         break;
                 }
-                toast("保存成功");
+                toast(R.string.save_succeed);
                 Logger.e("内容---"+content+"---"+"间隔---"+time+"选项"+voice_num);
                 postVoice("播报");
                 break;

@@ -90,7 +90,7 @@ public class SensorSetFragment extends DDRLazyFragment {
                 break;
             case R.id.tv_save_sensor:
                 postAndGet();
-                toast("保存成功");
+                toast(R.string.save_succeed);
                 break;
         }
     }
@@ -458,7 +458,7 @@ public class SensorSetFragment extends DDRLazyFragment {
                 // TODO Auto-generated method stub
                 try {
                     if (Integer.parseInt(s.toString())<30){
-                        toast("输入的值必须在30-65！");
+                        toast(R.string.n_num_between);
                     }else {
                     }
                 }catch (Exception e){
