@@ -158,6 +158,29 @@
             android:clickable="true"
             android:orientation="vertical"
             >
+
+            <TextView
+                android:id="@+id/tv_switch_language"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:drawableLeft="@mipmap/iv_switch"
+                android:text="@string/switch_to_en"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:drawablePadding="50dp"
+                android:layout_marginLeft="10dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="14sp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#262728"
+                />
+
             <TextView
                 android:id="@+id/tv_shutdown"
                 android:layout_width="match_parent"
@@ -200,22 +223,7 @@
                 android:layout_height="1dp"
                 android:background="#262728"
                 />
-            <TextView
-                android:id="@+id/tv_switch_language"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:drawableLeft="@mipmap/iv_switch"
-                android:text="@string/switch_to_en"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:drawablePadding="50dp"
-                android:layout_marginLeft="10dp"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="9sp"
-                android:autoSizeMaxTextSize="14sp"
-                />
+
         </LinearLayout>
     </androidx.drawerlayout.widget.DrawerLayout>
 

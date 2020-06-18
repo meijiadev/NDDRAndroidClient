@@ -85,6 +85,8 @@
     <string name="common_View_details">查看详情</string>
     <string name="common_map_set">地图设置</string>
     <string name="common_using">使用中</string>
+    <string name="set_charge_point">设置充电点</string>
+    <string name="charge_point">充电点</string>
     
     
     <!--基础状态-->
@@ -236,6 +238,7 @@
     <string name="common_virtual_wall">虚拟墙</string>
     <string name="common_denoising">原图去噪</string>
     <string name="common_line">直线</string>
+
 
     <!--地图设置页面-->
     <string name="map_setting">地图设置</string>

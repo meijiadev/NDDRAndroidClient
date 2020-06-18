@@ -36,6 +36,7 @@ public class PointView extends Shape {
     private TargetPoint targetPoint;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private PathLine.PathPoint pathPoint;
+    private TargetPoint chargePoint;
 
 
     private Bitmap autoBitmap;
@@ -97,6 +98,14 @@ public class PointView extends Shape {
      */
     public void set2TouchPoints(List<TargetPoint> selectPoints){
         this.selectPoints=selectPoints;
+    }
+
+    /**
+     * 充点电
+     * @param chargePoint
+     */
+    public void setChargePoint(TargetPoint chargePoint){
+        this.chargePoint=chargePoint;
     }
 
 
@@ -179,6 +188,17 @@ public class PointView extends Shape {
             }
         }
 
+        if (chargePoint!=null){
+            XyEntity xyEntity=zoomImageView.toCanvas(chargePoint.getX(),chargePoint.getY());
+            float x= xyEntity.getX()-chargeBitmap.getWidth()/2;
+            float y=  xyEntity.getY()-chargeBitmap.getHeight()/2;
+            float angle=chargePoint.getTheta();
+            matrix.reset();
+            matrix.postTranslate(x,y);
+            matrix.postRotate(-angle+zoomImageView.getDegrees(),xyEntity.getX(),xyEntity.getY());
+            canvas.drawBitmap(chargeBitmap,matrix,pointPaint);
+            canvas.drawText(chargePoint.getName(),xyEntity.getX(),xyEntity.getY()+15,textPaint);
+        }
         if (targetPoint!=null){
             XyEntity xyEntity=zoomImageView.toCanvas(targetPoint.getX(),targetPoint.getY());
             float x=  xyEntity.getX();
@@ -260,6 +280,7 @@ public class PointView extends Shape {
         selectPoints=null;
         isRuning=false;
         pathPoint=null;
+        chargePoint=null;
     }
 
 }

@@ -1,5 +1,8 @@
 package ddr.example.com.nddrandroidclient.base;
 
+import android.view.View;
+import android.widget.LinearLayout;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -7,6 +10,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * time : 2019/11/2
@@ -72,7 +76,24 @@ public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder>
     }
 
 
-
+    /**
+     * 将某个item直接隐藏
+     * @param isVisible
+     * @param helper
+     */
+    public void setVisibility(boolean isVisible,BaseViewHolder helper){
+        RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)helper.itemView.getLayoutParams();
+        if (isVisible){
+            param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            helper.itemView.setVisibility(View.VISIBLE);
+        }else{
+            helper.itemView.setVisibility(View.GONE);
+            param.height = 0;
+            param.width = 0;
+        }
+        helper.itemView.setLayoutParams(param);
+    }
 
 
 

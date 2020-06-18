@@ -268,6 +268,22 @@
         android:layout_marginRight="50dp"
         android:visibility="invisible"
         />
+    <TextView
+        android:id="@+id/tv_charge_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/iv_charging_point"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="130dp"
+        android:text="@string/charge_point"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:gravity="center_horizontal"
+        android:paddingTop="39.5dp"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/iv_add_path"

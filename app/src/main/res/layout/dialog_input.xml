@@ -66,7 +66,7 @@
                 android:background="@drawable/selector_transparent"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="取消"
+                android:text="@string/common_cancel"
                 android:textColor="@color/red01"
                 android:textSize="14sp" />
 
@@ -78,7 +78,7 @@
                 android:background="@drawable/selector_transparent"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="确定"
+                android:text="@string/common_confirm"
                 android:textColor="@color/colorConfirm"
                 android:textSize="14sp" />
         </LinearLayout>

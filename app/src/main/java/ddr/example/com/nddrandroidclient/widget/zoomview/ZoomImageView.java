@@ -229,6 +229,17 @@ public class ZoomImageView extends View {
     }
 
     /**
+     * 获取相对于图片的坐标
+     * @return
+     */
+    public XyEntity getPoint(){
+        float x=width/2;
+        float y=height/2;
+        XyEntity xyEntity=touchEvenHandler.coordinatesToImage(x,y);
+        return xyEntity;
+    }
+
+   /**
      * 设置保留小数点位数的除法
      * @param a
      * @param b

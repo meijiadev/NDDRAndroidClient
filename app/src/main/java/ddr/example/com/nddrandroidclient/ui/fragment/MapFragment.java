@@ -37,6 +37,7 @@ import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.download.FileUtil;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
@@ -125,6 +126,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     TextView tvCreateTime;
     @BindView(R.id.tv_reference)
     TextView tvReference;
+    @BindView(R.id.tv_set_charge)
+    TextView tvSetCharge;            //设置充电点
 
     /**
      * 目标点的子项查看和再编辑布局
@@ -133,6 +136,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     RelativeLayout pointDetailLayout;
     @BindView(R.id.et_point_name)
     RegexEditText etPointName;
+    @BindView(R.id.tv_revamp_charge)
+    TextView tvRevampCharge;           //修改充电点
     @BindView(R.id.et_x)
     DDREditText etX;
     @BindView(R.id.et_y)
@@ -142,7 +147,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @BindView(R.id.layout_edit)
     RelativeLayout layoutEdit;
     @BindView(R.id.revamp_point)
-    TextView revampPoint;             //修改充点电
+    TextView revampPoint;             //修改点
     /**
      * path路径的子项查看和再编辑
      */
@@ -267,8 +272,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     @SuppressLint("ResourceAsColor")
-    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete, R.id.bt_batch_delete, R.id.tv_delete_all,R.id.tv_back_batch, R.id.save_point, R.id.revamp_point, R.id.tv_path,
-            R.id.spinner_mode, R.id.bt_add_action, R.id.save_path, R.id.tv_edit_map,R.id.tv_reference })
+    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete, R.id.bt_batch_delete, R.id.tv_delete_all,R.id.tv_back_batch, R.id.save_point,R.id.tv_revamp_charge, R.id.revamp_point, R.id.tv_path,
+            R.id.spinner_mode, R.id.bt_add_action, R.id.save_path, R.id.tv_edit_map,R.id.tv_reference,R.id.tv_set_charge})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_create_map:
@@ -408,8 +413,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         etToward.setText(targetPoints.get(mPosition).getTheta());
                         if (targetPoints.get(mPosition).getName().equals(getString(R.string.initial_point))) {
                             layoutEdit.setVisibility(View.GONE);
-                        } else {
+                            tvRevampCharge.setVisibility(View.GONE);
+                        } else if (targetPoints.get(mPosition).getPointType().equals(PointType.eMarkingTypeCharging)) {
+                            layoutEdit.setVisibility(View.GONE);
+                            tvRevampCharge.setVisibility(View.VISIBLE);
+                        }else {
                             layoutEdit.setVisibility(View.VISIBLE);
+                            tvRevampCharge.setVisibility(View.GONE);
                         }
                         etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
                         etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
@@ -422,6 +432,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     leftDetailLayout.setVisibility(View.GONE);
                     pointDetailLayout.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.tv_set_charge:
+            case R.id.tv_revamp_charge:
+                Logger.e("点击跳转到MapEditActivity");
+                Intent intent1 = new Intent(getAttachActivity(), MapEditActivity.class);
+                intent1.putExtra("type", 4);
+                intent1.putExtra("bitmapPath", bitmapPath);
+                intent1.putExtra("targetList", (Serializable) targetPoints);
+                intent1.putExtra("pathList", (Serializable) pathLines);
+                startActivity(intent1);
                 break;
             case R.id.save_point:          // 保存已修改的目标点，并发送到服务端
                 if (mPosition < targetPoints.size()) {
@@ -649,25 +669,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_gray), null, null, null);
         tvPath.setTextColor(Color.parseColor("#ccffffff"));
         tvPath.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_path_gray), null, null, null);
-
-
     }
 
-
-
-    /**
-     * 防止任务重名
-     * @return true 表示任务重名
-     */
-    private boolean checkTaskName(String taskName){
-        for (TaskMode taskMode:taskModes){
-            if (taskMode.getName().equals(taskName)){
-                Logger.e("------"+taskName+";"+taskMode.getName());
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 进入批量删除状态
@@ -943,8 +946,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             mPosition = position;
             if (targetPoints.get(mPosition).getName().equals(getString(R.string.initial_point))) {
                 layoutEdit.setVisibility(View.GONE);
-            } else {
+                tvRevampCharge.setVisibility(View.GONE);
+            } else if (targetPoints.get(mPosition).getPointType().equals(PointType.eMarkingTypeCharging)) {
+                layoutEdit.setVisibility(View.GONE);
+                tvRevampCharge.setVisibility(View.VISIBLE);
+            }else {
                 layoutEdit.setVisibility(View.VISIBLE);
+                tvRevampCharge.setVisibility(View.GONE);
             }
             etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
             etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
@@ -1432,8 +1440,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
                                 if (targetPoints.get(0).getName().equals(getString(R.string.initial_point))) {
                                     layoutEdit.setVisibility(View.GONE);
-                                } else {
+                                    tvRevampCharge.setVisibility(View.GONE);
+                                } else if (targetPoints.get(0).getPointType().equals(PointType.eMarkingTypeCharging)) {
+                                    layoutEdit.setVisibility(View.GONE);
+                                    tvRevampCharge.setVisibility(View.VISIBLE);
+                                }else {
                                     layoutEdit.setVisibility(View.VISIBLE);
+                                    tvRevampCharge.setVisibility(View.GONE);
                                 }
                             } else {
                                 etPointName.setText(R.string.no_point);
@@ -1449,6 +1462,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             leftDetailLayout.setVisibility(View.VISIBLE);
                             pointDetailLayout.setVisibility(View.VISIBLE);
                             pathDetailLayout.setVisibility(View.GONE);
+                            if (haveChargePoint()){
+                                tvSetCharge.setVisibility(View.GONE);
+                            }else {
+                                tvSetCharge.setVisibility(View.VISIBLE);
+                            }
                             targetPointAdapter.setNewData(targetPoints);
                             recyclerDetail.setAdapter(targetPointAdapter);
                             setIconDefault();
@@ -1466,6 +1484,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 targetPointAdapter.setNewData(targetPoints);
                 tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                break;
+            case setChargePoint:
+                TargetPoint chargePoint= (TargetPoint) messageEvent.getData();
+                addChargePoint(chargePoint);
+                targetPointAdapter.setNewData(targetPoints);
+                tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
+                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                if (haveChargePoint()){
+                    tvSetCharge.setVisibility(View.GONE);
+                }
                 break;
             case updatePaths:
                 List<PathLine> pathLines1 = (List<PathLine>) messageEvent.getData();
@@ -1579,5 +1607,36 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
 
         }
+    }
+
+    /**
+     * 添加充电点 一张地图只能有一个充电点
+     */
+    private void addChargePoint(TargetPoint targetPoint){
+        if (targetPoint!=null){
+            for (int i=0;i<targetPoints.size();i++){
+                if (targetPoints.get(i).getPointType().equals(PointType.eMarkingTypeCharging)){
+                    targetPoints.set(i,targetPoint);
+                    return;
+                }
+            }
+            targetPoints.add(0,targetPoint);
+        }else {
+            Logger.e("接收的充電點不存在！");
+        }
+    }
+
+
+    /**
+     * 是否存在充电点
+     * @return
+     */
+    private boolean haveChargePoint(){
+        for (TargetPoint targetPoint:targetPoints){
+            if (targetPoint.getPointType().equals(PointType.eMarkingTypeCharging)){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -160,10 +160,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast(R.string.add_task_faild);
                 break;
             case getSpecificPoint:
-                toast(R.string.start_goto+sPoint);
+                toast(getString(R.string.start_goto)+sPoint);
                 break;
             case getSpecificPoint1:
-                toast(R.string.add_s_d_goto+sPoint);
+                toast(getString(R.string.add_s_d_goto)+sPoint);
                 break;
             case getSpecificPoint2:
                 toast(R.string.now_no_task);
@@ -189,7 +189,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast(R.string.no_task_yd);
                 break;
             case getSpecificPoint11:
-                toast(R.string.about_to_start+sPoint);
+                toast(getString(R.string.about_to_start)+sPoint);
                 break;
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {

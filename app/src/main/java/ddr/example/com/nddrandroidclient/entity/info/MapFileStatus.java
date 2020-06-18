@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.entity.info;
 
+import android.content.Context;
 import android.os.Environment;
 
 import java.util.ArrayList;
@@ -7,13 +8,19 @@ import java.util.Collections;
 import java.util.List;
 
 import DDRVLNMapProto.DDRVLNMap;
+import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.common.GlobalParameter;
+import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.point.BaseMode;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.Logger;
+
+import static ddr.example.com.nddrandroidclient.entity.PointType.eMarkingTypeMustArrive;
+import static ddr.example.com.nddrandroidclient.entity.PointType.eMarkingTypeNormal;
 
 /**
  * 用于保存解析后的地图详情信息的列表
@@ -65,6 +72,7 @@ public class MapFileStatus {
         return mapFileStatus;
     }
 
+
     public List<String> getMapNames() {
        // Logger.e("------:"+mapNames.size());
         return mapNames;
@@ -104,7 +112,7 @@ public class MapFileStatus {
             cSpaceItems.clear();
             for (int i = 0; i < targetPtItems.size(); i++) {
                 TargetPoint targetPoint = new TargetPoint();
-                targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+                targetPoint=intToEnum(targetPoint,i);
                 targetPoint.setX(targetPtItems.get(i).getPtData().getX());
                 targetPoint.setY(targetPtItems.get(i).getPtData().getY());
                 targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
@@ -182,7 +190,7 @@ public class MapFileStatus {
         spaceItems.clear();
         for (int i = 0; i < targetPtItems.size(); i++) {
             TargetPoint targetPoint = new TargetPoint();
-            targetPoint.setName(targetPtItems.get(i).getPtName().toStringUtf8());
+            targetPoint=intToEnum(targetPoint,i);
             targetPoint.setX(targetPtItems.get(i).getPtData().getX());
             targetPoint.setY(targetPtItems.get(i).getPtData().getY());
             targetPoint.setTheta(targetPtItems.get(i).getPtData().getTheta());
@@ -253,6 +261,50 @@ public class MapFileStatus {
             spaceItems.add(spaceItem);
         }
 
+    }
+
+    private TargetPoint intToEnum(TargetPoint targetPoint,int position){
+        int type=targetPtItems.get(position).getTargetPtTypeValue();
+        switch (type){
+            case 0:
+                targetPoint.setPointType(PointType.eMarkingTypeError);
+                break;
+            case 1:
+                targetPoint.setPointType(PointType.eMarkingTypeMustArrive);
+                return targetPoint;
+            case 2:
+                targetPoint.setPointType(PointType.eMarkingTypeProjection);
+                return targetPoint;
+            case 3:
+                targetPoint.setPointType(PointType.eMarkingTypeGate);
+                return targetPoint;
+            case 4:
+                targetPoint.setPointType(PointType.eMarkingTypeElevator);
+                return targetPoint;
+            case 5:
+                targetPoint.setPointType(PointType.eMarkingTypeCharging);
+                targetPoint.setName(BaseApplication.getContext().getString(R.string.charge_point));
+                return targetPoint;
+            case 6:
+                targetPoint.setPointType(PointType.eMarkingTypeQR);
+                return targetPoint;
+            case 7:
+                targetPoint.setPointType(PointType.eMarkingTypeRotate);
+                return targetPoint;
+            case 8:
+                targetPoint.setPointType(PointType.eMarkingTypeNormal);
+                return targetPoint;
+            case 9:
+                Logger.e("------初始点");
+                targetPoint.setPointType(PointType.eMarkingTypeBorn);
+                targetPoint.setName(BaseApplication.getContext().getString(R.string.initial_point));
+                return targetPoint;
+
+        }
+        //Logger.e("-----------过滤点类型");
+        targetPoint.setName(targetPtItems.get(position).getPtName().toStringUtf8());
+        targetPoint.setPointType(PointType.eMarkingTypeError);
+        return targetPoint;
     }
 
     public DDRVLNMap.reqDDRVLNMapEx getReqDDRVLNMapEx() {

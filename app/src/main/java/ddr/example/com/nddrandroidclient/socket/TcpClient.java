@@ -598,8 +598,10 @@ public class TcpClient extends BaseSocketConnection {
                     .setY(targetPoint.getY())
                     .setTheta(targetPoint.getTheta())
                     .build();
+            Logger.e("保存的点名字："+targetPoint.getName());
             DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
                     .setPtName(ByteString.copyFromUtf8(targetPoint.getName()))
+                    .setTargetPtTypeValue(targetPoint.getPointType().getTypeValue())
                     .setPtData(space_pointEx).build();
             targetPtItems.add(targetPtItem);
         }

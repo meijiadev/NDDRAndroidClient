@@ -34,6 +34,7 @@ public class MessageEvent {
         addNewPoint,    //添加目标点
         addNewPath,     //添加路径
         editMap,        //编辑地图
+        setChargePoint,  //设置充电点
         updatePoints,   //添加完，更新目标点列表
         updatePaths,    //添加完，更新路径列表
         updateVirtualWall,  //添加完虚拟墙并通知保存

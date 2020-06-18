@@ -84,6 +84,8 @@
     <string name="common_View_details">View details</string>
     <string name="common_map_set">Map set</string>
     <string name="common_using">In use</string>
+    <string name="set_charge_point">Set charging point</string>
+    <string name="charge_point">Charging point</string>
 
     <!--基础状态-->
     <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
