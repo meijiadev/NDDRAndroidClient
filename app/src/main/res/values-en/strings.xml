@@ -19,7 +19,7 @@
     <string name="common_minute">minute</string>
     <string name="common_second">second</string>
 
-    <string name="createMapPathToServer">建图路径</string>
+    <string name="createMapPathToServer">Built figure path</string>
 
     <string name="common_confirm">Determine</string>
     <string name="common_cancel">Cancel</string>
@@ -46,6 +46,7 @@
     <string name="app_quit">Quit</string>
     <string name="switch_to_cn">Switch to Chinese</string>
     <string name="switch_to_en">Switch to English</string>
+    <string name="go_to_charge">To charge</string>
     <string name="line_speed">Linear velocity：</string>
     <string name="angulau_speed">Angular velocity：</string>
     <string name="angulau_speed_1">radian/second</string>
@@ -108,6 +109,8 @@
     <string name="common_pause">Pause</string>
     <string name="common_wait">Idle</string>
     <string name="common_charging">Charging, chassis off motion</string>
+    <string name="common_charging_1">Looking for charging pile</string>
+    <string name="common_charging_2">Heading for charging point</string>
     <string name="common_exit_charge">Exit charging</string>
     <string name="no_task">No task</string>
     <string name="go_target_point">Go to the target point</string>

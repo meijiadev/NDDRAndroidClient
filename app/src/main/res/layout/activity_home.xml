@@ -180,6 +180,27 @@
                 android:layout_height="1dp"
                 android:background="#262728"
                 />
+            <TextView
+                android:id="@+id/tv_charging"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:drawableLeft="@mipmap/chongd_check"
+                android:text="@string/go_to_charge"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:drawablePadding="50dp"
+                android:layout_marginLeft="10dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="9sp"
+                android:autoSizeMaxTextSize="14sp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#262728"
+                />
 
             <TextView
                 android:id="@+id/tv_shutdown"

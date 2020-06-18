@@ -27,6 +27,13 @@ android {
         }
     }
 
+   /* ext{
+        File file = new File("app/build/extracted-include-protos/main")//路径看你自己文件目录喽
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+    }*/
+
     sourceSets {
         main {
             java {
@@ -103,7 +110,8 @@ dependencies {
     implementation "com.google.android.material:material:$rootProject.ext.materialVersion"
 
     //谷歌的数据格式框架protobuf
-    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+    implementation 'com.google.protobuf:protobuf-java:3.4.0'
+    implementation 'com.google.protobuf:protoc:3.4.0'
     // ButterKnife 注解库：https://github.com/JakeWharton/butterknife
     implementation 'com.jakewharton:butterknife:10.1.0'
     implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'

@@ -635,7 +635,7 @@ message notifyBaseStatusEx{
 	float posangulauspeed = 12;
 	bytes robotid = 13;
 	bool chargingStatus = 14; // true - 充电中
-	int32 chargingSubStatus = 15; // 充电子状态。0-空闲，1-正在寻找充电桩，2-正在充电，3-正在返回起始位置，[0-3表示自动充电时的各个状态]
+	int32 chargingSubStatus = 15; // 充电子状态。0-空闲，1-正在寻找充电桩，2-正在充电，3-正在返回起始位置，4-正在前往充电桩[0-3表示自动充电时的各个状态]
 	eAUTOMOVINGSTATUS automovingstatus = 16; // 自动模式细节
 	int32 taskCount = 17; // 任务次数
 	int32 taskDuration = 18; // 任务时长，单位秒

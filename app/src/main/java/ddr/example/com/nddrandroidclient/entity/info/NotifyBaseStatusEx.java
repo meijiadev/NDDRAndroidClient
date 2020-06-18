@@ -30,7 +30,8 @@ public class NotifyBaseStatusEx {
     private float posDirection;
     private float posLinespeed;
     private float currspeed;
-    private int eSelfCalibStatus;    // 充电子状态
+    private int eSelfCalibStatus;
+    private int chargingSubStatus;         // 充电子状态 0-空闲，1-正在寻找充电桩，2-正在充电，3-正在返回起始位置，4-正在前往充电桩[0-3表示自动充电时的各个状态]
     private boolean chargingStatus;    // true - 充电中
     private int taskCount;           // 任务次数
     private int taskDuration;         //任务时长，单位秒
@@ -73,6 +74,14 @@ public class NotifyBaseStatusEx {
 
     public void seteSelfCalibStatus(int eSelfCalibStatus) {
         this.eSelfCalibStatus = eSelfCalibStatus;
+    }
+
+    public void setChargingSubStatus(int chargingSubStatus) {
+        this.chargingSubStatus = chargingSubStatus;
+    }
+
+    public int getChargingSubStatus() {
+        return chargingSubStatus;
     }
 
     public int getTaskCount() {

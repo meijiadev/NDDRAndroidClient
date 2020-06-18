@@ -841,6 +841,16 @@ public class TcpClient extends BaseSocketConnection {
         tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdIPC);
     }
 
+    /**
+     * 去充电
+     */
+    public void goToCharge(){
+        BaseCmd.reqCmdStartActionMode reqCmdStartActionMode= BaseCmd.reqCmdStartActionMode.newBuilder()
+                .setMode(BaseCmd.eCmdActionMode.eReCharging)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdStartActionMode);
+    }
+
 
 
 

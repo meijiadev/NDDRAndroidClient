@@ -113,6 +113,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     TextView tvElectricQuantity;              //电池电量充电时的
     @BindView(R.id.bt_exit_charge)
     Button btExitCharge;                      //退出充电模式
+    @BindView(R.id.tv_charge_notify)
+    TextView tvChargeNotify;
 
 
 
@@ -376,19 +378,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
         }
         //Logger.e("------------是否在充电："+notifyBaseStatusEx.isChargingStatus());
-        if(notifyBaseStatusEx.isChargingStatus()) {
-            iv_cd_xs.setImageResource(R.mipmap.cd_green);
-            circleBarView.setProgress(batteryNum,0,Color.parseColor("#54E361"));
-            tvElectricQuantity.setText(String.valueOf(batteryNum)+"%");
-            if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
-                chargingLayout.setVisibility(View.VISIBLE);
-                leftLayout.setVisibility(View.GONE);
-                if (!chargeAnimation.isRunning()){
-                    chargeAnimation.start();
-                }
-            }
-        }else {
-            if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式 
+        if(!notifyBaseStatusEx.isChargingStatus()) {
+            if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式
                 chargingLayout.setVisibility(View.GONE);
                 leftLayout.setVisibility(View.VISIBLE);
                 if (chargeAnimation.isRunning()){
@@ -397,6 +388,28 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
+        }
+        switch (notifyBaseStatusEx.getChargingSubStatus()){
+            case 1:
+                tvChargeNotify.setText(R.string.common_charging_1);
+                break;
+            case 2:
+                tvChargeNotify.setText(R.string.common_charging);
+                if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
+                    chargingLayout.setVisibility(View.VISIBLE);
+                    leftLayout.setVisibility(View.GONE);
+                    if (!chargeAnimation.isRunning()){
+                        chargeAnimation.start();
+                    }
+                }
+                break;
+            case 4:
+                tvChargeNotify.setText(R.string.common_charging_2);
+                if (chargingLayout.getVisibility()!=View.VISIBLE){
+                    chargingLayout.setVisibility(View.VISIBLE);
+                    leftLayout.setVisibility(View.GONE);
+                }
+                break;
         }
     }
 
