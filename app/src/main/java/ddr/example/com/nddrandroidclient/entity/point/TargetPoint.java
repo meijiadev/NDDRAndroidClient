@@ -2,6 +2,8 @@ package ddr.example.com.nddrandroidclient.entity.point;
 
 import java.io.Serializable;
 
+import ddr.example.com.nddrandroidclient.entity.PointType;
+
 /**
  * time : 2019/11/7
  * desc : 目标点结构
@@ -11,8 +13,17 @@ public class TargetPoint extends BaseMode implements Serializable {
     private float x;
     private float y;
     private float theta;  //朝向 单位：度 【-180,180】
+    private PointType pointType;           //点的类型
 
 
+    public PointType getPointType() {
+        return pointType;
+    }
+
+
+    public void setPointType(PointType pointType) {
+        this.pointType = pointType;
+    }
 
 
     public TargetPoint(int type) {

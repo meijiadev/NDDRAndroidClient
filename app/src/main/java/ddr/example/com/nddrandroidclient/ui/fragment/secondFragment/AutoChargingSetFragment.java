@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
@@ -102,6 +103,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
                 getChosseStatus();
                 break;
             case R.id.tv_save_auto_char:
+                GlobalParameter.setIsAutoCharge(slideButton.isChecked());
                 int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
                 int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
                 postNaparmeter(ByteString.copyFromUtf8(switchAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
@@ -225,9 +227,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
 
     //获取选择的状态
     private void getChosseStatus(){
-        boolean isChecked=slideButton.isChecked;
-        if (isChecked==true){
-            Logger.e("点击勾中---");
+        if (slideButton.isChecked()){
             autoValue="1";
             ed_trigger_auto.setCursorVisible(true);
             ed_out_auto.setCursorVisible(true);
@@ -238,7 +238,6 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
             ed_out_auto.requestFocus();
             ed_trigger_auto.requestFocus();
         }else {
-            Logger.e("点击未选择");
             autoValue="0";
             ed_trigger_auto.setCursorVisible(false);
             ed_out_auto.setCursorVisible(false);
@@ -247,7 +246,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
             ed_trigger_auto.setFocusableInTouchMode(false);
             ed_out_auto.setFocusableInTouchMode(false);
         }
-        Logger.e("是否选择"+isChecked+"-----"+autoValue);
+        Logger.v("是否自动充电："+slideButton.isChecked());
     }
 
 

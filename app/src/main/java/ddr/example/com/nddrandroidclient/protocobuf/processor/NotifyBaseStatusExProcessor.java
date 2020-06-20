@@ -40,6 +40,7 @@ public class NotifyBaseStatusExProcessor extends BaseProcessor {
         notifyBaseStatusEx1.setExceptionValue(notifyBaseStatusEx.getRobotexceptionValue());
         notifyBaseStatusEx1.setLocationed(notifyBaseStatusEx.getBLocated());
         notifyBaseStatusEx1.setChargingType(notifyBaseStatusEx.getChargingTypeValue());
+        notifyBaseStatusEx1.setChargingSubStatus(notifyBaseStatusEx.getChargingSubStatus());
         notifyBaseStatusEx1.seteTaskMode(notifyBaseStatusEx.getTaskmodeValue());
         notifyBaseStatusEx1.setTemopTaskNum(notifyBaseStatusEx.getTemporaryTaskCount());
         EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.updateBaseStatus));

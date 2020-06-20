@@ -64,7 +64,7 @@ public class SlideButton extends View {
     private float circleRadius;
     private Scroller mScroller;
     //当前按钮的开关状态
-    public boolean isChecked = false;
+    private boolean isChecked = false;
 
     private int mWidth;
     private int mHeight;
@@ -169,6 +169,14 @@ public class SlideButton extends View {
             circle_x = circleStartX;
         }
         invalidate();
+    }
+
+    /**
+     * 获取当前按钮状态
+     * @return
+     */
+    public boolean isChecked() {
+        return isChecked;
     }
 
     private void init(Context context) {

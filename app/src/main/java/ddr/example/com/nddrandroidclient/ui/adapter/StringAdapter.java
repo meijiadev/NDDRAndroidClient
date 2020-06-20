@@ -39,9 +39,13 @@ public class StringAdapter extends BaseAdapter<String> {
         super.convert(helper, item);
         switch (viewType){
             case R.layout.item_recycle_task_check:
-                String showName=item.replaceAll("DDRTask_","");
-                showName=showName.replaceAll(".task","");
-                helper.setText(R.id.item_recycle_t_chenck,showName);
+                if (item.equals("AB_Task.task")){
+                    setVisibility(false,helper);
+                }else {
+                    String showName=item.replaceAll("DDRTask_","");
+                    showName=showName.replaceAll(".task","");
+                    helper.setText(R.id.item_recycle_t_chenck,showName);
+                }
                 break;
             case R.layout.item_recycle_robot_id:
                 helper.setText(R.id.tv_robot_id,item);

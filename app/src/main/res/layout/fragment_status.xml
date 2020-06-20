@@ -408,9 +408,10 @@
         android:layout_width="366.5dp"
         android:layout_height="match_parent"
         android:background="#161718"
-        android:visibility="gone"
+        android:visibility="visible"
         >
         <TextView
+            android:id="@+id/tv_charge_notify"
             android:layout_width="match_parent"
             android:layout_height="17dp"
             android:layout_marginTop="42dp"

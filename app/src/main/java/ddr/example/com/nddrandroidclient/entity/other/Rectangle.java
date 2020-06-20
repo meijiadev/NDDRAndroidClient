@@ -20,11 +20,11 @@ public class Rectangle {
         super();
     }
 
-    public Rectangle(XyEntity firstPoint,XyEntity secondPoint){
+    public Rectangle(XyEntity firstPoint,XyEntity firstPoint_1,XyEntity secondPoint,XyEntity secondPoint_1){
         this.firstPoint=firstPoint;
         this.secondPoint=secondPoint;
-        firstPoint_1=new XyEntity(secondPoint.getX(),firstPoint.getY());
-        secondPoint_1=new XyEntity(firstPoint.getX(),secondPoint.getY());
+        this.firstPoint_1=firstPoint_1;
+        this.secondPoint_1=secondPoint_1;
         rectanglePoints=new ArrayList<>();
         rectanglePoints.add(firstPoint);
         rectanglePoints.add(firstPoint_1);

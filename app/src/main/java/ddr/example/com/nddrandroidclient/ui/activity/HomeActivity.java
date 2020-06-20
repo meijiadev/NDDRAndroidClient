@@ -48,11 +48,15 @@ import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.PointType;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
@@ -139,6 +143,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private String LAN_IP_AI="192.168.0.95";
     private ComputerEditions computerEditions;
     private String language;
+    private MapFileStatus mapFileStatus;
 
     /**
      * ViewPage 适配器
@@ -247,6 +252,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initData() {
         tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
+        mapFileStatus=MapFileStatus.getInstance();
         getHostComputerEdition();
         receiveAiBroadcast();
         tcpAiClient=TcpAiClient.getInstance(context,ClientMessageDispatcher.getInstance());
@@ -255,9 +261,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         tcpClient.requestFile();     //请求所有地图
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
-
-
-
 
     }
 
@@ -335,6 +338,15 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             case R.id.tv_switch_language:
                 changeLanguage(language);
                 break;
+            case R.id.tv_charging:
+                if (!GlobalParameter.isIsAutoCharge()){
+                    toast(R.string.auto_charge_notify_1);
+                }else if (!haveChargePoint()){
+                    toast(R.string.auto_charge_notify_2);
+                }else {
+                    tcpClient.goToCharge();
+                }
+                break;
         }
         isChecked();
     }
@@ -354,6 +366,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+    /**
+     * 是否存在充电点
+     * @return
+     */
+    private boolean haveChargePoint(){
+        for (TargetPoint targetPoint:mapFileStatus.getcTargetPoints()){
+            if (targetPoint.getPointType().equals(PointType.eMarkingTypeCharging)){
+                return true;
+            }
+        }
+        return false;
     }
     /**
      * 判断哪个页面是否被选中

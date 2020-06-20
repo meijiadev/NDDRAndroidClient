@@ -16,6 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastWhiteStyle;
 import com.yhao.floatwindow.FloatWindow;
 import com.yhao.floatwindow.MoveType;
 import com.yhao.floatwindow.PermissionListener;
@@ -61,6 +63,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initState(this);
         context=getApplicationContext();            //使用Application的防止内存泄漏
+        /*// 吐司工具类
+        ToastUtils.init(getApplication(),new ToastWhiteStyle(getApplication()));*/
         initActivity();
     }
 

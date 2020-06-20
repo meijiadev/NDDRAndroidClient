@@ -38,6 +38,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.other.Rectangle;
@@ -75,6 +76,7 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
  * remark：包括 编辑虚拟墙 、添加目标点、添加路径、添加任务、编辑任务等功能
  */
 public class MapEditActivity extends DDRActivity {
+
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_target_point)
@@ -104,6 +106,9 @@ public class MapEditActivity extends DDRActivity {
     @BindView(R.id.fixed_speed)
     CheckBox fixedSpeed;
 
+
+    @BindView(R.id.tv_charge_point)
+    TextView tvChargePoint;                      //充电点
     @BindView(R.id.my_rocker)
     RockerView myRocker;
     @BindView(R.id.my_rocker_zy)
@@ -157,6 +162,7 @@ public class MapEditActivity extends DDRActivity {
     public static final int CREATE_POINT=1;   //新建目标点
     public static final int CREATE_PATH=2;    //新建路径
     public static final int EDIT_MAP=3;       //编辑地图 -虚拟墙等
+    public static final int SET_CHARGE_POINT=4;       //设置充电点
     private int activityType;                         //界面的类型
 
     private List<Rectangle> rectangles=new ArrayList<>();
@@ -166,6 +172,7 @@ public class MapEditActivity extends DDRActivity {
     private String bitmap;                                        //地图地址
     private static final int FAST_CLICK_DELAY_TIME=1000;          // 点击时间间隔 ，防止短时间多次点击
     private long lastClickTime=0;
+    private TargetPoint chargePoint;                            //充点电
 
 
 
@@ -235,7 +242,7 @@ public class MapEditActivity extends DDRActivity {
 
 
     @OnClick({R.id.iv_back,R.id.tv_target_point, R.id.tv_path, R.id.tv_025m, R.id.tv_05m, R.id.tv_1m, R.id.tv_2m, R.id.tv_mark_current,R.id.tv_selected_point, R.id.fixed_speed,R.id.iv_add_path
-    ,R.id.delete_point,R.id.save_path,R.id.bt_delete_wall,R.id.tv_add_de,R.id.tv_revocation_de,R.id.tv_init_de,R.id.tv_save_de})
+    ,R.id.delete_point,R.id.save_path,R.id.bt_delete_wall,R.id.tv_add_de,R.id.tv_revocation_de,R.id.tv_init_de,R.id.tv_save_de,R.id.tv_charge_point})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -357,7 +364,24 @@ public class MapEditActivity extends DDRActivity {
                     targetPoint.setMultiple(false);
                 }
                 break;
-            case R.id.fixed_speed:
+           /* case R.id.fixed_speed:
+                break;*/
+            case R.id.tv_charge_point:
+                chargePoint=new TargetPoint(2);
+                chargePoint.setName(getString(R.string.charge_point));
+                if (!isFreeHand) {
+                    chargePoint.setX(notifyBaseStatusEx.getPosX());
+                    chargePoint.setY(notifyBaseStatusEx.getPosY());
+                    Logger.e("--------角度："+radianToangle(notifyBaseStatusEx.getPosDirection()));
+                    chargePoint.setTheta(radianToangle(notifyBaseStatusEx.getPosDirection()));
+                } else {
+                    chargePoint.setX(zmap.getTargetPoint().getX());
+                    chargePoint.setY(zmap.getTargetPoint().getY());
+                    chargePoint.setTheta(0);
+                }
+                chargePoint.setPointType(PointType.eMarkingTypeCharging);
+                PointView.getInstance(context).setChargePoint(chargePoint);
+                zmap.invalidate();
                 break;
             case R.id.iv_add_path:
                 switch (activityType){
@@ -502,7 +526,11 @@ public class MapEditActivity extends DDRActivity {
                     secondPoint=zmap.getTargetPoint();
                     tvAddDe.setText(R.string.common_add_point);
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
-                    rectangle=new Rectangle(firstPoint,secondPoint);
+                    XyEntity firstPoint1=zmap.toCanvas(firstPoint.getX(),firstPoint.getY());
+                    XyEntity secondPoint1=zmap.toCanvas(secondPoint.getX(),secondPoint.getY());
+                    XyEntity firstPoint_1=zmap.toWorld(secondPoint1.getX(),firstPoint1.getY());
+                    XyEntity secondPoint_1=zmap.toWorld(firstPoint1.getX(),secondPoint1.getY());
+                    rectangle=new Rectangle(firstPoint,firstPoint_1,secondPoint,secondPoint_1);
                     rectangles.add(rectangle);
                     RectangleView.getRectangleView().setFirstPoint(null);
                     RectangleView.getRectangleView().setRectangles(rectangles);
@@ -594,6 +622,7 @@ public class MapEditActivity extends DDRActivity {
                             targetPoint.setTheta(0);
                         }
                         targetPoint.setInTask(true);  //方便显示
+                        targetPoint.setPointType(PointType.eMarkingTypeNormal);
                         if (checkPointName(targetPoint)){
                             toast(R.string.name_repetition);
                         }else {
@@ -887,13 +916,23 @@ public class MapEditActivity extends DDRActivity {
             customPopuWindow.dissmiss();
             switch (position){
                 case 0:
-                    zmap.setCanRotate(true);
                     isDenoising=false;
+                    firstPoint=null;
+                    tvAddDe.setText(R.string.common_add_point);
+                    tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
+                    tvRevocationDe.setText(R.string.common_revocation);
+                    tvRevocationDe.setBackgroundResource(R.mipmap.iv_denoising_revocation);
+                    RectangleView.getRectangleView().setFirstPoint(null);
+                    zmap.invalidate();
                     tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
                     break;
                 case 1:
                     isDenoising=true;
+                    lines=new ArrayList<>();
+                    polygons=new ArrayList<>();
                     //zmap.setCanRotate(false);
+                    LineView.getInstance(context).setLines(null);
+                    zmap.invalidate();
                     tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);
                     break;
             }
@@ -1139,7 +1178,7 @@ public class MapEditActivity extends DDRActivity {
      */
     public void initType(int type){
         switch (type){
-            case 1:
+            case CREATE_POINT:
                 Logger.e("新建点");
                 tvAddPath.setVisibility(View.VISIBLE);
                 tvMarkCurrent.setVisibility(View.VISIBLE);
@@ -1148,7 +1187,7 @@ public class MapEditActivity extends DDRActivity {
                 tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
                 LineView.getInstance(this).clearDraw();
                 break;
-            case 2:
+            case CREATE_PATH:
                 ivCenter.setVisibility(View.VISIBLE);
                 tvAddPath.setVisibility(View.VISIBLE);
                 tvDeletePoint.setVisibility(View.VISIBLE);
@@ -1159,7 +1198,7 @@ public class MapEditActivity extends DDRActivity {
                 LineView.getInstance(this).clearDraw();
                 zmap.invalidate();
                 break;
-            case 3:
+            case EDIT_MAP:
                 mapFileStatus = MapFileStatus.getInstance();
                 tvTargetPoint.setText(editTypes.get(0));
                 tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.virtual_wall_blue),null,null,null);
@@ -1180,6 +1219,14 @@ public class MapEditActivity extends DDRActivity {
                 LineView.getInstance(getApplication()).setSpaceItems(spaceItems);
                 LineView.getInstance(getApplication()).setClickable(true);
                 zmap.invalidate();
+                break;
+            case SET_CHARGE_POINT:
+                tvChargePoint.setVisibility(View.VISIBLE);
+                tvMarkCurrent.setVisibility(View.VISIBLE);
+                ivCenter.setVisibility(View.VISIBLE);
+                tvTargetPoint.setText(getString(R.string.target_point_label) + "(" + targetPoints.size() + ")");
+                tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
+                LineView.getInstance(this).clearDraw();
                 break;
         }
     }
@@ -1299,7 +1346,8 @@ public class MapEditActivity extends DDRActivity {
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updatePaths,newPaths));
         }else if (activityType==EDIT_MAP){
             EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateVirtualWall));
-
+        }else if (activityType==SET_CHARGE_POINT){
+            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.setChargePoint, chargePoint));
         }
     }
 

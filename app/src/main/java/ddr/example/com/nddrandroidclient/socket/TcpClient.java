@@ -28,6 +28,7 @@ import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.other.Rectangle;
@@ -122,13 +123,20 @@ public class TcpClient extends BaseSocketConnection {
         public void onSocketConnectionSuccess(ConnectionInfo info, String action) {
             isConnected=true;
             Logger.e("--------连接成功");
-            EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
-            sendHeartBeat();
+            Activity activity=ActivityStackManager.getInstance().getTopActivity();
+            if (activity!=null){
+                if (activity.getLocalClassName().contains("LoginActivity")){
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.tcpConnected));
+                }else {
+                    sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), CmdSchedule.localLogin(GlobalParameter.getAccount(),GlobalParameter.getPassword()));
+                }
+            }
             if (waitDialog!=null){
                 if (waitDialog.isShowing()){
                     waitDialog.dismiss();
                 }
             }
+            sendHeartBeat();
         }
 
         /**
@@ -221,20 +229,7 @@ public class TcpClient extends BaseSocketConnection {
         }
     }
 
-    /**
-     * 显示Toast提醒
-     * @param activity
-     * @param message
-     * @param showTime
-     */
-    private void showToast(final Activity activity, final String message, final int showTime){
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(activity,message,showTime).show();
-            }
-        });
-    }
+
 
 
 
@@ -603,8 +598,10 @@ public class TcpClient extends BaseSocketConnection {
                     .setY(targetPoint.getY())
                     .setTheta(targetPoint.getTheta())
                     .build();
+            Logger.e("保存的点名字："+targetPoint.getName());
             DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
                     .setPtName(ByteString.copyFromUtf8(targetPoint.getName()))
+                    .setTargetPtTypeValue(targetPoint.getPointType().getTypeValue())
                     .setPtData(space_pointEx).build();
             targetPtItems.add(targetPtItem);
         }
@@ -842,6 +839,16 @@ public class TcpClient extends BaseSocketConnection {
                 .setMode(eCmdIPCMode)
                 .build();
         tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdIPC);
+    }
+
+    /**
+     * 去充电
+     */
+    public void goToCharge(){
+        BaseCmd.reqCmdStartActionMode reqCmdStartActionMode= BaseCmd.reqCmdStartActionMode.newBuilder()
+                .setMode(BaseCmd.eCmdActionMode.eReCharging)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdStartActionMode);
     }
 
 

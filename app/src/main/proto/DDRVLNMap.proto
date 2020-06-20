@@ -101,6 +101,7 @@ enum eMarkingItemType
 	eMarkingTypeQR = 6;  // QR模式
 	eMarkingTypeRotate = 7; // 旋转特定角度
 	eMarkingTypeNormal = 8; // 普通路径点
+	eMarkingTypeBorn = 9; // 初始点
 } 
 
 // 朝向方式
@@ -493,6 +494,7 @@ message targetPtItem
 {
 	bytes ptName = 1;
 	space_pointEx ptData = 2;
+	eMarkingItemType targetPtType = 3;
 }
 
 message DDRMapTargetPointData

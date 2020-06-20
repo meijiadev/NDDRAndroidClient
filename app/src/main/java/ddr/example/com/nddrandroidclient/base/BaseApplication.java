@@ -14,6 +14,9 @@ import android.widget.Toast;
 import com.hjq.toast.ToastInterceptor;
 import com.hjq.toast.ToastUtils;
 //import com.squareup.leakcanary.LeakCanary;
+import com.hjq.toast.style.ToastAliPayStyle;
+import com.hjq.toast.style.ToastQQStyle;
+import com.hjq.toast.style.ToastWhiteStyle;
 import com.yhao.floatwindow.FloatWindow;
 import com.yhao.floatwindow.MoveType;
 import com.yhao.floatwindow.Screen;
@@ -79,7 +82,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
             }
         });
         // 吐司工具类
-        ToastUtils.init(application);
+        ToastUtils.init(application,new ToastWhiteStyle(application));
         // EventBus 事件总线
         EventBusManager.init();
         // Crash 捕捉界面
@@ -118,7 +121,6 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
 
     @Override
     public void onClickBottom() {
-        ToastUtils.show("点击底部");
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchFloatWindow));
         try {
             FloatWindow.get().hide();

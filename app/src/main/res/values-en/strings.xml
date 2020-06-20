@@ -19,7 +19,7 @@
     <string name="common_minute">Min</string>
     <string name="common_second">Sec</string>
 
-    <string name="createMapPathToServer">建图路径</string>
+    <string name="createMapPathToServer">Built figure path</string>
 
     <string name="common_confirm">Confirm</string>
     <string name="common_cancel">Cancel</string>
@@ -46,6 +46,7 @@
     <string name="app_quit">Log out</string>
     <string name="switch_to_cn">Switch to Chinese</string>
     <string name="switch_to_en">Switch to English</string>
+    <string name="go_to_charge">To charge</string>
     <string name="line_speed">Linear velocity：</string>
     <string name="angulau_speed">Angular velocity：</string>
     <string name="angulau_speed_1">radian/second</string>
@@ -84,6 +85,8 @@
     <string name="common_View_details">View details</string>
     <string name="common_map_set">Map settings</string>
     <string name="common_using">Using</string>
+    <string name="set_charge_point">Set charging point</string>
+    <string name="charge_point">Charging point</string>
 
     <!--基础状态-->
     <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
@@ -106,6 +109,8 @@
     <string name="common_pause">Pause</string>
     <string name="common_wait">Idle</string>
     <string name="common_charging">Charging,chassis can not move</string>
+    <string name="common_charging_1">Looking for charging pile</string>
+    <string name="common_charging_2">Heading for charging point</string>
     <string name="common_exit_charge">Exit charging</string>
     <string name="no_task">No task</string>
     <string name="go_target_point">To POI</string>

@@ -337,8 +337,10 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
     }
 
     public void toast(@StringRes int id) {
-        ToastUtils.show(id);
+        String text=getString(id);
+        ToastUtils.show(text);
     }
+
 
     public void toast(Object object) {
         ToastUtils.show(object);

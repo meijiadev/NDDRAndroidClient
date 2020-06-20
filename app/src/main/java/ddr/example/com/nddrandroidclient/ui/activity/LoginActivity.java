@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,6 +24,7 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
+import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -113,6 +115,8 @@ public  class LoginActivity extends DDRActivity {
                 if (isLan){
                     Logger.e("-----连接成功，开始登录");
                     tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
+                    GlobalParameter.setAccount(accountName);
+                    GlobalParameter.setPassword(passwordName);
                 }else {
                     Logger.e("-----广域网连接成功，开始登录");
                     tcpClient.sendData(null,CmdSchedule.remoteLogin(accountName,passwordName));
@@ -152,7 +156,7 @@ public  class LoginActivity extends DDRActivity {
                 accountName = account.getText().toString().trim();
                 passwordName = password.getText().toString().trim();
                 if (accountName.equals("")|passwordName.equals("")){
-                    toast(R.string.account_not_empty);
+                    toast(getString(R.string.account_not_empty));
                 }else {
                     if (isLan){                                   //局域网登录
                         //if (hasReceiveBroadcast){

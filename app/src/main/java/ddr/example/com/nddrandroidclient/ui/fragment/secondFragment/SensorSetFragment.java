@@ -438,7 +438,7 @@ public class SensorSetFragment extends DDRLazyFragment {
     //获取选择的状态
     private String autoValue;
     private void getChosseStatus(){
-        boolean isChecked=slideButton.isChecked;
+        boolean isChecked=slideButton.isChecked();
         if (isChecked==true){
             autoValue="1";
         }else {

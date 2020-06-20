@@ -141,7 +141,7 @@ public class NaparamAdapter extends BaseAdapter<Naparam> implements SlideButton.
     }
     public boolean isChecked;
     private void getChosseStatus(){
-        isChecked=slideButton.isChecked;
+        isChecked=slideButton.isChecked();
         Logger.e("状态"+isChecked);
        if (isChecked){
            slideButton.setChecked(true);
