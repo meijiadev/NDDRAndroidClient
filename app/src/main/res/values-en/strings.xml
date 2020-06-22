@@ -15,16 +15,16 @@
     <string name="crash_error_info">Error message</string>
     <string name="crash_copy_log">Copy log</string>
     <string name="crash_close">Close</string>\
-    <string name="common_hour">Hour</string>
-    <string name="common_minute">minute</string>
-    <string name="common_second">second</string>
+    <string name="common_hour">Hr</string>
+    <string name="common_minute">Min</string>
+    <string name="common_second">Sec</string>
 
     <string name="createMapPathToServer">Built figure path</string>
 
-    <string name="common_confirm">Determine</string>
+    <string name="common_confirm">Confirm</string>
     <string name="common_cancel">Cancel</string>
-    <string name="time_next">next step</string>
-    <string name="time_last">Previous step</string>
+    <string name="time_next">Next</string>
+    <string name="time_last">Back</string>
     <string name="time_start_title">Please select a start time</string>
     <string name="time_end_time">Please select the end time</string>
 
@@ -42,8 +42,8 @@
     <string name="home_setting">Settings</string>
     <string name="scram_status">Stop</string>
     <string name="control_status">RC</string>
-    <string name="robot_shutdown">Shut down</string>
-    <string name="app_quit">Quit</string>
+    <string name="robot_shutdown">Power off</string>
+    <string name="app_quit">Log out</string>
     <string name="switch_to_cn">Switch to Chinese</string>
     <string name="switch_to_en">Switch to English</string>
     <string name="go_to_charge">To charge</string>
@@ -53,79 +53,79 @@
 
     <!--地图管理-->
     <string name="new_create_map">New map</string>
-    <string name="batch_delete">Bulk delete</string>
-    <string name="common_exit">Quit</string>
+    <string name="batch_delete">Batch delete</string>
+    <string name="common_exit">Cancel</string>
     <string name="common_delete">Delete</string>
-    <string name="no_map_notify">No map information found, please create a new map</string>
+    <string name="no_map_notify">There is no map, please map first</string>
     <string name="target_point_label">POI</string>
     <string name="path_label">Path</string>
     <string name="map_edit">Map editor</string>
-    <string name="common_reference">Reference layer</string>
+    <string name="common_reference">Ref layer</string>
     <string name="common_create">New</string>
-    <string name="common_point_name">Point name:</string>
-    <string name="common_point_toward">Point yaw：</string>
-    <string name="common_path_name">Path name：</string>
+    <string name="common_point_name">Name:</string>
+    <string name="common_point_toward">Yaw：</string>
+    <string name="common_path_name">Name：</string>
     <string name="common_save">Save</string>
-    <string name="common_path_mode">Path mode: </string>
+    <string name="common_path_mode">Mode: </string>
     <string name="common_cs">Extension distance：</string>
     <string name="run_speed">Speed：</string>
     <string name="action_recycler">Action list：</string>
     <string name="add_action">Add</string>
     <string name="file_setting">File configuration：</string>
-    <string name="map_size">Map area：</string>
-    <string name="create_time">Creation date：</string>
-    <string name="ai_connected">AI service connection successful</string>
+    <string name="map_size">Map size：</string>
+    <string name="create_time">Map time：</string>
+    <string name="ai_connected">AI service connection success</string>
     <string name="initial_point">Initial point</string>
     <string name="no_point">No target point</string>
     <string name="no_path">No path</string>
-    <string name="is_relocation">Repositioning or not</string>
+    <string name="is_relocation">Relocate?</string>
     <string name="is_switch_map">Switch map or not</string>
-    <string name="common_relocation">Repositioning</string>
+    <string name="common_relocation">Relocate</string>
     <string name="common_switch_map">Switch map</string>
     <string name="common_View_details">View details</string>
-    <string name="common_map_set">Map set</string>
-    <string name="common_using">In use</string>
+    <string name="common_map_set">Map settings</string>
+    <string name="common_using">Using</string>
     <string name="set_charge_point">Set charging point</string>
     <string name="charge_point">Charging point</string>
 
     <!--基础状态-->
     <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
-    <string name="now_device">Current device:</string>
-    <string name="now_map">Current map：</string>
-    <string name="now_task">Current task：</string>
+    <string name="now_device">Robot ID:</string>
+    <string name="now_map">Map name：</string>
+    <string name="now_task">Task name：</string>
     <string name="common_unselected">Not selected</string>
     <string name="work_status">System status：</string>
     <string name="task_times">Times of task：</string>
-    <string name="working_hours">Working hours：</string>
+    <string name="working_hours">Duration：</string>
     <string name="task_speed">Task speed：</string>
     <string name="common_waiting">Idle</string>
-    <string name="create_task_steps">Establish task steps：</string>
+    <string name="create_task_steps">Create task：</string>
     <string name="first_steps">New map</string>
     <string name="second_steps">Edit target point</string>
     <string name="thirdly_steps">Create task</string>
-    <string name="fourth_steps">Run task</string>
+    <string name="fourth_steps">Run</string>
     <string name="common_complete">Complete</string>
     <string name="common_execute">Do</string>
     <string name="common_pause">Pause</string>
     <string name="common_wait">Idle</string>
-    <string name="common_charging">Charging, chassis off motion</string>
+    <string name="common_charging">Charging,chassis can not move</string>
     <string name="common_charging_1">Looking for charging pile</string>
     <string name="common_charging_2">Heading for charging point</string>
     <string name="common_exit_charge">Exit charging</string>
     <string name="no_task">No task</string>
-    <string name="go_target_point">Go to the target point</string>
-    <string name="common_times"> </string>
-    <string name="in_the_calibration">In self calibration</string>
-    <string name="common_runing">In motion</string>
-    <string name="common_collecting">Collecting</string>
-    <string name="common_error">abnormal</string>
-    <string name="common_relocationing">Repositioning</string>
+    <string name="go_target_point">To POI</string>
+    <string name="common_times">Sec </string>
+    <string name="in_the_calibration">Self-calibration...</string>
+    <string name="common_runing">Running</string>
+    <string name="common_collecting">Mapping</string>
+    <string name="common_error">Error</string>
+    <string name="common_relocationing">Relocating</string>
     <string name="common_Disconnect">Disconnect</string>
 
     <!--时段任务-->
     <string name="task_title">Task list</string>
     <string name="save_task">Upload tasks</string>
-    <string name="new_create_task">New</string>
+    <string name="new_create_task">New task</string>
     <string name="task_name">Task name</string>
     <string name="execute_time">Execution period</string>
     <string name="task_status">Task status</string>
@@ -133,16 +133,16 @@
     <string name="common_modification">modify</string>
     <string name="common_terminated">Cancel</string>
     <string name="common_recover">Recover</string>
-    <string name="common_wait_execute">Waiting for execution</string>
+    <string name="common_wait_execute">Waiting</string>
     <string name="common_stop">Stop</string>
-    <string name="common_executing">Executing</string>
+    <string name="common_executing">Running</string>
     <string name="common_executed">Completion of enforcement</string>
-    <string name="common_put_up">Hanging</string>
-    <string name="in_runing_task">Unable to delete while running</string>
+    <string name="common_put_up">Done</string>
+    <string name="in_runing_task">Running task can not be deleted</string>
 
     <!-- 高级设置-导航参数-->
-    <string name="navigation_para">Navigation parameters</string>
-    <string name="navigation_para_set">Navigation parameters set</string>
+    <string name="navigation_para">Navigation settings</string>
+    <string name="navigation_para_set">Navigation settings</string>
     <string name="height_set_save">Save</string>
     <string name="navigation_loop">Navigation loop</string>
     <string name="n_return_auto">Return automatically</string>
@@ -153,7 +153,7 @@
     <string name="n_point_turn">Point turning</string>
     <string name="n_arc_turn">Arc turning</string>
     <string name="n_point_turn_tip">Reach the point then rotate, suitable for narrow scenes</string>
-    <string name="n_arc_turn_tip">If the path has corners, robot calculates the turning radius to improves the efficiency, suitable for large scenes</string>
+    <string name="n_arc_turn_tip">If the path has corners, robot calculates the turning radius to improve the efficiency, suitable for large scenes</string>
     <string name="n_speed_down">Speed down distance</string>
     <string name="n_speed_down_tip">When the distance between robot and obstacle is less than this value, robot speeds down</string>
     <string name="n_stop_distance">Stop distance</string>
@@ -161,9 +161,9 @@
     <string name="n_restore_default">Reset parameter</string>
 
     <!-- 高级设置-自动充电 -->
-    <string name="auto_charging">Automatic charging</string>
-    <string name="auto_charging_set">Automatic charging set</string>
-    <string name="ac_open">Turn on automatic charging</string>
+    <string name="auto_charging">Auto-charge</string>
+    <string name="auto_charging_set">Auto-charge</string>
+    <string name="ac_open">Turn on Auto-charge</string>
     <string name="ac_open_tip">When battery power is lower than trigger value, robot returns to autocharge</string>
     <string name="ac_trig_auto_charge">Power trig autocharge</string>
     <string name="ac_stop_auto_charge">Power stop autocharge</string>
@@ -172,28 +172,28 @@
 
     <!-- 高级设置-传感器配置 -->
     <string name="sensor_set">Sensor configuration</string>
-    <string name="ultrasonic_set">Ultrasonic configuration</string>
+    <string name="ultrasonic_set">Sonar configuration</string>
     <string name="ultrasonic_set_tip">When sonar is triggered in static mode, the robot will stop moving</string>
-    <string name="ultrasonic_set_title">Be sure you have known the installation position before setting, the ultrasonic value is 0 means the function is closed</string>
+    <string name="ultrasonic_set_title">Be sure you have known the installation position before setting, the sonar value is 0 means the function is closed</string>
     <string name="imu_temperature">IMU temperature</string>
     <string name="imu_temperature_tip">It is recommended to set about 10℃ higher than the space</string>
 
     <!-- 高级设置-硬件检测-->
     <string name="hardware_detection">Hardware detection</string>
     <string name="hardware_name">Hardware name</string>
-    <string name="self_test_results">Self-test results</string>
-    <string name="self_test_time">Self-test time</string>
-    <string name="self_test">Self-test</string>
+    <string name="self_test_results">Self-check results</string>
+    <string name="self_test_time">Self-check time</string>
+    <string name="self_test">Self-check</string>
     <string name="st_lidar">Lidar</string>
-    <string name="st_dual_cameras">Dual cameras</string>
+    <string name="st_dual_cameras">Dual-cameras</string>
     <string name="st_embedded_system">Embedded system</string>
     <string name="st_normal">Normal</string>
     <string name="st_abnormal">Abnormal</string>
-    <string name="self_tested">Self-tested</string>
+    <string name="self_tested">Self-checked</string>
 
     <!--高级设置-关于我们-->
     <string name="about_us">About us</string>
-    <string name="au_app_version">Aplication version</string>
+    <string name="au_app_version">Application version</string>
     <string name="au_server_software_version">Server software version</string>
     <string name="au_module">Module</string>
     <string name="au_version">Version</string>
@@ -218,18 +218,18 @@
 
 
     <!--采集页面-->
-    <string name="collect_title_one">Scanning environment...</string>
-    <string name="collect_title_two">Self-calibration...</string>
+    <string name="collect_title_one">Self-calibrating....</string>
+    <string name="collect_title_two">Self-calibrating...</string>
     <string name="collect_title_three">Mapping</string>
-    <string name="common_detection">Detecte loop</string>
+    <string name="common_detection">Loop check</string>
     <string name="gauge_point">Mark</string>
-    <string name="conmon_collect_success">Completion of drawing</string>
+    <string name="conmon_collect_success">Mapping success</string>
 
     <!--地图编辑页面-->
-    <string name="mark_current">Mark the robot is current position</string>
-    <string name="select_point">Click to select target point to build path</string>
+    <string name="mark_current">Mark robot is position</string>
+    <string name="select_point">Select POIs to build path</string>
     <string name="common_gridlayout">Grid：</string>
-    <string name="common_add_point">Draw</string>
+    <string name="common_add_point">Mark</string>
     <string name="common_revocation">Undo</string>
     <string name="common_delete_point">Undo</string>
     <string name="common_init">Initialize</string>
@@ -250,7 +250,7 @@
     <string name="line_patrol">Path patrol mode </string>
     <string name="nav_notify_1"> (automatically plan the route without manual intervention)</string>
     <string name="nav_notify_2">(find the optimal route based on the preset paths when going to the POI）</string>
-    <string name="map_recover">Recovery the map</string>
+    <string name="map_recover">Recover map</string>
     <string name="stay_put">Stand by</string>
 
 
@@ -261,15 +261,15 @@
     <string name="create_task_hint_3">Please avoid adding the same point continuously！</string>
     <string name="create_task_hint_4">Please avoid adding the same path continuously!</string>
     <string name="task_rename">Task rename</string>
-    <string name="name_already_exists">Name already exists, please rename。</string>
+    <string name="name_already_exists">Name already exists, please rename</string>
     <string name="cancel_rename">Cancel rename!</string>
 
     <!--重定位页面-->
     <string name="manually_locate">Manual positioning</string>
-    <string name="location_notify">Tip: please determine the current position of the robot by translating and rotating the map to match the radar scanning shape</string>
-    <string name="look_location_data">Click to view the robot position</string>
-    <string name="relocation_failed">Repositioning failed, please reset robot posture</string>
-    <string name="relocation_succeed">Positioning successful!</string>
+    <string name="location_notify">Tip: rotate or move the map to match the lidar points</string>
+    <string name="look_location_data">View the robot position</string>
+    <string name="relocation_failed">Relocation failed</string>
+    <string name="relocation_succeed">Relocation successed!</string>
     <string name="the_relocation">Relocation may take 1-3 minutes...</string>
 
 
@@ -277,65 +277,65 @@
 
 
     <!--吐司提示-->
-    <string name="network_not_connect">The network cannot be connected. Please exit reconnection！</string>
+    <string name="network_not_connect">The network can not be connected. Please relogin！</string>
     <string name="loop_status_one">Detection error, please re detect</string>
-    <string name="loop_status_two">No loopback detected</string>
-    <string name="loop_status_three">Loopback already exists</string>
+    <string name="loop_status_two">Loopback not exist</string>
+    <string name="loop_status_three">Loopback exist</string>
     <string name="loop_status_four">The new acquisition datum forms a loop</string>
-    <string name="loop_status_five">Too close to detect loopback</string>
-    <string name="loop_status_six">In the process of detection, please do not click repeatedly!</string>
+    <string name="loop_status_five">Not need to check</string>
+    <string name="loop_status_six">Checking, please not do again before fininshing!</string>
     <string name="create_map_error">Abnormal map building, about to exit the current mode, this map is invalid</string>
-    <string name="gauge_succeed">Mark successful</string>
-    <string name="common_lock">locking</string>
+    <string name="gauge_succeed">Marked</string>
+    <string name="common_lock">Locked</string>
     <string name="common_cancel_lock">Unlock</string>
-    <string name="do_not_repeat_marks">Do not repeat marking</string>
-    <string name="please_add_point">Please add some more</string>
-    <string name="name_repetition">Duplicate name, please rename！</string>
-    <string name="save_succeed">Saved successfully！</string>
+    <string name="do_not_repeat_marks">Do not repeat mark</string>
+    <string name="please_add_point">Please add point first</string>
+    <string name="name_repetition">Exist same name, please rename!</string>
+    <string name="save_succeed">Saved</string>
     <string name="save_failed">Save failed！</string>
     <string name="cancel_add">Cancel adding</string>
     <string name="select_two_point">Please select at least two points</string>
-    <string name="please_select_virtual">Please select the virtual wall to delete first</string>
-    <string name="nothing_revocation">There is currently no revocable content</string>
+    <string name="please_select_virtual">Please select the virtual wall you wanna delete first</string>
+    <string name="nothing_revocation">There is no content to undo</string>
     <string name="operation_failure">operation failed</string>
     <string name="load_succeed">Loading succeeded</string>
-    <string name="current_map_using">The current map is in use and cannot be modified</string>
+    <string name="current_map_using">The map is using and can not be modified</string>
     <string name="under_revision">Modifying...</string>
     <string name="modification_failed">Modification failed！</string>
-    <string name="point_set_notify">After the task, the robot will automatically return to the designated standby point for standby</string>
-    <string name="robot_is_shutdown">The robot is shutting down...</string>
-    <string name="robot_is_restart">The robot is rebooting, please exit to the landing page and wait for the reboot to complete before reconnecting</string>
+    <string name="point_set_notify">After the task, the robot will return to the setted standby point.</string>
+    <string name="robot_is_shutdown">The robot is powering off</string>
+    <string name="robot_is_restart">The robot is rebooting, please log out and wait a moment to reconnect</string>
     <string name="login_succeed">Login succeeded</string>
-    <string name="account_not_empty">User name and password cannot be empty</string>
+    <string name="account_not_empty">User name or password is empty</string>
     <string name="in_login">Logging in...</string>
     <string name="login_failed">Login failed, please check the network and log in again</string>
     <string name="please_anter_name">Please enter the map name</string>
-    <string name="not_wait_collect">Drawing cannot be collected in non standby mode. Please return to standby mode first</string>
-    <string name="batch_collect">Current batch deletion status, unable to enter collection mode</string>
+    <string name="not_wait_collect">It is not idle now, mapping could not be started</string>
+    <string name="batch_collect">It is in batch delete status, unable to map</string>
     <string name="please_delete_selected">Please select a picture to delete first</string>
     <string name="the_point_inexistence">The target point does not exist!</string>
     <string name="the_path_inexistence">The path does not exist！</string>
     <string name="please_select_point">Please select a target point before deleting</string>
-    <string name="please_select_path">Please select a path before deleting</string>
+    <string name="please_select_path">Please select a path to delete</string>
     <string name="current_map_unable_delete">The current map cannot be deleted</string>
     <string name="load_failed">Load failed</string>
-    <string name="can_not_relocation">Self calibration in progress, unable to relocate...</string>
+    <string name="can_not_relocation">Self-calibrating, unable to relocate</string>
     <string name="in_relocation">Relocating, please exit the current location first...</string>
-    <string name="not_map_using">There is no map currently in use. Please make sure there is a map collected and select a map to use！</string>
-    <string name="cancel_go_point">Cancel target point removal</string>
-    <string name="please_wait_self_calibration">Please wait, self calibration in progress</string>
-    <string name="please_wait_in">Please wait a moment, entering</string>
+    <string name="not_map_using">There is no map in use. Please make sure there is a map and select one to use！</string>
+    <string name="cancel_go_point">Cancel to POI</string>
+    <string name="please_wait_self_calibration">Wait a moment, self-calibrating...</string>
+    <string name="please_wait_in">Wait a moment, entering</string>
     <string name="please_create_task">Please create a task first</string>
     <string name="add_task_success">Add temporary task succeeded</string>
     <string name="add_task_faild">Failed to add temporary task</string>
     <string name="start_goto">Start going</string>
     <string name="add_s_d_goto">Add task succeeded, waiting to go</string>
-    <string name="now_no_task">No task currently</string>
-    <string name="now_no_location">There is currently no location</string>
+    <string name="now_no_task">There is no task</string>
+    <string name="now_no_location">There is no location</string>
     <string name="build_task_faild">Build path failed</string>
     <string name="now_Self_calibration">Currently in self calibration</string>
     <string name="back_Standby">Return to standby point</string>
-    <string name="s_now_task">Complete current task, start period task</string>
+    <string name="s_now_task">Complete current task, start timetask</string>
     <string name="no_task_yd">No mission, stand by</string>
     <string name="about_to_start">About to start</string>
     <string name="please_select_rpoint">Please select path point first</string>
@@ -345,22 +345,22 @@
     <string name="common_start">Start</string>
     <string name="in_wait_please">Standing by, please enter the execution state first</string>
     <string name="in_wait">Standing by, please enter the execution state first</string>
-    <string name="please_wait_back">Just a moment, please. Exiting</string>
+    <string name="please_wait_back">Just a moment, exiting</string>
     <string name="cancel_setting_time">Unset time</string>
-    <string name="setting_time">The end time must be greater than the start time, please reset</string>
+    <string name="setting_time">The end time must be later than the start time, please reset</string>
     <string name="not_in_time">Not within the time period, unable to recover!</string>
-    <string name="cancel_sunmit_task">Cancel the commit task</string>
-    <string name="no_timing_task">There is no scheduled task</string>
+    <string name="cancel_sunmit_task">Cancel to commit task</string>
+    <string name="no_timing_task">There is no timetask</string>
 
-    <string name="n_setting_distance">The deceleration distance at the beginning of obstacle avoidance shall not be less than the stopping distance. Please input again</string>
-    <string name="n_num_between">The value entered must be between 30-65!</string>
+    <string name="n_setting_distance">The deceleration distance shall be bigger than the stopping distance. Please input again</string>
+    <string name="n_num_between">The value must be 30-65!</string>
 
 
     <!--Dialog-->
     <string name="common_network_connecting">Network connecting...</string>
-    <string name="waiting_dialog">Please do not move the robot while positioning...</string>
-    <string name="exit_collecting_dialog">Exit collection or not</string>
-    <string name="save_map_dialog">Save current collection or not</string>
+    <string name="waiting_dialog">Localizating, please do not move the robot</string>
+    <string name="exit_collecting_dialog">Quit this map?</string>
+    <string name="save_map_dialog">End the mapping?</string>
     <string name="add_path_name_dialog">Add pathname</string>
     <string name="please_enter">Please enter a name</string>
     <string name="is_delete">Delete or not</string>
@@ -369,13 +369,13 @@
     <string name="init_map">Initializing map...</string>
     <string name="add_gauge_name">Add target name</string>
     <string name="reload_map">Reload map...</string>
-    <string name="in_load_map">Automatic positioning！</string>
-    <string name="is_save_setting">Save current settings and exit？</string>
+    <string name="in_load_map">It is loading the map！</string>
+    <string name="is_save_setting">Save the settings and exit？？</string>
     <string name="save_dialog">Save</string>
-    <string name="not_save_dialog">Do not save</string>
-    <string name="empty_map_data">All map data will be cleared, confirm the operation?</string>
+    <string name="not_save_dialog">Not save</string>
+    <string name="empty_map_data">All map datas will be cleared, confirm to do that?</string>
     <string name="is_back">Exit or not</string>
-    <string name="collect_map">Collecting maps</string>
+    <string name="collect_map">Mapping</string>
     <string name="enter_map_name">Enter map name</string>
     <string name="please_delete">Delete selected?</string>
     <string name="common_deleting">Deleting...</string>
@@ -383,16 +383,16 @@
     <string name="common_loading">In map information</string>
     <string name="in_switch">Switching...</string>
     <string name="switch_failed">Switch failed！</string>
-    <string name="relocation_failed_1">Automatic positioning failed, enter manual positioning or not</string>
+    <string name="relocation_failed_1">Auto-relocation failed, enter manual relocation or not</string>
     <string name="common_yes">Yes</string>
     <string name="common_no">No</string>
 
     <string name="enter_run_times">Please enter the number of cycles</string>
     <string name="is_go">Whether to go ?</string>
-    <string name="current_not_location">There is currently no positioning, please select the relocation method</string>
+    <string name="current_not_location">There is no location, please select the relocation method</string>
     <string name="hand_location">Manual</string>
     <string name="auto_location">Automatic</string>
-    <string name="is_delete_task">Whether to delete the task</string>
+    <string name="is_delete_task">Delete the task?</string>
     <string name="submit_task">Submit a task</string>
     <string name="enter_task_name">Enter the task name</string>
     <string name="name_is_exist">The name already exists, please rename it.</string>

@@ -40,7 +40,7 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     // 不在主线程中实例化Handle, Looper.getMainLooper()表示放到主UI线程去处理。
-    private  final Handler HANDLER = new Handler(Looper.getMainLooper());
+    private final  Handler HANDLER = new Handler(Looper.getMainLooper());
     public final Object mHandlerToken = hashCode();
     public Context context;
     public Runnable mRunnable;
