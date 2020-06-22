@@ -283,7 +283,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
-    @OnClick({R.id.iv_menu,R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown,R.id.tv_switch_language})
+    @OnClick({R.id.iv_menu,R.id.status, R.id.mapmanager, R.id.taskmanager, R.id.highset,R.id.tv_quit,R.id.tv_shutdown,R.id.tv_switch_language,R.id.tv_charging})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_menu:
@@ -339,11 +339,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 changeLanguage(language);
                 break;
             case R.id.tv_charging:
-                if (!GlobalParameter.isIsAutoCharge()){
+                if (!SpUtil.getInstance(context).getBoolean(SpUtil.CHARGE_STATUS)){
                     toast(R.string.auto_charge_notify_1);
                 }else if (!haveChargePoint()){
                     toast(R.string.auto_charge_notify_2);
                 }else {
+                    toast(R.string.auto_charge_notify_3);
                     tcpClient.goToCharge();
                 }
                 break;

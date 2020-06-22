@@ -25,6 +25,7 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
+import ddr.example.com.nddrandroidclient.language.SpUtil;
 import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.other.SlideButton;
@@ -103,7 +104,7 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
                 getChosseStatus();
                 break;
             case R.id.tv_save_auto_char:
-                GlobalParameter.setIsAutoCharge(slideButton.isChecked());
+                SpUtil.getInstance(getContext()).putBoolean(SpUtil.CHARGE_STATUS,slideButton.isChecked());
                 int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
                 int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
                 postNaparmeter(ByteString.copyFromUtf8(switchAutoKey),ByteString.copyFromUtf8(autoValue),2,3);

@@ -2,6 +2,9 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -17,6 +20,11 @@ import com.jaygoo.widget.VerticalRangeSeekBar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -54,10 +62,10 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
  * modify time: 2020/3/23
  */
 public class CollectingActivity extends DDRActivity {
-    @BindView(R.id.collect4)
+ /*   @BindView(R.id.collect4)
     CollectingView4 collectingView4;
     @BindView(R.id.collect3)
-    CollectingView3 collectingView3;
+    CollectingView3 collectingView3;*/
     @BindView(R.id.process_bar)
     ProgressBar processBar;
     @BindView(R.id.layout_progress)
@@ -262,7 +270,7 @@ public class CollectingActivity extends DDRActivity {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 quitCollect();
-                                stopDraw();
+                                //stopDraw();
                                 finish();
                             }
                             @Override
@@ -280,7 +288,7 @@ public class CollectingActivity extends DDRActivity {
                             public void onConfirm(BaseDialog dialog, String content) {
                                 exitModel();
                                 layoutProgress.setVisibility(View.VISIBLE);
-                                stopDraw();
+                                //stopDraw();
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
@@ -541,22 +549,44 @@ public class CollectingActivity extends DDRActivity {
         task.cancel();
         tcpClient.requestFile();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-        if (collectingView3!=null){
+       /* if (collectingView3!=null){
             if (collectingView3.isRunning){
                 Logger.e("非正常退出采集模式");
                 stopDraw();
             }
-        }
+        }*/
 
     }
     @Override
     protected void onResume() {
         super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Logger.e("Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
+        } else {
+            Logger.e("OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
         if (tcpClient!=null&&!tcpClient.isConnected()){
             Logger.e("网络无法连接!");
             //netWorkStatusDialog();
         }
     }
+
+    //OpenCV库加载并初始化成功后的回调函数
+    private BaseLoaderCallback mLoaderCallback=new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status){
+                case LoaderCallbackInterface.SUCCESS:
+                    Logger.e("OpenCVLoader加载成功");
+                    break;
+                default:
+                    break;
+            }
+            super.onManagerConnected(status);
+        }
+    };
 
     /**
      * 显示网络连接弹窗
@@ -582,7 +612,7 @@ public class CollectingActivity extends DDRActivity {
     public boolean statusBarDarkFont() {
         return false;
     }
-    private int totalSize=0;
+   /* private int totalSize=0;
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void upDateDrawMap(MessageEvent mainUpDate){
         switch (mainUpDate.getType()){
@@ -616,7 +646,7 @@ public class CollectingActivity extends DDRActivity {
                 }
                 break;
         }
-    }
+    }*/
 
     /**
      * 弧度转角度
@@ -624,44 +654,14 @@ public class CollectingActivity extends DDRActivity {
     private float radianToangle(float angle){
         return (float)(180/Math.PI*angle);
     }
-    /**
-     * 计算缩放比例
-     * @param list
-     */
-    private void maxOrmin(List<BaseCmd.notifyLidarPts.Position> list){
-        long startTime=System.currentTimeMillis();
-        if (list!=null){
-            int listSize=list.size();
-            for (int i=0;i<listSize;i++){
-                if (maxX<list.get(i).getPtX()) maxX=list.get(i).getPtX();
-                if (maxY<list.get(i).getPtY()) maxY=list.get(i).getPtY();
-                if (minX>list.get(i).getPtX()) minX=list.get(i).getPtX();
-                if (minY>list.get(i).getPtY()) minY=list.get(i).getPtY();
-            }
-            if (maxX<posX) maxX=posX;
-            if (maxY<posY) maxY=posY;
-            if (minX>posX) minX=posX;
-            if (minY>posY) minY=posY;
-            float xy=Math.max(Math.max(maxX,Math.abs(minX)),Math.max(maxY,Math.abs(minY)));
-            if (xy<=0){
-                ratio=1;
-            }else {
-                if (measureWidth>measureHeight){
-                    ratio=measureWidth/(xy)/2*1;
-                }else {
-                    ratio=measureHeight/(xy)/2*1;
-                }
-            }
-        }
-        long endTime=System.currentTimeMillis();
-    }
 
-    /**
+
+   /* *//**
      * 停止绘制
-     */
+     *//*
     public void stopDraw(){
         collectingView4.onStop();
         collectingView3.onStop();
     }
-
+*/
 }
