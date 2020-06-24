@@ -239,7 +239,7 @@
     <!--地图编辑页面-->
     <string name="mark_current">标记机器人当前位置</string>
     <string name="select_point">点击选择目标点建路径</string>
-    <string name="common_gridlayout">网格：</string>
+    <string name="common_gridlayout">网格</string>
     <string name="common_add_point">添加点</string>
     <string name="common_revocation">撤销</string>
     <string name="common_delete_point">删除点</string>
@@ -283,6 +283,9 @@
     <string name="relocation_failed">重新定位失败，请重新设置机器人位姿</string>
     <string name="relocation_succeed">定位成功!</string>
     <string name="the_relocation">正在重新定位中可能需要1~3分钟时间...</string>
+    <string name="manually_locateing">手动重定位</string>
+    <string name="quit_locateing">取消重定位</string>
+    <string name="in_locateing">正在重定位...</string>
     
     
 

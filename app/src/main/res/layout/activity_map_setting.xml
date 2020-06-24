@@ -270,17 +270,17 @@
         android:layout_below="@id/layout_title"
         android:layout_marginTop="273dp"
         android:layout_marginLeft="48dp"/>
+
     <TextView
         android:layout_width="242dp"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_navigation"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="12dp"
+        android:gravity="right"
         android:text="@string/nav_notify_1"
         android:textColor="#99ffffff"
-        android:textSize="12sp"
-        android:gravity="right"
-        android:layout_below="@id/tv_navigation"
-        android:layout_marginTop="14dp"
-        android:layout_marginLeft="48dp"
-        />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_line_patrol"

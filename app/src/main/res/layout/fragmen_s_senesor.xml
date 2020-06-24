@@ -137,6 +137,7 @@
         android:background="@drawable/bg_task_cz"
         android:gravity="center"
         android:digits="1234567890"
+        android:maxLength="3"
         android:inputType="numberSigned|numberDecimal|text"
         android:imeOptions="actionDone"
         android:textColor="#ffffff"
