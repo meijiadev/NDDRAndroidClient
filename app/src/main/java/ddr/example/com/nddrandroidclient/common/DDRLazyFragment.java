@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseLazyFragment;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 
@@ -123,7 +124,8 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
     }
 
     public void toast(@StringRes int id) {
-        ToastUtils.show(id);
+        String s=getString(id);
+        ToastUtils.show(s);
     }
 
     public void toast(Object object) {

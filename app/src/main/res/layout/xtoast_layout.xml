@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="100dp"
+    android:background="@drawable/bt_bg__map">
+     <TextView
+         android:id="@+id/tvNetworkNotify"
+         android:layout_width="match_parent"
+         android:layout_height="50dp"
+         android:layout_centerHorizontal="true"
+         android:text="@string/network_notify"
+         android:textColor="@color/red"
+         android:gravity="center"
+         android:layout_marginTop="20dp"
+         />
+    <TextView
+        android:id="@+id/tvBackLogin"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="@string/networkNotify_1"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        android:layout_below="@id/tvNetworkNotify"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        />
+
+
+</RelativeLayout>

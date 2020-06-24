@@ -23,8 +23,10 @@
     <string name="time_last">上一步</string>
     <string name="time_start_title">请选择开始时间</string>
     <string name="time_end_time">请选择结束时间</string>
-
     <string name="createMapPathToServer">建图路径</string>
+
+    <string name="network_notify">与服务连接断开，正在重连中...</string>
+    <string name="networkNotify_1">（点击此处返回登录页面）</string>
 
 
 
@@ -46,7 +48,7 @@
     <string name="robot_shutdown">关机</string>
     <string name="app_quit">退出</string>
     <string name="switch_to_cn">切换成中文</string>
-    <string name="switch_to_en">切换成英文</string>
+    <string name="switch_to_en">Switch to English</string>
     <string name="go_to_charge">去充电</string>
     <string name="line_speed">线速度：</string>
     <string name="angulau_speed">角速度：</string>

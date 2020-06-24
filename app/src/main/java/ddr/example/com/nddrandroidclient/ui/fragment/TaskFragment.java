@@ -81,7 +81,13 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
 //                Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
-                taskModeList=mapFileStatus.getcTaskModes();
+                try {
+                    taskModeList=ListTool.deepCopy(mapFileStatus.getcTaskModes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 taskAdapter.setNewData(taskModeList);
                 break;
         }
@@ -147,6 +153,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                                 case R.id.tv_task_pause:
                                     handleTask(position);
                                     submissionTask();
+                                    taskAdapter.setNewData(taskModeList);
                                     break;
                                     // 已修改成“删除”任务
                                 case R.id.tv_task_stop:
@@ -431,7 +438,13 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
         super.onRestart();
         Logger.e("------onRestart");
         Logger.e("列表数"+mapFileStatus.getcTaskModes().size());
-        taskModeList=mapFileStatus.getcTaskModes();
+        try {
+            taskModeList=ListTool.deepCopy(mapFileStatus.getcTaskModes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         taskAdapter.setNewData(taskModeList);
         submissionTask();
     }
@@ -447,5 +460,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
         super.onPause();
         Logger.e("------onPause");
     }
+
+
 
 }

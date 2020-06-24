@@ -335,9 +335,7 @@ public class MapSettingActivity extends DDRActivity {
                     mapName=newMapName;
                 }
                 break;
-            case notifyTCPDisconnected:
-                netWorkStatusDialog();
-                break;
+
         }
     }
 

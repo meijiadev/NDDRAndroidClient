@@ -44,8 +44,8 @@
     <string name="control_status">RC</string>
     <string name="robot_shutdown">Power off</string>
     <string name="app_quit">Log out</string>
-    <string name="switch_to_cn">Switch to Chinese</string>
-    <string name="switch_to_en">Switch to English</string>
+    <string name="switch_to_cn">切换成中文</string>
+    <string name="switch_to_en">切换成英文</string>
     <string name="go_to_charge">To charge</string>
     <string name="line_speed">Linear velocity：</string>
     <string name="angulau_speed">Angular velocity：</string>

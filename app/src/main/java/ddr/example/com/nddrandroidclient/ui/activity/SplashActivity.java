@@ -14,6 +14,10 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -22,6 +26,7 @@ import butterknife.BindView;
 
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
+import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
 
@@ -35,6 +40,8 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
     ImageView ivSplash;
     public UdpClient udpClient;
     private int port=28888;
+
+    private String [] permission=new String[]{ Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE,Permission.SYSTEM_ALERT_WINDOW};
     @Override
     protected int getLayoutId() {
         return R.layout.activity_splash;
@@ -96,7 +103,7 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
      */
     private void requestPermission(){
         XXPermissions.with(this)
-                .permission(Permission.Group.STORAGE)
+                .permission(permission)
                 .request(this);
     }
 
@@ -146,4 +153,30 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Logger.e("Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
+        } else {
+            Logger.e("OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    }
+
+    //OpenCV库加载并初始化成功后的回调函数
+    private BaseLoaderCallback mLoaderCallback=new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status){
+                case LoaderCallbackInterface.SUCCESS:
+                    Logger.e("OpenCVLoader加载成功");
+                    break;
+                default:
+                    break;
+            }
+            super.onManagerConnected(status);
+        }
+    };
 }

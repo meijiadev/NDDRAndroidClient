@@ -48,8 +48,17 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
 
     @Override
     public void setNewData(@Nullable List<TaskMode> data) {
+        checkTask(data);
         super.setNewData(data);
     }
+    private void checkTask(List<TaskMode> taskModes){
+        for (int i=0;i<taskModes.size();i++){
+            if (taskModes.get(i).getName().equals("AB_Task.task")){
+                taskModes.remove(i);
+            }
+        }
+    }
+
 
     /**
      *
@@ -77,74 +86,88 @@ public class TaskAdapter extends BaseAdapter<TaskMode> {
                 }
                 break;
             case R.layout.item_recycle_tasklist:
-                if (item.getName().equals("AB_Task.task")){
-                    setVisibility(false,helper);
-                }else {
-                    tv_task_status=helper.getView(R.id.tv_task_status);
-                    tv_task_time=helper.getView(R.id.tv_task_time);
-                    tvPause=helper.getView(R.id.tv_task_pause);
-                    //Logger.e("-------TaskState:"+item.getTaskState());
-                    switch (item.getTaskState()){
-                        case 0:
-                        case 4:
-                            tv_task_status.setText(R.string.common_terminated);
-                            tvPause.setText(R.string.common_recover);
-                            tvPause.setTextColor(Color.WHITE);
-                            break;
-                        case 1:
-                            tv_task_status.setText(R.string.common_wait_execute);
-                            tvPause.setText(R.string.common_stop);
-                            tvPause.setTextColor(Color.WHITE);
-                            break;
-                        case 2:
-                            tv_task_status.setText(R.string.common_executing);
-                            tvPause.setText(R.string.common_pause);
-                            tvPause.setTextColor(Color.WHITE);
-                            break;
-                        case 3:
-                            tv_task_status.setText(R.string.common_executed);
-                            tvPause.setText(R.string.common_recover);
-                            tvPause.setTextColor(Color.parseColor("#99ffffff"));
-                            break;
-                        case 5:
-                            tv_task_status.setText(R.string.common_put_up);
-                            tvPause.setText(R.string.common_recover);
-                            tvPause.setTextColor(Color.WHITE);
-                            break;
-                    }
-                    String starth=null;
-                    String startm=null;
-                    String endh=null;
-                    String endm=null;
-                    if (item.getStartHour()<10){
-                        starth="0"+item.getStartHour();
-                    }else {
-                        starth=""+item.getStartHour();
-                    }
-                    if (item.getStartMin()<10){
-                        startm="0"+item.getStartMin();
-                    }else {
-                        startm=""+item.getStartMin();
-                    }
-                    if (item.getEndHour()<10){
-                        endh="0"+item.getEndHour();
-                    }else {
-                        endh=""+item.getEndHour();
-                    }
-                    if (item.getEndMin()<10){
-                        endm="0"+item.getEndMin();
-                    }else {
-                        endm=""+item.getEndMin();
-                    }
-                    String taskName1=item.getName();
-                    taskName1=taskName1.replaceAll("DDRTask_","");
-                    taskName1=taskName1.replaceAll(".task","");
-                    helper.setText(R.id.tv_map_list,taskName1)
-                            .addOnClickListener(R.id.layout_time,R.id.tv_task_pause,R.id.tv_task_stop)
-                            .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
+                tv_task_status=helper.getView(R.id.tv_task_status);
+                tv_task_time=helper.getView(R.id.tv_task_time);
+                tvPause=helper.getView(R.id.tv_task_pause);
+                //Logger.e("-------TaskState:"+item.getTaskState());
+                switch (item.getTaskState()){
+                    case 0:
+                    case 4:
+                        tv_task_status.setText(R.string.common_terminated);
+                        tvPause.setText(R.string.common_recover);
+                        tvPause.setTextColor(Color.WHITE);
+                        break;
+                    case 1:
+                        tv_task_status.setText(R.string.common_wait_execute);
+                        tvPause.setText(R.string.common_stop);
+                        tvPause.setTextColor(Color.WHITE);
+                        break;
+                    case 2:
+                        tv_task_status.setText(R.string.common_executing);
+                        tvPause.setText(R.string.common_pause);
+                        tvPause.setTextColor(Color.WHITE);
+                        break;
+                    case 3:
+                        tv_task_status.setText(R.string.common_executed);
+                        tvPause.setText(R.string.common_recover);
+                        tvPause.setTextColor(Color.parseColor("#99ffffff"));
+                        break;
+                    case 5:
+                        tv_task_status.setText(R.string.common_put_up);
+                        tvPause.setText(R.string.common_recover);
+                        tvPause.setTextColor(Color.WHITE);
+                        break;
                 }
+                String starth=null;
+                String startm=null;
+                String endh=null;
+                String endm=null;
+                if (item.getStartHour()<10){
+                    starth="0"+item.getStartHour();
+                }else {
+                    starth=""+item.getStartHour();
+                }
+                if (item.getStartMin()<10){
+                    startm="0"+item.getStartMin();
+                }else {
+                    startm=""+item.getStartMin();
+                }
+                if (item.getEndHour()<10){
+                    endh="0"+item.getEndHour();
+                }else {
+                    endh=""+item.getEndHour();
+                }
+                if (item.getEndMin()<10){
+                    endm="0"+item.getEndMin();
+                }else {
+                    endm=""+item.getEndMin();
+                }
+                String taskName1=item.getName();
+                taskName1=taskName1.replaceAll("DDRTask_","");
+                taskName1=taskName1.replaceAll(".task","");
+                helper.setText(R.id.tv_map_list,taskName1)
+                        .addOnClickListener(R.id.layout_time,R.id.tv_task_pause,R.id.tv_task_stop)
+                        .setText(R.id.tv_task_time,starth+":"+startm+"-"+endh+":"+endm);
                 break;
         }
+    }
+    /**
+     * 将某个item直接隐藏
+     * @param isVisible
+     * @param helper
+     */
+    public void setVisibility(boolean isVisible,BaseViewHolder helper){
+        RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)helper.getConvertView().getLayoutParams();
+        if (isVisible){
+            param.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            helper.getConvertView().setVisibility(View.VISIBLE);
+        }else{
+            helper.getConvertView().setVisibility(View.GONE);
+            param.height = 0;
+            param.width = 0;
+        }
+        helper.getConvertView().setLayoutParams(param);
     }
 
 

@@ -55,6 +55,8 @@ public class SurfaceTouchEventHandler {
     private int widthScreen;
     private int heightScreen;
     private boolean canRotate=true;             // 默认可旋转
+    private Bitmap sourceBitmap;
+
 
 
     public static SurfaceTouchEventHandler getInstance(int widthScreen,int heightScreen){
@@ -74,6 +76,24 @@ public class SurfaceTouchEventHandler {
         this.heightScreen=heightScreen;
     }
 
+
+    public void setDefaultBitmap(Bitmap srcBitmap){
+        if (srcBitmap!=null){
+            int bitmapWidth=srcBitmap.getWidth();
+            int bitmapHeight=srcBitmap.getHeight();
+            if (sourceBitmap==null||(sourceBitmap.getWidth()!=bitmapWidth||sourceBitmap.getHeight()!=bitmapHeight)){
+                this.sourceBitmap=srcBitmap;
+                savedMatrix.set(matrix);
+                matrix1.set(savedMatrix);
+                float translateX=(widthScreen-bitmapWidth)/2f;
+                float translateY=(heightScreen-bitmapHeight)/2f;
+                matrix1.postTranslate(translateX,translateY);
+                matrix.set(matrix1);
+                matrix.getValues(values);
+                originalMatrix.set(matrix);
+            }
+        }
+    }
     /**
      * 获取最终用于绘制的矩阵变量
      * @return
@@ -313,6 +333,7 @@ public class SurfaceTouchEventHandler {
      */
     public void onDestroy(){
         surfaceTouchEventHandler=null;
+        sourceBitmap=null;
         matrix.reset();
     }
 

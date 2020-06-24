@@ -1314,9 +1314,6 @@ public class MapEditActivity extends DDRActivity {
                     Logger.e("-------地图加载");
                 },500);
                 break;
-            case notifyTCPDisconnected:
-                netWorkStatusDialog();
-                break;
         }
     }
 

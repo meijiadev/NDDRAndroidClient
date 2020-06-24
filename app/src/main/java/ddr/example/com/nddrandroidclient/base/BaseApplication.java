@@ -83,6 +83,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         });
         // 吐司工具类
         ToastUtils.init(application,new ToastWhiteStyle(application));
+
         // EventBus 事件总线
         EventBusManager.init();
         // Crash 捕捉界面
@@ -132,6 +133,8 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
     public static Context getContext() {
         return context;
     }
+
+
 
 
 

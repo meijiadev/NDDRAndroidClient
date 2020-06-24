@@ -59,21 +59,12 @@
             />
 
     </RelativeLayout>
-
-  <!--  <ddr.example.com.nddrandroidclient.widget.view.CollectingView4
-        android:id="@+id/collect4"
+    <ddr.example.com.nddrandroidclient.widget.zoomview.GenerateMapView
+        android:id="@+id/generateMapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/title_layout"
-        android:visibility="visible"
-        />
-    <ddr.example.com.nddrandroidclient.widget.view.CollectingView3
-        android:id="@+id/collect3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/title_layout"
-        android:visibility="visible"
-        />-->
+        android:layout_centerInParent="true"
+        android:layout_below="@id/title_layout"/>
 
     <!--回环检测-->
     <TextView

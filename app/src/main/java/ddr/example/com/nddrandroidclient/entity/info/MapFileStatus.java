@@ -293,6 +293,7 @@ public class MapFileStatus {
                 return targetPoint;
             case 8:
                 targetPoint.setPointType(PointType.eMarkingTypeNormal);
+                targetPoint.setName(targetPtItems.get(position).getPtName().toStringUtf8());
                 return targetPoint;
             case 9:
                 Logger.e("------初始点");

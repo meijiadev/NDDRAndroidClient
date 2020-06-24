@@ -52,6 +52,7 @@ import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView3;
 import ddr.example.com.nddrandroidclient.widget.view.CollectingView4;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
+import ddr.example.com.nddrandroidclient.widget.zoomview.GenerateMapView;
 
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
@@ -66,6 +67,8 @@ public class CollectingActivity extends DDRActivity {
     CollectingView4 collectingView4;
     @BindView(R.id.collect3)
     CollectingView3 collectingView3;*/
+    @BindView(R.id.generateMapView)
+    GenerateMapView generateMapView;
     @BindView(R.id.process_bar)
     ProgressBar processBar;
     @BindView(R.id.layout_progress)
@@ -114,9 +117,8 @@ public class CollectingActivity extends DDRActivity {
     private float posX,posY;        //机器人当前位置
     private float radian;           // 机器人当前朝向 单位弧度
     private float angle;            // 机器人当前朝向 弧度转换后的角度
-    private float minX=0,minY=0,maxX=0,maxY=0;  //雷达扫到的最大坐标和最小坐标
+
     private float ratio=1;         //地图比例
-    private int measureWidth=1000, measureHeight=1000;
     private boolean isStartDraw=false;        //是否开始绘制
     private int clicks;                       //点击次数
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -160,9 +162,7 @@ public class CollectingActivity extends DDRActivity {
                         break;
                 }
                 break;
-            case notifyTCPDisconnected:
-                netWorkStatusDialog();
-                break;
+
         }
     }
 
@@ -212,6 +212,10 @@ public class CollectingActivity extends DDRActivity {
                         myRockerZy.setVisibility(View.VISIBLE);
                         myRocker.setVisibility(View.VISIBLE);
                         addPoi.setVisibility(View.VISIBLE);
+                        if (!isStartDraw){
+                            generateMapView.startThread();
+                        }
+                        isStartDraw=true;
                         break;
                 }
             }
@@ -270,7 +274,7 @@ public class CollectingActivity extends DDRActivity {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
                                 quitCollect();
-                                //stopDraw();
+                                generateMapView.onStop();
                                 finish();
                             }
                             @Override
@@ -288,7 +292,7 @@ public class CollectingActivity extends DDRActivity {
                             public void onConfirm(BaseDialog dialog, String content) {
                                 exitModel();
                                 layoutProgress.setVisibility(View.VISIBLE);
-                                //stopDraw();
+                                generateMapView.onStop();
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
@@ -549,44 +553,24 @@ public class CollectingActivity extends DDRActivity {
         task.cancel();
         tcpClient.requestFile();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-       /* if (collectingView3!=null){
-            if (collectingView3.isRunning){
+        if (generateMapView!=null){
+            if (generateMapView.isRunning){
                 Logger.e("非正常退出采集模式");
-                stopDraw();
+                generateMapView.onStop();
             }
-        }*/
+        }
+
 
     }
     @Override
     protected void onResume() {
         super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Logger.e("Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
-        } else {
-            Logger.e("OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
         if (tcpClient!=null&&!tcpClient.isConnected()){
             Logger.e("网络无法连接!");
             //netWorkStatusDialog();
         }
     }
 
-    //OpenCV库加载并初始化成功后的回调函数
-    private BaseLoaderCallback mLoaderCallback=new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status){
-                case LoaderCallbackInterface.SUCCESS:
-                    Logger.e("OpenCVLoader加载成功");
-                    break;
-                default:
-                    break;
-            }
-            super.onManagerConnected(status);
-        }
-    };
 
     /**
      * 显示网络连接弹窗
@@ -612,56 +596,7 @@ public class CollectingActivity extends DDRActivity {
     public boolean statusBarDarkFont() {
         return false;
     }
-   /* private int totalSize=0;
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void upDateDrawMap(MessageEvent mainUpDate){
-        switch (mainUpDate.getType()){
-            case receivePointCloud:
-                if (NotifyBaseStatusEx.getInstance().getSonMode()==6){
-                    if (measureHeight==0){
-                        measureWidth=collectingView4.getWidth();
-                        measureHeight=collectingView4.getHeight();
-                        Logger.e("------绘图控件大小"+measureWidth+";"+measureHeight);
-                    }
-                    //long startTime=System.currentTimeMillis();
-                    posX=notifyLidarPtsEntity.getPosX();
-                    posY=notifyLidarPtsEntity.getPosY();
-                    radian=notifyLidarPtsEntity.getPosdirection();
-                    totalSize=totalSize+notifyLidarPtsEntity.getPositionList().size();
-                    Logger.e("------接收到点数总和："+totalSize);
-                    //tvCs.setText("x:"+posX+"y:"+posY+"radian:"+radian);
-                    angle=radianToangle(radian);
-                    notifyLidarPtsEntity1=new NotifyLidarPtsEntity();
-                    notifyLidarPtsEntity1.setPosX(notifyLidarPtsEntity.getPosX());
-                    notifyLidarPtsEntity1.setPosY(notifyLidarPtsEntity.getPosY());
-                    notifyLidarPtsEntity1.setPositionList(notifyLidarPtsEntity.getPositionList());
-                    ptsEntityList.add(notifyLidarPtsEntity1);
-                    if (!isStartDraw){
-                        collectingView4.startThread();
-                        collectingView3.startThread();
-                    }
-                    collectingView4.setData(ptsEntityList,poiPoints);
-                    collectingView3.setData(ptsEntityList,angle);
-                    isStartDraw=true;
-                }
-                break;
-        }
-    }*/
-
-    /**
-     * 弧度转角度
-     */
-    private float radianToangle(float angle){
-        return (float)(180/Math.PI*angle);
-    }
 
 
-   /* *//**
-     * 停止绘制
-     *//*
-    public void stopDraw(){
-        collectingView4.onStop();
-        collectingView3.onStop();
-    }
-*/
+
 }

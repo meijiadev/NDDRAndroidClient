@@ -17,7 +17,7 @@ public class SpUtil {
     private static SharedPreferences.Editor editor;
 
     private SpUtil(Context context) {
-        hmSpref = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        hmSpref = context.getApplicationContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         editor = hmSpref.edit();
     }
 

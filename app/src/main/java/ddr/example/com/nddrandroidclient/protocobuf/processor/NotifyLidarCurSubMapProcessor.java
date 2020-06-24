@@ -4,8 +4,16 @@ import android.content.Context;
 
 import com.google.protobuf.GeneratedMessageLite;
 
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+
+import java.util.List;
+
 import DDRCommProto.BaseCmd;
+import ddr.example.com.nddrandroidclient.entity.info.GridItem;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarCurSubMap;
+import ddr.example.com.nddrandroidclient.helper.OpenCVUtility;
 import ddr.example.com.nddrandroidclient.helper.ZlibUtil;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -19,19 +27,26 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
         super.process(context, commonHeader, msg);
         BaseCmd.notifyLidarCurSubMap notifyLidarCurSubMap= (BaseCmd.notifyLidarCurSubMap) msg;
         NotifyLidarCurSubMap notifyLidarCurSubMap1=NotifyLidarCurSubMap.getInstance();
-        NotifyLidarCurSubMap notifyLidarCurSubMap2=new NotifyLidarCurSubMap();
-        notifyLidarCurSubMap2.setCompressionType(notifyLidarCurSubMap.getCompressionType());
-        notifyLidarCurSubMap2.setGridItem(notifyLidarCurSubMap.getGridIndex());
-        notifyLidarCurSubMap2.setHeight(notifyLidarCurSubMap.getHeight());
-        notifyLidarCurSubMap2.setWidth(notifyLidarCurSubMap.getWidth());
-        notifyLidarCurSubMap2.setPosDirection(notifyLidarCurSubMap.getPosdirection());
-        notifyLidarCurSubMap2.setPosX(notifyLidarCurSubMap.getPosx());
-        notifyLidarCurSubMap2.setPosY(notifyLidarCurSubMap.getPosy());
-        notifyLidarCurSubMap2.setTimes(notifyLidarCurSubMap.getTimestamp());
-        String index=notifyLidarCurSubMap2.getGridItem().getGridX()+","+notifyLidarCurSubMap2.getGridItem().getGridX();
-        //Logger.e("-----地图索引："+index+"----"+notifyLidarCurSubMap1.getDataMap().size());
-        notifyLidarCurSubMap2.setSubMap(ZlibUtil.unZip(notifyLidarCurSubMap.getSubmap().toByteArray()));
-        notifyLidarCurSubMap1.addData(index,notifyLidarCurSubMap2);
-        Logger.e("-----接收栅格地图"+notifyLidarCurSubMap2.getCompressionType()+"数组长度："+notifyLidarCurSubMap2.getSubMap().length);
+        notifyLidarCurSubMap1.setCompressionType(notifyLidarCurSubMap.getCompressionType());
+        notifyLidarCurSubMap1.setHeight(notifyLidarCurSubMap.getHeight());
+        notifyLidarCurSubMap1.setWidth(notifyLidarCurSubMap.getWidth());
+        notifyLidarCurSubMap1.setPosDirection(notifyLidarCurSubMap.getPosdirection());
+        notifyLidarCurSubMap1.setPosX(notifyLidarCurSubMap.getPosx());
+        notifyLidarCurSubMap1.setPosY(notifyLidarCurSubMap.getPosy());
+        notifyLidarCurSubMap1.setTimes(notifyLidarCurSubMap.getTimestamp());
+        notifyLidarCurSubMap1.setLidarRange(notifyLidarCurSubMap.getOaLidarRange());
+        GridItem gridItem=new GridItem(notifyLidarCurSubMap.getGridIndex().getGridX(),notifyLidarCurSubMap.getGridIndex().getGridY());
+        notifyLidarCurSubMap1.setGridItem(gridItem);
+        try {
+            long startTime=System.currentTimeMillis();
+            byte[]data=ZlibUtil.unZip(notifyLidarCurSubMap.getSubmap().toByteArray());
+            Mat mat= new Mat(new Size(notifyLidarCurSubMap.getWidth(),notifyLidarCurSubMap.getHeight()), CvType.CV_8UC3);
+            mat.put(0,0,data);
+            OpenCVUtility.getInstance().putValue(gridItem,mat);
+            long endTime=System.currentTimeMillis();
+            Logger.e("耗费的时间："+(endTime-startTime));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

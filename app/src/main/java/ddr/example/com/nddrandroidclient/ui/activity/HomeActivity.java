@@ -178,10 +178,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 if (className.equals(HomeActivity.class.toString()))
                 new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.taskmanager));
                 break;
-            case notifyTCPDisconnected:
-                Logger.e("----------断开连接页面：HomeActivity");
-                netWorkStatusDialog();
-                break;
             case updateRelocationStatus:
                 int relocationStatus= (int) messageEvent.getData();
                 if (relocationStatus==1&&vpHomePager!=null){

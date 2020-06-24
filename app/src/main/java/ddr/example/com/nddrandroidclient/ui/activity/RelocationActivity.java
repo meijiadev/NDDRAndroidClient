@@ -193,9 +193,6 @@ public class RelocationActivity extends DDRActivity {
                         break;
                 }
                 break;
-            case notifyTCPDisconnected:
-                netWorkStatusDialog();
-                break;
             case touchFloatWindow:
                 new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.iv_back));
                 break;

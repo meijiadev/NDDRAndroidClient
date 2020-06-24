@@ -264,7 +264,11 @@ public class ZoomImageView extends View {
     }
 
     protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(sourceBitmap, touchEvenHandler.getMatrix(), null);
+        try {
+            canvas.drawBitmap(sourceBitmap, touchEvenHandler.getMatrix(), null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         PointView.getInstance(context).drawPoint(canvas,this);
         LineView.getInstance(context).drawLine(canvas,this);
         GridLayerView.getInstance(this).drawGrid(canvas);
