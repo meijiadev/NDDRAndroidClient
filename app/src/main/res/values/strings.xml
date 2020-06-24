@@ -53,6 +53,8 @@
     <string name="angulau_speed_1">弧度/秒</string>
     <string name="auto_charge_notify_1">未开启自动充电功能，请设置后尝试</string>
     <string name="auto_charge_notify_2">当前地图未设置充电点，是否前往设置</string>
+    <string name="auto_charge_notify_3">即将准备前往充电点</string>
+    <string name="exit_charging">正在退出充电模式</string>
 
     <!--地图管理-->
     <string name="new_create_map">新建地图</string>

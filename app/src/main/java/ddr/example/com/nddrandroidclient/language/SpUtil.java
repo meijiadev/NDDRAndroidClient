@@ -11,6 +11,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public class SpUtil {
     public static final String LANGUAGE = "language";
     private static final String SP_NAME = "poemTripSpref";
+    public static final String CHARGE_STATUS="chargeStatus";
     private static SpUtil spUtil;
     private static SharedPreferences hmSpref;
     private static SharedPreferences.Editor editor;
@@ -37,7 +38,16 @@ public class SpUtil {
         Logger.e("设置的语言："+value);
     }
 
+    public void putBoolean(String key,boolean value){
+        editor.putBoolean(key,value);
+        editor.commit();
+    }
+
     public String getString(String key) {
         return hmSpref.getString(key,"");
+    }
+
+    public boolean getBoolean(String key){
+        return hmSpref.getBoolean(key,false);
     }
 }

@@ -398,9 +398,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
                     chargingLayout.setVisibility(View.VISIBLE);
                     leftLayout.setVisibility(View.GONE);
-                    if (!chargeAnimation.isRunning()){
-                        chargeAnimation.start();
-                    }
+                }
+
+                if (!chargeAnimation.isRunning()){
+                    chargeAnimation.start();
                 }
                 break;
             case 4:
@@ -411,6 +412,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
+        Logger.d("当前充电状态："+notifyBaseStatusEx.getChargingSubStatus());
     }
 
     /**
@@ -452,7 +454,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point,R.id.tv_warn})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point,R.id.tv_warn,R.id.bt_exit_charge})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -504,6 +506,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                             }
                         }).show();
 
+                break;
+            case R.id.bt_exit_charge:
+                tcpClient.exitModel();
+                toast(R.string.exit_charging);
                 break;
         }
     }

@@ -10,6 +10,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyBaseStatusExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyEnvInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyHardStateProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarCurSubMapProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyMapGenStatProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyRelocaStatusProcessor;
@@ -142,5 +143,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         DDRAIServiceCmd.rspSpeechConfig rspSpeechConfig=DDRAIServiceCmd.rspSpeechConfig.newBuilder().build();
         m_ProcessorMap.put(rspSpeechConfig.getClass().toString(),new RspSpeechConfigProcessor());
+
+        BaseCmd.notifyLidarCurSubMap notifyLidarCurSubMap= BaseCmd.notifyLidarCurSubMap.newBuilder().build();
+        m_ProcessorMap.put(notifyLidarCurSubMap.getClass().toString(),new NotifyLidarCurSubMapProcessor());
     }
 }

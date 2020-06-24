@@ -39,6 +39,9 @@ public class PathAdapter extends BaseAdapter<PathLine> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, PathLine item) {
         super.convert(helper, item);
+        if (item.getName().contains("ABPointLine")){
+            setVisibility(false,helper);
+        }
         switch (viewType){
             case R.layout.item_target_point:
                 if (item.isSelected()){

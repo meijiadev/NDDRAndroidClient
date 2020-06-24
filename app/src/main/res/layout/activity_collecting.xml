@@ -60,7 +60,7 @@
 
     </RelativeLayout>
 
-    <ddr.example.com.nddrandroidclient.widget.view.CollectingView4
+  <!--  <ddr.example.com.nddrandroidclient.widget.view.CollectingView4
         android:id="@+id/collect4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,7 +73,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/title_layout"
         android:visibility="visible"
-        />
+        />-->
+
     <!--回环检测-->
     <TextView
         android:id="@+id/tv_detection"

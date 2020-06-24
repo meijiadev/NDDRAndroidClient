@@ -10,7 +10,7 @@ android {
     }
     defaultConfig {
         applicationId "ddr.example.com.nddrandroidclient"
-        minSdkVersion 19
+        minSdkVersion 21
         // targetSdkVersion 28
         targetSdkVersion rootProject.ext.targetVersion
         versionCode 1
@@ -104,6 +104,8 @@ protobuf {
 }
 
 dependencies {
+
+    implementation project(path: ':OpenCVLibrary430')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // 谷歌 Support 包
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompatVersion"
