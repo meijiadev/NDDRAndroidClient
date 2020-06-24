@@ -15,8 +15,8 @@
     <string name="crash_error_info">Error message</string>
     <string name="crash_copy_log">Copy log</string>
     <string name="crash_close">Close</string>\
-    <string name="common_hour">Hr</string>
-    <string name="common_minute">Min</string>
+    <string name="common_hour"> </string>
+    <string name="common_minute"> </string>
     <string name="common_second">Sec</string>
 
     <string name="createMapPathToServer">Built figure path</string>
@@ -38,7 +38,7 @@
     <!--Home页-->
     <string name="home_status">Console</string>
     <string name="home_map_manager">Map</string>
-    <string name="home_task">Timetask</string>
+    <string name="home_task">Task</string>
     <string name="home_setting">Settings</string>
     <string name="scram_status">Stop</string>
     <string name="control_status">RC</string>
@@ -114,7 +114,7 @@
     <string name="common_exit_charge">Exit charging</string>
     <string name="no_task">No task</string>
     <string name="go_target_point">To POI</string>
-    <string name="common_times">Sec </string>
+    <string name="common_times"> </string>
     <string name="in_the_calibration">Self-calibration...</string>
     <string name="common_runing">Running</string>
     <string name="common_collecting">Mapping</string>
@@ -167,8 +167,8 @@
     <string name="ac_open_tip">When battery power is lower than trigger value, robot returns to autocharge</string>
     <string name="ac_trig_auto_charge">Power trig autocharge</string>
     <string name="ac_stop_auto_charge">Power stop autocharge</string>
-    <string name="height_set_open">ON</string>
-    <string name="height_set_close">OFF</string>
+    <string name="height_set_open"> </string>
+    <string name="height_set_close"> </string>
 
     <!-- 高级设置-传感器配置 -->
     <string name="sensor_set">Sensor configuration</string>
@@ -271,6 +271,9 @@
     <string name="relocation_failed">Relocation failed</string>
     <string name="relocation_succeed">Relocation successed!</string>
     <string name="the_relocation">Relocation may take 1-3 minutes...</string>
+    <string name="manually_locateing">Manual</string>
+    <string name="quit_locateing">Cancel</string>
+    <string name="in_locateing">relocation</string>
 
 
 
@@ -388,7 +391,7 @@
     <string name="common_no">No</string>
 
     <string name="enter_run_times">Please enter the number of cycles</string>
-    <string name="is_go">Whether to go ?</string>
+    <string name="is_go">Whether to go </string>
     <string name="current_not_location">There is no location, please select the relocation method</string>
     <string name="hand_location">Manual</string>
     <string name="auto_location">Automatic</string>
