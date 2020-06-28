@@ -22,7 +22,7 @@ public class RegexEditText extends AppCompatEditText implements InputFilter {
     /** 手机号（只能以 1 开头） */
     public static final String REGEX_MOBILE = "[1]\\d{0,10}";
     /** 中文（普通的中文字符） */
-    public static final String REGEX_CHINESE = "[\\u4e00-\\u9fa5]*";
+    public static final String REGEX_CHINESE = "[\\u4E00-\\u9FA5]*";
     /** 英文（大写和小写的英文） */
     public static final String REGEX_ENGLISH = "[a-zA-Z]*";
     /** 计数（非 0 开头的数字） */

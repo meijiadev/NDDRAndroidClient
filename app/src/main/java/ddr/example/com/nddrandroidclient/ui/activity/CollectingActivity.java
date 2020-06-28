@@ -565,27 +565,7 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected()){
-            Logger.e("网络无法连接!");
-            //netWorkStatusDialog();
-        }
     }
-
-
-    /**
-     * 显示网络连接弹窗
-     */
-    private void  netWorkStatusDialog(){
-        waitDialog1=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
-        postDelayed(()->{
-            if (waitDialog1.isShowing()){
-                toast(R.string.network_not_connect);
-                ActivityStackManager.getInstance().finishAllActivities();
-                startActivity(LoginActivity.class);
-            }
-        },6000);
-    }
-
 
     @Override
     public void onBackPressed() {

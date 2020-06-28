@@ -70,6 +70,7 @@ public class TcpClient extends BaseSocketConnection {
     private SocketCallBack socketCallBack;
     private byte[] heads=new byte[4];  //存储头部长度信息的字节数组
     private byte [] bodyLenths=new byte[4];        //存储body体的信息长度
+    private XToast xToast;
 
     /**
      * 获取客户端
@@ -242,7 +243,10 @@ public class TcpClient extends BaseSocketConnection {
         }
     }
 
-    private XToast xToast;
+    /**
+     * 显示全局弹窗
+     * @param activity
+     */
     private void showXToast(Activity activity){
         activity.runOnUiThread(new Runnable() {
             @Override
