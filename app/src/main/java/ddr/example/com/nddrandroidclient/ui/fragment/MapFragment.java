@@ -1092,8 +1092,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         tv2m=contentView.findViewById(R.id.tv_2m);
         recyclerPoints=contentView.findViewById(R.id.recycler_target_point);
         recyclerPaths=contentView.findViewById(R.id.recycler_paths);
-        handleLogic();
         handleRecycler();
+        handleLogic();
 
     }
 
@@ -1296,7 +1296,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         recyclerPaths.setAdapter(pathReferenceAdapter);
         targetReferenceAdapter.setNewData(targetPoints);
         pathReferenceAdapter.setNewData(pathLines);
-
         targetReferenceAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (targetPoints.get(position).isMultiple()){
                 targetPoints.get(position).setMultiple(false);
@@ -1393,6 +1392,36 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         }
     }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Logger.e("---------------------------------------onRestart--------------------");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Logger.e("---------------------------------------onPause--------------------");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Logger.e("--------------------------------------onResume--------------------------");
+        if (tv1m!=null){
+            for (TargetPoint targetPoint:targetPoints){
+                targetPoint.setMultiple(false);
+            }
+            for (PathLine pathLine:pathLines){
+                pathLine.setMultiple(false);
+            }
+            setIconDefault1();
+            tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+            tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+        }
+    }
+
     /**
      * 返回到地图列表页面
      */
@@ -1481,6 +1510,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case updatePoints:
                 List<TargetPoint> targetPoints1 = (List<TargetPoint>) messageEvent.getData();
                 targetPoints.addAll(targetPoints1);
+                for (TargetPoint targetPoint:targetPoints){
+                    targetPoint.setMultiple(false);
+                }
                 targetPointAdapter.setNewData(targetPoints);
                 tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
@@ -1498,6 +1530,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case updatePaths:
                 List<PathLine> pathLines1 = (List<PathLine>) messageEvent.getData();
                 pathLines.addAll(pathLines1);
+                for (PathLine pathLine:pathLines){
+                    pathLine.setMultiple(false);
+                }
                 pathAdapter.setNewData(pathLines);
                 tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
@@ -1540,7 +1575,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         }
                     }, 200);
                 }
-
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 break;
             case updateRelocationStatus:

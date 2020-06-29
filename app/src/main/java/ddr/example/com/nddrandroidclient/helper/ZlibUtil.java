@@ -38,7 +38,7 @@ public class ZlibUtil {
         }
         decompress.end();
         long endTime=System.currentTimeMillis();
-        Logger.e("解压耗费的时间："+(endTime-startTime)+"-----解压出的数组大小："+output.length);
+        //Logger.e("解压耗费的时间："+(endTime-startTime)+"-----解压出的数组大小："+output.length);
         return output;
     }
 }

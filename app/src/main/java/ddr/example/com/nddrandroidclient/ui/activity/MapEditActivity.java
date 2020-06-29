@@ -660,6 +660,8 @@ public class MapEditActivity extends DDRActivity {
 
     private List<DDRVLNMap.space_pointEx> lines=new ArrayList<>();       //线段
     private List<DDRVLNMap.space_pointEx> polygons=new ArrayList<>();    //多边形
+    List<BaseCmd.reqEditorLidarMap.optPoint> optPoints=new ArrayList<>(); // 处理虚拟墙（该命令会修改bkPic_obs.png的地图）
+    List<BaseCmd.reqEditorLidarMap.VirtualLineItem> virtualLineItems=new ArrayList<>();
     private void addVirtualWall(){
         switch (mPosition){
             case 0:
@@ -668,6 +670,11 @@ public class MapEditActivity extends DDRActivity {
                         .setY(zmap.getTargetPoint().getY())
                         .build();
                 lines.add(space_pointEx);
+                BaseCmd.reqEditorLidarMap.optPoint optPoint= BaseCmd.reqEditorLidarMap.optPoint.newBuilder()
+                        .setPtX(space_pointEx.getX())
+                        .setPtY(space_pointEx.getY())
+                        .build();
+                optPoints.add(optPoint);
                 LineView.getInstance(getApplication()).setLines(lines);
                 zmap.invalidate();
                 break;
@@ -762,6 +769,27 @@ public class MapEditActivity extends DDRActivity {
 
                 break;
         }
+    }
+
+    private void dealWithWall(){
+        List<BaseCmd.reqEditorLidarMap.VirtualLineItem> virtualLineItems=new ArrayList<>();
+        List<BaseCmd.reqEditorLidarMap.optPoint> optPoints=new ArrayList<>();
+        for (int j=0;j<spaceItems.size();j++){
+            List<DDRVLNMap.space_pointEx> pointExes=spaceItems.get(j).getLines();
+            for (int i=0;i<pointExes.size();i++){
+                BaseCmd.reqEditorLidarMap.optPoint optPoint= BaseCmd.reqEditorLidarMap.optPoint.newBuilder()
+                        .setPtX(pointExes.get(i).getX())
+                        .setPtY(pointExes.get(i).getY())
+                        .build();
+                optPoints.add(optPoint);
+            }
+            BaseCmd.reqEditorLidarMap.VirtualLineItem virtualLineItem= BaseCmd.reqEditorLidarMap.VirtualLineItem.newBuilder()
+                    .addAllLineSet(optPoints)
+                    .build();
+            virtualLineItems.add(virtualLineItem);
+        }
+        tcpClient.reqEditMapVirtual(6,virtualLineItems,mapFileStatus.getMapName());
+
     }
 
     /**

@@ -449,6 +449,7 @@ public class MessageRoute {
      * 以小端模式将int转成byte[]
      * @param value
      * @return
+     * '
      */
     public static byte[] intToBytesLittle(int value) {
         byte[] src = new byte[4];

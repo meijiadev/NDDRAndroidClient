@@ -26,6 +26,7 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         BaseCmd.notifyLidarCurSubMap notifyLidarCurSubMap= (BaseCmd.notifyLidarCurSubMap) msg;
+        Logger.d("栅格地图机器人当前位置："+notifyLidarCurSubMap.getPosx()+";"+notifyLidarCurSubMap.getPosy());
         NotifyLidarCurSubMap notifyLidarCurSubMap1=NotifyLidarCurSubMap.getInstance();
         notifyLidarCurSubMap1.setCompressionType(notifyLidarCurSubMap.getCompressionType());
         notifyLidarCurSubMap1.setHeight(notifyLidarCurSubMap.getHeight());

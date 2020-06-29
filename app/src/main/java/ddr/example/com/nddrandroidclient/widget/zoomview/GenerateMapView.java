@@ -187,13 +187,11 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 canvas.drawLine(xyEntity1.getX(), xyEntity1.getY(), xyEntity.getX(), xyEntity.getY(), lastFrame);
             }
             angle=radianToangle(notifyLidarPtsEntity.getPosdirection());
-            XyEntity xyEntity=coordinatesToMat(notifyLidarPtsEntity.getPosX(),notifyLidarPtsEntity.getPosY());
-            xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
-            float cx = xyEntity.getX()-directionBitmap.getWidth()/2;
-            float cy =xyEntity.getY()-directionBitmap.getHeight()*13/20;
+            float cx = xyEntity1.getX()-directionBitmap.getWidth()/2;
+            float cy =xyEntity1.getY()-directionBitmap.getHeight()*13/20;
             matrix1.reset();
             matrix1.postTranslate(cx,cy);
-            matrix1.postRotate(-angle+(float) surfaceTouchEventHandler.getAngle(),xyEntity.getX(),xyEntity.getY());
+            matrix1.postRotate(-angle+(float) surfaceTouchEventHandler.getAngle(),xyEntity1.getX(),xyEntity1.getY());
             canvas.drawBitmap(directionBitmap,matrix1,paint);
         }
 
@@ -240,8 +238,9 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                     int colEnd=colStart+eachPixelW;
                     mat.copyTo(srcMat.submat(rowStart,rowEnd,colStart,colEnd));
                     if (gridItem.getX()==0&&gridItem.getY()==0){
-                        originY=rowStart*eachPixelW+eachPixelW/2;
-                        originX=colStart*eachPixelW+eachPixelW/2;
+                        Logger.e("------rowStart:"+rowStart+"colStart:"+colStart);
+                        originY=rowStart+eachPixelW/2;
+                        originX=colStart+eachPixelW/2;
                     }
                 }
             }else {
@@ -251,11 +250,23 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 int colStart=(maxY-notifyLidarCurSubMap.getGridItem().getY())*notifyLidarCurSubMap.getWidth();
                 int colEnd=colStart+notifyLidarCurSubMap.getWidth();
                 mat.copyTo(srcMat.submat(rowStart,rowEnd,colStart,colEnd));
+/*
+                for (GridItem gridItem:matMap.keySet()){
+                    int rowStart1=(maxX-gridItem.getX())*eachPixelW;
+                    int colStart1=(maxY-gridItem.getY())*eachPixelW;
+                    if (gridItem.getX()==0&&gridItem.getY()==0){
+                        Logger.e("------rowStart:"+rowStart+"colStart:"+colStart);
+                        originY=rowStart1+eachPixelW/2;
+                        originX=colStart1+eachPixelW/2;
+                    }
+                }
+*/
+
             }
         }
         srcBitmap=openCVUtility.matToBitmap(srcMat);
         surfaceTouchEventHandler.setDefaultBitmap(srcBitmap);
-        Logger.e("生成的图片的大小："+srcBitmap.getWidth()+";"+srcBitmap.getHeight());
+       // Logger.e("生成的图片的大小："+srcBitmap.getWidth()+";"+srcBitmap.getHeight());
         perMeter=eachPixelW/(lidarRange*2);
     }
 
@@ -265,7 +276,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
      * @param y
      */
     private XyEntity coordinatesToMat(float x, float y){
-        //Logger.e("-----:"+x+";"+y);
+        //Logger.d("-----:"+x+";"+y);
         float cx=(-y)*perMeter+originX;
         float cy=(-x)*perMeter+originY;
         //Logger.e("坐标："+cx+";"+cy+";"+perMeter+";"+originX+";"+originY);
@@ -301,7 +312,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
 
     public boolean onTouchEvent(MotionEvent event) {
         if (surfaceTouchEventHandler!=null){
-            Logger.e("---触摸");
+            //Logger.e("---触摸");
             surfaceTouchEventHandler.touchEvent(event);
         }
         return true;

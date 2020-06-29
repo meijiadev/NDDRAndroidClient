@@ -498,7 +498,7 @@ public class TcpClient extends BaseSocketConnection {
      * type=6 ->添加虚拟墙，由多个线段组成。就是 reqEditorLidarMap 中的 vlSet。
      * type=7 -> 移除虚拟墙，由多个线段组成。就是 reqEditorLidarMap 中的 vlSet。
      */
-    private void reqEditMapVirtual(int type,List<BaseCmd.reqEditorLidarMap.VirtualLineItem> virtualLineItems,String mapName){
+    public void reqEditMapVirtual(int type,List<BaseCmd.reqEditorLidarMap.VirtualLineItem> virtualLineItems,String mapName){
         BaseCmd.reqEditorLidarMap reqEditorLidarMap=BaseCmd.reqEditorLidarMap.newBuilder()
                 .setTypeValue(type)
                 .addAllVlSet(virtualLineItems)

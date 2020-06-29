@@ -23,7 +23,7 @@ public class NotifyLidarPtsProcessor extends BaseProcessor {
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         BaseCmd.notifyLidarPts notifyLidarPts= (BaseCmd.notifyLidarPts) msg;
-        Logger.d("接收点云："+longToDate(notifyLidarPts.getTimestamp()));
+        Logger.d("接收点云："+notifyLidarPts.getPosx()+";"+notifyLidarPts.getPosy()+";"+notifyLidarPts.getPosdirection());
         NotifyLidarPtsEntity notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         notifyLidarPtsEntity.setPosX(notifyLidarPts.getPosx());
         notifyLidarPtsEntity.setPosY(notifyLidarPts.getPosy());
