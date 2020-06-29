@@ -311,19 +311,21 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                 for (int i=0;i<taskModeList.size();i++){
                     Logger.e("队列"+taskModeList.get(i).getType());
                 }
-                new InputDialog.Builder(getAttachActivity()).setTitle(R.string.submit_task)
-                        .setEditVisibility(View.GONE)
-                        .setListener(new InputDialog.OnListener() {
-                            @Override
-                            public void onConfirm(BaseDialog dialog, String content) {
-                                submissionTask();
-                                toast(R.string.save_succeed);
-                        }
-                            @Override
-                            public void onCancel(BaseDialog dialog) {
-                                toast(R.string.cancel_sunmit_task);
-                            }
-                        }).show();
+                submissionTask();
+                toast(R.string.save_succeed);
+//                new InputDialog.Builder(getAttachActivity()).setTitle(R.string.submit_task)
+//                        .setEditVisibility(View.GONE)
+//                        .setListener(new InputDialog.OnListener() {
+//                            @Override
+//                            public void onConfirm(BaseDialog dialog, String content) {
+//                                submissionTask();
+//                                toast(R.string.save_succeed);
+//                        }
+//                            @Override
+//                            public void onCancel(BaseDialog dialog) {
+//                                toast(R.string.cancel_sunmit_task);
+//                            }
+//                        }).show();
                 break;
             case R.id.tv_create_task:
                 showCreateTaskDialog();

@@ -303,18 +303,19 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 vpHomePager.setCurrentItem(3);
                 break;
             case R.id.tv_quit:
-                new InputDialog.Builder(getActivity())
-                        .setTitle(R.string.is_back)
-                        .setEditVisibility(View.GONE)
-                        .setListener(new InputDialog.OnListener() {
-                            @Override
-                            public void onConfirm(BaseDialog dialog, String content) {
-                                onBack();
-                            }
-                            @Override
-                            public void onCancel(BaseDialog dialog) {
-                            }
-                        }).show();
+                onBack();
+//                new InputDialog.Builder(getActivity())
+//                        .setTitle(R.string.is_back)
+//                        .setEditVisibility(View.GONE)
+//                        .setListener(new InputDialog.OnListener() {
+//                            @Override
+//                            public void onConfirm(BaseDialog dialog, String content) {
+//                                onBack();
+//                            }
+//                            @Override
+//                            public void onCancel(BaseDialog dialog) {
+//                            }
+//                        }).show();
 
                 break;
             case R.id.tv_shutdown:
