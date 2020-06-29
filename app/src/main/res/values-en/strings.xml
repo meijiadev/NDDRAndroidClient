@@ -94,10 +94,10 @@
     <string name="now_map">Map name：</string>
     <string name="now_task">Task name：</string>
     <string name="common_unselected">Not selected</string>
-    <string name="work_status">System status：</string>
-    <string name="task_times">Times of task：</string>
+    <string name="work_status">Status：</string>
+    <string name="task_times">Times：</string>
     <string name="working_hours">Duration：</string>
-    <string name="task_speed">Task speed：</string>
+    <string name="task_speed">Speed：</string>
     <string name="common_waiting">Idle</string>
     <string name="create_task_steps">Create task：</string>
     <string name="first_steps">New map</string>
@@ -124,11 +124,11 @@
 
     <!--时段任务-->
     <string name="task_title">Task list</string>
-    <string name="save_task">Upload tasks</string>
+    <string name="save_task">Upload</string>
     <string name="new_create_task">New task</string>
-    <string name="task_name">Task name</string>
-    <string name="execute_time">Execution period</string>
-    <string name="task_status">Task status</string>
+    <string name="task_name">Name</string>
+    <string name="execute_time">Time</string>
+    <string name="task_status">Status</string>
     <string name="operator_task">Operating</string>
     <string name="common_modification">modify</string>
     <string name="common_terminated">Cancel</string>
@@ -141,7 +141,7 @@
     <string name="in_runing_task">Running task can not be deleted</string>
 
     <!-- 高级设置-导航参数-->
-    <string name="navigation_para">Navigation settings</string>
+    <string name="navigation_para">Navigation</string>
     <string name="navigation_para_set">Navigation settings</string>
     <string name="height_set_save">Save</string>
     <string name="navigation_loop">Navigation loop</string>
@@ -158,7 +158,7 @@
     <string name="n_speed_down_tip">When the distance between robot and obstacle is less than this value, robot speeds down</string>
     <string name="n_stop_distance">Stop distance</string>
     <string name="n_stop_distance_tip">When the distance between the robot and the obstacle is less than or equal to this value, robot stops</string>
-    <string name="n_restore_default">Reset parameter</string>
+    <string name="n_restore_default">Reset</string>
 
     <!-- 高级设置-自动充电 -->
     <string name="auto_charging">Auto-charge</string>
@@ -171,12 +171,12 @@
     <string name="height_set_close"> </string>
 
     <!-- 高级设置-传感器配置 -->
-    <string name="sensor_set">Sensor configuration</string>
+    <string name="sensor_set">Sensor</string>
     <string name="ultrasonic_set">Sonar configuration</string>
     <string name="ultrasonic_set_tip">When sonar is triggered in static mode, the robot will stop moving</string>
     <string name="ultrasonic_set_title">Be sure you have known the installation position before setting, the sonar value is 0 means the function is closed</string>
-    <string name="imu_temperature">IMU temperature</string>
-    <string name="imu_temperature_tip">It is recommended to set about 10℃ higher than the space</string>
+    <string name="imu_temperature">IMU TEMP</string>
+    <string name="imu_temperature_tip">It is recommended to set 10℃ higher than the space</string>
 
     <!-- 高级设置-硬件检测-->
     <string name="hardware_detection">Hardware detection</string>
@@ -239,8 +239,8 @@
 
     <!--地图设置页面-->
     <string name="map_setting">Map settings</string>
-    <string name="map_name">Map name：</string>
-    <string name="wait_point">Standby point：</string>
+    <string name="map_name">Name：</string>
+    <string name="wait_point">Standby：</string>
     <string name="ab_mode">POI mode：</string>
     <string name="static_mode">Static mode</string>
     <string name="dynamic_mode">Dynamic mode</string>
