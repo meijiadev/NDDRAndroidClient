@@ -1433,6 +1433,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             PointView.getInstance(getAttachActivity()).clearDraw();
             LineView.getInstance(getAttachActivity()).clearDraw();
             GridLayerView.getInstance(zoomMap).onDestroy();
+
         }
     }
 

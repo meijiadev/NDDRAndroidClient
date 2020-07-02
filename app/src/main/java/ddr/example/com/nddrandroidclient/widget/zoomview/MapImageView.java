@@ -18,6 +18,9 @@ import android.view.View;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -112,15 +115,12 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     public void setImageBitmap(String path){
         //Logger.e("设置图片");
         String pngPath = GlobalParameter.ROBOT_FOLDER + path + "/" + "bkPic.png";
-        FileInputStream fis = null;
         try {
-            fis = new FileInputStream(pngPath);
-            Bitmap bitmap = BitmapFactory.decodeStream(fis);
-            sourceBitmap = bitmap;
+            Mat mat= Imgcodecs.imread(pngPath,Imgcodecs.IMREAD_UNCHANGED);
+            sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(mat,sourceBitmap);
             Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         initAffine();

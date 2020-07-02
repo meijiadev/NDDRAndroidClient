@@ -54,6 +54,7 @@ public class ZoomImageView extends View {
     public double t1=410.973;
     private TouchEvenHandler touchEvenHandler;
     private float scale=1f;   //当前地图的缩放值
+    private Mat sourceMat;
 
     public ZoomImageView(Context context) {
         super(context);
@@ -80,9 +81,9 @@ public class ZoomImageView extends View {
         if (path!=null){
             try {
                 try {
-                    Mat mat= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
-                    sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(mat,sourceBitmap);
+                    sourceMat= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
+                    sourceBitmap=Bitmap.createBitmap(sourceMat.width(),sourceMat.height(),Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(sourceMat,sourceBitmap);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -92,6 +93,14 @@ public class ZoomImageView extends View {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 获取图片的Mat数据
+     * @return
+     */
+    public Mat getSourceMat() {
+        return sourceMat;
     }
 
     /**
@@ -119,7 +128,7 @@ public class ZoomImageView extends View {
         if (bitmap!=null){
             sourceBitmap=bitmap;
         }
-        initAffine();
+        //initAffine();
     }
 
     /**
@@ -165,7 +174,7 @@ public class ZoomImageView extends View {
      * @param y
      * @return
      */
-    private XyEntity toXorY(float x, float y){
+    public XyEntity toXorY(float x, float y){
         float x1=(float)( r00*x+r01*y+t0);
         float y1=(float) (r10*x+r11*y+t1);
         return new XyEntity(x1,y1);

@@ -21,10 +21,17 @@ import com.jaygoo.widget.VerticalRangeSeekBar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfDouble;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -533,13 +540,22 @@ public class MapEditActivity extends DDRActivity {
                     XyEntity secondPoint_1=zmap.toWorld(firstPoint1.getX(),secondPoint1.getY());
                     rectangle=new Rectangle(firstPoint,firstPoint_1,secondPoint,secondPoint_1);
                     rectangles.add(rectangle);
+                    XyEntity xyEntity1=zmap.toXorY(firstPoint.getX(),firstPoint.getY());
+                    XyEntity xyEntity2=zmap.toXorY(secondPoint.getX(),secondPoint.getY());
+                    Logger.e("----startrow:"+ (int)xyEntity1.getY()+"endRows"+(int)xyEntity2.getY()+"startCol:"+(int) xyEntity1.getX()+"endCol:"+(int) xyEntity2.getX());
+                    Mat mat=zmap.getSourceMat().submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
+                    dealWithMat(mat);
+                    Mat srcMat=zmap.getSourceMat();
+                    Bitmap bitmap=Bitmap.createBitmap(srcMat.width(),srcMat.height(),Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(srcMat,bitmap);
+                    zmap.setImageBitmap(bitmap);
+                    srcMat.release();
                     RectangleView.getRectangleView().setFirstPoint(null);
-                    RectangleView.getRectangleView().setRectangles(rectangles);
+                    //RectangleView.getRectangleView().setRectangles(rectangles);
                     zmap.invalidate();
                     tvRevocationDe.setBackgroundResource(R.mipmap.iv_denoising_revocation);
                     tvRevocationDe.setText(R.string.common_revocation);
                 }
-
                 break;
             case R.id.tv_revocation_de:
                 if (tvAddDe.getText().toString().equals(getString(R.string.common_complete))){
@@ -585,6 +601,32 @@ public class MapEditActivity extends DDRActivity {
     }
 
 
+    private void dealWithMat(Mat mat){
+        Mat gray=new Mat();
+        Imgproc.cvtColor(mat,gray,Imgproc.COLOR_BGR2GRAY);
+        //计算均值与标准方差
+        MatOfDouble means=new MatOfDouble();
+        MatOfDouble stddevs=new MatOfDouble();
+        Core.meanStdDev(gray,means,stddevs);
+        double[] mean=means.toArray();
+        double[] stddev=stddevs.toArray();
+        Logger.e("均差："+mean[0]+";标准方差："+stddev[0]);
+        int w=gray.cols();      //多少列
+        int h=gray.rows();      // 多少行
+        byte[] data=new byte[w*h];
+        gray.get(0,0,data);
+        Logger.e("-----:"+ Arrays.toString(data));
+        int pv=0;
+        for (int i=0;i<data.length;i++){
+            pv=data[i]&0xff;
+            if (pv!=17&pv!=-1){
+                pv=-1;
+            }
+            data[i]=(byte)pv;
+        }
+        gray.put(0,0,data);
+        Imgproc.cvtColor(gray,mat,Imgproc.COLOR_GRAY2BGR);
+    }
     /**
      * 显示等待弹窗
      */
@@ -661,8 +703,6 @@ public class MapEditActivity extends DDRActivity {
 
     private List<DDRVLNMap.space_pointEx> lines=new ArrayList<>();       //线段
     private List<DDRVLNMap.space_pointEx> polygons=new ArrayList<>();    //多边形
-    List<BaseCmd.reqEditorLidarMap.optPoint> optPoints=new ArrayList<>(); // 处理虚拟墙（该命令会修改bkPic_obs.png的地图）
-    List<BaseCmd.reqEditorLidarMap.VirtualLineItem> virtualLineItems=new ArrayList<>();
     private void addVirtualWall(){
         switch (mPosition){
             case 0:
@@ -675,7 +715,6 @@ public class MapEditActivity extends DDRActivity {
                         .setPtX(space_pointEx.getX())
                         .setPtY(space_pointEx.getY())
                         .build();
-                optPoints.add(optPoint);
                 LineView.getInstance(getApplication()).setLines(lines);
                 zmap.invalidate();
                 break;
@@ -942,7 +981,7 @@ public class MapEditActivity extends DDRActivity {
                     isDenoising=true;
                     lines=new ArrayList<>();
                     polygons=new ArrayList<>();
-                    //zmap.setCanRotate(false);
+                    zmap.setCanRotate(false);
                     LineView.getInstance(context).setLines(null);
                     zmap.invalidate();
                     tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_denoising_blue),null,null,null);

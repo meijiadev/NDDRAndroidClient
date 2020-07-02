@@ -42,7 +42,7 @@ public class RectangleView extends Shape {
         paint=new Paint();
         paint.setColor(Color.GRAY);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(4);
+        paint.setStrokeWidth(2);
         paint.setStyle(Paint.Style.STROKE);
         paint1=new Paint();
         paint1.setColor(Color.WHITE);
