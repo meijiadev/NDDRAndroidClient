@@ -144,62 +144,62 @@ public class SensorSetFragment extends DDRLazyFragment {
             switch (Integer.parseInt(sensorList.get(i).getKey())){
                 case 1:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("1号");
+                    ultrasonic.setTextNum("1");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 2:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("2号");
+                    ultrasonic.setTextNum("2");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 3:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("3号");
+                    ultrasonic.setTextNum("3");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 4:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("4号");
+                    ultrasonic.setTextNum("4");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 5:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("5号");
+                    ultrasonic.setTextNum("5");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 6:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("6号");
+                    ultrasonic.setTextNum("6");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 7:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("7号");
+                    ultrasonic.setTextNum("7");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 8:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("8号");
+                    ultrasonic.setTextNum("8");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 9:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("9号");
+                    ultrasonic.setTextNum("9");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 10:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("10号");
+                    ultrasonic.setTextNum("10");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 11:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("11号");
+                    ultrasonic.setTextNum("11");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
                 case 12:
                     ultrasonic=new Ultrasonic();
-                    ultrasonic.setTextNum("12号");
+                    ultrasonic.setTextNum("12");
                     ultrasonic.setTextContant(String.valueOf(cs));
                     break;
             }

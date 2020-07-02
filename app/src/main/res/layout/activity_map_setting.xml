@@ -132,7 +132,7 @@
         android:gravity="left|center_vertical"
         android:layout_marginLeft="48dp"
         android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="8sp"
+        android:autoSizeMinTextSize="9sp"
         android:autoSizeMaxTextSize="@dimen/text_size_12sp"
         />
 
@@ -236,7 +236,7 @@
         android:layout_alignParentRight="true"/>
 
     <TextView
-        android:layout_width="337dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_below="@id/layout_title"
         android:layout_marginLeft="48dp"
@@ -244,9 +244,6 @@
         android:text="@string/nav_notify"
         android:textColor="#99ffffff"
         android:textSize="12sp"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="8sp"
-        android:autoSizeMaxTextSize="@dimen/text_size_12sp"
         />
     <View
         android:layout_width="match_parent"

@@ -16,6 +16,7 @@
     <string name="common_hour">时</string>
     <string name="common_minute">分</string>
     <string name="common_second">秒</string>
+    <string name="common_m_status">分</string>
 
     <string name="common_confirm">确定</string>
     <string name="common_cancel">取消</string>
@@ -94,6 +95,7 @@
     <string name="common_using">使用中</string>
     <string name="set_charge_point">设置充电点</string>
     <string name="charge_point">充电点</string>
+    <string name="common_all">全选</string>
     
     
     <!--基础状态-->

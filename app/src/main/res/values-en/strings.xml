@@ -18,6 +18,7 @@
     <string name="common_hour"> </string>
     <string name="common_minute"> </string>
     <string name="common_second">Sec</string>
+    <string name="common_m_status">min</string>
 
     <string name="createMapPathToServer">Built figure path</string>
 
@@ -87,6 +88,7 @@
     <string name="common_using">Using</string>
     <string name="set_charge_point">Set charging point</string>
     <string name="charge_point">Charging point</string>
+    <string name="common_all">All</string>
 
     <!--基础状态-->
     <string name="common_warn">Not loaded to the map in use, please click here to refresh!</string>
@@ -249,7 +251,7 @@
     <string name="navigation_mode">Autonomous navigation mode</string>
     <string name="line_patrol">Path patrol mode </string>
     <string name="nav_notify_1"> (automatically plan the route without manual intervention)</string>
-    <string name="nav_notify_2">(find the optimal route based on the preset paths when going to the POI）</string>
+    <string name="nav_notify_2">find the optimal route based on the preset paths when going to the POI</string>
     <string name="map_recover">Recover map</string>
     <string name="stay_put">Stand by</string>
 

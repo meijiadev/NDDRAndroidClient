@@ -10,7 +10,7 @@
         android:layout_width="102dp"
         android:layout_height="20dp"
         android:textColor="@color/text_gray"
-        android:text="全选"
+        android:text="@string/common_all"
         android:textSize="12sp"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
