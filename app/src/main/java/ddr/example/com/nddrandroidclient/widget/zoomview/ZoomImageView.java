@@ -12,6 +12,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
@@ -75,12 +79,10 @@ public class ZoomImageView extends View {
     public void setImageBitmap(String path){
         if (path!=null){
             try {
-                FileInputStream fis = null;
                 try {
-                    fis = new FileInputStream(path);
-                    sourceBitmap = BitmapFactory.decodeStream(fis);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    Mat mat= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
+                    sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(mat,sourceBitmap);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
