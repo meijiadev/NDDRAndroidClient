@@ -73,7 +73,6 @@
             <TextView
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:background="#161718"
                 android:layout_toRightOf="@+id/tv_task_name1"
                 android:id="@+id/tv_run_time1"
                 android:layout_marginLeft="117.5dp"

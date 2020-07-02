@@ -346,7 +346,7 @@ public class NewTaskActivity extends DDRActivity {
      */
     private void showRenameDialog(){
        inputDialog= new InputDialog.Builder(this)
-                .setTitle("任务重命名")
+                .setTitle(R.string.task_rename)
                 .setAutoDismiss(false)
                 .setListener(new InputDialog.OnListener() {
                     @Override
