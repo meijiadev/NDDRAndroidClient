@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.protobuf.GeneratedMessageLite;
 
+import org.greenrobot.eventbus.EventBus;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -11,6 +12,7 @@ import org.opencv.core.Size;
 import java.util.List;
 
 import DDRCommProto.BaseCmd;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.GridItem;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarCurSubMap;
 import ddr.example.com.nddrandroidclient.helper.OpenCVUtility;
@@ -45,9 +47,10 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
             mat.put(0,0,data);
             OpenCVUtility.getInstance().putValue(gridItem,mat);
             long endTime=System.currentTimeMillis();
-            Logger.e("耗费的时间："+(endTime-startTime));
+            //Logger.e("耗费的时间："+(endTime-startTime));
         }catch (Exception e){
             e.printStackTrace();
         }
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.receiveLidarMap));
     }
 }

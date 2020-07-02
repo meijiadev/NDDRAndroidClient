@@ -314,6 +314,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 }).show();
 
                     }else if (NotifyBaseStatusEx.getInstance().getMode() == 2) {
+                        tcpClient.getAllLidarMap();
                         Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
                         startActivity(intent);
                     }else {
@@ -1417,8 +1418,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 pathLine.setMultiple(false);
             }
             setIconDefault1();
-            tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
-            tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+            allShowPath=false;
         }
     }
 

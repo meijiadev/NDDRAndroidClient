@@ -272,7 +272,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      */
     private void drawRadarLine(Canvas canvas){
         if (sourceBitmap!=null){
-            canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
+            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
             canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
             positionList = notifyLidarPtsEntity.getPositionList();
             //Logger.d("-------点云数量：" + positionList.size());

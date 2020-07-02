@@ -792,25 +792,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void onResume() {
         super.onResume();
-        if (!tcpClient.isConnected()){
-            Logger.e("网络已断开");
-            //netWorkStatusDialog();
-        }
     }
 
-    /**
-     * 显示网络连接弹窗
-     */
-    private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
-        postDelayed(()->{
-            if (waitDialog.isShowing()){
-                toast(R.string.network_not_connect);
-                ActivityStackManager.getInstance().finishAllActivities();
-                startActivity(LoginActivity.class);
-            }
-        },6000);
-    }
+
 
     public UdpClient udpClient;
     private int aiPort=18888;

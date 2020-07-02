@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -946,6 +947,7 @@ public class MapEditActivity extends DDRActivity {
                 case 0:
                     isDenoising=false;
                     firstPoint=null;
+                    rectangles.clear();
                     tvAddDe.setText(R.string.common_add_point);
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
                     tvRevocationDe.setText(R.string.common_revocation);
@@ -1303,10 +1305,6 @@ public class MapEditActivity extends DDRActivity {
                             tvRevocationDe.setVisibility(View.GONE);
                             ImageLoader.clear(this);
                             tcpClient.requestFile();          //去噪成功后，开始重新下载地图
-                            rectangles.clear();
-                            RectangleView.getRectangleView().setFirstPoint(null);
-                            RectangleView.getRectangleView().setRectangles(rectangles);
-                            zmap.invalidate();
                             if (waitDialog!=null&&waitDialog.isShowing()){
                                 waitDialog.dismiss();
                                 showWaitDialog(getString(R.string.reload_map));
@@ -1315,10 +1313,6 @@ public class MapEditActivity extends DDRActivity {
                         case 4:
                             ImageLoader.clear(this);
                             tcpClient.requestFile();          //地图初始化修改成功后，开始重新下载地图
-                            rectangles.clear();
-                            RectangleView.getRectangleView().setFirstPoint(null);
-                            RectangleView.getRectangleView().setRectangles(rectangles);
-                            zmap.invalidate();
                             if (waitDialog!=null&&waitDialog.isShowing()){
                                 waitDialog.dismiss();
                                 showWaitDialog(getString(R.string.reload_map));
@@ -1327,6 +1321,10 @@ public class MapEditActivity extends DDRActivity {
                     }
                 }else {
                     toast(R.string.operation_failure);
+                    rectangles.clear();
+                    RectangleView.getRectangleView().setFirstPoint(null);
+                    RectangleView.getRectangleView().setRectangles(rectangles);
+                    zmap.invalidate();
                     if (waitDialog!=null&&waitDialog.isShowing()){
                         waitDialog.dismiss();
                     }
@@ -1334,13 +1332,17 @@ public class MapEditActivity extends DDRActivity {
                 break;
             case updateMapList:
                 postDelayed(()->{
-                    if (waitDialog!=null&&waitDialog.isShowing()){
+                    if (waitDialog!=null){
                         waitDialog.dismiss();
                         toast(R.string.load_succeed);
                     }
                     zmap.setImageBitmap(bitmap);
+                    rectangles.clear();
+                    RectangleView.getRectangleView().setFirstPoint(null);
+                    RectangleView.getRectangleView().setRectangles(rectangles);
+                    zmap.invalidate();
                     Logger.e("-------地图加载");
-                },500);
+                },1000);
                 break;
         }
     }
@@ -1380,24 +1382,10 @@ public class MapEditActivity extends DDRActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (tcpClient!=null&&!tcpClient.isConnected()){
-            Logger.e("----连接断开");
-            //netWorkStatusDialog();
-        }
     }
 
 
-    /**
-     * 显示网络连接弹窗
-     */
-    private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
-        postDelayed(()->{
-            if (waitDialog.isShowing()){
-                toast(R.string.network_not_connect);
-                ActivityStackManager.getInstance().finishAllActivities();
-                startActivity(LoginActivity.class);
-            }
-        },6000);
-    }
+
+
+
 }

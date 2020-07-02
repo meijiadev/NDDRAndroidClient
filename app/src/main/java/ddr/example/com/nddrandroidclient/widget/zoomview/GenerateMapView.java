@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
@@ -14,6 +15,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.opencv.core.Mat;
 
 import java.util.ArrayList;
@@ -22,10 +26,12 @@ import java.util.Map;
 
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.GridItem;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarCurSubMap;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
+import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.helper.OpenCVUtility;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -34,6 +40,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  *  time:2020/06/19
  */
 public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callback {
+    private int mBackColor = Color.TRANSPARENT;       //背景色透明
     public boolean isRunning=false;
     private DrawMapThread drawThread;          //绘制线程
     private SurfaceHolder holder;
@@ -63,6 +70,9 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
 
 
     private void init(){
+        holder=getHolder();
+        holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
+        holder.addCallback(this);
         matrix=new Matrix();
         matrix1=new Matrix();
         paint=new Paint();
@@ -70,8 +80,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         openCVUtility=OpenCVUtility.getInstance();
         notifyLidarCurSubMap=NotifyLidarCurSubMap.getInstance();
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
-        holder=getHolder();
-        holder.addCallback(this);
         directionBitmap= BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         targetBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
         lastFrame=new Paint();
@@ -81,6 +89,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         pathPaint=new Paint();
         pathPaint.setColor(Color.BLACK);
         pathPaint.setStrokeWidth(2);
+        EventBusManager.register(this);
     }
 
     /**
@@ -133,7 +142,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 Canvas canvas=null;
                 try {
                     canvas=holder.lockCanvas();
-                    checkMatNumber();
                     drawMap(canvas);
                     drawRobot(canvas);
                 }catch (Exception e){
@@ -163,9 +171,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
      */
     private void drawMap(Canvas canvas){
         if (srcBitmap!=null){
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-            canvas.drawPaint(paint);
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
             matrix=surfaceTouchEventHandler.getMatrix();
             canvas.drawBitmap(srcBitmap,matrix,paint);
         }
@@ -174,6 +180,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     /**
      * 绘制机器人当前位置
      * @param canvas
+     *
      */
     private void drawRobot(Canvas canvas){
         positionList=notifyLidarPtsEntity.getPositionList();
@@ -264,6 +271,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
 
             }
         }
+
         srcBitmap=openCVUtility.matToBitmap(srcMat);
         surfaceTouchEventHandler.setDefaultBitmap(srcBitmap);
        // Logger.e("生成的图片的大小："+srcBitmap.getWidth()+";"+srcBitmap.getHeight());
@@ -299,7 +307,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Logger.e("-------surfaceChanged:"+width+";"+height);
         surfaceTouchEventHandler=SurfaceTouchEventHandler.getInstance(width,height);
-        openCVUtility.onDestroy();
     }
 
     @Override
@@ -307,6 +314,8 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         if (surfaceTouchEventHandler!=null){
             surfaceTouchEventHandler.onDestroy();
         }
+        EventBusManager.unregister(this);
+        openCVUtility.onDestroy();
     }
 
 
@@ -316,5 +325,14 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
             surfaceTouchEventHandler.touchEvent(event);
         }
         return true;
+    }
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void receiveMessage(MessageEvent messageEvent){
+        switch (messageEvent.getType()){
+            case receiveLidarMap:
+                Logger.d("---------------receiveLidarMap");
+                checkMatNumber();
+                break;
+        }
     }
 }

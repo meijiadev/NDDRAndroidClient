@@ -105,6 +105,25 @@
         android:layout_marginRight="10dp"
         android:gravity="center"
         />
+    <TextView
+        android:id="@+id/tv_reference"
+        android:layout_width="124dp"
+        android:layout_height="32dp"
+        android:drawableLeft="@mipmap/item_show"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bt_bg__map"
+        android:paddingLeft="20dp"
+        android:text="@string/common_reference"
+        android:textSize="@dimen/text_size_12sp"
+        android:textColor="@color/white"
+        android:gravity="center_vertical"
+        android:drawablePadding="5dp"
+        android:layout_marginRight="17dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="9sp"
+        android:autoSizeMaxTextSize="12sp"
+        android:layout_marginTop="15dp"
+        />
 
 
 </RelativeLayout>

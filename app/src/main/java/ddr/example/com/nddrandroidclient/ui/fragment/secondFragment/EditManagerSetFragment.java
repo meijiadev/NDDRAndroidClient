@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
 import android.graphics.Canvas;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import DDRCommProto.BaseCmd;
 import butterknife.BindView;
+import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
@@ -23,12 +25,19 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
+import ddr.example.com.nddrandroidclient.http.HttpManage;
+import ddr.example.com.nddrandroidclient.http.VersionInformation;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * time: 2020/03/24
@@ -40,6 +49,8 @@ public class EditManagerSetFragment extends DDRLazyFragment {
     RecyclerView computer_type_recycle;
     @BindView(R.id.tv_bb_type)
     TextView tv_bb_type;
+    @BindView(R.id.tvUpdateServer)
+    TextView tvUpdateServer;
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
@@ -123,10 +134,44 @@ public class EditManagerSetFragment extends DDRLazyFragment {
         tv_bb_type.setText("V " + versionName + " " + buildTime);
     }
 
+    @OnClick(R.id.tvUpdateServer)
+    public void onViewClicked(View view) {
+        Logger.e("点击检查更新升级");
+        getVersions();
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
 
+    /**
+     * 通过http获取服务版本信息
+     */
+    private void getVersions(){
+        HttpManage.getServer().getVersion()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VersionInformation>() {            // Observable(被观察者) 通过subscribe(订阅)方法发送给所有的订阅者（Observer）
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Logger.e("------------onSubscribe");
+                    }
+
+                    @Override
+                    public void onNext(VersionInformation versionInformation) {
+                        Logger.e("请求成功");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Logger.e("----------onComplete:完成");
+                    }
+                });
     }
 }

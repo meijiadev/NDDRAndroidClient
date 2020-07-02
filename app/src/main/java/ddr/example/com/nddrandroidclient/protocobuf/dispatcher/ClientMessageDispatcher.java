@@ -24,6 +24,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdStartActionM
 
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspDetecLoopProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspEditorLidarMapProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetAllLidarCurSubMapProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetDDRVLNMapExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetParameterProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspGetSensorProcessor;
@@ -146,5 +147,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.notifyLidarCurSubMap notifyLidarCurSubMap= BaseCmd.notifyLidarCurSubMap.newBuilder().build();
         m_ProcessorMap.put(notifyLidarCurSubMap.getClass().toString(),new NotifyLidarCurSubMapProcessor());
+
+        BaseCmd.rspGetAllLidarCurSubMap rspGetAllLidarCurSubMap= BaseCmd.rspGetAllLidarCurSubMap.newBuilder().build();
+        m_ProcessorMap.put(rspGetAllLidarCurSubMap.getClass().toString(),new RspGetAllLidarCurSubMapProcessor());
     }
 }
