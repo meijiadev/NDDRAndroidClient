@@ -236,7 +236,7 @@ public class RelocationActivity extends DDRActivity {
     private boolean allShowPoint,allShowPath;               // 是否全部显示
     private int gridStatus;                                // 0 默认 1:0.25m ,2: 0.5m, 3: 1m ,4: 2m
     private void showPopupWindowReference(View view){
-        View contentView=getLayoutInflater().from(context).inflate(R.layout.popupwindow_reference,null);
+        View contentView=getLayoutInflater().from(this).inflate(R.layout.popupwindow_reference,null);
         customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(context)
                 .setView(contentView)
                 .create()

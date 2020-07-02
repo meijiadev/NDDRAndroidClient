@@ -273,6 +273,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         }
 
         srcBitmap=openCVUtility.matToBitmap(srcMat);
+        srcMat.release();
         surfaceTouchEventHandler.setDefaultBitmap(srcBitmap);
        // Logger.e("生成的图片的大小："+srcBitmap.getWidth()+";"+srcBitmap.getHeight());
         perMeter=eachPixelW/(lidarRange*2);
