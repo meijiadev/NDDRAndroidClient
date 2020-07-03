@@ -665,6 +665,8 @@ message notifyEnvInfo{
 	bool antiCollision4 = 13; // 防碰撞4
 	bool fallProtection = 14; // 防跌落
 	bool resetState = 15; // 复位状态 0-复位  1-未复位
+	int64 CurrOdometer = 16; // 当前里程计 单位CM
+	int64 TotalOdometer = 17; // 总里程计 单位CM
 }
 
 // 通知重定位状态。收到这个表示重定位结束了。

@@ -56,6 +56,7 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
+import ddr.example.com.nddrandroidclient.helper.BitmapUtil;
 import ddr.example.com.nddrandroidclient.helper.ListTool;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -173,9 +174,9 @@ public class MapEditActivity extends DDRActivity {
     public static final int SET_CHARGE_POINT=4;       //设置充电点
     private int activityType;                         //界面的类型
 
-    private List<Rectangle> rectangles=new ArrayList<>();
+    private List<Mat> mats=new ArrayList<>();           //保存去噪的五次Mat,以供撤销
+    private Mat srcMat;
     private XyEntity firstPoint,secondPoint;      //两点确定一个矩形
-    private Rectangle rectangle=new Rectangle();                  //保存矩形信息坐标
     private BaseDialog waitDialog;
     private String bitmap;                                        //地图地址
     private static final int FAST_CLICK_DELAY_TIME=1000;          // 点击时间间隔 ，防止短时间多次点击
@@ -205,7 +206,6 @@ public class MapEditActivity extends DDRActivity {
         graphTypeAdapter=new StringAdapter(R.layout.item_edit_type_recycler);
         graphTypeAdapter.setContext(context);
         GridLayerView.getInstance(zmap).onDestroy();
-
     }
 
     @Override
@@ -239,7 +239,6 @@ public class MapEditActivity extends DDRActivity {
         //graphTypes.add("多边形");
         initType(activityType);
         onShowItemClick();
-
     }
 
 
@@ -531,30 +530,33 @@ public class MapEditActivity extends DDRActivity {
                     tvRevocationDe.setBackgroundResource(R.mipmap.delete_point);
                     tvRevocationDe.setVisibility(View.VISIBLE);
                 }else {
+                    if (mats.size()==0){
+                        Mat mat=new Mat();
+                        zmap.getSourceMat().copyTo(mat);
+                        mats.add(mat);
+                    }
                     secondPoint=zmap.getTargetPoint();
                     tvAddDe.setText(R.string.common_add_point);
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
-                    XyEntity firstPoint1=zmap.toCanvas(firstPoint.getX(),firstPoint.getY());
-                    XyEntity secondPoint1=zmap.toCanvas(secondPoint.getX(),secondPoint.getY());
-                    XyEntity firstPoint_1=zmap.toWorld(secondPoint1.getX(),firstPoint1.getY());
-                    XyEntity secondPoint_1=zmap.toWorld(firstPoint1.getX(),secondPoint1.getY());
-                    rectangle=new Rectangle(firstPoint,firstPoint_1,secondPoint,secondPoint_1);
-                    rectangles.add(rectangle);
                     XyEntity xyEntity1=zmap.toXorY(firstPoint.getX(),firstPoint.getY());
                     XyEntity xyEntity2=zmap.toXorY(secondPoint.getX(),secondPoint.getY());
                     Logger.e("----startrow:"+ (int)xyEntity1.getY()+"endRows"+(int)xyEntity2.getY()+"startCol:"+(int) xyEntity1.getX()+"endCol:"+(int) xyEntity2.getX());
-                    Mat mat=zmap.getSourceMat().submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
+                    srcMat=mats.get(mats.size()-1);
+                    Mat dtsMat=new Mat();
+                    srcMat.copyTo(dtsMat);
+                    Mat mat=dtsMat.submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
                     dealWithMat(mat);
-                    Mat srcMat=zmap.getSourceMat();
-                    Bitmap bitmap=Bitmap.createBitmap(srcMat.width(),srcMat.height(),Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(srcMat,bitmap);
+                    mats.add(dtsMat);
+                    Bitmap bitmap=Bitmap.createBitmap(dtsMat.width(),dtsMat.height(),Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(dtsMat,bitmap);
                     zmap.setImageBitmap(bitmap);
-                    srcMat.release();
                     RectangleView.getRectangleView().setFirstPoint(null);
-                    //RectangleView.getRectangleView().setRectangles(rectangles);
                     zmap.invalidate();
                     tvRevocationDe.setBackgroundResource(R.mipmap.iv_denoising_revocation);
                     tvRevocationDe.setText(R.string.common_revocation);
+                    if (mats.size()>5){
+                        mats.remove(0);
+                    }
                 }
                 break;
             case R.id.tv_revocation_de:
@@ -565,18 +567,18 @@ public class MapEditActivity extends DDRActivity {
                     tvRevocationDe.setText(R.string.common_revocation);
                     tvRevocationDe.setBackgroundResource(R.mipmap.iv_denoising_revocation);
                 }else {
-                    if (rectangles.size()>0){
-                        rectangles.remove(rectangles.size()-1);
+                    if (mats.size()>1){
+                        mats.remove(mats.size()-1);
+                        zmap.setSourceMat(mats.get(mats.size()-1));
                     }else {
                         toast(R.string.nothing_revocation);
                     }
                 }
                 RectangleView.getRectangleView().setFirstPoint(null);
-                RectangleView.getRectangleView().setRectangles(rectangles);
                 zmap.invalidate();
                 break;
             case R.id.tv_save_de:
-                tcpClient.reqEditMapNoise(rectangles,1,false,mapFileStatus.getMapName());
+                tcpClient.sendEditMap(mapFileStatus.getMapName(),"bkPic.png", BitmapUtil.Bitmap2Bytes(zmap.getSourceBitmap()),false);
                 showWaitDialog(getString(R.string.in_storage)+mapFileStatus.getMapName());
                 break;
             case R.id.tv_init_de:
@@ -586,7 +588,7 @@ public class MapEditActivity extends DDRActivity {
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                tcpClient.reqEditMapNoise(rectangles,4,true,mapFileStatus.getMapName());
+                                tcpClient.sendEditMap(mapFileStatus.getMapName(),"bkPic.png", BitmapUtil.Bitmap2Bytes(zmap.getSourceBitmap()),true);
                                 showWaitDialog(getString(R.string.init_map));
                             }
 
@@ -600,17 +602,13 @@ public class MapEditActivity extends DDRActivity {
         }
     }
 
-
+    /**
+     * 修改图片某一块像素
+     * @param mat
+     */
     private void dealWithMat(Mat mat){
         Mat gray=new Mat();
         Imgproc.cvtColor(mat,gray,Imgproc.COLOR_BGR2GRAY);
-        //计算均值与标准方差
-        MatOfDouble means=new MatOfDouble();
-        MatOfDouble stddevs=new MatOfDouble();
-        Core.meanStdDev(gray,means,stddevs);
-        double[] mean=means.toArray();
-        double[] stddev=stddevs.toArray();
-        Logger.e("均差："+mean[0]+";标准方差："+stddev[0]);
         int w=gray.cols();      //多少列
         int h=gray.rows();      // 多少行
         byte[] data=new byte[w*h];
@@ -966,9 +964,9 @@ public class MapEditActivity extends DDRActivity {
             customPopuWindow.dissmiss();
             switch (position){
                 case 0:
+                    zmap.setCanRotate(true);
                     isDenoising=false;
                     firstPoint=null;
-                    rectangles.clear();
                     tvAddDe.setText(R.string.common_add_point);
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
                     tvRevocationDe.setText(R.string.common_revocation);
@@ -1317,38 +1315,12 @@ public class MapEditActivity extends DDRActivity {
                 }
                 break;
             case notifyEditorMapResult:
-                BaseCmd.rspEditorLidarMap rspEditorLidarMap= (BaseCmd.rspEditorLidarMap) messageEvent.getData();
-                int resultType=rspEditorLidarMap.getTypeValue();
-                int type=rspEditorLidarMap.getReqData().getTypeValue();
-                if (resultType==0){
-                    switch (type){
-                        case 1:
-                            tvRevocationDe.setVisibility(View.GONE);
-                            ImageLoader.clear(this);
-                            tcpClient.requestFile();          //去噪成功后，开始重新下载地图
-                            if (waitDialog!=null&&waitDialog.isShowing()){
-                                waitDialog.dismiss();
-                                showWaitDialog(getString(R.string.reload_map));
-                            }
-                            break;
-                        case 4:
-                            ImageLoader.clear(this);
-                            tcpClient.requestFile();          //地图初始化修改成功后，开始重新下载地图
-                            if (waitDialog!=null&&waitDialog.isShowing()){
-                                waitDialog.dismiss();
-                                showWaitDialog(getString(R.string.reload_map));
-                            }
-                            break;
-                    }
-                }else {
-                    toast(R.string.operation_failure);
-                    rectangles.clear();
-                    RectangleView.getRectangleView().setFirstPoint(null);
-                    RectangleView.getRectangleView().setRectangles(rectangles);
-                    zmap.invalidate();
-                    if (waitDialog!=null&&waitDialog.isShowing()){
-                        waitDialog.dismiss();
-                    }
+                tvRevocationDe.setVisibility(View.GONE);
+                ImageLoader.clear(this);
+                tcpClient.requestFile();                    //去噪成功后，开始重新下载地图
+                if (waitDialog!=null&&waitDialog.isShowing()){
+                    waitDialog.dismiss();
+                    showWaitDialog(getString(R.string.reload_map));
                 }
                 break;
             case updateMapList:
@@ -1358,9 +1330,7 @@ public class MapEditActivity extends DDRActivity {
                         toast(R.string.load_succeed);
                     }
                     zmap.setImageBitmap(bitmap);
-                    rectangles.clear();
                     RectangleView.getRectangleView().setFirstPoint(null);
-                    RectangleView.getRectangleView().setRectangles(rectangles);
                     zmap.invalidate();
                     Logger.e("-------地图加载");
                 },1000);

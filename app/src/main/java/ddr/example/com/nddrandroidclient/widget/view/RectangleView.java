@@ -23,10 +23,6 @@ public class RectangleView extends Shape {
     private ZoomImageView zoomImageView;
     private XyEntity firstPoint;
 
-    private List<Rectangle> rectangles=new ArrayList<>();
-
-
-
     public static RectangleView getRectangleView() {
         if (rectangleView==null){
             synchronized (RectangleView.class){
@@ -56,26 +52,10 @@ public class RectangleView extends Shape {
     public void draw(Canvas canvas, Object o) {
         super.draw(canvas, o);
         zoomImageView= (ZoomImageView) o;
-        if (rectangles!=null&&rectangles.size()>0){
-            for (Rectangle rectangle:rectangles){
-                Path path=new Path();
-                XyEntity xyEntity1=zoomImageView.toCanvas(rectangle.getFirstPoint().getX(),rectangle.getFirstPoint().getY());
-                XyEntity xyEntity2=zoomImageView.toCanvas(rectangle.getFirstPoint_1().getX(),rectangle.getFirstPoint_1().getY());
-                XyEntity xyEntity3=zoomImageView.toCanvas(rectangle.getSecondPoint().getX(),rectangle.getSecondPoint().getY());
-                XyEntity xyEntity4=zoomImageView.toCanvas(rectangle.getSecondPoint_1().getX(),rectangle.getSecondPoint_1().getY());
-                path.moveTo(xyEntity1.getX(),xyEntity1.getY());
-                path.lineTo(xyEntity2.getX(),xyEntity2.getY());
-                path.lineTo(xyEntity3.getX(),xyEntity3.getY());
-                path.lineTo(xyEntity4.getX(),xyEntity4.getY());
-                path.close();
-                canvas.drawPath(path,paint1);
-
-            }
-        }
         if (firstPoint!=null){
             XyEntity xyEntity=zoomImageView.toCanvas(firstPoint.getX(),firstPoint.getY());
             XyEntity xyEntity1=zoomImageView.toCanvas(zoomImageView.getTargetPoint().getX(),zoomImageView.getTargetPoint().getY());
-            Logger.e("-------xyEntity1:"+xyEntity1.getX()+";"+xyEntity1.getY());
+            //Logger.e("-------xyEntity1:"+xyEntity1.getX()+";"+xyEntity1.getY());
             canvas.drawRect(xyEntity.getX(),xyEntity.getY(),xyEntity1.getX(),xyEntity1.getY(),paint);
 
         }
@@ -87,14 +67,7 @@ public class RectangleView extends Shape {
     public void setFirstPoint(XyEntity xyEntity){
         firstPoint=xyEntity;
     }
-
-
-    public void setRectangles(List<Rectangle> rectangles){
-        this.rectangles=rectangles;
-    }
-
     public void clearDraw(){
-        rectangles=null;
         firstPoint=null;
 
     }

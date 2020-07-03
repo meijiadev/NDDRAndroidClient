@@ -16,6 +16,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
@@ -78,7 +79,7 @@ public class ZoomImageView extends View {
      * @param path
      */
     public void setImageBitmap(String path){
-        if (path!=null){
+        if (fileIsExits(path)){
             try {
                 try {
                     sourceMat= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
@@ -93,14 +94,39 @@ public class ZoomImageView extends View {
                 e.printStackTrace();
             }
         }
-    }
 
+    }
+    /**
+     * 判断文件是否存在
+     * @param path
+     * @return
+     */
+    private boolean fileIsExits(String path){
+        try {
+            File file=new File(path);
+            if (!file.exists()){
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
     /**
      * 获取图片的Mat数据
      * @return
      */
     public Mat getSourceMat() {
         return sourceMat;
+    }
+
+    /**
+     * 获取图片的Bitmap
+     * @return
+     */
+    public Bitmap getSourceBitmap() {
+        return sourceBitmap;
     }
 
     /**
@@ -129,6 +155,11 @@ public class ZoomImageView extends View {
             sourceBitmap=bitmap;
         }
         //initAffine();
+    }
+
+    public void setSourceMat(Mat mat){
+        sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(mat,sourceBitmap);
     }
 
     /**

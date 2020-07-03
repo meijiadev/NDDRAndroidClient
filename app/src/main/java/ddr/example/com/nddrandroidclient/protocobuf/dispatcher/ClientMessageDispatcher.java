@@ -39,6 +39,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRemoteServerLis
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunControlExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspRunSpecificPoint;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSelectLSProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSetMapBkpicDataProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspSpeechConfigProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.ServerInformationProcessor;
 
@@ -150,5 +151,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.rspGetAllLidarCurSubMap rspGetAllLidarCurSubMap= BaseCmd.rspGetAllLidarCurSubMap.newBuilder().build();
         m_ProcessorMap.put(rspGetAllLidarCurSubMap.getClass().toString(),new RspGetAllLidarCurSubMapProcessor());
+
+        DDRVLNMap.rspSetMapBkpicData rspSetMapBkpicData= DDRVLNMap.rspSetMapBkpicData.newBuilder().build();
+        m_ProcessorMap.put(rspSetMapBkpicData.getClass().toString(),new RspSetMapBkpicDataProcessor());
     }
 }

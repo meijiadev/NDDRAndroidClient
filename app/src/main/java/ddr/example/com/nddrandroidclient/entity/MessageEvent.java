@@ -70,7 +70,7 @@ public class MessageEvent {
         getSpecificPoint10,
         getSpecificPoint11,
 
-        notifyEditorMapResult,
+        notifyEditorMapResult,           //返回去噪结果
         notifyTCPDisconnected,
         updataVoice,//获取语音播报结果
 

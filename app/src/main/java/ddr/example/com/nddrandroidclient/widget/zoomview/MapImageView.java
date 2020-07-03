@@ -22,6 +22,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -115,15 +116,35 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     public void setImageBitmap(String path){
         //Logger.e("设置图片");
         String pngPath = GlobalParameter.ROBOT_FOLDER + path + "/" + "bkPic.png";
-        try {
-            Mat mat= Imgcodecs.imread(pngPath,Imgcodecs.IMREAD_UNCHANGED);
-            sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(mat,sourceBitmap);
-            Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (fileIsExits(pngPath)){
+            try {
+                Mat mat= Imgcodecs.imread(pngPath,Imgcodecs.IMREAD_UNCHANGED);
+                sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(mat,sourceBitmap);
+                Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            initAffine();
         }
-        initAffine();
+    }
+
+    /**
+     * 判断文件是否存在
+     * @param path
+     * @return
+     */
+    private boolean fileIsExits(String path){
+        try {
+            File file=new File(path);
+            if (!file.exists()){
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private List<BaseMode> baseModes;

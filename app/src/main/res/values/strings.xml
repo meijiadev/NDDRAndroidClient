@@ -28,6 +28,7 @@
 
     <string name="network_notify">与服务连接断开，正在重连中...</string>
     <string name="networkNotify_1">（点击此处返回登录页面）</string>
+    <string name="common_synchronization">同步</string>
 
 
 
