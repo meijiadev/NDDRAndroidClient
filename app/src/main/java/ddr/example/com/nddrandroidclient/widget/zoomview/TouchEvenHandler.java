@@ -19,8 +19,8 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  * time:2020/04/29
  */
 public class TouchEvenHandler {
-    private View view;
-    private Bitmap sourceBitmap;
+    public final View view;
+    public final Bitmap sourceBitmap;
     private float initRatio;             //最初的缩放大小
     // Matrix getValues 矩阵参数
     private float[] values=new float[9];
@@ -58,21 +58,54 @@ public class TouchEvenHandler {
     public static final int NONE_BITMAP=4;        // 不作任何操作
     public static final int SCALE_BITMAP_OUT=5;   //放大
     public static final int SCALE_BITMAP_IN=6;    // 缩小
-    private boolean isAutoRefresh;
+    public final boolean isAutoRefresh;
     private boolean canRotate=true;             // 默认可旋转
     private float originalX,originalY;           //最初时图片左上角位于画布中的位置
 
-    public TouchEvenHandler(@NotNull View view, Bitmap sourceBitmap, boolean isAutoRefresh) {
+    public TouchEvenHandler(@NotNull Builder builder) {
         Logger.e("初始化TouchEvenHandler");
-        this.view=view;
-        this.isAutoRefresh=isAutoRefresh;
+        this.view=builder.view;
+        this.isAutoRefresh=builder.isAutoRefresh;
         widthScreen=view.getWidth();
         heightScreen=view.getHeight();
-        this.sourceBitmap=sourceBitmap;
+        this.sourceBitmap=builder.bitmap;
         initBitmap();
         if (!isAutoRefresh){
             view.invalidate();
         }
+    }
+
+    public static class Builder{
+        public View view;
+        public Bitmap bitmap;
+        public boolean isAutoRefresh;
+        public Builder(){
+            isAutoRefresh=true;
+        }
+        public Builder(TouchEvenHandler touchEvenHandler){
+            this.view=touchEvenHandler.view;
+            this.bitmap=touchEvenHandler.sourceBitmap;
+            this.isAutoRefresh=touchEvenHandler.isAutoRefresh;
+        }
+
+        public Builder setView(View view){
+            this.view=view;
+            return this;
+        }
+        public Builder setBitmap(Bitmap bitmap){
+            this.bitmap=bitmap;
+            return this;
+        }
+
+        public Builder setAuRefresh(boolean isAutoRefresh){
+            this.isAutoRefresh=isAutoRefresh;
+            return this;
+        }
+
+        public TouchEvenHandler build(){
+            return new TouchEvenHandler(this);
+        }
+
     }
 
 

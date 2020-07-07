@@ -320,7 +320,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
             case 3:
-
                 break;
             case 4:
             case 5:

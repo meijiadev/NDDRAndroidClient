@@ -149,7 +149,10 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * 初始化地图的矩阵参数
      */
     private void initAffine(){
-        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+        touchEvenHandler=new TouchEvenHandler.Builder()
+                .setView(this)
+                .setBitmap(sourceBitmap)
+                .build();
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
         r00=affine_mat.getR11();
@@ -433,7 +436,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
             // 分别获取到ImageView的宽度和高度
             float width=getWidth();
             float height=getHeight();
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            touchEvenHandler=new TouchEvenHandler.Builder()
+                    .setView(this)
+                    .setBitmap(sourceBitmap)
+                    .build();
+
             Logger.e("布局大小发生改变:"+width+";"+height);
         }
     }
@@ -443,7 +450,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
             if (touchEvenHandler!=null){
                 touchEvenHandler.touchEvent(event);
             }else {
-                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+                touchEvenHandler=new TouchEvenHandler.Builder()
+                        .setView(this)
+                        .setBitmap(sourceBitmap)
+                        .build();
+
             }
         }
         return true;

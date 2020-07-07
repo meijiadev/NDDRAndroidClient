@@ -1437,12 +1437,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         }
     }
 
-
-
-    private BaseDialog relocationDialog;
     private NotifyBaseStatusEx notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
-    private int relocationStatus;
-
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
@@ -1578,69 +1573,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 break;
-            case updateRelocationStatus:
-                relocationStatus= (int) messageEvent.getData();
-                switch (relocationStatus){
-                    case 0:
-                        if (relocationDialog!=null&&relocationDialog.isShowing()){
-                            relocationDialog.dismiss();
-                        }
-                        new InputDialog.Builder(getAttachActivity())
-                                .setEditVisibility(View.GONE)
-                                .setTitle(R.string.relocation_failed_1)
-                                .setConfirm(R.string.common_yes)
-                                .setCancel(R.string.common_no)
-                                .setCanceledOnTouchOutside(false)    // 是否可以点击外部取消弹窗
-                                .setListener(new InputDialog.OnListener() {
-                                    @Override
-                                    public void onConfirm(BaseDialog dialog, String content) {
-                                        Intent intent = new Intent(getAttachActivity(), RelocationActivity.class);
-                                        intent.putExtra("currentBitmap", switchBitmapPath);
-                                        intent.putExtra("currentMapName", switchMapName);
-                                        startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void onCancel(BaseDialog dialog) {
-
-                                    }
-                                }).show();
-                        break;
-                    case 1:
-                        toast(R.string.relocation_succeed);
-                        if (relocationDialog!=null){
-                            relocationDialog.dismiss();
-                        }
-                        break;
-                    case 2:
-                        Logger.e("进入重定位...");
-                        relocationDialog = new RelocationDialog.Builder(getAttachActivity())
-                                .setAutoDismiss(true)
-                                .setListener(new RelocationDialog.OnListener() {
-                                    @Override
-                                    public void onHandMovement() {
-                                        Logger.e("地图地址:"+switchBitmapPath);
-                                        tcpClient.exitModel();
-                                        Intent intent = new Intent(getAttachActivity(), RelocationActivity.class);
-                                        intent.putExtra("currentBitmap", switchBitmapPath);
-                                        intent.putExtra("currentMapName", switchMapName);
-                                        startActivity(intent);
-                                    }
-                                    @Override
-                                    public void onCancelRelocation() {
-                                        tcpClient.exitModel();
-
-                                    }
-                                })
-                                .show();
-                        break;
-                    case 3:
-
-                        break;
-                }
-                break;
-
-
         }
     }
 

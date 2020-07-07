@@ -12,13 +12,15 @@ public class SpUtil {
     public static final String LANGUAGE = "language";
     private static final String SP_NAME = "poemTripSpref";
     public static final String CHARGE_STATUS="chargeStatus";
+    public static final String LOGIN_PASSWORD="password";  //登录密码
+    public static final String LOGIN_ACCOUNT="account";    //登录账号
     private static SpUtil spUtil;
-    private static SharedPreferences hmSpref;
+    private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 
     private SpUtil(Context context) {
-        hmSpref = context.getApplicationContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        editor = hmSpref.edit();
+        sharedPreferences = context.getApplicationContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
     }
 
     public static SpUtil getInstance(Context context) {
@@ -44,10 +46,10 @@ public class SpUtil {
     }
 
     public String getString(String key) {
-        return hmSpref.getString(key,"");
+        return sharedPreferences.getString(key,"");
     }
 
     public boolean getBoolean(String key){
-        return hmSpref.getBoolean(key,false);
+        return sharedPreferences.getBoolean(key,false);
     }
 }

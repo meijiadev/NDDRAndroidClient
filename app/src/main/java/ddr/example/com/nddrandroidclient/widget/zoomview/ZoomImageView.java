@@ -166,7 +166,11 @@ public class ZoomImageView extends View {
      *初始化参数
      */
     private void initAffine(){
-        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+        touchEvenHandler=new TouchEvenHandler.Builder()
+                .setView(this)
+                .setBitmap(sourceBitmap)
+                .setAuRefresh(false)
+                .build();
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
         r00=affine_mat.getR11();
@@ -300,7 +304,12 @@ public class ZoomImageView extends View {
             // 分别获取到ImageView的宽度和高度
             width=getWidth();
             height=getHeight();
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            touchEvenHandler=new TouchEvenHandler.Builder()
+                    .setView(this)
+                    .setBitmap(sourceBitmap)
+                    .setAuRefresh(false)
+                    .build();
+
             Logger.e("布局大小发生改变");
         }
     }
@@ -333,7 +342,11 @@ public class ZoomImageView extends View {
                 }
                 GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
             }else {
-                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+                touchEvenHandler=new TouchEvenHandler.Builder()
+                        .setView(this)
+                        .setBitmap(sourceBitmap)
+                        .setAuRefresh(false)
+                        .build();
             }
         }
         return true;

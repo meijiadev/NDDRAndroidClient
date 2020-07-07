@@ -1333,6 +1333,10 @@ public class MapEditActivity extends DDRActivity {
                     RectangleView.getRectangleView().setFirstPoint(null);
                     zmap.invalidate();
                     Logger.e("-------地图加载");
+                    for (Mat mat:mats){
+                        mat.release();
+                    }
+                    mats.clear();
                 },1000);
                 break;
         }

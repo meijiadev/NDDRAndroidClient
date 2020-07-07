@@ -247,7 +247,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      * 初始化地图的矩阵参数
      */
     private void initAffine(){
-        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+        touchEvenHandler=new TouchEvenHandler.Builder()
+                .setView(this)
+                .setBitmap(sourceBitmap)
+                .setAuRefresh(true)
+                .build();
         //touchEvenHandler.setCanRotate(false);
         try {
             DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
@@ -497,7 +501,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
             if (touchEvenHandler!=null){
                 touchEvenHandler.touchEvent(event);
             }else {
-                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+                touchEvenHandler=new TouchEvenHandler.Builder()
+                        .setView(this)
+                        .setBitmap(sourceBitmap)
+                        .setAuRefresh(true)
+                        .build();
             }
         }
         return true;
