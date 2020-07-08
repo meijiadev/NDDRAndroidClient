@@ -25,31 +25,38 @@ public class RspSpeechConfigProcessor extends BaseProcessor{
         super.process(context, commonHeader, msg);
         DDRAIServiceCmd .rspSpeechConfig rspSpeechConfig= (DDRAIServiceCmd.rspSpeechConfig) msg;
         voiceS=VoiceS.getInstance();
-        if (rspSpeechConfig.getSpeechconfig().getClosestatus()){
-            voiceS.setClose(true);
-        }else {
-            voiceList = new ArrayList<>();
-            Voice voice=new Voice();
-            voice.setText(rspSpeechConfig.getSpeechconfig().getObstacle().getText().toStringUtf8());
-            voice.setInterval(rspSpeechConfig.getSpeechconfig().getObstacle().getInterval());
-            voice.setPriority(rspSpeechConfig.getSpeechconfig().getObstacle().getPriority());
-            voice.setType(1);
-            voice.setIsclose(rspSpeechConfig.getSpeechconfig().getClosestatus());
-            Logger.e("内容是"+rspSpeechConfig.getSpeechconfig().getObstacle().getText().toStringUtf8());
+        voiceList = new ArrayList<>();
+        Logger.e("接收内容是-----"+rspSpeechConfig.getSpeechconfig().getClosestatus());
+        Voice voice = new Voice();
+        voice.setText(rspSpeechConfig.getSpeechconfig().getObstacle().getText().toStringUtf8());
+        voice.setInterval(rspSpeechConfig.getSpeechconfig().getObstacle().getInterval());
+        voice.setPriority(rspSpeechConfig.getSpeechconfig().getObstacle().getPriority());
+        voice.setType(1);
+        Logger.e("内容是" + rspSpeechConfig.getSpeechconfig().getObstacle().getText().toStringUtf8());
 
-            Voice voice1=new Voice();
-            voice1.setText(rspSpeechConfig.getSpeechconfig().getSustained().getText().toStringUtf8());
-            voice1.setInterval(rspSpeechConfig.getSpeechconfig().getSustained().getInterval());
-            voice1.setPriority(rspSpeechConfig.getSpeechconfig().getSustained().getPriority());
-            voice1.setType(2);
-            voice1.setIsclose(rspSpeechConfig.getSpeechconfig().getClosestatus());
-            Logger.e("内容是"+rspSpeechConfig.getSpeechconfig().getSustained().getText().toStringUtf8());
+        Voice voice1 = new Voice();
+        voice1.setText(rspSpeechConfig.getSpeechconfig().getSustained().getText().toStringUtf8());
+        voice1.setInterval(rspSpeechConfig.getSpeechconfig().getSustained().getInterval());
+        voice1.setPriority(rspSpeechConfig.getSpeechconfig().getSustained().getPriority());
+        voice1.setType(2);
+        Logger.e("内容是" + rspSpeechConfig.getSpeechconfig().getSustained().getText().toStringUtf8());
+        switch (rspSpeechConfig.getSpeechconfig().getClosestatus()) {
+            case 1:
+                voiceS.setClose(true);
+                break;
+            case 2:
+                voiceS.setClose(false);
+                voice.setIsclose(rspSpeechConfig.getSpeechconfig().getClosestatus());
+                break;
+            case 3:
+                voiceS.setClose(false);
+                voice1.setIsclose(rspSpeechConfig.getSpeechconfig().getClosestatus());
+                break;
 
-            voiceList.add(voice);
-            voiceList.add(voice1);
-            voiceS.setVoiceList(voiceList);
-            voiceS.setClose(false);
         }
+        voiceList.add(voice);
+        voiceList.add(voice1);
+        voiceS.setVoiceList(voiceList);
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataVoice));
 
     }

@@ -5,7 +5,7 @@ public class Voice {
     private int interval;
     private int priority;
     private int type;
-    private boolean isclose;
+    private int isclose;
 
     public String getText() {
         return text;
@@ -39,11 +39,11 @@ public class Voice {
         this.type = type;
     }
 
-    public boolean isIsclose() {
+    public int getIsclose() {
         return isclose;
     }
 
-    public void setIsclose(boolean isclose) {
+    public void setIsclose(int isclose) {
         this.isclose = isclose;
     }
 }

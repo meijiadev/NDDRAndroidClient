@@ -7,6 +7,7 @@ public class VoiceS {
     public static VoiceS voiceS;
     private List<Voice> voiceList =new ArrayList<>();
     private boolean isClose;
+    private int type;
     public static VoiceS getInstance(){
         if (voiceS==null){
             synchronized (VoiceS.class){
@@ -32,5 +33,13 @@ public class VoiceS {
 
     public void setClose(boolean close) {
         isClose = close;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
