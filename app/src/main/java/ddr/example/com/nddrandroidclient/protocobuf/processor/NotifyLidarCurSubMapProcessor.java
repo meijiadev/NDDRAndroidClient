@@ -52,5 +52,6 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
             e.printStackTrace();
         }
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.receiveLidarMap));
+        //Logger.e("------总共："+OpenCVUtility.getInstance().getMatMap().size()+"块");
     }
 }

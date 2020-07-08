@@ -375,7 +375,9 @@ public class TcpClient extends BaseSocketConnection {
      * 还没采集完时退出采集模式，再进入请求之前采集过的栅格图
      */
     public void getAllLidarMap(){
-        BaseCmd.reqGetAllLidarCurSubMap reqGetAllLidarCurSubMap= BaseCmd.reqGetAllLidarCurSubMap.newBuilder().build();
+        Logger.e("获取所有栅格地图");
+        BaseCmd.reqGetAllLidarCurSubMap reqGetAllLidarCurSubMap= BaseCmd.reqGetAllLidarCurSubMap.newBuilder()
+                .build();
         sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqGetAllLidarCurSubMap);
     }
     /**

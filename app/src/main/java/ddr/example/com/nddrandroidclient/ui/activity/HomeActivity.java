@@ -280,7 +280,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         tcpClient.requestFile();     //请求所有地图
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
-
+        //如果是采集模式直接进入采集页面
+        if (notifyBaseStatusEx.getMode()==2){
+            tcpClient.getAllLidarMap();
+            Intent intent = new Intent(HomeActivity.this, CollectingActivity.class);
+            startActivity(intent);
+        }
     }
 
 
@@ -481,29 +486,30 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             //重定位中
             if (notifyBaseStatusEx.getSonMode()==15){
                 Logger.e("进入重定位...");
-                if (relocationDialog==null|!relocationDialog.isShowing()){
+                if (relocationDialog==null){
                     relocationDialog = new RelocationDialog.Builder(this)
                             .setAutoDismiss(true)
                             .setListener(new RelocationDialog.OnListener() {
                                 @Override
                                 public void onHandMovement() {
-                                    Logger.e("地图地址:"+currentBitmapPath);
                                     tcpClient.exitModel();
                                     Intent intent = new Intent(HomeActivity.this, RelocationActivity.class);
                                     intent.putExtra("currentBitmap", currentBitmapPath);
                                     intent.putExtra("currentMapName", currentMap);
                                     startActivity(intent);
+                                    relocationDialog=null;
                                 }
                                 @Override
                                 public void onCancelRelocation() {
                                     tcpClient.exitModel();
+                                    relocationDialog=null;
                                 }
                             })
                             .show();
                 }
             }
-        }
 
+        }
     }
 
     /**

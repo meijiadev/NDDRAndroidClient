@@ -57,7 +57,7 @@ public class MessageEvent {
 
         getSwitchTaskSuccess, //获取临时任务结果成功
         getSwitchTaskFaild,//获取临时任务结果失败
-
+        GoToChargingPoint,    //前往充点电
         responseAbPoint,     // 点击ab点回复消息
         getSpecificPoint,   //获取点击AB点的结果
         getSpecificPoint1,

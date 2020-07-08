@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -45,7 +46,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     private DrawMapThread drawThread;          //绘制线程
     private SurfaceHolder holder;
     private Bitmap srcBitmap;
-    private Matrix matrix,matrix1;
+    private Matrix matrix,matrix1,matrix2;
     private Paint paint,lastFrame,pathPaint;
     private NotifyLidarCurSubMap notifyLidarCurSubMap;
     private OpenCVUtility openCVUtility;
@@ -58,6 +59,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     private float angle;
     private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
+    private List<XyEntity> robotPath=new ArrayList<>();
     public GenerateMapView(Context context) {
         super(context);
         init();
@@ -75,6 +77,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         holder.addCallback(this);
         matrix=new Matrix();
         matrix1=new Matrix();
+        matrix2=new Matrix();
         paint=new Paint();
         paint.setAntiAlias(true);
         openCVUtility=OpenCVUtility.getInstance();
@@ -88,6 +91,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         lastFrame.setColor(Color.parseColor("#9900CED1"));
         pathPaint=new Paint();
         pathPaint.setColor(Color.BLACK);
+        pathPaint.setStyle(Paint.Style.STROKE);
         pathPaint.setStrokeWidth(2);
         EventBusManager.register(this);
     }
@@ -143,6 +147,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 try {
                     canvas=holder.lockCanvas();
                     drawMap(canvas);
+                    drawPath(canvas);
                     drawRobot(canvas);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -202,6 +207,35 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
             canvas.drawBitmap(directionBitmap,matrix1,paint);
         }
 
+    }
+
+    /**
+     *显示机器人行走路径
+     * @param canvas
+     */
+    private void drawPath(Canvas canvas){
+        int size=robotPath.size();
+        if (size>1){
+            Path path=new Path();
+            for (int i=0;i<size;i++){
+                XyEntity xyEntity = coordinatesToMat(robotPath.get(i).getX(), robotPath.get(i).getY());
+                xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
+                if (i==0){
+                    path.moveTo(xyEntity.getX(),xyEntity.getY());
+                }else {
+                    path.lineTo(xyEntity.getX(),xyEntity.getY());
+                }
+            }
+            canvas.drawPath(path,pathPaint);
+        }
+        XyEntity xyEntity=coordinatesToMat(0,0);
+        xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
+        float cx=xyEntity.getX()-targetBitmap.getWidth()/2;
+        float cy=xyEntity.getY()-targetBitmap.getHeight()/2;
+        matrix2.reset();
+        matrix2.postTranslate(cx,cy);
+        matrix2.postRotate((float) surfaceTouchEventHandler.getAngle(),xyEntity.getX(),xyEntity.getY());
+        canvas.drawBitmap(targetBitmap,matrix2,paint);
     }
 
 
@@ -333,6 +367,10 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
             case receiveLidarMap:
                 Logger.d("---------------receiveLidarMap");
                 checkMatNumber();
+                break;
+            case receivePointCloud:
+                XyEntity xyEntity=new XyEntity(notifyLidarPtsEntity.getPosX(),notifyLidarPtsEntity.getPosY());
+                robotPath.add(xyEntity);
                 break;
         }
     }
