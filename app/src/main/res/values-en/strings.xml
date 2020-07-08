@@ -34,7 +34,7 @@
     <string name="right_button">WAN</string>
     <string name="account_name">Account</string>
     <string name="password_hint">Password</string>
-    <string name="login_button">Login</string>
+    <string name="login_button">Log in</string>
 
     <!--Home页-->
     <string name="home_status">Console</string>
@@ -228,7 +228,7 @@
     <string name="conmon_collect_success">Mapping success</string>
 
     <!--地图编辑页面-->
-    <string name="mark_current">Mark robot is position</string>
+    <string name="mark_current">Mark robot location</string>
     <string name="select_point">Select POIs to build path</string>
     <string name="common_gridlayout">Grid：</string>
     <string name="common_add_point">Mark</string>
@@ -350,7 +350,7 @@
     <string name="common_start">Start</string>
     <string name="in_wait_please">Standing by, please enter the execution state first</string>
     <string name="in_wait">Standing by, please enter the execution state first</string>
-    <string name="please_wait_back">Just a moment, exiting</string>
+    <string name="please_wait_back">wait a moment, exiting</string>
     <string name="cancel_setting_time">Unset time</string>
     <string name="setting_time">The end time must be later than the start time, please reset</string>
     <string name="not_in_time">Not within the time period, unable to recover!</string>
@@ -366,13 +366,13 @@
     <string name="waiting_dialog">Localizating, please do not move the robot</string>
     <string name="exit_collecting_dialog">Quit this map?</string>
     <string name="save_map_dialog">End the mapping?</string>
-    <string name="add_path_name_dialog">Add pathname</string>
+    <string name="add_path_name_dialog">New path</string>
     <string name="please_enter">Please enter a name</string>
     <string name="is_delete">Delete or not</string>
     <string name="in_storage">Saving...</string>
     <string name="is_recover_denoising">Restore noise or not？</string>
     <string name="init_map">Initializing map...</string>
-    <string name="add_gauge_name">Add target name</string>
+    <string name="add_gauge_name">New POI</string>
     <string name="reload_map">Reload map...</string>
     <string name="in_load_map">It is loading the map！</string>
     <string name="is_save_setting">Save the settings and exit？？</string>
@@ -380,7 +380,7 @@
     <string name="not_save_dialog">Not save</string>
     <string name="empty_map_data">All map datas will be cleared, confirm to do that?</string>
     <string name="is_back">Exit or not</string>
-    <string name="collect_map">Mapping</string>
+    <string name="collect_map">New map</string>
     <string name="enter_map_name">Enter map name</string>
     <string name="please_delete">Delete selected?</string>
     <string name="common_deleting">Deleting...</string>
