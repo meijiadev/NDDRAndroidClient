@@ -24,6 +24,7 @@ public class MessageEvent {
         realTimeDraw,     //实时绘制 机器人当前位置
         addPoiPoint,   //采集过程中添加点
         updateVersion, //获取版本信息
+        receiveLidarMap,       //接收雷达栅格图
         receivePointCloud,    //接收点云
         receiveVisionPoints,   //接收视觉点云
         switchTaskSuccess,   //
@@ -69,7 +70,7 @@ public class MessageEvent {
         getSpecificPoint10,
         getSpecificPoint11,
 
-        notifyEditorMapResult,
+        notifyEditorMapResult,           //返回去噪结果
         notifyTCPDisconnected,
         updataVoice,//获取语音播报结果
 

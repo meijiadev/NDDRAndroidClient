@@ -605,6 +605,20 @@ message rspGetDDRVLNMapEx
 	bytes bkpicData = 3;
 }
 
+// 客户端发送图片数据
+message reqSetMapBkpicData
+{
+	bytes onerouteName = 1;
+	bytes bkpicDataname = 2;// 图片名字，比如 bkPic.png
+	bytes bkpicData = 3; // 地图数据
+	bool bResumeOriginal = 4; // true 表示恢复成最原始的
+}
+
+message rspSetMapBkpicData
+{
+	DDRCommProto.eCmdRspType type = 1;
+}
+
 // 0.4版任务调度协议
 message reqRunControlEx
 {

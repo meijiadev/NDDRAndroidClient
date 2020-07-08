@@ -18,7 +18,11 @@ import android.view.View;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -112,18 +116,35 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     public void setImageBitmap(String path){
         //Logger.e("设置图片");
         String pngPath = GlobalParameter.ROBOT_FOLDER + path + "/" + "bkPic.png";
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(pngPath);
-            Bitmap bitmap = BitmapFactory.decodeStream(fis);
-            sourceBitmap = bitmap;
-            Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        if (fileIsExits(pngPath)){
+            try {
+                Mat mat= Imgcodecs.imread(pngPath,Imgcodecs.IMREAD_UNCHANGED);
+                sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(mat,sourceBitmap);
+                Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            initAffine();
         }
-        initAffine();
+    }
+
+    /**
+     * 判断文件是否存在
+     * @param path
+     * @return
+     */
+    private boolean fileIsExits(String path){
+        try {
+            File file=new File(path);
+            if (!file.exists()){
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private List<BaseMode> baseModes;
@@ -226,7 +247,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      * 初始化地图的矩阵参数
      */
     private void initAffine(){
-        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+        touchEvenHandler=new TouchEvenHandler.Builder()
+                .setView(this)
+                .setBitmap(sourceBitmap)
+                .setAuRefresh(true)
+                .build();
         //touchEvenHandler.setCanRotate(false);
         try {
             DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
@@ -272,7 +297,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      */
     private void drawRadarLine(Canvas canvas){
         if (sourceBitmap!=null){
-            canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
+            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
             canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
             positionList = notifyLidarPtsEntity.getPositionList();
             //Logger.d("-------点云数量：" + positionList.size());
@@ -476,7 +501,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
             if (touchEvenHandler!=null){
                 touchEvenHandler.touchEvent(event);
             }else {
-                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,true);
+                touchEvenHandler=new TouchEvenHandler.Builder()
+                        .setView(this)
+                        .setBitmap(sourceBitmap)
+                        .setAuRefresh(true)
+                        .build();
             }
         }
         return true;

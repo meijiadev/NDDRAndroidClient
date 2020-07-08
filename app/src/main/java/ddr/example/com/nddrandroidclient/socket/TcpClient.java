@@ -371,9 +371,13 @@ public class TcpClient extends BaseSocketConnection {
     }
 
 
-
-
-
+    /**
+     * 还没采集完时退出采集模式，再进入请求之前采集过的栅格图
+     */
+    public void getAllLidarMap(){
+        BaseCmd.reqGetAllLidarCurSubMap reqGetAllLidarCurSubMap= BaseCmd.reqGetAllLidarCurSubMap.newBuilder().build();
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqGetAllLidarCurSubMap);
+    }
     /**
      * 请求文件（txt、png) 刷新文件列表
      */
@@ -439,6 +443,23 @@ public class TcpClient extends BaseSocketConnection {
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
         tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+    }
+
+    /**
+     * 发送去噪后的图片到服务端
+     * @param mapName
+     * @param pictureName
+     * @param data
+     * @param isReset
+     */
+    public void sendEditMap(String mapName,String pictureName,byte[]data,boolean isReset){
+        DDRVLNMap.reqSetMapBkpicData reqSetMapBkpicData= DDRVLNMap.reqSetMapBkpicData.newBuilder()
+                .setOnerouteName(ByteString.copyFromUtf8(mapName))
+                .setBkpicDataname(ByteString.copyFromUtf8(pictureName))
+                .setBkpicData(ByteString.copyFrom(data))
+                .setBResumeOriginal(isReset)
+                .build();
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqSetMapBkpicData);
     }
 
     /**

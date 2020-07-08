@@ -32,7 +32,6 @@ public class OpenCVUtility {
         return openCVUtility;
     }
     private OpenCVUtility() {
-
     }
 
 
@@ -43,7 +42,7 @@ public class OpenCVUtility {
 
     public Mat createSrcMat(int w,int h){
         //创建三通道的灰色(127)Mat
-         srcMat=new Mat(new Size(w,h),CvType.CV_8UC3,new Scalar(127,127,127));
+         srcMat=new Mat(new Size(w,h),CvType.CV_8UC3,new Scalar(18,17,16));
          return srcMat;
     }
 
@@ -54,6 +53,9 @@ public class OpenCVUtility {
     }
 
     public Mat getSrcMat() {
+        if (srcMat==null){
+            srcMat=createSrcMat(700,700);
+        }
         return srcMat;
     }
 
@@ -70,6 +72,7 @@ public class OpenCVUtility {
             matMap.clear();
             srcMat.release();
             srcMat=null;
+            openCVUtility=null;
         }
     }
 }

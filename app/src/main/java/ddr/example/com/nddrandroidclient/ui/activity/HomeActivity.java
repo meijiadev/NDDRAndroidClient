@@ -1,17 +1,12 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 
-import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,25 +14,17 @@ import android.widget.TextView;
 
 
 import com.google.protobuf.ByteString;
-import com.jaygoo.widget.OnRangeChangedListener;
-import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
-import com.yhao.floatwindow.FloatWindow;
-
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import DDRCommProto.BaseCmd;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -74,6 +61,7 @@ import ddr.example.com.nddrandroidclient.base.BaseFragmentAdapter;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.RelocationDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
@@ -121,7 +109,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
-    private String currentMap;     //当前运行的地图名
+    private String currentMap;          //当前运行的地图名
+    private String currentBitmapPath;   //当前使用的图片存储地址
     private String currentTask;   //当前运行的任务
     private CustomPopuWindow customPopuWindow;
     private SharedPreferences sharedPreferences;
@@ -144,12 +133,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private ComputerEditions computerEditions;
     private String language;
     private MapFileStatus mapFileStatus;
-
+    private BaseDialog relocationDialog;
     /**
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
-    private BaseDialog waitDialog;
+    private int relocationStatus;
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -158,12 +147,53 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             case updateBaseStatus:
                 initStatusBar();
                 break;
+            case updateRelocationStatus:
+                relocationStatus= (int) messageEvent.getData();
+                switch (relocationStatus){
+                    case 0:
+                        if (relocationDialog!=null&&relocationDialog.isShowing()){
+                            relocationDialog.dismiss();
+                            relocationDialog=null;
+                        }
+                        new InputDialog.Builder(this)
+                                .setEditVisibility(View.GONE)
+                                .setTitle(R.string.relocation_failed_1)
+                                .setConfirm(R.string.common_yes)
+                                .setCancel(R.string.common_no)
+                                .setCanceledOnTouchOutside(false)    // 是否可以点击外部取消弹窗
+                                .setListener(new InputDialog.OnListener() {
+                                    @Override
+                                    public void onConfirm(BaseDialog dialog, String content) {
+                                        Intent intent = new Intent(HomeActivity.this, RelocationActivity.class);
+                                        intent.putExtra("currentBitmap", currentBitmapPath);
+                                        intent.putExtra("currentMapName", currentMap);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onCancel(BaseDialog dialog) {
+
+                                    }
+                                }).show();
+                        break;
+                    case 1:
+                        toast(R.string.relocation_succeed);
+                        if (relocationDialog!=null){
+                            relocationDialog.dismiss();
+                            relocationDialog=null;
+                        }
+                        break;
+                }
+                if (relocationStatus==1&&vpHomePager!=null){
+                    vpHomePager.setCurrentItem(0);
+                }
+                break;
             case updateMapList:
-                Logger.e("-------------updateMapList");
+                Logger.d("-------------updateMapList");
                 getMapInfo();
                 break;
             case switchTaskSuccess:
-                Logger.e("--------更新地图");
+                Logger.d("--------更新地图");
                 getMapInfo();
                 Logger.e("---------" + currentMap);
                 break;
@@ -178,17 +208,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 if (className.equals(HomeActivity.class.toString()))
                 new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.taskmanager));
                 break;
-            case updateRelocationStatus:
-                int relocationStatus= (int) messageEvent.getData();
-                if (relocationStatus==1&&vpHomePager!=null){
-                    vpHomePager.setCurrentItem(0);
-                }
-                break;
             case updateAiPort:
                 udpIp1= (UdpIp) messageEvent.getData();
-//                Logger.e(globalParameter.isLan()+"是否局域网");
                 Logger.e("AIip"+udpIp1.getIp()+"端口"+udpIp1.getPort());
-                    tcpAiClient.createConnect(LAN_IP_AI,udpIp1.getPort());
+                tcpAiClient.createConnect(LAN_IP_AI,udpIp1.getPort());
                 break;
             case tcpAiConnected:
                 Logger.e("TcpAI服务开始连接");
@@ -304,19 +327,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case R.id.tv_quit:
                 onBack();
-//                new InputDialog.Builder(getActivity())
-//                        .setTitle(R.string.is_back)
-//                        .setEditVisibility(View.GONE)
-//                        .setListener(new InputDialog.OnListener() {
-//                            @Override
-//                            public void onConfirm(BaseDialog dialog, String content) {
-//                                onBack();
-//                            }
-//                            @Override
-//                            public void onCancel(BaseDialog dialog) {
-//                            }
-//                        }).show();
-
                 break;
             case R.id.tv_shutdown:
                 new InputDialog.Builder(this).setEditVisibility(View.GONE).setConfirm("关机").setCancel("重启").setListener(new InputDialog.OnListener() {
@@ -430,6 +440,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             DecimalFormat df = new DecimalFormat("0");
             DecimalFormat format = new DecimalFormat("0.00");
             currentMap = notifyBaseStatusEx.getCurroute();
+            currentBitmapPath = GlobalParameter.ROBOT_FOLDER + currentMap + "/" + "bkPic.png";
             currentTask = notifyBaseStatusEx.getCurrpath();
             xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
             jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
@@ -467,7 +478,32 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     iv_yk_def.setTextColor(getResources().getColor(R.color.text_gray));
                     break;
             }
+            //重定位中
+            if (notifyBaseStatusEx.getSonMode()==15){
+                Logger.e("进入重定位...");
+                if (relocationDialog==null|!relocationDialog.isShowing()){
+                    relocationDialog = new RelocationDialog.Builder(this)
+                            .setAutoDismiss(true)
+                            .setListener(new RelocationDialog.OnListener() {
+                                @Override
+                                public void onHandMovement() {
+                                    Logger.e("地图地址:"+currentBitmapPath);
+                                    tcpClient.exitModel();
+                                    Intent intent = new Intent(HomeActivity.this, RelocationActivity.class);
+                                    intent.putExtra("currentBitmap", currentBitmapPath);
+                                    intent.putExtra("currentMapName", currentMap);
+                                    startActivity(intent);
+                                }
+                                @Override
+                                public void onCancelRelocation() {
+                                    tcpClient.exitModel();
+                                }
+                            })
+                            .show();
+                }
+            }
         }
+
     }
 
     /**
@@ -563,222 +599,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     }
 
-    /**
-     * 遥控弹窗
-     */
-    private void showControlPopupWindow() {
-        View contentView = null;
-        contentView = LayoutInflater.from(this).inflate(R.layout.dialog_yk_check, null);
-        customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(this)
-                .setView(contentView)
-                .size(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                .enableOutsideTouchableDissmiss(true)// 设置点击PopupWindow之外的地方，popWindow不关闭，如果不设置这个属性或者为true，则关闭
-                .setOutsideTouchable(false)//是否PopupWindow 以外触摸dissmiss
-                .create()
-                .showAsDropDown(findViewById(R.id.taskmanager),0,-10);
-        seekBar=contentView.findViewById(R.id.seek_bar_control);
-        fixedSpeed=contentView.findViewById(R.id.fixed_speed);
-        myRocker=contentView.findViewById(R.id.my_rocker_control);
-        myRockerZy=contentView.findViewById(R.id.my_rocker_zy_control);
-        tvSpeed=contentView.findViewById(R.id.tv_speed_control);
-        iv_quit_yk=contentView.findViewById(R.id.iv_quit_yk);
-        tv_xsu=contentView.findViewById(R.id.robot_xsu);//线速度
-        tv_jsu=contentView.findViewById(R.id.robot_jsu);//角速度
-        initSeekBar();
-        initRockerView();
-        initTimer();
-        setFixedSpeed();
-        maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
-        seekBar.setProgress((float) maxSpeed);
-        tvSpeed.setText(String.valueOf(maxSpeed));
-        iv_quit_yk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                customPopuWindow.dissmiss();
-                timer.cancel();
-                task.cancel();
-                try {
-                    FloatWindow.get().show();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
-    @SuppressLint("NewApi")
-    private void initSeekBar() {
-        seekBar.setOnRangeChangedListener(new OnRangeChangedListener() {
-            @Override
-            public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
-                if (!ishaveChecked) {
-                    editor.putFloat("speed", (float) maxSpeed);                 //保存最近的改变速度
-                    editor.commit();
-                    tvSpeed.setText(String.valueOf(maxSpeed));
-                }
-                Logger.e("------" + seekBar.getLeftSeekBar().getProgress());
-                maxSpeed = seekBar.getLeftSeekBar().getProgress();
-            }
-
-            @Override
-            public void onStartTrackingTouch(RangeSeekBar view, boolean isLeft) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(RangeSeekBar view, boolean isLeft) {
-
-            }
-        });
-    }
-
-    /**
-     * 自定义摇杆View的相关操作
-     * 作用：监听摇杆的方向，角度，距离
-     */
-    private void initRockerView() {
-        myRocker.setOnShakeListener(DIRECTION_2_VERTICAL, new RockerView.OnShakeListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void direction(RockerView.Direction direction) {
-                if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
-                    //Logger.e("---中心");
-                    lineSpeed = 0;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_base_default);
-                } else if (direction == RockerView.Direction.DIRECTION_DOWN) {     // 当前方向：下
-                    isforward = false;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_backward);
-                    //Logger.e("下");
-                } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
-
-                } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
-                    isforward = true;
-                    myRocker.setmAreaBackground(R.mipmap.rocker_forward);
-                    //Logger.e("上");
-                } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
-
-                }
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        });
-
-        myRockerZy.setOnShakeListener(DIRECTION_2_HORIZONTAL, new RockerView.OnShakeListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void direction(RockerView.Direction direction) {
-                if (direction == RockerView.Direction.DIRECTION_CENTER) {           // "当前方向：中心"
-                    // Logger.e("---中心");
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_default_zy);
-                    palstance = 0;
-                } else if (direction == RockerView.Direction.DIRECTION_DOWN) {
-
-                } else if (direction == RockerView.Direction.DIRECTION_LEFT) {    //当前方向：左
-                    isGoRight = false;
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_go_left);
-                    // Logger.e("左");
-                } else if (direction == RockerView.Direction.DIRECTION_UP) {      //当前方向：上
-
-                } else if (direction == RockerView.Direction.DIRECTION_RIGHT) {
-                    //Logger.e("右");
-                    isGoRight = true;
-                    myRockerZy.setmAreaBackground(R.mipmap.rocker_go_right);
-                }
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        });
-
-        /*** lambda 表达式 Java8*/
-        myRockerZy.setOnDistanceLevelListener((level) -> {
-                    DecimalFormat df = new DecimalFormat("#.00");
-                    palstance = Float.parseFloat(df.format(maxSpeed * level / 10));
-                    if (isGoRight) {
-                        palstance = -palstance;
-                    }
-                }
-        );
-
-        myRocker.setOnDistanceLevelListener((level -> {
-            DecimalFormat df = new DecimalFormat("#.00");
-            lineSpeed = Float.parseFloat(df.format(maxSpeed * level / 10));
-            if (!isforward) {
-                lineSpeed = -lineSpeed;
-            }
-        }));
-
-    }
-
-    Timer timer;
-    TimerTask task;
-    int a = 0;
-
-    /**
-     * 定时器，每90毫秒执行一次
-     */
-    private void initTimer() {
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-
-            public void run() {
-                // Logger.e("线速度，角速度："+lineSpeed+";"+palstance);
-                if (lineSpeed == 0 && palstance == 0) {
-                    a++;
-                    if (a <= 5) {
-                        //Logger.e("----a:" + a);
-                        tcpClient.sendSpeed(lineSpeed, palstance);
-                    }
-                } else {
-                    a = 0;
-                    //Logger.e("线速度，角速度：" + lineSpeed + ";" + palstance);
-                    tcpClient.sendSpeed(lineSpeed, palstance);
-                }
-            }
-        };
-        timer.schedule(task, 0, 50);
-    }
-
-
-    /**
-     * 固定速度
-     */
-    public void setFixedSpeed() {
-        fixedSpeed.setOnCheckedChangeListener(((buttonView, isChecked) -> {
-            if (isChecked) {
-                ishaveChecked = isChecked;
-                maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
-                Logger.e("-----" + maxSpeed);
-                tvSpeed.setText(String.valueOf(maxSpeed));
-                seekBar.setEnabled(false);
-                toast(R.string.common_lock);
-            } else {
-                seekBar.setEnabled(true);
-                ishaveChecked = isChecked;
-                maxSpeed = sharedPreferences.getFloat("speed", (float) 0.4);
-                seekBar.setProgress((float) maxSpeed);
-                tvSpeed.setText(String.valueOf(maxSpeed));
-                toast(R.string.common_cancel_lock);
-
-            }
-        }));
-    }
-
     @Override
     public void onSoftKeyboardOpened(int keyboardHeight) {
 
@@ -792,25 +612,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void onResume() {
         super.onResume();
-        if (!tcpClient.isConnected()){
-            Logger.e("网络已断开");
-            //netWorkStatusDialog();
-        }
     }
 
-    /**
-     * 显示网络连接弹窗
-     */
-    private void  netWorkStatusDialog(){
-        waitDialog=new WaitDialog.Builder(this).setMessage(R.string.common_network_connecting).show();
-        postDelayed(()->{
-            if (waitDialog.isShowing()){
-                toast(R.string.network_not_connect);
-                ActivityStackManager.getInstance().finishAllActivities();
-                startActivity(LoginActivity.class);
-            }
-        },6000);
-    }
+
 
     public UdpClient udpClient;
     private int aiPort=18888;

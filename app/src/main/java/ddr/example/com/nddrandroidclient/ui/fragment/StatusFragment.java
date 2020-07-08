@@ -320,7 +320,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
             case 3:
-
                 break;
             case 4:
             case 5:
@@ -377,7 +376,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 btExitCharge.setVisibility(View.GONE);
                 break;
         }
-        //Logger.e("------------是否在充电："+notifyBaseStatusEx.isChargingStatus());
+        Logger.d("------------是否在充电："+notifyBaseStatusEx.isChargingStatus()+"电量："+batteryNum);
         if(!notifyBaseStatusEx.isChargingStatus()) {
             if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式
                 chargingLayout.setVisibility(View.GONE);
@@ -388,7 +387,18 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
+        }else {
+            if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
+                chargingLayout.setVisibility(View.VISIBLE);
+                leftLayout.setVisibility(View.GONE);
+            }
+            if (!chargeAnimation.isRunning()){
+                chargeAnimation.start();
+            }
+           tvElectricQuantity.setText(batteryNum+"%");
         }
+
+        //只有在自动充电时才生效
         switch (notifyBaseStatusEx.getChargingSubStatus()){
             case 1:
                 tvChargeNotify.setText(R.string.common_charging_1);
@@ -399,7 +409,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     chargingLayout.setVisibility(View.VISIBLE);
                     leftLayout.setVisibility(View.GONE);
                 }
-
                 if (!chargeAnimation.isRunning()){
                     chargeAnimation.start();
                 }

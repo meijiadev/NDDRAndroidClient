@@ -12,6 +12,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
@@ -50,6 +55,7 @@ public class ZoomImageView extends View {
     public double t1=410.973;
     private TouchEvenHandler touchEvenHandler;
     private float scale=1f;   //当前地图的缩放值
+    private Mat sourceMat;
 
     public ZoomImageView(Context context) {
         super(context);
@@ -73,14 +79,12 @@ public class ZoomImageView extends View {
      * @param path
      */
     public void setImageBitmap(String path){
-        if (path!=null){
+        if (fileIsExits(path)){
             try {
-                FileInputStream fis = null;
                 try {
-                    fis = new FileInputStream(path);
-                    sourceBitmap = BitmapFactory.decodeStream(fis);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    sourceMat= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
+                    sourceBitmap=Bitmap.createBitmap(sourceMat.width(),sourceMat.height(),Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(sourceMat,sourceBitmap);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -90,6 +94,39 @@ public class ZoomImageView extends View {
                 e.printStackTrace();
             }
         }
+
+    }
+    /**
+     * 判断文件是否存在
+     * @param path
+     * @return
+     */
+    private boolean fileIsExits(String path){
+        try {
+            File file=new File(path);
+            if (!file.exists()){
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    /**
+     * 获取图片的Mat数据
+     * @return
+     */
+    public Mat getSourceMat() {
+        return sourceMat;
+    }
+
+    /**
+     * 获取图片的Bitmap
+     * @return
+     */
+    public Bitmap getSourceBitmap() {
+        return sourceBitmap;
     }
 
     /**
@@ -117,14 +154,23 @@ public class ZoomImageView extends View {
         if (bitmap!=null){
             sourceBitmap=bitmap;
         }
-        initAffine();
+        //initAffine();
+    }
+
+    public void setSourceMat(Mat mat){
+        sourceBitmap=Bitmap.createBitmap(mat.width(),mat.height(),Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(mat,sourceBitmap);
     }
 
     /**
      *初始化参数
      */
     private void initAffine(){
-        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+        touchEvenHandler=new TouchEvenHandler.Builder()
+                .setView(this)
+                .setBitmap(sourceBitmap)
+                .setAuRefresh(false)
+                .build();
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
         r00=affine_mat.getR11();
@@ -163,7 +209,7 @@ public class ZoomImageView extends View {
      * @param y
      * @return
      */
-    private XyEntity toXorY(float x, float y){
+    public XyEntity toXorY(float x, float y){
         float x1=(float)( r00*x+r01*y+t0);
         float y1=(float) (r10*x+r11*y+t1);
         return new XyEntity(x1,y1);
@@ -258,7 +304,12 @@ public class ZoomImageView extends View {
             // 分别获取到ImageView的宽度和高度
             width=getWidth();
             height=getHeight();
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            touchEvenHandler=new TouchEvenHandler.Builder()
+                    .setView(this)
+                    .setBitmap(sourceBitmap)
+                    .setAuRefresh(false)
+                    .build();
+
             Logger.e("布局大小发生改变");
         }
     }
@@ -291,7 +342,11 @@ public class ZoomImageView extends View {
                 }
                 GridLayerView.getInstance(this).setScalePrecision((float) touchEvenHandler.getZoomX());
             }else {
-                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+                touchEvenHandler=new TouchEvenHandler.Builder()
+                        .setView(this)
+                        .setBitmap(sourceBitmap)
+                        .setAuRefresh(false)
+                        .build();
             }
         }
         return true;

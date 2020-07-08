@@ -48,6 +48,19 @@
             android:background="@drawable/version"
             android:gravity="center"/>
         <TextView
+            android:id="@+id/tvUpdateServer"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@id/tv_bb_type"
+            android:layout_alignBaseline="@id/tv_bb_type"
+            android:textColor="#ccffffff"
+            android:background="@drawable/version"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:text="检查更新"
+            android:textSize="@dimen/text_size_12sp"
+            />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:text="机器人服务端软件版本信息"

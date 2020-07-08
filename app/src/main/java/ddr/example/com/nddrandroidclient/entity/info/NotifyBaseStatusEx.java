@@ -124,9 +124,6 @@ public class NotifyBaseStatusEx {
 
     public void setSonMode(int sonMode) {
         this.sonMode = sonMode;
-        if (sonMode==8){
-            setFinishCollect(true);
-        }
     }
 
     public int getStopStat() {
@@ -233,13 +230,7 @@ public class NotifyBaseStatusEx {
         return isHaveLocation;
     }
 
-    public void setFinishCollect(boolean finishCollect) {
-        isFinishCollect = finishCollect;
-    }
 
-    public boolean isFinishCollect() {
-        return isFinishCollect;
-    }
 
     public int getTemopTaskNum() {
         return temopTaskNum;

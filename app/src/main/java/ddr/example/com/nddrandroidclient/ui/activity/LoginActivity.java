@@ -27,6 +27,7 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
+import ddr.example.com.nddrandroidclient.language.SpUtil;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -58,9 +59,6 @@ public  class LoginActivity extends DDRActivity {
 
     public  int tcpPort = 88;
     private String accountName = "", passwordName = "";
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-
     public TcpClient tcpClient;
 
     public UdpClient udpClient;
@@ -88,8 +86,7 @@ public  class LoginActivity extends DDRActivity {
                 break;
             case LoginSuccess:
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
-                editor.putString("password", passwordName);
-                editor.commit();
+                SpUtil.getInstance(context).putString(SpUtil.LOGIN_PASSWORD,passwordName);
                 Logger.e("登录成功");
                 toast(R.string.login_succeed);
                 postDelayed(()->{
@@ -101,8 +98,7 @@ public  class LoginActivity extends DDRActivity {
                 break;
             case wanLoginSuccess:
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
-                editor.putString("password", passwordName);
-                editor.commit();
+                SpUtil.getInstance(context).putString(SpUtil.LOGIN_PASSWORD,passwordName);
                 Logger.e("广域网登录成功");
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
@@ -140,9 +136,7 @@ public  class LoginActivity extends DDRActivity {
     @Override
     protected void initData() {
         receiveBroadcast();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = sharedPreferences.edit();
-        password.setText(sharedPreferences.getString("password", ""));
+        password.setText(SpUtil.getInstance(context).getString(SpUtil.LOGIN_PASSWORD));
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int memorySize = activityManager.getMemoryClass();

@@ -144,7 +144,7 @@ public class TcpAiClient extends BaseSocketConnection {
                     disConnect();
                 }else {
                     Logger.e("-------断开连接的页面："+activity.getLocalClassName());
-                    showDialog(activity );
+                    //showDialog(activity );
                 }
             }
         }

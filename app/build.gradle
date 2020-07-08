@@ -105,7 +105,7 @@ protobuf {
 
 dependencies {
 
-    implementation project(path: ':OpenCVLibrary430')
+    //implementation project(path: ':OpenCVLibrary430')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // 谷歌 Support 包
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompatVersion"
@@ -163,4 +163,13 @@ dependencies {
 
     //今日头条适配方案框架
     implementation 'me.jessyan:autosize:0.9.5'
+
+    implementation 'com.google.code.gson:gson:2.8.2'   //gson解析
+    implementation 'com.squareup.retrofit2:retrofit:2.0.2' //retrofit2.0
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0' //配合Rxjava 使用
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.0-beta4' //ConverterFactory的Gson:
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.8' //rxjava
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'  //rxandroid 线程调度
+
+
 }

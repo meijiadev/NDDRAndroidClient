@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -29,6 +31,8 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.widget.zoomview.TouchEvenHandler;
@@ -41,9 +45,9 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private TouchEvenHandler touchEvenHandler;
     private int mBackColor = Color.TRANSPARENT;       //背景色透明
     private Bitmap directionBitmap;
-    private Paint paint;
+    private Paint paint,textPaint,linePaint;
     private float scale=1;                             //地图缩放的比例
-    private int directionW,directionH;
+    private int directionW,directionH,bitmapW,bitmapH;
     private Bitmap sourceBitmap;
     private MapFileStatus mapFileStatus;
     private double r00 = 0;
@@ -53,6 +57,13 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private double r11 = 0;
     private double t1 = 410.973;
     private float posX,posY;
+    private List<TargetPoint> targetPoints1;
+    private List<PathLine> pathLines1;
+    private Bitmap targetBitmap;
+    private Matrix matrix=new Matrix();
+    private Bitmap startBitmap,endBitmap;
+
+
     public RobotLocationView(Context context) {
         super(context);
         init();
@@ -61,7 +72,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     public RobotLocationView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
-
     }
 
     private void init(){
@@ -70,10 +80,23 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         mapFileStatus=MapFileStatus.getInstance();
         directionBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
+        targetBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
+        startBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.start_default);
+        endBitmap=BitmapFactory.decodeResource(getResources(),R.mipmap.end_defalut);
         paint = new Paint();
         paint.setColor(Color.parseColor("#00CED1"));
+        textPaint=new Paint();
+        textPaint.setStrokeWidth(8);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(16);
+        linePaint=new Paint();
+        linePaint.setColor(Color.GRAY);
+        linePaint.setStrokeWidth(3);
+        linePaint.setAntiAlias(true);
         directionW=directionBitmap.getWidth();
         directionH=directionBitmap.getHeight();
+        bitmapW=startBitmap.getWidth();
+        bitmapH=startBitmap.getHeight();
         EventBus.getDefault().register(this);
     }
 
@@ -84,6 +107,21 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     public void setImageBitmap(Bitmap sourceBitmap){
         this.sourceBitmap=sourceBitmap;
         initAffine();
+    }
+    /**
+     * 显示被选中的点（多选）
+     * @param targetPoints
+     */
+    public void setTargetPoints(List<TargetPoint> targetPoints){
+        this.targetPoints1=targetPoints;
+    }
+
+    /**
+     * 设置需要显示的路径（多选）
+     * @param pathLines
+     */
+    public void setPathLines(List<PathLine> pathLines){
+        this.pathLines1=pathLines;
     }
 
     /**
@@ -111,7 +149,10 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * 初始化地图的矩阵参数
      */
     private void initAffine(){
-        touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+        touchEvenHandler=new TouchEvenHandler.Builder()
+                .setView(this)
+                .setBitmap(sourceBitmap)
+                .build();
         MapFileStatus mapFileStatus=MapFileStatus.getInstance();
         DDRVLNMap.affine_mat affine_mat=mapFileStatus.getAffine_mat();
         r00=affine_mat.getR11();
@@ -132,19 +173,18 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         float y1=(float) (r10*x+r11*y+t1)*touchEvenHandler.getInitRatio();
         return new XyEntity(x1,y1);
     }
-
-  /*  *//**
+    /*
      * 从世界坐标直接得到相对于画布的坐标
      * @param x
      * @param y
-     * @return
-     *//*
+     * @return*/
+
     public XyEntity toCanvas(float x,float y){
         //世界坐标转成相对于图片位置的像素坐标
         XyEntity xyEntity=toXorY(x,y);
         //再将相对于图片的位置转成相对于画布的位置
         return touchEvenHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
-    }*/
+    }
     /**
      * 将相对于画布坐标转成世界坐标
      * @param x
@@ -248,6 +288,9 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                     canvas=holder.lockCanvas();
                     if (canvas!=null){
                        doDraw(canvas);
+                       drawPoint(canvas);
+                       drawPath(canvas);
+                       drawGrid(canvas);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -301,6 +344,76 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         }
     }
 
+
+    private void drawPoint(Canvas canvas){
+        if (targetPoints1 != null) {
+            for (int i=0;i<targetPoints1.size();i++){
+                if (targetPoints1.get(i).isMultiple()){
+                    XyEntity xyEntity=toCanvas(targetPoints1.get(i).getX(),targetPoints1.get(i).getY());
+                    float x= xyEntity.getX();
+                    float y=  xyEntity.getY();
+                    matrix.reset();
+                    matrix.postTranslate(x,y);
+                    matrix.postRotate(-targetPoints1.get(i).getTheta()+(float) touchEvenHandler.getAngle(),xyEntity.getX(),xyEntity.getY());
+                    canvas.drawBitmap(targetBitmap,matrix,paint);
+                    canvas.drawText(targetPoints1.get(i).getName(),xyEntity.getX(),xyEntity.getY()+15,textPaint);
+                }
+            }
+        }
+    }
+
+    private void drawPath(Canvas canvas){
+        if (pathLines1!=null){
+            for (int i=0;i<pathLines1.size();i++){
+                if (pathLines1.get(i).isMultiple()){
+                    List<PathLine.PathPoint> pathPoints=pathLines1.get(i).getPathPoints();
+                    for (int j=0;j<pathPoints.size();j++){
+                        if (pathPoints.size()>1){
+                            XyEntity xyEntity1=toCanvas(pathPoints.get(j).getX(),pathPoints.get(j).getY());
+                            if (j<pathPoints.size()-1){
+                                XyEntity xyEntity2=toCanvas(pathPoints.get(j+1).getX(),pathPoints.get(j+1).getY());
+                                canvas.drawLine(xyEntity1.getX(),xyEntity1.getY(),xyEntity2.getX(),xyEntity2.getY(),linePaint);
+                            }
+                            if (j==0){
+                                canvas.drawBitmap(startBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }else if (j==pathPoints.size()-1){
+                                canvas.drawBitmap(endBitmap,xyEntity1.getX()-bitmapW/2,xyEntity1.getY()-bitmapH/2,linePaint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }else {
+                                canvas.drawCircle(xyEntity1.getX(),xyEntity1.getY(),8,linePaint);
+                                canvas.drawText(pathPoints.get(j).getName(),xyEntity1.getX(),xyEntity1.getY()+15,textPaint);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
+    public void drawGrid(Canvas canvas){
+        if (precision!=0){
+            int viewWidth=getWidth();       //得到画布的宽
+            int viewHeight=getHeight();     //得到画布的高
+            pixIntervalX=precision/Math.abs(1/r01)*touchEvenHandler.getZoomX();
+            prxIntervalY=precision/Math.abs(1/r10)*touchEvenHandler.getZoomX();
+            //画横线
+            if (prxIntervalY!=0&&pixIntervalX!=0){
+                for (int i=0;i<viewHeight/prxIntervalY;i++){
+                    canvas.drawLine(0,(float) (i*prxIntervalY),viewWidth,(float)(i*prxIntervalY),paint);
+                }
+                //画竖线
+                for (int i = 0; i < viewWidth / pixIntervalX; i++) {
+                    canvas.drawLine((float) (i * pixIntervalX), 0, (float)(i * pixIntervalX), viewHeight, paint);
+                }
+            }
+        }
+    }
+
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
@@ -323,7 +436,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
             // 分别获取到ImageView的宽度和高度
             float width=getWidth();
             float height=getHeight();
-            touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+            touchEvenHandler=new TouchEvenHandler.Builder()
+                    .setView(this)
+                    .setBitmap(sourceBitmap)
+                    .build();
+
             Logger.e("布局大小发生改变:"+width+";"+height);
         }
     }
@@ -333,7 +450,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
             if (touchEvenHandler!=null){
                 touchEvenHandler.touchEvent(event);
             }else {
-                touchEvenHandler=new TouchEvenHandler(this,sourceBitmap,false);
+                touchEvenHandler=new TouchEvenHandler.Builder()
+                        .setView(this)
+                        .setBitmap(sourceBitmap)
+                        .build();
+
             }
         }
         return true;
@@ -348,5 +469,10 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                 //Logger.e("--------接收雷达数据");
                 break;
         }
+    }
+    private double pixIntervalX,prxIntervalY;
+    private float precision=0;
+    public void setPrecision(float precision){
+        this.precision=precision;
     }
 }

@@ -83,6 +83,7 @@ public class SurfaceTouchEventHandler {
             int bitmapHeight=srcBitmap.getHeight();
             if (sourceBitmap==null||(sourceBitmap.getWidth()!=bitmapWidth||sourceBitmap.getHeight()!=bitmapHeight)){
                 this.sourceBitmap=srcBitmap;
+                matrix.reset();
                 savedMatrix.set(matrix);
                 matrix1.set(savedMatrix);
                 float translateX=(widthScreen-bitmapWidth)/2f;
@@ -116,7 +117,6 @@ public class SurfaceTouchEventHandler {
      */
     public void initMatrix(){
         matrix.set(originalMatrix);
-
     }
 
     /**

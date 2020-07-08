@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -115,12 +117,10 @@ public class CollectingActivity extends DDRActivity {
     private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
     private List<XyEntity>poiPoints=new ArrayList<>();                   //兴趣点列表 采集中生成
     private float posX,posY;        //机器人当前位置
-    private float radian;           // 机器人当前朝向 单位弧度
-    private float angle;            // 机器人当前朝向 弧度转换后的角度
-
-    private float ratio=1;         //地图比例
     private boolean isStartDraw=false;        //是否开始绘制
     private int clicks;                       //点击次数
+    private static final int FLAG_HOMEKEY_DISPATCHED = 0x80000000;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
@@ -570,6 +570,26 @@ public class CollectingActivity extends DDRActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+  /*  @Override
+    public void onAttachedToWindow() {
+        getWindow().clearFlags(FLAG_HOMEKEY_DISPATCHED );//屏蔽菜单键
+        this.getWindow().setType(
+                WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+        super.onAttachedToWindow();
+    }*/
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode==KeyEvent.KEYCODE_BACK){
+            toast("当前页面不能直接退出！");
+            return true;
+        }else if (keyCode==KeyEvent.KEYCODE_HOME){
+            toast("当前页面不能直接退出");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
