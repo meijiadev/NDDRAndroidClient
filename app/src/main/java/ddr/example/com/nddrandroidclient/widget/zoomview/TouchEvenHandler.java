@@ -75,6 +75,9 @@ public class TouchEvenHandler {
         }
     }
 
+    /**
+     * 新增Builder模式
+     */
     public static class Builder{
         public View view;
         public Bitmap bitmap;
