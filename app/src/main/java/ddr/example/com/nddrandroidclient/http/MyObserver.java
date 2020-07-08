@@ -7,6 +7,7 @@ import io.reactivex.disposables.Disposable;
  * 监听
  */
 public class MyObserver implements Observer<VersionInformation> {
+
     @Override
     public void onSubscribe(Disposable d) {
 
