@@ -200,6 +200,9 @@
             android:layout_marginTop="20dp"
             android:id="@+id/tv_work2"
             android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="14sp"
            />
 
         <TextView
