@@ -108,6 +108,8 @@ public class VoiceSetFragment extends DDRLazyFragment {
                     toast(R.string.Selecting);
                 }
                 voice_num = 0;
+                edYlContent.setText(" ");
+                edYlTime.setText(" ");
                 break;
             case R.id.tv_v_obstacle:
                 if (!tvVObstacle.getSelected()) {

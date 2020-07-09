@@ -259,7 +259,7 @@
 
             <TextView
                 android:id="@+id/tv_smart_smooth_turn"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_title6"
