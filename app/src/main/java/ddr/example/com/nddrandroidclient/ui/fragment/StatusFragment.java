@@ -199,7 +199,11 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
             case responseAbPoint:
-                tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                break;
+            case GoToChargingPoint:
+                //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+                mapImageView.setTargetPoint(null);
                 break;
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
@@ -463,7 +467,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point,R.id.tv_warn,R.id.bt_exit_charge})
+    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point,R.id.tv_warn,R.id.bt_exit_charge,R.id.circle})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.iv_shrink:
@@ -519,6 +523,9 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case R.id.bt_exit_charge:
                 tcpClient.exitModel();
                 toast(R.string.exit_charging);
+                break;
+            case R.id.circle:
+                tcpClient.getAllLidarMap();
                 break;
         }
     }

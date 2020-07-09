@@ -22,6 +22,7 @@ public class RspGetAllLidarCurSubMapProcessor extends BaseProcessor {
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
+        Logger.e("获取所有块地图");
         try {
             notifyLidarCurSubMaps=new ArrayList<>();
             long startTime=System.currentTimeMillis();
@@ -39,5 +40,6 @@ public class RspGetAllLidarCurSubMapProcessor extends BaseProcessor {
         }catch (Exception e){
             e.printStackTrace();
         }
+        Logger.e("------总共："+OpenCVUtility.getInstance().getMatMap().size()+"块");
     }
 }

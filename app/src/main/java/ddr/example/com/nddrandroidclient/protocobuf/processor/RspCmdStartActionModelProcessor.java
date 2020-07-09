@@ -17,10 +17,10 @@ public class RspCmdStartActionModelProcessor extends BaseProcessor {
         super.process(context, commonHeader,msg);
         BaseCmd.rspCmdStartActionMode rspCmdStartActionMode= (BaseCmd.rspCmdStartActionMode) msg;
         Logger.e("--------》》》"+rspCmdStartActionMode.getMode()+"----->>"+rspCmdStartActionMode.getType());
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.switchTaskSuccess));
-        switch (rspCmdStartActionMode.getType()){
-            case eSuccess:
-
+       // EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.switchTaskSuccess));
+        switch (rspCmdStartActionMode.getModeValue()){
+            case 5:
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.GoToChargingPoint));
                 break;
         }
     }
