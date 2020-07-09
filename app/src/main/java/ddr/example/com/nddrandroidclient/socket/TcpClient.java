@@ -309,6 +309,7 @@ public class TcpClient extends BaseSocketConnection {
     public void onDestroy(){
         tcpClient=null;
         context=null;
+        disConnect();
     }
 
     /**

@@ -562,6 +562,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         intent_login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //关键的一句，将新的activity置为栈顶
         startActivity(intent_login);
         finish();
+        tcpClient.onDestroy();
 
     }
 
@@ -577,7 +578,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void onDestroy() {
         vpHomePager.removeOnPageChangeListener(this);
         vpHomePager.setAdapter(null);
-        tcpClient.disConnect();
+        tcpClient.onDestroy();
         tcpAiClient.disConnect();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();

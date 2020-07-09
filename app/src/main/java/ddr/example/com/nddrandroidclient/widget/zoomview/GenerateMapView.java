@@ -147,7 +147,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 try {
                     canvas=holder.lockCanvas();
                     drawMap(canvas);
-                    drawPath(canvas);
+                    //drawPath(canvas);
                     drawRobot(canvas);
                 }catch (Exception e){
                     e.printStackTrace();
