@@ -22,6 +22,7 @@ import com.yhao.floatwindow.MoveType;
 import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.LitePal;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
@@ -100,6 +101,8 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 //.eventListener(new YourCustomEventListener())
                 .apply();
         initFloatView();
+        //初始化数据库
+        LitePal.initialize(this);
     }
 
     /**

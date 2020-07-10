@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 import com.jaygoo.widget.VerticalRangeSeekBar;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -282,9 +284,12 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         editor = sharedPreferences.edit();
         //如果是采集模式直接进入采集页面
         if (notifyBaseStatusEx.getMode()==2){
-            tcpClient.getAllLidarMap();
-            Intent intent = new Intent(HomeActivity.this, CollectingActivity.class);
-            startActivity(intent);
+            postDelayed(()->{
+                tcpClient.getAllLidarMap();
+                EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.getRobotCoordinates));
+                Intent intent = new Intent(HomeActivity.this, CollectingActivity.class);
+                startActivity(intent);
+            },1000);
         }
     }
 

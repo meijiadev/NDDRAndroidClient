@@ -158,7 +158,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case getSwitchTaskSuccess:
                 toast(R.string.add_task_success);
                 break;
-            case getSwitchTaskFaild:
+            case getSwitchTaskFailed:
                 toast(R.string.add_task_faild);
                 break;
             case getSpecificPoint:

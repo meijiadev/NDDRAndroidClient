@@ -16,6 +16,7 @@ import com.google.protobuf.ByteString;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
@@ -290,6 +291,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                             content = content.replaceAll(" ", "");
                                             String name = "OneRoute_" + content;
                                             if (!mapFileStatus.getMapNames().contains(name)) {
+                                                LitePal.deleteDatabase("DDRDataBase");
                                                 BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
                                                         .setMode(BaseCmd.eCmdActionMode.eRec)
                                                         .setRouteName(ByteString.copyFromUtf8(name))

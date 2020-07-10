@@ -16,9 +16,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.LitePal;
 import org.opencv.core.Mat;
 
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.GridItem;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarCurSubMap;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.model.RobotCoordinates;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.helper.OpenCVUtility;
@@ -59,7 +60,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     private float angle;
     private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
-    private List<XyEntity> robotPath=new ArrayList<>();
+    private List<RobotCoordinates> robotPath=new ArrayList<>();
     public GenerateMapView(Context context) {
         super(context);
         init();
@@ -73,13 +74,14 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
 
     private void init(){
         holder=getHolder();
-        holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
+        //holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         holder.addCallback(this);
         matrix=new Matrix();
         matrix1=new Matrix();
         matrix2=new Matrix();
         paint=new Paint();
         paint.setAntiAlias(true);
+        paint.setDither(true);
         openCVUtility=OpenCVUtility.getInstance();
         notifyLidarCurSubMap=NotifyLidarCurSubMap.getInstance();
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
@@ -95,6 +97,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         pathPaint.setStrokeWidth(2);
         EventBusManager.register(this);
     }
+
 
     /**
      * 开始绘制
@@ -147,7 +150,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 try {
                     canvas=holder.lockCanvas();
                     drawMap(canvas);
-                    //drawPath(canvas);
+                    drawPath(canvas);
                     drawRobot(canvas);
                 }catch (Exception e){
                     e.printStackTrace();
@@ -176,7 +179,10 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
      */
     private void drawMap(Canvas canvas){
         if (srcBitmap!=null){
-            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            canvas.drawPaint(paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+            canvas.drawColor(Color.parseColor("#101112"));
             matrix=surfaceTouchEventHandler.getMatrix();
             canvas.drawBitmap(srcBitmap,matrix,paint);
         }
@@ -279,7 +285,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                     int colEnd=colStart+eachPixelW;
                     mat.copyTo(srcMat.submat(rowStart,rowEnd,colStart,colEnd));
                     if (gridItem.getX()==0&&gridItem.getY()==0){
-                        Logger.e("------rowStart:"+rowStart+"colStart:"+colStart);
                         originY=rowStart+eachPixelW/2;
                         originX=colStart+eachPixelW/2;
                     }
@@ -291,18 +296,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 int colStart=(maxY-notifyLidarCurSubMap.getGridItem().getY())*notifyLidarCurSubMap.getWidth();
                 int colEnd=colStart+notifyLidarCurSubMap.getWidth();
                 mat.copyTo(srcMat.submat(rowStart,rowEnd,colStart,colEnd));
-/*
-                for (GridItem gridItem:matMap.keySet()){
-                    int rowStart1=(maxX-gridItem.getX())*eachPixelW;
-                    int colStart1=(maxY-gridItem.getY())*eachPixelW;
-                    if (gridItem.getX()==0&&gridItem.getY()==0){
-                        Logger.e("------rowStart:"+rowStart+"colStart:"+colStart);
-                        originY=rowStart1+eachPixelW/2;
-                        originX=colStart1+eachPixelW/2;
-                    }
-                }
-*/
-
             }
         }
 
@@ -361,7 +354,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         }
         return true;
     }
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND,sticky = true)
     public void receiveMessage(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case receiveLidarMap:
@@ -369,8 +362,19 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 checkMatNumber();
                 break;
             case receivePointCloud:
-                XyEntity xyEntity=new XyEntity(notifyLidarPtsEntity.getPosX(),notifyLidarPtsEntity.getPosY());
-                robotPath.add(xyEntity);
+                if (isRunning){
+                    float cx=notifyLidarPtsEntity.getPosX();
+                    float cy=notifyLidarPtsEntity.getPosY();
+                    RobotCoordinates robotCoordinates=new RobotCoordinates();
+                    robotCoordinates.setX(cx);
+                    robotCoordinates.setY(cy);
+                    robotPath.add(robotCoordinates);
+                    robotCoordinates.save();
+                }
+                break;
+            case getRobotCoordinates:
+                robotPath=LitePal.findAll(RobotCoordinates.class);
+                Logger.e("-----本地保存的数据："+robotPath.size());
                 break;
         }
     }

@@ -22,7 +22,6 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.widget.zoomview.SurfaceTouchEventHandler;
-import ddr.example.com.nddrandroidclient.widget.zoomview.TouchEvenHandler;
 
 /**
  * desc:采集实时绘制地图

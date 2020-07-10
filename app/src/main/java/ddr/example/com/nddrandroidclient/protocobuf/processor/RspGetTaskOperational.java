@@ -25,7 +25,7 @@ public class RspGetTaskOperational extends BaseProcessor{
                 }
                 break;
             case eCmdFailed:
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSwitchTaskFaild));
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSwitchTaskFailed));
                 break;
         }
     }
