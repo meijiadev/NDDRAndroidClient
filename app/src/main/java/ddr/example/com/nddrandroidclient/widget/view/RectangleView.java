@@ -3,14 +3,8 @@ package ddr.example.com.nddrandroidclient.widget.view;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ddr.example.com.nddrandroidclient.entity.other.Rectangle;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
-import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
 
 /**

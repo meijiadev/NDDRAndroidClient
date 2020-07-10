@@ -90,7 +90,7 @@ public class VoiceSetFragment extends DDRLazyFragment {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
-            case updataVoice:
+            case updateVoice:
                 getResultAndSet();
                 break;
         }

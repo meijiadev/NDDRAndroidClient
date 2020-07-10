@@ -5,15 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.hjq.xtoast.OnClickListener;
-import com.hjq.xtoast.OnToastListener;
 import com.hjq.xtoast.XToast;
 import com.xuhao.didi.core.iocore.interfaces.ISendable;
 import com.xuhao.didi.core.pojo.OriginalData;
@@ -23,20 +20,16 @@ import com.xuhao.didi.socket.client.sdk.client.ConnectionInfo;
 import com.xuhao.didi.socket.client.sdk.client.OkSocketOptions;
 import com.xuhao.didi.socket.client.sdk.client.action.SocketActionAdapter;
 import com.xuhao.didi.socket.client.sdk.client.connection.IConnectionManager;
-import com.yhao.floatwindow.IFloatWindow;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
-import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.R;
-import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
@@ -53,9 +46,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.MessageRoute;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.BaseMessageDispatcher;
-import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.LoginActivity;
-import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 
 /**
  * 基于OkSocket库的TCP客户端
@@ -358,6 +349,8 @@ public class TcpClient extends BaseSocketConnection {
     public boolean isConnected() {
         return isConnected;
     }
+
+
 
 
     /**

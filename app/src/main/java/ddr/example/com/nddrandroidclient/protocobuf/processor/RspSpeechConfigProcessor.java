@@ -57,7 +57,7 @@ public class RspSpeechConfigProcessor extends BaseProcessor{
         voiceList.add(voice);
         voiceList.add(voice1);
         voiceS.setVoiceList(voiceList);
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataVoice));
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateVoice));
 
     }
 }

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.view.MotionEvent;
-import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 

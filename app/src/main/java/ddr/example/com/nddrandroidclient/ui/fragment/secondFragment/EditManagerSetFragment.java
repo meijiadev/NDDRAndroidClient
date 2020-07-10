@@ -149,6 +149,8 @@ public class EditManagerSetFragment extends DDRLazyFragment {
      * 通过http获取服务版本信息
      */
     private void getVersions(){
+        toast("正在查询版本信息!");
+        tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eExitModuleService);
         HttpManage.getServer().getVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

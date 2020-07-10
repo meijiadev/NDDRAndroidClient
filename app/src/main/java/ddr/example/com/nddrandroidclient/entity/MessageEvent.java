@@ -56,7 +56,7 @@ public class MessageEvent {
         touchSelectPoint,            //触摸选中目标点
 
         getSwitchTaskSuccess, //获取临时任务结果成功
-        getSwitchTaskFaild,//获取临时任务结果失败
+        getSwitchTaskFailed,//获取临时任务结果失败
         GoToChargingPoint,    //前往充点电
         responseAbPoint,     // 点击ab点回复消息
         getSpecificPoint,   //获取点击AB点的结果
@@ -72,10 +72,8 @@ public class MessageEvent {
 
         notifyEditorMapResult,           //返回去噪结果
         notifyTCPDisconnected,
-        updataVoice,//获取语音播报结果
-
-
-
+        updateVoice,//获取语音播报结果
+        getRobotCoordinates,  //从本地数据库更新数据
 
     }
 
