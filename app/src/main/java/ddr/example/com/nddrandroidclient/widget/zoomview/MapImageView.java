@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -207,8 +208,8 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     private void init(){
         holder=getHolder();
         holder.addCallback(this);
-        setZOrderOnTop(true);
-        holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
+        //setZOrderOnTop(true);
+        //holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
         mapFileStatus=MapFileStatus.getInstance();
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
@@ -288,7 +289,10 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      */
     private void drawRadarLine(Canvas canvas){
         if (sourceBitmap!=null){
-            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            canvas.drawPaint(paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+            canvas.drawColor(Color.parseColor("#101112"));
             canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
             positionList = notifyLidarPtsEntity.getPositionList();
             //Logger.d("-------点云数量：" + positionList.size());
