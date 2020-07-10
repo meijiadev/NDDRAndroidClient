@@ -42,7 +42,6 @@ import ddr.example.com.nddrandroidclient.other.Logger;
  *  time:2020/06/19
  */
 public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callback {
-    private int mBackColor = Color.TRANSPARENT;       //背景色透明
     public boolean isRunning=false;
     private DrawMapThread drawThread;          //绘制线程
     private SurfaceHolder holder;
@@ -250,7 +249,9 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
      * 检查矩阵的索引,计算总共需要多少块像素承载数据,并改变相应位置的像素
      */
     private void checkMatNumber(){
+        //获得所有块Mat数据
         Map<GridItem,Mat> matMap=openCVUtility.getMatMap();
+        //获得Mat的宽高（每块都是781x781）
         eachPixelW=notifyLidarCurSubMap.getWidth();
         int minX=0,minY=0,maxX=0,maxY=0;
         int numberX,numberY;
@@ -358,7 +359,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     public void receiveMessage(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case receiveLidarMap:
-                Logger.d("---------------receiveLidarMap");
                 checkMatNumber();
                 break;
             case receivePointCloud:

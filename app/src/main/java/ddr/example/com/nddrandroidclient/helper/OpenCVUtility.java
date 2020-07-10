@@ -40,12 +40,23 @@ public class OpenCVUtility {
         return mat;
     }
 
+    /**
+     * 创建指定大小的Mat
+     * @param w
+     * @param h
+     * @return
+     */
     public Mat createSrcMat(int w,int h){
         //创建三通道的灰色(127)Mat
          srcMat=new Mat(new Size(w,h),CvType.CV_8UC3,new Scalar(18,17,16));
          return srcMat;
     }
 
+    /**
+     * 将Mat转成图片Bitmap
+     * @param source
+     * @return
+     */
     public Bitmap matToBitmap(Mat source){
         Bitmap bitmap=Bitmap.createBitmap(source.width(),source.height(),Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(source,bitmap);
@@ -59,6 +70,11 @@ public class OpenCVUtility {
         return srcMat;
     }
 
+    /**
+     * 保存不同索引的Mat数据
+     * @param gridItem
+     * @param mat
+     */
     public void putValue(GridItem gridItem,Mat mat){
         matMap.put(gridItem, mat);
     }

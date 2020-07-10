@@ -13,7 +13,7 @@ import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
- * 处理SurfaceView的点击事件
+ * 处理SurfaceView的点击事件(平移、缩放、旋转)
  */
 public class SurfaceTouchEventHandler {
     private static SurfaceTouchEventHandler surfaceTouchEventHandler;
@@ -57,7 +57,12 @@ public class SurfaceTouchEventHandler {
     private Bitmap sourceBitmap;
 
 
-
+    /**
+     * 获取类唯一对象
+     * @param widthScreen 显示控件的宽高
+     * @param heightScreen
+     * @return
+     */
     public static SurfaceTouchEventHandler getInstance(int widthScreen,int heightScreen){
         if (surfaceTouchEventHandler==null){
             synchronized (SurfaceTouchEventHandler.class){
@@ -204,6 +209,22 @@ public class SurfaceTouchEventHandler {
         double y1=cx*sinA+cy*cosA;
         double x2=getTranslateX()+x1;
         double y2=getTranslateY()+y1;
+        return new XyEntity((float) x2,(float) y2);
+    }
+
+    /**
+     * 已知相对于画布的坐标计算出该点相对于图片左上角的坐标，按照上面的方式反着推
+     * @return 相对于图片的坐标
+     */
+    public XyEntity coordinatesToImage(float x, float y){
+        double cosA=getCosA();
+        double sinA=getSinA();
+        float x1=x-getTranslateX();
+        float y1=y-getTranslateY();
+        double cx=x1/cosA+sinA/(cosA*cosA+sinA*sinA)*(y1-sinA*x1/cosA);
+        double cy=(y1-x1*sinA/cosA)*cosA/(cosA*cosA+sinA*sinA);
+        double x2=cx/getZoomX();
+        double y2=cy/getZoomY();
         return new XyEntity((float) x2,(float) y2);
     }
 

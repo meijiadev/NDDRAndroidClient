@@ -203,7 +203,12 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 break;
             case GoToChargingPoint:
                 //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-                mapImageView.setTargetPoint(null);
+                BaseCmd.eCmdRspType eCmdRspType= (BaseCmd.eCmdRspType) messageEvent.getData();
+                if (eCmdRspType.equals(BaseCmd.eCmdRspType.eSuccess)){
+                    mapImageView.setTargetPoint(null);
+                }else if (eCmdRspType.equals(BaseCmd.eCmdRspType.eCmdFailed)){
+                    toast(R.string.commonFailedToCharge);
+                }
                 break;
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
@@ -377,7 +382,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 btExitCharge.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                btExitCharge.setVisibility(View.GONE);
+                btExitCharge.setVisibility(View.VISIBLE);
                 break;
         }
         Logger.d("------------是否在充电："+notifyBaseStatusEx.isChargingStatus()+"电量："+batteryNum);
@@ -388,6 +393,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 if (chargeAnimation.isRunning()){
                     chargeAnimation.stop();                           // 如果动画正在运行 则停止
                 }
+                Logger.d("-----d-关闭充电界面");
             }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
             circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
@@ -405,6 +411,10 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         //只有在自动充电时才生效
         switch (notifyBaseStatusEx.getChargingSubStatus()){
             case 1:
+                if (chargingLayout.getVisibility()!=View.VISIBLE){
+                    chargingLayout.setVisibility(View.VISIBLE);
+                    leftLayout.setVisibility(View.GONE);
+                }
                 tvChargeNotify.setText(R.string.common_charging_1);
                 break;
             case 2:

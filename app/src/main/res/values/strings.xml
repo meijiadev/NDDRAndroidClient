@@ -132,6 +132,7 @@
     <string name="common_error">异常</string>
     <string name="common_relocationing">重定位中</string>
     <string name="common_Disconnect">断开连接</string>
+    <string name="commonFailedToCharge">进入充电模式失败！</string>
 
     
 

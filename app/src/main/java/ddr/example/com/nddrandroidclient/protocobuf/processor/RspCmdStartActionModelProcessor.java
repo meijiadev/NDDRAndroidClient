@@ -20,7 +20,7 @@ public class RspCmdStartActionModelProcessor extends BaseProcessor {
        // EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.switchTaskSuccess));
         switch (rspCmdStartActionMode.getModeValue()){
             case 5:
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.GoToChargingPoint));
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.GoToChargingPoint,rspCmdStartActionMode.getType()));
                 break;
         }
     }
