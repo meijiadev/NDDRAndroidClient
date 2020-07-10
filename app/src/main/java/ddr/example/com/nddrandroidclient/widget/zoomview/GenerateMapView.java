@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -73,13 +74,14 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
 
     private void init(){
         holder=getHolder();
-        holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
+        //holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         holder.addCallback(this);
         matrix=new Matrix();
         matrix1=new Matrix();
         matrix2=new Matrix();
         paint=new Paint();
         paint.setAntiAlias(true);
+        paint.setDither(true);
         openCVUtility=OpenCVUtility.getInstance();
         notifyLidarCurSubMap=NotifyLidarCurSubMap.getInstance();
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
@@ -177,7 +179,10 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
      */
     private void drawMap(Canvas canvas){
         if (srcBitmap!=null){
-            canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            canvas.drawPaint(paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+            canvas.drawColor(Color.parseColor("#101112"));
             matrix=surfaceTouchEventHandler.getMatrix();
             canvas.drawBitmap(srcBitmap,matrix,paint);
         }
