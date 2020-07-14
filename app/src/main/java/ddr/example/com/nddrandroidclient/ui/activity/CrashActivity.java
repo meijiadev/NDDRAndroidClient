@@ -106,7 +106,7 @@ public final class CrashActivity extends DDRActivity {
      * @return
      */
     private String saveCrashInfo2File(String errorMessage){
-        File dir=new File(GlobalParameter.ROBOT_FOLDER);
+        File dir=new File(GlobalParameter.ROBOT_FOLDER_LOG);
         if (dir.exists()){
             //  Logger.e("文件夹已存在，无须创建");
         }else {
@@ -121,7 +121,7 @@ public final class CrashActivity extends DDRActivity {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             try {
                 Logger.e("建立log文件");
-                File path = new File(GlobalParameter.ROBOT_FOLDER);
+                File path = new File(GlobalParameter.ROBOT_FOLDER_LOG);
                 FileOutputStream fos = new FileOutputStream(path +"/"+ fileName);
                 fos.write(sb.toString().getBytes());
                 fos.close();
