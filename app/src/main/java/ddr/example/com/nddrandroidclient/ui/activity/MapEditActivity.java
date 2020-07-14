@@ -600,23 +600,27 @@ public class MapEditActivity extends DDRActivity {
      * @param mat
      */
     private void dealWithMat(Mat mat){
-        Mat gray=new Mat();
-        Imgproc.cvtColor(mat,gray,Imgproc.COLOR_BGR2GRAY);
-        int w=gray.cols();      //多少列
-        int h=gray.rows();      // 多少行
-        byte[] data=new byte[w*h];
-        gray.get(0,0,data);
-        Logger.e("-----:"+ Arrays.toString(data));
-        int pv=0;
-        for (int i=0;i<data.length;i++){
-            pv=data[i]&0xff;
-            if (pv!=17&pv!=-1){
-                pv=-1;
+        try {
+            Mat gray=new Mat();
+            Imgproc.cvtColor(mat,gray,Imgproc.COLOR_BGR2GRAY);
+            int w=gray.cols();      //多少列
+            int h=gray.rows();      // 多少行
+            byte[] data=new byte[w*h];
+            gray.get(0,0,data);
+            Logger.e("-----:"+ Arrays.toString(data));
+            int pv=0;
+            for (int i=0;i<data.length;i++){
+                pv=data[i]&0xff;
+                if (pv!=17&pv!=-1){
+                    pv=-1;
+                }
+                data[i]=(byte)pv;
             }
-            data[i]=(byte)pv;
+            gray.put(0,0,data);
+            Imgproc.cvtColor(gray,mat,Imgproc.COLOR_GRAY2BGR);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        gray.put(0,0,data);
-        Imgproc.cvtColor(gray,mat,Imgproc.COLOR_GRAY2BGR);
     }
     /**
      * 显示等待弹窗
@@ -1323,6 +1327,7 @@ public class MapEditActivity extends DDRActivity {
                         toast(R.string.load_succeed);
                     }
                     zmap.setImageBitmap(bitmap);
+                    zmap.setCanRotate(false);
                     RectangleView.getRectangleView().setFirstPoint(null);
                     zmap.invalidate();
                     Logger.e("-------地图加载");
