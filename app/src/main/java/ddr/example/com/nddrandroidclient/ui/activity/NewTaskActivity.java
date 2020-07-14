@@ -208,7 +208,7 @@ public class NewTaskActivity extends DDRActivity {
                     taskMode.setRunCounts(999);
                     taskMode.setStartHour(0);
                     taskMode.setStartMin(0);
-                    taskMode.setEndHour(24);
+                    taskMode.setEndHour(0);
                     taskMode.setEndMin(0);
                     taskModes.add(taskMode);
                     tcpClient.saveTaskData(mapFileStatus.getCurrentMapEx(),taskModes);

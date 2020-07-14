@@ -32,6 +32,7 @@ public class RegexEditText extends AppCompatEditText implements InputFilter {
     /** 非空格的字符（不能输入空格） */
     public static final String REGEX_NONNULL = "\\S+";
 
+
     /** 正则表达式规则 */
     private Pattern mPattern;
 

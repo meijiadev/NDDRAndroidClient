@@ -7,23 +7,40 @@
     android:layout_gravity="center"
     android:gravity="center"
     app:cardBackgroundColor="#161718"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp"
     >
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/layout_progress"
+        android:layout_width="308dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/title_layout"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/dialog_add_action_bg"
+        android:visibility="visible"
+        >
+        <ProgressBar
+            android:id="@+id/process_bar"
+            android:layout_width="204dp"
+            android:layout_height="20dp"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:max="100"
+            android:progressDrawable="@drawable/layer_list_progress_drawable_1"
+            />
         <TextView
-            android:id="@+id/tv_number"
+            android:id="@+id/tv_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20%"
-            android:textSize="@dimen/text_size_14sp"
-            android:textColor="#0399ff"
+            android:text="下载进度 0%"
+            android:textSize="14sp"
             android:textStyle="bold"
+            android:textColor="#0399ff"
+            android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="34dp"
             />
     </RelativeLayout>
+
 
 </androidx.cardview.widget.CardView>

@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.dialog;
 
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -8,12 +9,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
 import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
+import ddr.example.com.nddrandroidclient.widget.edit.LimitInputTextWatcher;
 
 /**
  *    time   : 2019/02/27
@@ -23,9 +28,7 @@ public final class InputDialog {
 
     public static final class Builder
             extends MyDialogFragment.Builder<Builder>
-            implements View.OnClickListener,
-            BaseDialog.OnShowListener,
-            BaseDialog.OnDismissListener {
+            implements View.OnClickListener {
 
         private OnListener mListener;
         private boolean mAutoDismiss = true;
@@ -50,9 +53,14 @@ public final class InputDialog {
             mCancelView.setOnClickListener(this);
             mConfirmView.setOnClickListener(this);
 
-            addOnShowListener(this);
-            addOnDismissListener(this);
         }
+
+
+        public Builder addTextChangedListener(String regex){
+            mInputView.addTextChangedListener(new LimitInputTextWatcher(mInputView,regex));
+            return this;
+        }
+
 
         public Builder setTitle(@StringRes int id) {
             return setTitle(getString(id));
@@ -141,26 +149,6 @@ public final class InputDialog {
             return super.setThemeStyle(id);
         }
 
-        /**
-         * {@link BaseDialog.OnShowListener}
-         */
-        @Override
-        public void onShow(BaseDialog dialog) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getSystemService(InputMethodManager.class).showSoftInput(mInputView, 0);
-                }
-            }, 300);
-        }
-
-        /**
-         * {@link BaseDialog.OnDismissListener}
-         */
-        @Override
-        public void onDismiss(BaseDialog dialog) {
-            getSystemService(InputMethodManager.class).hideSoftInputFromWindow(mInputView.getWindowToken(), 0);
-        }
 
         /**
          * {@link View.OnClickListener}

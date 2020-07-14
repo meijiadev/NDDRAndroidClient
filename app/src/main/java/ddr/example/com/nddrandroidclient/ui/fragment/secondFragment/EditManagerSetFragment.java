@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.protobuf.ByteString;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
@@ -25,7 +28,9 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
+import ddr.example.com.nddrandroidclient.http.DownloadProgress;
 import ddr.example.com.nddrandroidclient.http.HttpManage;
+import ddr.example.com.nddrandroidclient.http.UpdateState;
 import ddr.example.com.nddrandroidclient.http.VersionInformation;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
@@ -33,6 +38,8 @@ import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDisp
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.ProgressDialog;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -150,7 +157,6 @@ public class EditManagerSetFragment extends DDRLazyFragment {
      */
     private void getVersions(){
         toast("正在查询版本信息!");
-        tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eExitModuleService);
         HttpManage.getServer().getVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -162,7 +168,19 @@ public class EditManagerSetFragment extends DDRLazyFragment {
 
                     @Override
                     public void onNext(VersionInformation versionInformation) {
-                        Logger.e("请求成功");
+                        String title;
+                        Logger.e("请求成功:"+versionInformation.getState());
+                        if (!versionInformation.getState().equals("Net Error")){
+                            if (versionInformation.getLatestVersion().equals(versionInformation.getCurrentVersion())){
+                                //toast("当前版本为最新版本无需升级");
+                                title="当前版本为最新版本，是否仍要升级";
+                            }else {
+                                title="最新版本为："+versionInformation.getLatestVersion()+"是否升级";
+                            }
+                            showVersionDialog(title);
+                        }else {
+                            toast("当前机器人无外网连接!");
+                        }
                     }
 
                     @Override
@@ -176,4 +194,66 @@ public class EditManagerSetFragment extends DDRLazyFragment {
                     }
                 });
     }
+
+
+    /**
+     * 是否更新
+     * @param versionTitle
+     */
+    public void showVersionDialog(String versionTitle){
+        new InputDialog.Builder(getAttachActivity())
+                .setEditVisibility(View.GONE)
+                .setTitle(versionTitle)
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eExitModuleService);
+                        updateServer();
+                    }
+
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+                        toast(R.string.common_cancel);
+                    }
+                }).show();
+    }
+
+    /**
+     * 请求更新
+     */
+    private void updateServer(){
+        HttpManage.getServer().updateServer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UpdateState>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Logger.e("------------onSubscribe");
+                    }
+
+                    @Override
+                    public void onNext(UpdateState updateState) {
+                        if (updateState.getState().equals("Net Error")){
+                            toast("当前机器人无外网连接!");
+                        }else{
+                            new ProgressDialog.Builder(getAttachActivity())
+                                    .setTitle("下载进度：")
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
+
 }

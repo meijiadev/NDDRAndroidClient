@@ -1465,5 +1465,28 @@ message rspGetAllLidarCurSubMap{
 	repeated notifyLidarCurSubMap data = 2;
 }
 
+// 异常码
+enum enDDRNotifyExceptCode
+{
+	enExceptCode_Normal = 0; // 没有错
+	enExceptCode_NoLocated = 1; // 当前没有定位
+	enExceptCode_NoChargingPt = 2; // 当前地图没有充电点
+	enExceptCode_GeneralPathFailed = 3; // 生成路径失败
+}
+
+// 异常类型。 还可以设置通知一次，或者一定要有回复才不发。
+enum enDDRExceptType
+{
+	enDDRExceptType_Normal = 0;
+	enDDRExceptType_NoNeedRsp = 1;
+	enDDRExceptType_NeedRsp = 2;
+}
+
+message notifyExceptCode{
+	enDDRNotifyExceptCode code = 1;
+	enDDRExceptType type = 2;
+	bytes description = 3;
+}
+
 
 // +++++++++++++++++++ Common message bodies +++++++++++++++++++ //

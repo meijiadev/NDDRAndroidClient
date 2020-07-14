@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * 图片Bitmap工具类
+ */
 public class BitmapUtil {
     public static byte[] Bitmap2Bytes(Bitmap bitmap){
         ByteArrayOutputStream baos =new ByteArrayOutputStream();

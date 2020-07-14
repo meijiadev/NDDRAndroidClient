@@ -12,7 +12,7 @@ public interface HttpServer {
     Observable<VersionInformation>getVersion();
 
     @GET("upgrade")
-    Observable<String> updateServer();
+    Observable<UpdateState> updateServer();
 
     @GET("progress")
     Observable<DownloadProgress> getProgress();

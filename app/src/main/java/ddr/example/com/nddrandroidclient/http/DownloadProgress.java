@@ -13,6 +13,7 @@ public class DownloadProgress {
 
     private String ProgressName;
     private double Progress;
+    private String state;
 
     public String getProgressName() {
         return ProgressName;
@@ -28,5 +29,13 @@ public class DownloadProgress {
 
     public void setProgress(double Progress) {
         this.Progress = Progress;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
     }
 }

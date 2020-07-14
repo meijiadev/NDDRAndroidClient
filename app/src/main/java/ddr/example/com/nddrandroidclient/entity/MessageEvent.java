@@ -75,6 +75,10 @@ public class MessageEvent {
         updateVoice,//获取语音播报结果
         getRobotCoordinates,  //从本地数据库更新数据
 
+        exceptCode_NoLocated,     //当前无定位
+        exceptCode_NoChargingPoint,     //无充点电
+        exceptCode_GeneralPathFailed,    //生成路径失败
+
     }
 
     public MessageEvent(Type type) {

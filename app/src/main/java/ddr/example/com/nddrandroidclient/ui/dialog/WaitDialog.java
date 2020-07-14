@@ -37,9 +37,8 @@ public final class WaitDialog {
             mMessageView.setVisibility(text == null ? View.GONE : View.VISIBLE);
             return this;
         }
-
-
     }
+
 
 
 }

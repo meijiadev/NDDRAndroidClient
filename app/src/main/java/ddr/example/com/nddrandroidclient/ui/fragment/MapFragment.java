@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,6 +26,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
@@ -69,6 +73,7 @@ import ddr.example.com.nddrandroidclient.ui.dialog.RelocationDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
+import ddr.example.com.nddrandroidclient.widget.edit.LimitInputTextWatcher;
 import ddr.example.com.nddrandroidclient.widget.edit.MyEditTextChangeListener;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import ddr.example.com.nddrandroidclient.widget.textview.DDRTextView;
@@ -284,6 +289,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 .setTitle(R.string.collect_map)
                                 .setAutoDismiss(false)
                                 .setHint(R.string.enter_map_name)
+                                .addTextChangedListener(LimitInputTextWatcher.REGEX_NAME)
                                 .setListener(new InputDialog.OnListener() {
                                     @Override
                                     public void onConfirm(BaseDialog dialog, String content) {

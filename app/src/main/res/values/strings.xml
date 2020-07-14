@@ -350,6 +350,7 @@
     <string name="now_no_task">当前无任务</string>
     <string name="now_no_location">当前没有定位</string>
     <string name="build_task_faild">生成路径失败</string>
+    <string name="no_charging_point">当前地图没有充电点</string>
     <string name="now_Self_calibration">当前处于自标定</string>
     <string name="back_Standby">返回待机点</string>
     <string name="s_now_task">完成当前任务，开始时段任务</string>

@@ -87,11 +87,8 @@ public class CircleBarView extends View {
         bgPaint.setColor(Color.parseColor("#272829"));
         bgPaint.setAntiAlias(true);
         bgPaint.setStrokeWidth(barWidth);
-
         centerPaint=new Paint();
         centerPaint.setAntiAlias(true);
-
-
         progressNum=0;
         MaxNum=100;
         startAngle=0;
@@ -108,7 +105,7 @@ public class CircleBarView extends View {
         progressPaint.setColor(progressColor);
         canvas.drawArc(mRectF,startAngle,sweepAngle,false,bgPaint);//这里角度0对应的是三点钟方向，顺时针方向递增   背景圆弧
         canvas.drawArc(mRectF,startProgressAngle,progressSweepAngle,false,progressPaint);      //进度圆弧
-        canvas.drawText(String.valueOf(progressNum)+"%",measuredWidth/2,measuredHeight*2/3 ,textPaint);
+        canvas.drawText(progressNum+"%",measuredWidth/2,measuredHeight*2/3 ,textPaint);
 
     }
 

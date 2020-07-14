@@ -20,6 +20,7 @@ public class VersionInformation {
     private String latestVersion;
     private String currentVersion;
     private List<String> vers;
+    private String state;
 
     public String getBaseVersion() {
         return baseVersion;
@@ -51,5 +52,13 @@ public class VersionInformation {
 
     public void setVers(List<String> vers) {
         this.vers = vers;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
     }
 }

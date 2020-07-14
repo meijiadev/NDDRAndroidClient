@@ -9,6 +9,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyBaseStatusExProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyEnvInfoProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyExceptCodeProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyHardStateProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarCurSubMapProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
@@ -154,5 +155,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         DDRVLNMap.rspSetMapBkpicData rspSetMapBkpicData= DDRVLNMap.rspSetMapBkpicData.newBuilder().build();
         m_ProcessorMap.put(rspSetMapBkpicData.getClass().toString(),new RspSetMapBkpicDataProcessor());
+
+        BaseCmd.notifyExceptCode notifyExceptCode= BaseCmd.notifyExceptCode.newBuilder().build();
+        m_ProcessorMap.put(notifyExceptCode.getClass().toString(),new NotifyExceptCodeProcessor());
     }
 }

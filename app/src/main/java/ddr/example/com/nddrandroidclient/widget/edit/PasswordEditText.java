@@ -64,7 +64,7 @@ public final class PasswordEditText extends RegexEditText
         addInputType(TYPE_INVISIBLE);
         if (getInputRegex() == null) {
             // 密码输入规则
-            setInputRegex(REGEX_NONNULL);
+            setInputRegex(REGEX_ENGLISH);
         }
 
         setDrawableVisible(false);

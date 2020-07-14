@@ -16,23 +16,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.hjq.toast.ToastUtils;
-import com.hjq.toast.style.ToastWhiteStyle;
-import com.yhao.floatwindow.FloatWindow;
-import com.yhao.floatwindow.MoveType;
-import com.yhao.floatwindow.PermissionListener;
-import com.yhao.floatwindow.Screen;
-
 import java.util.Random;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import ddr.example.com.nddrandroidclient.language.LanguageUtil;
-import ddr.example.com.nddrandroidclient.language.SpUtil;
+import ddr.example.com.nddrandroidclient.helper.SpUtil;
 import ddr.example.com.nddrandroidclient.other.Logger;
-import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
-import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 
 /**
  * time    ：2019/10/25

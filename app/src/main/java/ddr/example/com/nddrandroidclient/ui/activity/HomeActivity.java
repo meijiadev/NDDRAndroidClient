@@ -42,7 +42,6 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
-import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
@@ -51,8 +50,7 @@ import ddr.example.com.nddrandroidclient.helper.ActivityStackManager;
 import ddr.example.com.nddrandroidclient.helper.DoubleClickHelper;
 import ddr.example.com.nddrandroidclient.language.LanguageType;
 import ddr.example.com.nddrandroidclient.language.LanguageUtil;
-import ddr.example.com.nddrandroidclient.language.SpUtil;
-import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
+import ddr.example.com.nddrandroidclient.helper.SpUtil;
 import ddr.example.com.nddrandroidclient.other.KeyboardWatcher;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
@@ -64,7 +62,6 @@ import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.ControlPopupWindow;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.RelocationDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
@@ -73,9 +70,6 @@ import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 import ddr.example.com.nddrandroidclient.widget.view.RockerView;
-
-import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
-import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
 
 /**
  * time:2019/10/26
@@ -232,6 +226,15 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                     UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
                   Logger.e("非消杀无需连接Ai");
                 }
+                break;
+            case exceptCode_NoLocated:
+                toast(R.string.now_no_location);
+                break;
+            case exceptCode_GeneralPathFailed:
+                toast(R.string.build_task_faild);
+                break;
+            case exceptCode_NoChargingPoint:
+                toast(R.string.no_charging_point);
                 break;
         }
 

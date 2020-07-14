@@ -11,6 +11,7 @@
         android:layout_height="53dp"
         android:layout_marginTop="73dp"
         android:layout_centerHorizontal="true"
+        android:src="@mipmap/logo"
         />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -82,7 +83,6 @@
                 android:hint="账号"
                 android:text="admin"
                 android:gravity="center_vertical"
-                android:inputType="none"
                 android:textColor="@color/fontColor"
                 android:textColorHint="@color/fontColor"
                 android:textSize="13sp"

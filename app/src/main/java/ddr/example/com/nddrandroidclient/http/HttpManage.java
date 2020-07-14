@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.http;
 
+import ddr.example.com.nddrandroidclient.other.Logger;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -10,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class HttpManage {
     private static HttpServer httpServer;
-    private static String baseUrl="http://127.0.0.1:8081/";            //获取版本信息接口
+    private static String baseUrl="http://192.168.1.87:8081/";            //获取版本信息接口
 
     public static HttpServer getServer(){
         if (httpServer==null){
@@ -26,5 +27,14 @@ public class HttpManage {
             }
         }
         return httpServer;
+    }
+
+    public static void setBaseUrl(String IP) {
+        HttpManage.baseUrl ="http://"+IP+":8081/";
+        Logger.e("------baseUrl:"+baseUrl);
+    }
+
+    public static String getBaseUrl() {
+        return baseUrl;
     }
 }
