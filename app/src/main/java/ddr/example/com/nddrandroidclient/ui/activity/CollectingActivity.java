@@ -539,9 +539,11 @@ public class CollectingActivity extends DDRActivity {
     protected void onDestroy() {
         super.onDestroy();
         timer.cancel();
-        task.cancel();
-        tcpClient.requestFile();
-        tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+
+        if (tcpClient!=null){
+            tcpClient.requestFile();
+            tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+        }
         if (generateMapView!=null){
             if (generateMapView.isRunning){
                 Logger.e("非正常退出采集模式");

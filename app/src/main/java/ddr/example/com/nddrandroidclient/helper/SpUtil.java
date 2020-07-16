@@ -51,6 +51,6 @@ public class SpUtil {
     }
 
     public boolean getBoolean(String key){
-        return sharedPreferences.getBoolean(key,false);
+        return sharedPreferences.getBoolean(key,true);
     }
 }

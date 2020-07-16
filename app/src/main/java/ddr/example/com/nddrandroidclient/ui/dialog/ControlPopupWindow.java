@@ -15,11 +15,17 @@ import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
 import com.yhao.floatwindow.FloatWindow;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import ddr.example.com.nddrandroidclient.R;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -29,6 +35,9 @@ import ddr.example.com.nddrandroidclient.widget.view.RockerView;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_HORIZONTAL;
 import static ddr.example.com.nddrandroidclient.widget.view.RockerView.DirectionMode.DIRECTION_2_VERTICAL;
 
+/**
+ * desc：控制遥控弹窗
+ */
 public class ControlPopupWindow {
     private float lineSpeed, palstance;  //线速度 ，角速度
     private double maxSpeed = 0.4;       //设置的最大速度
@@ -46,6 +55,7 @@ public class ControlPopupWindow {
     private CustomPopuWindow customPopuWindow;
     private TcpClient tcpClient;
     private boolean isShowToast;
+    private NotifyBaseStatusEx notifyBaseStatusEx;
 
     private Context context;
     public ControlPopupWindow(Context context) {
@@ -55,7 +65,25 @@ public class ControlPopupWindow {
         if (customPopuWindow!=null){
             customPopuWindow.dissmiss();
         }
+        notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
+        EventBus.getDefault().register(this);
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void update(MessageEvent messageEvent) {
+        switch (messageEvent.getType()) {
+            case updateBaseStatus:
+                DecimalFormat df = new DecimalFormat("0");
+                DecimalFormat format = new DecimalFormat("0.00");
+                xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
+                jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
+                if(tv_xsu!=null && tv_jsu!=null){
+                    tv_xsu.setText(context.getString(R.string.line_speed)+xsu+" m/s");
+                    tv_jsu.setText(context.getString(R.string.angulau_speed)+jsu+context.getString(R.string.angulau_speed_1));
+                }
+                break;
+        }
     }
 
     /**
@@ -91,6 +119,7 @@ public class ControlPopupWindow {
                 customPopuWindow.dissmiss();
                 timer.cancel();
                 task.cancel();
+                onDestroy();
                 try {
                     FloatWindow.get().show();
                 }catch (Exception e){
@@ -276,5 +305,9 @@ public class ControlPopupWindow {
                 tvSpeed.setText(showSpeed(maxSpeed));
             }
         }));
+    }
+
+    public void onDestroy(){
+        EventBus.getDefault().unregister(this);
     }
 }
