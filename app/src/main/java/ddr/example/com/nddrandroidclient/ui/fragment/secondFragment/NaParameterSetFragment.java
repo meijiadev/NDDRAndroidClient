@@ -368,7 +368,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
      */
     private void  postAndGet(int type) {
         try {
-            bz_radius_text = Float.parseFloat(edBzRadius.getText().toString());
+//            bz_radius_text = Float.parseFloat(edBzRadius.getText().toString());
             bz_sldown_text = Float.parseFloat(etDecelerationDistance.getText().toString());
             bz_stop_text = Float.parseFloat(etStopDistance.getText().toString());
         }catch (NullPointerException e){
@@ -386,10 +386,6 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
                 for (int i = 0; i < 3; i++) {
                     Parameter parameter1 = new Parameter();
                     switch (i) {
-                        case 0:
-                            parameter1.setKey(bzRadiusKey);
-                            parameter1.setValue(String.valueOf(bz_radius_text / 100));
-                            break;
                         case 1:
                             parameter1.setKey(bzDistanceKey);
                             parameter1.setValue(String.valueOf(bz_sldown_text / 100));
