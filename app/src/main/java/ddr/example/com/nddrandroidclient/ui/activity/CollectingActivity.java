@@ -176,7 +176,6 @@ public class CollectingActivity extends DDRActivity {
         collectName=getIntent().getStringExtra("CollectName");
         Logger.e("-----采集的地图名");
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
-        notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         processBar.setMax(100);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
