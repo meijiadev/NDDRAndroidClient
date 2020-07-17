@@ -80,7 +80,7 @@ public  class LoginActivity extends DDRActivity {
     private String localIP;         //本机IP
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDate(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateIPList:
@@ -94,7 +94,7 @@ public  class LoginActivity extends DDRActivity {
                         tcpPort= udpIp.getPort();
                         LAN_IP=udpIp.getIp();
                     }
-                    Logger.e("广播的IP和端口："+udpIp.getIp()+";"+udpIp.getPort());
+                    Logger.d("广播的IP和端口："+udpIp.getIp()+";"+udpIp.getPort());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -125,7 +125,7 @@ public  class LoginActivity extends DDRActivity {
                 break;
             case tcpConnected:
                 if (isLan){
-                    Logger.e("-----连接成功，开始登录");
+                    toast("服务器连接成功!");
                     tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
                     GlobalParameter.setAccount(accountName);
                     GlobalParameter.setPassword(passwordName);
@@ -166,7 +166,7 @@ public  class LoginActivity extends DDRActivity {
     public String getLocalIP(){
         localIP= NetWorkUtil.getLocalIpAddress(context);
         int index=localIP.lastIndexOf(".");
-        Logger.e("本机IP:"+localIP+";"+index);
+        Logger.d("本机IP:"+localIP+";"+index);
         localIP=localIP.substring(0,index);
         return localIP;
     }
@@ -181,23 +181,18 @@ public  class LoginActivity extends DDRActivity {
                     toast(getString(R.string.account_not_empty));
                 }else {
                     if (isLan){                                   //局域网登录
-                        //if (hasReceiveBroadcast){
                         if (tcpClient.isConnected()) tcpClient.disConnect();
-                            tcpClient.createConnect(LAN_IP,tcpPort);
-                            waitDialog=new WaitDialog.Builder(this)
-                                    .setMessage(R.string.in_login)
-                                    .show();
-                            postDelayed(()->{
-                                if (waitDialog.isShowing()){
-                                    toast(R.string.login_failed);
-                                    waitDialog.dismiss();
-                                    tcpClient.disConnect();
-                                }
-                                },5000);
-
-                       // }else {
-                            //toast("无法连接，请检查机器人服务是否正常开启！");
-                       // }
+                        tcpClient.createConnect(LAN_IP,tcpPort);
+                        waitDialog=new WaitDialog.Builder(this)
+                                .setMessage(R.string.in_login)
+                                .show();
+                        postDelayed(()->{
+                            if (waitDialog.isShowing()){
+                                toast(R.string.login_failed);
+                                waitDialog.dismiss();
+                                tcpClient.disConnect();
+                            }
+                            },3500);
                     }else {                                     //广域网登录
                         if (tcpClient.isConnected())
                             tcpClient.disConnect();

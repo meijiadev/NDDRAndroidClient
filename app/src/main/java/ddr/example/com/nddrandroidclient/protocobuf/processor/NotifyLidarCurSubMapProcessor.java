@@ -50,6 +50,8 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
             OpenCVUtility.getInstance().putValue(gridItem,mat);
             long endTime=System.currentTimeMillis();
             //Logger.e("耗费的时间："+(endTime-startTime));
+        }catch (UnsatisfiedLinkError e){
+            e.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
         }

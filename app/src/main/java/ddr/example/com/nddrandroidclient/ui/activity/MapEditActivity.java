@@ -618,6 +618,8 @@ public class MapEditActivity extends DDRActivity {
             }
             gray.put(0,0,data);
             Imgproc.cvtColor(gray,mat,Imgproc.COLOR_GRAY2BGR);
+        }catch (UnsatisfiedLinkError e){
+            e.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
         }

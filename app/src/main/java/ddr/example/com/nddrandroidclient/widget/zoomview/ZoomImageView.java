@@ -87,6 +87,8 @@ public class ZoomImageView extends View {
                 }
                 Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
                 initAffine();
+            }catch (UnsatisfiedLinkError e){
+                e.printStackTrace();
             }catch (Exception e){
                 e.printStackTrace();
             }
