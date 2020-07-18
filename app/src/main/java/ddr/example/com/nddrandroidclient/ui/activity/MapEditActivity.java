@@ -541,7 +541,7 @@ public class MapEditActivity extends DDRActivity {
                     int endRow=(int) xyEntity2.getY();
                     int startCol=(int) xyEntity1.getX();
                     int endCol=(int) xyEntity2.getX();
-                    //保证去噪的区域不超过图片的宽高
+                    //保证去噪的区域不超过图片的宽高,修复超过0-rows,0-cols 导致崩溃的问题
                     startRow=startRow<0?0:startRow;
                     startRow=startRow>dtsMat.rows()?dtsMat.rows():startRow;
                     endRow=endRow<0?0:endRow;
