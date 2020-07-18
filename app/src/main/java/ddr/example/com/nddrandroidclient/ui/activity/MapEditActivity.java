@@ -537,19 +537,26 @@ public class MapEditActivity extends DDRActivity {
                     srcMat=mats.get(mats.size()-1);
                     Mat dtsMat=new Mat();
                     srcMat.copyTo(dtsMat);
-                    Mat mat=dtsMat.submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
-                    dealWithMat(mat);
-                    mats.add(dtsMat);
-                    Bitmap bitmap=Bitmap.createBitmap(dtsMat.width(),dtsMat.height(),Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(dtsMat,bitmap);
-                    zmap.setImageBitmap(bitmap);
+                    int startRow=(int) xyEntity1.getY();
+                    int endRow=(int) xyEntity2.getY();
+                    int startCol=(int) xyEntity1.getX();
+                    int endCol=(int) xyEntity2.getX();
+                    //保证去噪的区域不超过图片的宽高
+                    if (0<=startRow&&startRow<=endRow&&endRow<=dtsMat.rows()&&0<=startCol&&startCol<= endCol&&endCol<=dtsMat.cols()){
+                        Mat mat=dtsMat.submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
+                        dealWithMat(mat);
+                        mats.add(dtsMat);
+                        Bitmap bitmap=Bitmap.createBitmap(dtsMat.width(),dtsMat.height(),Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(dtsMat,bitmap);
+                        zmap.setImageBitmap(bitmap);
+                        if (mats.size()>5){
+                            mats.remove(0);
+                        }
+                    }
                     RectangleView.getRectangleView().setFirstPoint(null);
                     zmap.invalidate();
                     tvRevocationDe.setBackgroundResource(R.mipmap.iv_denoising_revocation);
                     tvRevocationDe.setText(R.string.common_revocation);
-                    if (mats.size()>5){
-                        mats.remove(0);
-                    }
                 }
                 break;
             case R.id.tv_revocation_de:
