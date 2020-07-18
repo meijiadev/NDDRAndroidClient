@@ -542,21 +542,37 @@ public class MapEditActivity extends DDRActivity {
                     int startCol=(int) xyEntity1.getX();
                     int endCol=(int) xyEntity2.getX();
                     //保证去噪的区域不超过图片的宽高
-                    if (0<=startRow&&startRow<=endRow&&endRow<=dtsMat.rows()&&0<=startCol&&startCol<= endCol&&endCol<=dtsMat.cols()){
-                        Mat mat=dtsMat.submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
-                        dealWithMat(mat);
-                        mats.add(dtsMat);
-                        Bitmap bitmap=Bitmap.createBitmap(dtsMat.width(),dtsMat.height(),Bitmap.Config.ARGB_8888);
-                        Utils.matToBitmap(dtsMat,bitmap);
-                        zmap.setImageBitmap(bitmap);
-                        if (mats.size()>5){
-                            mats.remove(0);
-                        }
+                    startRow=startRow<0?0:startRow;
+                    startRow=startRow>dtsMat.rows()?dtsMat.rows():startRow;
+                    endRow=endRow<0?0:endRow;
+                    endRow=endRow>dtsMat.rows()?dtsMat.rows():endRow;
+                    startCol=startCol<0?0:startCol;
+                    startCol=startCol>dtsMat.cols()?dtsMat.cols():startCol;
+                    endCol=endCol<0?0:endCol;
+                    endCol=endCol>dtsMat.cols()?dtsMat.cols():endCol;
+                    if (startRow>endRow){
+                        int row=startRow;
+                        startRow=endRow;
+                        endRow=row;
                     }
+                    if (startCol>endCol){
+                        int col=startCol;
+                        startCol=endCol;
+                        endCol=col;
+                    }
+                    Mat mat=dtsMat.submat(startRow,endRow,startCol,endCol);
+                    dealWithMat(mat);
+                    mats.add(dtsMat);
+                    Bitmap bitmap=Bitmap.createBitmap(dtsMat.width(),dtsMat.height(),Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(dtsMat,bitmap);
+                    zmap.setImageBitmap(bitmap);
                     RectangleView.getRectangleView().setFirstPoint(null);
                     zmap.invalidate();
                     tvRevocationDe.setBackgroundResource(R.mipmap.iv_denoising_revocation);
                     tvRevocationDe.setText(R.string.common_revocation);
+                    if (mats.size()>5){
+                        mats.remove(0);
+                    }
                 }
                 break;
             case R.id.tv_revocation_de:
