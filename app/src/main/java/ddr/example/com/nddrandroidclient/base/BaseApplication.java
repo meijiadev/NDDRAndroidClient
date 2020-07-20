@@ -36,10 +36,10 @@ import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.APP_DEFAULT_DOMAIN;
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.APP_UPDATE_DOMAIN;
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.APP_UPDATE_DOMAIN_NAME;
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.SERVER_UPDATE_DOMAIN_NAME;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_DEFAULT_DOMAIN;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN_NAME;
+import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
 
 /**
  * time :  2019/10/28

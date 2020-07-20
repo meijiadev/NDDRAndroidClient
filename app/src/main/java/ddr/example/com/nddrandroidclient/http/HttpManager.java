@@ -2,14 +2,13 @@ package ddr.example.com.nddrandroidclient.http;
 
 import java.util.concurrent.TimeUnit;
 
-import ddr.example.com.nddrandroidclient.other.Logger;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.APP_DEFAULT_DOMAIN;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_DEFAULT_DOMAIN;
 
 /**
  * desc: http管理类,能够动态改变baseUrl

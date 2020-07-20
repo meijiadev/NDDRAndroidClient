@@ -4,14 +4,13 @@ import ddr.example.com.nddrandroidclient.http.serverupdate.DownloadProgress;
 import ddr.example.com.nddrandroidclient.http.serverupdate.UpdateState;
 import ddr.example.com.nddrandroidclient.http.serverupdate.VersionInformation;
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Streaming;
 
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.APP_UPDATE_DOMAIN_NAME;
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.SERVER_UPDATE_DOMAIN_NAME;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN_NAME;
+import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
 import static me.jessyan.retrofiturlmanager.RetrofitUrlManager.DOMAIN_NAME_HEADER;
 
 /**

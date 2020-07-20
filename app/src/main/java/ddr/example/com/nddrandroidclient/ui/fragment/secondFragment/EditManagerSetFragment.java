@@ -41,7 +41,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
-import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.SERVER_UPDATE_DOMAIN_NAME;
+import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
 
 /**
  * time: 2020/03/24

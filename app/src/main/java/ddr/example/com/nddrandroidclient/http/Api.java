@@ -1,4 +1,4 @@
-package ddr.example.com.nddrandroidclient.http.serverupdate;
+package ddr.example.com.nddrandroidclient.http;
 
 /**
  * desc :配置默认url
