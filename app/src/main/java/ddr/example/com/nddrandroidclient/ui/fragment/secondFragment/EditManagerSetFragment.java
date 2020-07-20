@@ -1,12 +1,8 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
-import android.graphics.Canvas;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.protobuf.ByteString;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -28,10 +24,9 @@ import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEdition;
 import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
-import ddr.example.com.nddrandroidclient.http.DownloadProgress;
-import ddr.example.com.nddrandroidclient.http.HttpManage;
-import ddr.example.com.nddrandroidclient.http.UpdateState;
-import ddr.example.com.nddrandroidclient.http.VersionInformation;
+import ddr.example.com.nddrandroidclient.http.HttpManager;
+import ddr.example.com.nddrandroidclient.http.serverupdate.UpdateState;
+import ddr.example.com.nddrandroidclient.http.serverupdate.VersionInformation;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
@@ -41,10 +36,12 @@ import ddr.example.com.nddrandroidclient.ui.adapter.VersionAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.ProgressDialog;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
+
+import static ddr.example.com.nddrandroidclient.http.serverupdate.Api.SERVER_UPDATE_DOMAIN_NAME;
 
 /**
  * time: 2020/03/24
@@ -157,7 +154,8 @@ public class EditManagerSetFragment extends DDRLazyFragment {
      */
     private void getVersions(){
         toast("正在查询版本信息!");
-        HttpManage.getServer().getVersion()
+        Logger.e("-----url:"+ RetrofitUrlManager.getInstance().fetchDomain(SERVER_UPDATE_DOMAIN_NAME).toString());
+        HttpManager.getInstance().getHttpServer().getVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<VersionInformation>() {            // Observable(被观察者) 通过subscribe(订阅)方法发送给所有的订阅者（Observer）
@@ -222,7 +220,7 @@ public class EditManagerSetFragment extends DDRLazyFragment {
      * 请求更新
      */
     private void updateServer(){
-        HttpManage.getServer().updateServer()
+        HttpManager.getInstance().getHttpServer().updateServer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UpdateState>() {
@@ -238,6 +236,7 @@ public class EditManagerSetFragment extends DDRLazyFragment {
                         }else{
                             new ProgressDialog.Builder(getAttachActivity())
                                     .setTitle("下载进度：")
+                                    .setUpdateServer()
                                     .show();
                         }
                     }

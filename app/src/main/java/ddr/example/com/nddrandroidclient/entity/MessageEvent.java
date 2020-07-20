@@ -79,6 +79,10 @@ public class MessageEvent {
         exceptCode_NoChargingPoint,     //无充点电
         exceptCode_GeneralPathFailed,    //生成路径失败
 
+        updateProgress,
+        apkDownloadSucceed,
+        apkDownloadFailed,
+
     }
 
     public MessageEvent(Type type) {

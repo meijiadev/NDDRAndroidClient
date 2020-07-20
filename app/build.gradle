@@ -163,6 +163,7 @@ dependencies {
     //今日头条适配方案框架
     implementation 'me.jessyan:autosize:0.9.5'
 
+    implementation 'me.jessyan:retrofit-url-manager:1.4.0'
     implementation 'com.google.code.gson:gson:2.8.2'   //gson解析
     implementation 'com.squareup.retrofit2:retrofit:2.0.2' //retrofit2.0
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0' //配合Rxjava 使用

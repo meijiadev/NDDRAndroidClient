@@ -71,6 +71,16 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="600"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="ddr.example.com.nddrandroidclient.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_provider_paths"
+            tools:replace="android:resource" />
+    </provider>
     </application>
 
 </manifest>

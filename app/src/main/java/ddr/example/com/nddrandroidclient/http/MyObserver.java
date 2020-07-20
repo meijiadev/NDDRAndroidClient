@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.http;
 
+import ddr.example.com.nddrandroidclient.http.serverupdate.VersionInformation;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
