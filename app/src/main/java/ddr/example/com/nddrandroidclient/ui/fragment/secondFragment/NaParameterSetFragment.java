@@ -273,10 +273,10 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
             parameterList = parameters.getParameterList();
             Logger.e("数量" + parameterList.size());
             for (int i = 0; i < parameterList.size(); i++) {
-                if (parameterList.get(i).getKey().contains(bzRadiusKey)) {
-                    bz_ra = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
-                    edBzRadius.setText(String.valueOf(bz_ra));
-                }
+//                if (parameterList.get(i).getKey().contains(bzRadiusKey)) {
+//                    bz_ra = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
+//                    edBzRadius.setText(String.valueOf(bz_ra));
+//                }
                 if (parameterList.get(i).getKey().contains(bzDistanceKey)) {
                     bz_sl = (int) (Float.parseFloat(parameterList.get(i).getValue()) * 100);
                     etDecelerationDistance.setText(String.valueOf(bz_sl));
@@ -383,14 +383,14 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
             case 1:
 
                 eConfigItemType = BaseCmd.eConfigItemType.eConfigTypeCore;
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 2; i++) {
                     Parameter parameter1 = new Parameter();
                     switch (i) {
-                        case 1:
+                        case 0:
                             parameter1.setKey(bzDistanceKey);
                             parameter1.setValue(String.valueOf(bz_sldown_text / 100));
                             break;
-                        case 2:
+                        case 1:
                             parameter1.setKey(bzStopKey);
                             parameter1.setValue(String.valueOf(bz_stop_text / 100));
                             break;
