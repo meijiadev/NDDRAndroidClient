@@ -252,7 +252,7 @@ public class TcpClient extends BaseSocketConnection {
                             @Override
                             public void onClick(XToast toast, TextView view) {
                                 toast.cancel();
-                                tcpClient.disConnect();
+                                disConnect();
                                 Intent intent=new Intent(activity,LoginActivity.class);
                                 toast.startActivity(intent);
                             }

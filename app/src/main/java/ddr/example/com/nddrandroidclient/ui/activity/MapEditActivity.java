@@ -537,7 +537,30 @@ public class MapEditActivity extends DDRActivity {
                     srcMat=mats.get(mats.size()-1);
                     Mat dtsMat=new Mat();
                     srcMat.copyTo(dtsMat);
-                    Mat mat=dtsMat.submat((int) xyEntity1.getY(),(int) xyEntity2.getY(),(int) xyEntity1.getX(),(int) xyEntity2.getX());
+                    int startRow=(int) xyEntity1.getY();
+                    int endRow=(int) xyEntity2.getY();
+                    int startCol=(int) xyEntity1.getX();
+                    int endCol=(int) xyEntity2.getX();
+                    //保证去噪的区域不超过图片的宽高,修复超过0-rows,0-cols 导致崩溃的问题
+                    startRow=startRow<0?0:startRow;
+                    startRow=startRow>dtsMat.rows()?dtsMat.rows():startRow;
+                    endRow=endRow<0?0:endRow;
+                    endRow=endRow>dtsMat.rows()?dtsMat.rows():endRow;
+                    startCol=startCol<0?0:startCol;
+                    startCol=startCol>dtsMat.cols()?dtsMat.cols():startCol;
+                    endCol=endCol<0?0:endCol;
+                    endCol=endCol>dtsMat.cols()?dtsMat.cols():endCol;
+                    if (startRow>endRow){
+                        int row=startRow;
+                        startRow=endRow;
+                        endRow=row;
+                    }
+                    if (startCol>endCol){
+                        int col=startCol;
+                        startCol=endCol;
+                        endCol=col;
+                    }
+                    Mat mat=dtsMat.submat(startRow,endRow,startCol,endCol);
                     dealWithMat(mat);
                     mats.add(dtsMat);
                     Bitmap bitmap=Bitmap.createBitmap(dtsMat.width(),dtsMat.height(),Bitmap.Config.ARGB_8888);
@@ -618,6 +641,8 @@ public class MapEditActivity extends DDRActivity {
             }
             gray.put(0,0,data);
             Imgproc.cvtColor(gray,mat,Imgproc.COLOR_GRAY2BGR);
+        }catch (UnsatisfiedLinkError e){
+            e.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
         }

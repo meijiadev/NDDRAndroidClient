@@ -101,8 +101,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @BindView(R.id.tv_switch_language)
     TextView tv_switch_language;
 
-
-
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private String currentMap;          //当前运行的地图名
@@ -111,20 +109,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private CustomPopuWindow customPopuWindow;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private float lineSpeed, palstance;  //线速度 ，角速度
+
     private double maxSpeed = 0.4;       //设置的最大速度
-    private boolean isforward, isGoRight; //左右摇杆当前的方向
-    private VerticalRangeSeekBar seekBar;
-    private CheckBox fixedSpeed;
-    private  RockerView myRocker;
-    private RockerView myRockerZy;
-    private TextView tvSpeed;
-    private ImageView iv_quit_yk;
-    private TextView tv_xsu;//线速度
-    private TextView tv_jsu;//角速度
-    private String xsu;
-    private String jsu;
-    private boolean ishaveChecked = false;
     private String LAN_IP_AI="192.168.0.95";
     private ComputerEditions computerEditions;
     private String language;
@@ -450,17 +436,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
 
     private void initStatusBar() {
         if (notifyBaseStatusEx != null) {
-            DecimalFormat df = new DecimalFormat("0");
-            DecimalFormat format = new DecimalFormat("0.00");
             currentMap = notifyBaseStatusEx.getCurroute();
             currentBitmapPath = GlobalParameter.ROBOT_FOLDER + currentMap + "/" + "bkPic.png";
             currentTask = notifyBaseStatusEx.getCurrpath();
-            xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
-            jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));
-            if(tv_xsu!=null && tv_jsu!=null){
-                tv_xsu.setText(getString(R.string.line_speed)+xsu+" m/s");
-                tv_jsu.setText(getString(R.string.angulau_speed)+jsu+getString(R.string.angulau_speed_1));
-            }
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
                     iv_jt_def.setVisibility(View.VISIBLE);

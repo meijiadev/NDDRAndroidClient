@@ -156,27 +156,7 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
     @Override
     protected void onResume() {
         super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Logger.e("Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
-        } else {
-            Logger.e("OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
+
     }
 
-    //OpenCV库加载并初始化成功后的回调函数
-    private BaseLoaderCallback mLoaderCallback=new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status){
-                case LoaderCallbackInterface.SUCCESS:
-                    Logger.e("OpenCVLoader加载成功");
-                    break;
-                default:
-                    break;
-            }
-            super.onManagerConnected(status);
-        }
-    };
 }

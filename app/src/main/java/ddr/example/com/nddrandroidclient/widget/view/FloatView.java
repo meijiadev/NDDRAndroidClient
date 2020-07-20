@@ -50,19 +50,12 @@ public class FloatView extends View  {
         init();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void upDate(MessageEvent mainUpDate){
-        switch (mainUpDate.getType()){
-            case updateBaseStatus:
-                break;
-        }
-    }
+
 
     private void init(){
         mPaint=new Paint();
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.parseColor("#979797"));
-        EventBus.getDefault().register(this);
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         bgBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.flow_yk);
     }

@@ -31,9 +31,14 @@ public class RspGetAllLidarCurSubMapProcessor extends BaseProcessor {
             for (int i=0;i<notifyLidarCurSubMaps.size();i++){
                 GridItem gridItem=new GridItem(notifyLidarCurSubMaps.get(i).getGridIndex().getGridX(),notifyLidarCurSubMaps.get(i).getGridIndex().getGridY());
                 byte[]data= ZlibUtil.unZip(notifyLidarCurSubMaps.get(i).getSubmap().toByteArray());
-                Mat mat= new Mat(new Size(notifyLidarCurSubMaps.get(i).getWidth(),notifyLidarCurSubMaps.get(i).getHeight()), CvType.CV_8UC3);
-                mat.put(0,0,data);
-                OpenCVUtility.getInstance().putValue(gridItem,mat);
+                try {
+                    Mat mat= new Mat(new Size(notifyLidarCurSubMaps.get(i).getWidth(),notifyLidarCurSubMaps.get(i).getHeight()), CvType.CV_8UC3);
+                    mat.put(0,0,data);
+                    OpenCVUtility.getInstance().putValue(gridItem,mat);
+                }catch (UnsatisfiedLinkError error){
+                    error.printStackTrace();
+                    break;
+                }
             }
             long endTime=System.currentTimeMillis();
             Logger.e("耗费的时间："+(endTime-startTime)+";"+notifyLidarCurSubMaps.size());

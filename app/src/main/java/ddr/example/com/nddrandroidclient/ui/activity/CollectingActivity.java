@@ -176,7 +176,6 @@ public class CollectingActivity extends DDRActivity {
         collectName=getIntent().getStringExtra("CollectName");
         Logger.e("-----采集的地图名");
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
-        notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         processBar.setMax(100);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(String.valueOf(maxSpeed));
@@ -539,9 +538,11 @@ public class CollectingActivity extends DDRActivity {
     protected void onDestroy() {
         super.onDestroy();
         timer.cancel();
-        task.cancel();
-        tcpClient.requestFile();
-        tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+
+        if (tcpClient!=null){
+            tcpClient.requestFile();
+            tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
+        }
         if (generateMapView!=null){
             if (generateMapView.isRunning){
                 Logger.e("非正常退出采集模式");

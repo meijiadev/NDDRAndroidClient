@@ -43,11 +43,15 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
         try {
             long startTime=System.currentTimeMillis();
             byte[]data=ZlibUtil.unZip(notifyLidarCurSubMap.getSubmap().toByteArray());
-            Mat mat= new Mat(new Size(notifyLidarCurSubMap.getWidth(),notifyLidarCurSubMap.getHeight()), CvType.CV_8UC3);
+            double w=notifyLidarCurSubMap.getWidth();
+            double h=notifyLidarCurSubMap.getHeight();
+            Mat mat= new Mat(new Size(w,h), CvType.CV_8UC3);
             mat.put(0,0,data);
             OpenCVUtility.getInstance().putValue(gridItem,mat);
             long endTime=System.currentTimeMillis();
             //Logger.e("耗费的时间："+(endTime-startTime));
+        }catch (UnsatisfiedLinkError e){
+            e.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
         }

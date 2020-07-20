@@ -12,6 +12,7 @@ import android.view.View;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -49,7 +50,7 @@ public class ZoomImageView extends View {
     public double t1=410.973;
     private TouchEvenHandler touchEvenHandler;
     private float scale=1f;   //当前地图的缩放值
-    private Mat sourceMat;
+    private Mat sourceMat=new Mat();
 
     public ZoomImageView(Context context) {
         super(context);
@@ -76,7 +77,9 @@ public class ZoomImageView extends View {
         if (fileIsExits(path)){
             try {
                 try {
-                    sourceMat= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
+                    Mat mat1;
+                    mat1= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
+                    Imgproc.cvtColor(mat1,sourceMat,Imgproc.COLOR_BGR2RGB);
                     sourceBitmap=Bitmap.createBitmap(sourceMat.width(),sourceMat.height(),Bitmap.Config.ARGB_8888);
                     Utils.matToBitmap(sourceMat,sourceBitmap);
                 } catch (NullPointerException e) {
@@ -84,6 +87,8 @@ public class ZoomImageView extends View {
                 }
                 Logger.e("图片的宽高："+sourceBitmap.getWidth()+"；"+sourceBitmap.getHeight());
                 initAffine();
+            }catch (UnsatisfiedLinkError e){
+                e.printStackTrace();
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -371,7 +371,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
 //            bz_radius_text = Float.parseFloat(edBzRadius.getText().toString());
             bz_sldown_text = Float.parseFloat(etDecelerationDistance.getText().toString());
             bz_stop_text = Float.parseFloat(etStopDistance.getText().toString());
-        }catch (Exception e){
+        }catch (NullPointerException e){
             e.printStackTrace();
         }
         List<Parameter> parameterList1 =new ArrayList<>();

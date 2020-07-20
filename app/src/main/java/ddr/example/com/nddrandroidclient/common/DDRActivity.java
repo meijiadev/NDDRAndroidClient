@@ -16,6 +16,9 @@ import com.yhao.floatwindow.PermissionListener;
 import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.EventBus;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -99,7 +102,29 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
     protected void onResume() {
         super.onResume();
         ActivityStackManager.getInstance().onResume(this);
+        if (!OpenCVLoader.initDebug()) {
+            Logger.e("Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
+        } else {
+            Logger.e("OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
     }
+
+    //OpenCV库加载并初始化成功后的回调函数
+    private BaseLoaderCallback mLoaderCallback=new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status){
+                case LoaderCallbackInterface.SUCCESS:
+                    Logger.e("OpenCVLoader加载成功");
+                    break;
+                default:
+                    break;
+            }
+            super.onManagerConnected(status);
+        }
+    };
 
     /**
      * 递归获取 ViewGroup 中的 TitleBar 对象
