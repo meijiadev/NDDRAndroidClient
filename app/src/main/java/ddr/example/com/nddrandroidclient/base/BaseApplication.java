@@ -37,6 +37,7 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
 import static ddr.example.com.nddrandroidclient.http.Api.APP_DEFAULT_DOMAIN;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_QUERY_DOMAIN_NAME;
 import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN;
 import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN_NAME;
 import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
@@ -60,7 +61,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         }
         initSDK(this);
         RetrofitUrlManager.getInstance().putDomain(SERVER_UPDATE_DOMAIN_NAME,APP_DEFAULT_DOMAIN);
-        RetrofitUrlManager.getInstance().putDomain(APP_UPDATE_DOMAIN_NAME,APP_UPDATE_DOMAIN);
+        RetrofitUrlManager.getInstance().putDomain(APP_QUERY_DOMAIN_NAME,APP_UPDATE_DOMAIN);
     }
 
     public  void initSDK(Application application) {

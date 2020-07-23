@@ -19,7 +19,11 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 import okhttp3.ResponseBody;
+
+import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN;
+import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN_NAME;
 
 /**
  * desc:下载的服务
@@ -42,6 +46,8 @@ public class DownloadServer extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.e("onStartCommand");
+        String version=intent.getStringExtra("version");
+        RetrofitUrlManager.getInstance().putDomain(APP_UPDATE_DOMAIN_NAME,APP_UPDATE_DOMAIN+"Release/"+version+"/"+"AndroidClient.apk");
         HttpManager.getInstance().getHttpServer().downloadApk()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<ResponseBody>() {
@@ -61,7 +67,7 @@ public class DownloadServer extends Service {
                         Logger.e("创建文件");
                         directory.mkdirs();
                     }
-                    file=new File(directory,"test.apk");
+                    file=new File(directory,"RobotAndroid.apk");
                     FileOutputStream outputStream=new FileOutputStream(file);
                     byte[] bytes=new byte[1024];
                     int len=0;

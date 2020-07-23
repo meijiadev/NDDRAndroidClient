@@ -7,8 +7,11 @@ import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Query;
 import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
+import static ddr.example.com.nddrandroidclient.http.Api.APP_QUERY_DOMAIN_NAME;
 import static ddr.example.com.nddrandroidclient.http.Api.APP_UPDATE_DOMAIN_NAME;
 import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
 import static me.jessyan.retrofiturlmanager.RetrofitUrlManager.DOMAIN_NAME_HEADER;
@@ -32,11 +35,16 @@ public interface HttpServer {
     @GET("progress")
     Observable<DownloadProgress> getProgress();
 
+    //查询版本信息
+    @Headers({DOMAIN_NAME_HEADER+APP_QUERY_DOMAIN_NAME})
+    @GET("Release.txt")
+    Observable<AppVersion> queryAppVersion();
+
 
     //下载apk
     @Headers({DOMAIN_NAME_HEADER+APP_UPDATE_DOMAIN_NAME})
     @Streaming
-    @GET("AndroidClient.apk")
+    @GET("/")
     Observable<ResponseBody>downloadApk();
 
 

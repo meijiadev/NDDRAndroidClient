@@ -23,6 +23,7 @@ import java.io.IOException;
 import androidx.core.content.FileProvider;
 import butterknife.BindView;
 import butterknife.OnClick;
+import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
@@ -30,6 +31,7 @@ import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.helper.NetWorkUtil;
+import ddr.example.com.nddrandroidclient.http.AppVersion;
 import ddr.example.com.nddrandroidclient.http.HttpManager;
 import ddr.example.com.nddrandroidclient.http.serverupdate.UpdateState;
 import ddr.example.com.nddrandroidclient.http.serverupdate.VersionInformation;
@@ -250,11 +252,42 @@ public  class LoginActivity extends DDRActivity {
             case R.id.login_log:
                 break;
             case R.id.ivUpdateApk:
-                new ProgressDialog.Builder(getActivity())
-                        .setTitle("下载进度：")
-                        .show();
-                Intent intent=new Intent(this, DownloadServer.class);
-                startService(intent);
+                HttpManager.getInstance().getHttpServer().queryAppVersion().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<AppVersion>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppVersion appVersion) {
+                        if (appVersion!=null){
+                            String versionName = BuildConfig.VERSION_NAME;
+                            if (appVersion.getLatestVersion().equals(versionName)){
+                                toast("当前为最新版本"+versionName);
+                            }else {
+                            }
+                            versionName=appVersion.getLatestVersion();
+                            new ProgressDialog.Builder(getActivity())
+                                    .setTitle("下载进度：")
+                                    .show();
+                            Intent intent=new Intent(LoginActivity.this, DownloadServer.class);
+                            intent.putExtra("version",versionName);
+                            startService(intent);
+                        }else {
+                            toast("查询版本信息失败");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        toast("请求版本信息失败");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Logger.e("onComplete");
+                    }
+                });
                 break;
 
         }
