@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.toast.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -18,6 +20,7 @@ import butterknife.Unbinder;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseLazyFragment;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  *  time   : 2019/10/28
@@ -108,11 +111,31 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Logger.e("-------------"+this.getClass().getSimpleName());
+        EventBusManager.register(this);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mButterKnife != null) {
             mButterKnife.unbind();
         }
+        EventBusManager.unregister(this);
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Logger.e("-------------"+this.getClass().getSimpleName());
         EventBusManager.unregister(this);
     }
 

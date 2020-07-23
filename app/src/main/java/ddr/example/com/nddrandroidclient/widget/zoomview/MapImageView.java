@@ -157,6 +157,12 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
         if (!taskName.equals("PathError")){
             data=mapFileStatus.getCurrentMapEx();
             taskModes=mapFileStatus.getcTaskModes();
+            List<PathLine> pathLineList;
+            if (isRunAbPointLine){
+                pathLineList=mapFileStatus.getABPaths();
+            }else {
+                pathLineList=mapFileStatus.getcPathLines();
+            }
             try {
                 for (TaskMode taskMode1:taskModes){
                     if (taskName.equals(taskMode1.getName())){
@@ -170,7 +176,6 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
                         if (baseMode.getType()==1){
                             PathLine pathLine= (PathLine) baseMode;
                             String lineName=pathLine.getName();
-                            List<PathLine> pathLineList=mapFileStatus.getcPathLines();
                             List<PathLine.PathPoint> pathPoints=new ArrayList<>();
                             for (PathLine pathLine1:pathLineList){
                                 if (lineName.equals(pathLine1.getName())){
@@ -200,6 +205,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
             }
         }
     }
+
+    private void setABTask(){
+
+    }
+
 
     /**
      * 是否显示ab点路径

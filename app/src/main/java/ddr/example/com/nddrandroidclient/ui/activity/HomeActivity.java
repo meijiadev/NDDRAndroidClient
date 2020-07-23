@@ -608,6 +608,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     public UdpClient udpClient;
     private int aiPort=18888;

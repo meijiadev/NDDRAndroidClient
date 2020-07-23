@@ -1,7 +1,6 @@
 package ddr.example.com.nddrandroidclient.entity.info;
 
-import android.content.Context;
-import android.os.Environment;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +18,6 @@ import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
-import static ddr.example.com.nddrandroidclient.entity.PointType.eMarkingTypeMustArrive;
-import static ddr.example.com.nddrandroidclient.entity.PointType.eMarkingTypeNormal;
 
 /**
  * 用于保存解析后的地图详情信息的列表
@@ -56,6 +53,8 @@ public class MapFileStatus {
     private DDRVLNMap.affine_mat affine_mat;                          //地图的矩阵
 
     public int AllCount=0; //定时任务总次数
+
+    private List<PathLine> ABPaths=new ArrayList<>();
 
     /**
      * 单例模式，用于保存地图相关信息
@@ -110,6 +109,7 @@ public class MapFileStatus {
             cPathLines.clear();
             cTaskModes.clear();
             cSpaceItems.clear();
+            ABPaths.clear();
             for (int i = 0; i < targetPtItems.size(); i++) {
                 TargetPoint targetPoint = new TargetPoint();
                 targetPoint=intToEnum(targetPoint,i);
@@ -139,7 +139,11 @@ public class MapFileStatus {
                 pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
                 pathLine.setbStartFromSeg0(pathLineItemExes.get(i).getBStartFromSeg0());
                 pathLine.setbNoCornerSmoothing(pathLineItemExes.get(i).getBNoCornerSmoothing());
-                cPathLines.add(pathLine);
+                if (pathLine.getName().contains("ABPointLine")|pathLine.getName().contains("DijkstraLine")){
+                    ABPaths.add(pathLine);
+                }else {
+                    cPathLines.add(pathLine);
+                }
             }
             for (int i = 0; i < taskItemExes.size(); i++) {
                 List<DDRVLNMap.path_elementEx> path_elementExes = taskItemExes.get(i).getPathSetList();
@@ -216,7 +220,11 @@ public class MapFileStatus {
             pathLine.setVelocity(pathLineItemExes.get(i).getVelocity());
             pathLine.setbStartFromSeg0(pathLineItemExes.get(i).getBStartFromSeg0());
             pathLine.setbNoCornerSmoothing(pathLineItemExes.get(i).getBNoCornerSmoothing());
-            pathLines.add(pathLine);
+            if (pathLine.getName().contains("ABPointLine")|pathLine.getName().contains("DijkstraLine")){
+                //ABPaths.add(pathLine);
+            }else {
+                pathLines.add(pathLine);
+            }
         }
         //Logger.e("-------------任务的数量："+taskItemExes.size());
         for (int i = 0; i < taskItemExes.size(); i++) {
@@ -452,5 +460,10 @@ public class MapFileStatus {
      */
     public DDRVLNMap.affine_mat getAffine_mat() {
         return affine_mat;
+    }
+
+
+    public List<PathLine> getABPaths() {
+        return ABPaths;
     }
 }

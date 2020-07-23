@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseAdapter;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
+import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  *  time : 2019/11/12
@@ -35,13 +37,11 @@ public class PathAdapter extends BaseAdapter<PathLine> {
     }
 
 
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void convert(@NonNull BaseViewHolder helper, PathLine item) {
         super.convert(helper, item);
-        if (item.getName().contains("ABPointLine")){
-            setVisibility(false,helper);
-        }
         switch (viewType){
             case R.layout.item_target_point:
                 if (item.isSelected()){

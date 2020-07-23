@@ -25,7 +25,7 @@ public class LanguageUtil {
      */
     @SuppressWarnings("deprecation")
     public static void changeAppLanguage(Context context, String newLanguage) {
-        Logger.e("设置成："+newLanguage);
+        //Logger.e("设置成："+newLanguage);
         if (TextUtils.isEmpty(newLanguage)) {
             return;
         }
@@ -46,12 +46,12 @@ public class LanguageUtil {
         } else if (language.equals(LanguageType.ENGLISH.getLanguage())) {
             locale = Locale.ENGLISH;
         }
-        Logger.e("getLocaleByLanguage: " + locale.getDisplayName());
+        //Logger.e("getLocaleByLanguage: " + locale.getDisplayName());
         return locale;
     }
 
     public static Context attachBaseContext(Context context, String language) {
-        Logger.e("attachBaseContext: " + Build.VERSION.SDK_INT);
+        //Logger.e("attachBaseContext: " + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return updateResources(context, language);
         } else {

@@ -103,10 +103,10 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
         super.onResume();
         ActivityStackManager.getInstance().onResume(this);
         if (!OpenCVLoader.initDebug()) {
-            Logger.e("Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            Logger.d("Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
         } else {
-            Logger.e("OpenCV library found inside package. Using it!");
+            Logger.d("OpenCV library found inside package. Using it!"+this.getClass().getName());
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
@@ -117,7 +117,7 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
         public void onManagerConnected(int status) {
             switch (status){
                 case LoaderCallbackInterface.SUCCESS:
-                    Logger.e("OpenCVLoader加载成功");
+                    Logger.d("OpenCVLoader加载成功");
                     break;
                 default:
                     break;

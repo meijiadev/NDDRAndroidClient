@@ -253,6 +253,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         Map<GridItem,Mat> matMap=openCVUtility.getMatMap();
         //获得Mat的宽高（每块都是781x781）
         eachPixelW=notifyLidarCurSubMap.getWidth();
+        lidarRange=notifyLidarCurSubMap.getLidarRange();
         int minX=0,minY=0,maxX=0,maxY=0;
         int numberX,numberY;
         for (GridItem gridItem:matMap.keySet()){

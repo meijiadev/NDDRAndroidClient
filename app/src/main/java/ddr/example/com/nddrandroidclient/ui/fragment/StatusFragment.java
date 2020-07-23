@@ -116,9 +116,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     @BindView(R.id.tv_charge_notify)
     TextView tvChargeNotify;
 
-
-
-
     private Animation hideAnimation;  //布局隐藏时的动画
     private Animation showAnimation;  // 布局显示时的动画效果
     private AnimationDrawable chargeAnimation;
@@ -270,7 +267,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
-
         mapImageView.startThread();
     }
 
@@ -880,7 +876,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             }
             if (mapImageView !=null&&!mapImageView.drawThread.isAlive()){
                 mapImageView.startThread();
-                mapImageView.setImageBitmap(notifyBaseStatusEx.getCurroute());
+                //mapImageView.setImageBitmap(notifyBaseStatusEx.getCurroute());
             }
             //当服务断开时
             if (tcpClient!=null&&!tcpClient.isConnected()){

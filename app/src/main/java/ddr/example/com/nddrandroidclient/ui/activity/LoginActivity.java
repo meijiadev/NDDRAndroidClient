@@ -273,7 +273,7 @@ public  class LoginActivity extends DDRActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            toast("请求版本信息失败");
+                            toast("网络不可用!");
                         }
 
                         @Override
@@ -308,7 +308,7 @@ public  class LoginActivity extends DDRActivity {
                     public void onCancel(BaseDialog dialog) {
 
                     }
-                });
+                }).show();
     }
 
 

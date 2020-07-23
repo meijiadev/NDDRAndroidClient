@@ -63,7 +63,6 @@ public class TouchEvenHandler {
     private float originalX,originalY;           //最初时图片左上角位于画布中的位置
 
     public TouchEvenHandler(@NotNull Builder builder) {
-        Logger.e("初始化TouchEvenHandler");
         this.view=builder.view;
         this.isAutoRefresh=builder.isAutoRefresh;
         widthScreen=view.getWidth();
@@ -73,6 +72,7 @@ public class TouchEvenHandler {
         if (!isAutoRefresh){
             view.invalidate();
         }
+        Logger.e("初始化TouchEvenHandler"+view.getClass().getSimpleName());
     }
 
     /**
@@ -240,6 +240,7 @@ public class TouchEvenHandler {
      * @return 画布坐标
      */
     public XyEntity coordinatesToCanvas(float x, float y){
+        Logger.e("");
         double radians= Math.atan2(values[Matrix.MSKEW_Y], values[Matrix.MSCALE_Y]);
         double cosA= Math.cos(radians);
         double sinA= Math.sin(radians);
