@@ -33,7 +33,6 @@ public class HttpManager {
                 .readTimeout(5, TimeUnit.SECONDS)
                 .connectTimeout(5,TimeUnit.SECONDS)
                 .build();
-
         this.retrofit=new Retrofit.Builder()
                 .baseUrl(APP_DEFAULT_DOMAIN)                                  //默认的url
                 .addConverterFactory(GsonConverterFactory.create())          //请求结果转换成实体类

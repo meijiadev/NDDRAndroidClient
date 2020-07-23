@@ -149,7 +149,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     public String sPoint="未知点";
     private boolean isRunabPoint;               //是否在跑ab点
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateBaseStatus:
@@ -165,6 +165,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast(getString(R.string.start_goto)+sPoint);
                 break;
             case getSpecificPoint1:
+                Logger.e("------添加任务成功，等待前往"+sPoint);
                 toast(getString(R.string.add_s_d_goto)+sPoint);
                 break;
             case getSpecificPoint2:
@@ -198,9 +199,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     targetPoints.get(i).setSelected(false);
                 }
                 break;
-            case responseAbPoint:
-                //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
-                break;
             case GoToChargingPoint:
                 //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 BaseCmd.eCmdRspType eCmdRspType= (BaseCmd.eCmdRspType) messageEvent.getData();
@@ -213,6 +211,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             case updateDDRVLNMap:
                 Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
                 if (mapFileStatus.getMapName().equals(mapName)){
+                    tvWarn.setVisibility(View.GONE);
                     //Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setImageBitmap(mapName);
                     groupList = new ArrayList<>();
@@ -224,7 +223,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
                     mapImageView.setABPointLine(isRunabPoint);
-                    tvWarn.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -379,8 +377,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         }
         switch (notifyBaseStatusEx.getChargingType()){
             case 1:
-                btExitCharge.setVisibility(View.VISIBLE);
-                break;
+               // btExitCharge.setVisibility(View.VISIBLE);
             case 2:
                 btExitCharge.setVisibility(View.VISIBLE);
                 break;
@@ -396,7 +393,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 Logger.d("-----d-关闭充电界面");
             }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
-            circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
         }else {
             if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
                 chargingLayout.setVisibility(View.VISIBLE);
@@ -405,7 +401,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             if (!chargeAnimation.isRunning()){
                 chargeAnimation.start();
             }
-           tvElectricQuantity.setText(batteryNum+"%");
         }
 
         //只有在自动充电时才生效
@@ -435,6 +430,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
         }
+        tvElectricQuantity.setText(batteryNum+"%");
+        circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
         Logger.d("当前充电状态："+notifyBaseStatusEx.getChargingSubStatus());
     }
 
@@ -654,6 +651,7 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                                         @Override
                                         public void onConfirm(BaseDialog dialog, String content) {
                                             sPoint = targetPoints.get(position).getName();
+                                            Logger.e("-----需要前往的点："+sPoint);
                                             goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
                                             tv_restart_point.setVisibility(View.VISIBLE);
                                             for (int i = 0; i < targetPoints.size(); i++) {

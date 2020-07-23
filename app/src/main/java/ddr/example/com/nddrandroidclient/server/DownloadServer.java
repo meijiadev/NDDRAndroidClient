@@ -26,6 +26,7 @@ import okhttp3.ResponseBody;
  */
 public class DownloadServer extends Service {
     private File file;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

@@ -66,6 +66,5 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint11));
                 break;
         }
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.responseAbPoint));
     }
 }

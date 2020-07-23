@@ -12,21 +12,16 @@ public class GlobalParameter {
     public static final String ROBOT_FOLDER_DOWNLOAD=Environment.getExternalStorageDirectory().getPath()+"/"+"DDRMapDownload"+"/"; //下载文件夹
     private static String account;            //用户名
     private static String password;          //密码
-
     public static void setAccount(String account) {
         GlobalParameter.account = account;
     }
-
     public static void setPassword(String password) {
         GlobalParameter.password = password;
     }
-
     public static String getAccount() {
         return account;
     }
-
     public static String getPassword() {
         return password;
     }
-
 }

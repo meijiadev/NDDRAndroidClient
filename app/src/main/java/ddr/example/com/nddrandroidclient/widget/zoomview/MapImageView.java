@@ -115,8 +115,10 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
                 Mat mat1=new Mat();
                 //先将BRGMat转成RGB格式，再转换成图片
                 Imgproc.cvtColor(mat,mat1,Imgproc.COLOR_BGR2RGB);
+                mat.release();
                 sourceBitmap=Bitmap.createBitmap(mat1.width(),mat1.height(),Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(mat1,sourceBitmap);
+                mat1.release();
                 Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
             } catch (UnsatisfiedLinkError e) {
                 e.printStackTrace();
