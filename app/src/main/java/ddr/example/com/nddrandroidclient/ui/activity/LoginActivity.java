@@ -252,45 +252,63 @@ public  class LoginActivity extends DDRActivity {
             case R.id.login_log:
                 break;
             case R.id.ivUpdateApk:
-                HttpManager.getInstance().getHttpServer().queryAppVersion().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<AppVersion>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(AppVersion appVersion) {
-                        if (appVersion!=null){
-                            String versionName = BuildConfig.VERSION_NAME;
-                            if (appVersion.getLatestVersion().equals(versionName)){
-                                toast("当前为最新版本"+versionName);
-                            }else {
-                            }
-                            versionName=appVersion.getLatestVersion();
-                            new ProgressDialog.Builder(getActivity())
-                                    .setTitle("下载进度：")
-                                    .show();
-                            Intent intent=new Intent(LoginActivity.this, DownloadServer.class);
-                            intent.putExtra("version",versionName);
-                            startService(intent);
-                        }else {
-                            toast("查询版本信息失败");
+                if (NetWorkUtil.checkEnable(context)){
+                    HttpManager.getInstance().getHttpServer().queryAppVersion().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<AppVersion>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
                         }
-                    }
+                        @Override
+                        public void onNext(AppVersion appVersion) {
+                            if (appVersion!=null){
+                                String versionName = BuildConfig.VERSION_NAME;
+                                if (appVersion.getLatestVersion().equals(versionName)){
+                                    toast("当前为最新版本"+versionName);
+                                }else {
+                                }
+                                isDownloadApk(versionName);
+                            }else {
+                                toast("查询版本信息失败");
+                            }
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        toast("请求版本信息失败");
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            toast("请求版本信息失败");
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        Logger.e("onComplete");
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+                            Logger.e("onComplete");
+                        }
+                    });
+                }else {
+                    toast("网络不可用!");
+                }
                 break;
 
         }
+    }
+
+    private void isDownloadApk(String versionName){
+        new InputDialog.Builder(this)
+                .setEditVisibility(View.GONE)
+                .setTitle("是否更新到最新版本")
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        new ProgressDialog.Builder(getActivity())
+                                .setTitle("下载进度：")
+                                .show();
+                        Intent intent=new Intent(LoginActivity.this, DownloadServer.class);
+                        intent.putExtra("version",versionName);
+                        startService(intent);
+                    }
+
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+
+                    }
+                });
     }
 
 
