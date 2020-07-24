@@ -114,7 +114,6 @@ public class CollectingActivity extends DDRActivity {
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case updateBaseStatus:
-                //Logger.e("-------:" + notifyBaseStatusEx.getSonMode());
                 initStatusBar();
                 break;
             case notifyMapGenerateProgress:
@@ -291,7 +290,6 @@ public class CollectingActivity extends DDRActivity {
                 BaseCmd.reqAddPathPointWhileCollecting reqAddPathPointWhileCollecting=BaseCmd.reqAddPathPointWhileCollecting.newBuilder().build();
                 tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqAddPathPointWhileCollecting);
                 EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.addPoiPoint));
-                poiPoints.add(new XyEntity(posX,posY));
                 toast(R.string.gauge_succeed);
                 break;
             case R.id.tv_detection:

@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
@@ -31,6 +32,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.GridItem;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarCurSubMap;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.model.PoiPoint;
 import ddr.example.com.nddrandroidclient.entity.model.RobotCoordinates;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
@@ -55,9 +57,10 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
     private float perMeter;
     private float originX,originY;         //相对于Mat的原点坐标
     private int eachPixelW;               //每块像素的宽高
-    private Bitmap directionBitmap,targetBitmap;
+    private Bitmap directionBitmap,targetBitmap,poiBitmap;
     private float angle;
     private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
+    private List<PoiPoint>poiPoints=new ArrayList<>();
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
     private List<RobotCoordinates> robotPath=new ArrayList<>();
     public GenerateMapView(Context context) {
@@ -69,8 +72,6 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         super(context, attrs);
         init();
     }
-
-
     private void init(){
         holder=getHolder();
         //holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
@@ -86,6 +87,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
         notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         directionBitmap= BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         targetBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
+        poiBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.poi_default);
         lastFrame=new Paint();
         lastFrame.setStrokeWidth(1);
         lastFrame.setStyle(Paint.Style.FILL);
@@ -151,6 +153,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                     drawMap(canvas);
                     drawPath(canvas);
                     drawRobot(canvas);
+                    drawPoint(canvas);
                 }catch (Exception e){
                     e.printStackTrace();
                 }finally {
@@ -212,6 +215,21 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
             canvas.drawBitmap(directionBitmap,matrix1,paint);
         }
 
+    }
+
+    /**
+     * 添加采集过程中的目标点
+     * @param canvas
+     */
+    private void drawPoint(Canvas canvas){
+        if (poiPoints!=null){
+            int pts=poiPoints.size();
+            for (int i=0;i<pts;i++){
+                XyEntity xyEntity=coordinatesToMat(poiPoints.get(i).getX(),poiPoints.get(i).getY());
+                xyEntity=surfaceTouchEventHandler.coordinatesToCanvas(xyEntity.getX(),xyEntity.getY());
+                canvas.drawBitmap(poiBitmap,xyEntity.getX()-poiBitmap.getWidth()/2,xyEntity.getY()-poiBitmap.getHeight()/2,pathPaint);
+            }
+        }
     }
 
     /**
@@ -303,7 +321,9 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
 
         srcBitmap=openCVUtility.matToBitmap(srcMat);
         srcMat.release();
-        surfaceTouchEventHandler.setDefaultBitmap(srcBitmap);
+        if (surfaceTouchEventHandler!=null){
+            surfaceTouchEventHandler.setDefaultBitmap(srcBitmap);
+        }
        // Logger.e("生成的图片的大小："+srcBitmap.getWidth()+";"+srcBitmap.getHeight());
         perMeter=eachPixelW/(lidarRange*2);
     }
@@ -345,6 +365,7 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
             surfaceTouchEventHandler.onDestroy();
         }
         EventBusManager.unregister(this);
+        EventBus.getDefault().removeAllStickyEvents();
         openCVUtility.onDestroy();
     }
 
@@ -375,7 +396,18 @@ public class GenerateMapView extends SurfaceView implements SurfaceHolder.Callba
                 break;
             case getRobotCoordinates:
                 robotPath=LitePal.findAll(RobotCoordinates.class);
+                poiPoints=LitePal.findAll(PoiPoint.class);
                 Logger.e("-----本地保存的数据："+robotPath.size());
+                break;
+            case addPoiPoint:
+                poiPoints=(poiPoints==null)?new ArrayList<>():poiPoints;
+                float cx=notifyLidarPtsEntity.getPosX();
+                float cy=notifyLidarPtsEntity.getPosY();
+                PoiPoint poiPoint=new PoiPoint();
+                poiPoint.setX(cx);
+                poiPoint.setY(cy);
+                poiPoints.add(poiPoint);
+                poiPoint.save();
                 break;
         }
     }

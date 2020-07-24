@@ -1303,7 +1303,7 @@ public class MapEditActivity extends DDRActivity {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateBaseStatus:

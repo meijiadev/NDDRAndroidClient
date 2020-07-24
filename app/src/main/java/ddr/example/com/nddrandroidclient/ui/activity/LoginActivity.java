@@ -185,7 +185,6 @@ public  class LoginActivity extends DDRActivity {
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int memorySize = activityManager.getMemoryClass();
-        Logger.e("分配的内存上限："+memorySize+";"+activityManager.getLargeMemoryClass());
     }
 
     /**

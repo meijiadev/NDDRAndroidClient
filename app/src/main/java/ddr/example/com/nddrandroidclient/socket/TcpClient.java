@@ -124,7 +124,7 @@ public class TcpClient extends BaseSocketConnection {
         @Override
         public void onSocketConnectionSuccess(ConnectionInfo info, String action) {
             isConnected=true;
-            Logger.e("--------连接成功");
+            Logger.e("--------连接成功---------");
             Activity activity=ActivityStackManager.getInstance().getTopActivity();
             if (activity!=null){
                 if (activity.getLocalClassName().contains("LoginActivity")){
@@ -197,7 +197,7 @@ public class TcpClient extends BaseSocketConnection {
 
         @Override
         public void onSocketWriteResponse(ConnectionInfo info, String action, ISendable data) {
-
+            Logger.d("---------"+action);
         }
 
 
@@ -281,7 +281,7 @@ public class TcpClient extends BaseSocketConnection {
     public void feedDog(){
         if (manager!=null){
             manager.getPulseManager().feed();
-          // Logger.e("---喂狗");
+           Logger.d("---喂狗");
         }
     }
 
@@ -294,14 +294,10 @@ public class TcpClient extends BaseSocketConnection {
             manager.disconnect();
             isConnected=false;
             manager=null;
+            Logger.e("断开tcp连接");
         }
     }
 
-    public void onDestroy(){
-        tcpClient=null;
-        context=null;
-        disConnect();
-    }
 
     /**
      * 发送消息
@@ -311,6 +307,7 @@ public class TcpClient extends BaseSocketConnection {
     public void sendData(BaseCmd.CommonHeader commonHeader, GeneratedMessageLite message){
         if (manager!=null){
             byte[] data=m_MessageRoute.serialize(commonHeader,message);
+            Logger.d("--------sendData");
             manager.send(new SendData(data));
         }
     }
@@ -329,7 +326,7 @@ public class TcpClient extends BaseSocketConnection {
                 while (isConnected&&manager!=null){
                     try {
                         manager.getPulseManager().setPulseSendable(new PulseData(m_MessageRoute.serialize(null,hb))).pulse();
-                        //Logger.e("发送心跳包");
+                        Logger.d("发送心跳包");
                         Thread.sleep(3000);
                     }catch (NullPointerException e){
                         e.printStackTrace();

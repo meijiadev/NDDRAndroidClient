@@ -1533,6 +1533,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 Logger.e("更新数据");
                 break;
             case updateMapList:
+                Logger.e("更新地图列表!");
                 if (waitDialog != null) {
                     if (waitDialog.isShowing()) {
                         waitDialog.dismiss();

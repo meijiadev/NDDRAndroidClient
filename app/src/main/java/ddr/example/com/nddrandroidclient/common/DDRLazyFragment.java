@@ -129,6 +129,7 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
             mButterKnife.unbind();
         }
         EventBusManager.unregister(this);
+        EventBus.getDefault().removeAllStickyEvents();
     }
 
 
@@ -136,6 +137,7 @@ public abstract class DDRLazyFragment<A extends DDRActivity> extends BaseLazyFra
     public void onPause() {
         super.onPause();
         Logger.e("-------------"+this.getClass().getSimpleName());
+        if (this.getClass().getSimpleName().equals("statusFragment"))
         EventBusManager.unregister(this);
     }
 

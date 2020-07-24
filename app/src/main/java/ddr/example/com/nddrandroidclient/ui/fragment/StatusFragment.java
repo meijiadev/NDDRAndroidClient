@@ -58,7 +58,7 @@ import ddr.example.com.nddrandroidclient.widget.zoomview.MapImageView;
  * time: 2019/10/26
  * desc: 基础状态界面
  */
-public final class StatusFragment extends DDRLazyFragment<HomeActivity>implements StatusSwitchButton.OnStatusSwitchListener,Animation.AnimationListener{
+public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements StatusSwitchButton.OnStatusSwitchListener,Animation.AnimationListener{
 
     @BindView(R.id.status_switch_bt)
     StatusSwitchButton statusSwitchButton;
@@ -101,8 +101,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     TextView tv_set_go;
     @BindView(R.id.tv_restart_point)
     TextView tv_restart_point;
-
-
     @BindView(R.id.left_layout)
     RelativeLayout leftLayout;                //非充电状态下的左侧布局
     @BindView(R.id.charging_layout)
@@ -140,13 +138,12 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     private MapFileStatus mapFileStatus;
     private StringAdapter taskCheckAdapter;
     private CustomPopuWindow customPopWindow;
-    //private StringAdapter robotIdAdapter;
     private RecyclerView  recycler_task_check;
     private int modeType;
     public String sPoint="未知点";
     private boolean isRunabPoint;               //是否在跑ab点
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    private String pointName;
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
             case updateBaseStatus:
@@ -159,11 +156,16 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast(R.string.add_task_faild);
                 break;
             case getSpecificPoint:
-                toast(getString(R.string.start_goto)+sPoint);
+                pointName= (String) messageEvent.getData();
+                if (sPoint.equals(pointName))
+                toast(getString(R.string.start_goto)+pointName);
                 break;
             case getSpecificPoint1:
                 Logger.e("------添加任务成功，等待前往"+sPoint);
-                toast(getString(R.string.add_s_d_goto)+sPoint);
+                pointName= (String) messageEvent.getData();
+                if (sPoint.equals(pointName)){
+                    toast(getString(R.string.add_s_d_goto)+pointName);
+                }
                 break;
             case getSpecificPoint2:
                 toast(R.string.now_no_task);
@@ -189,6 +191,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 toast(R.string.no_task_yd);
                 break;
             case getSpecificPoint11:
+                pointName= (String) messageEvent.getData();
+                if (sPoint.equals(pointName))
                 toast(getString(R.string.about_to_start)+sPoint);
                 break;
             case switchMapSucceed:
@@ -197,7 +201,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
                 }
                 break;
             case GoToChargingPoint:
-                //tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                 BaseCmd.eCmdRspType eCmdRspType= (BaseCmd.eCmdRspType) messageEvent.getData();
                 if (eCmdRspType.equals(BaseCmd.eCmdRspType.eSuccess)){
                     mapImageView.setTargetPoint(null);
@@ -431,17 +434,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
         Logger.d("当前充电状态："+notifyBaseStatusEx.getChargingSubStatus());
     }
 
-    /**
-     * 将机器id赋值
-     */
-    public static void setRobotID(String robotid){
-        String stringd="DDR";
-        if(!Pattern.compile(regEx).matcher(robotid).find()&&!robotid.contains("BLANK")){
-            robotID =robotid;
-        }else {
-            robotID=stringd+"001";
-        }
-    }
     /**
      * 路径选择弹窗
      * @param view
@@ -843,23 +835,6 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Logger.e("---------statusFragment onPause");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Logger.e("---------statusFragment onResume");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Logger.e("---------statusFragment onRestart");
-    }
     /**
      * setUserVisibleHint的使用场景:FragmentPagerAdapter+ViewPager
      * 这种方式我们还是比较常见的,譬如,谷歌自带的TabLayout控件,此种场景下,当我们切换fragment的时候,会调用setUserVisibleHint方法,
@@ -876,7 +851,8 @@ public final class StatusFragment extends DDRLazyFragment<HomeActivity>implement
             }
             if (mapImageView !=null&&!mapImageView.drawThread.isAlive()){
                 mapImageView.startThread();
-                //mapImageView.setImageBitmap(notifyBaseStatusEx.getCurroute());
+                mapImageView.setImageBitmap(notifyBaseStatusEx.getCurroute());
+                tvWarn.setVisibility(View.GONE);
             }
             //当服务断开时
             if (tcpClient!=null&&!tcpClient.isConnected()){
