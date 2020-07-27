@@ -49,7 +49,7 @@ public class DownloadServer extends Service {
         String version=intent.getStringExtra("version");
         RetrofitUrlManager.getInstance().putDomain(APP_UPDATE_DOMAIN_NAME,APP_UPDATE_DOMAIN+"Release/"+version+"/"+"AndroidClient.apk");
         HttpManager.getInstance().getHttpServer().downloadApk()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())        //设置被观察者在IO子线程中执行
                 .subscribe(new Observer<ResponseBody>() {
             @Override
             public void onSubscribe(Disposable d) {

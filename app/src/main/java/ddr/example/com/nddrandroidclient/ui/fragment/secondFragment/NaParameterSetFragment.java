@@ -68,10 +68,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private Naparam naparam;
     private List<Naparam> naparamList;
 
-    private static TcpClient tcpClient;
-    private NotifyBaseStatusEx notifyBaseStatusEx;
-    private NotifyEnvInfo notifyEnvInfo;
-    private MapFileStatus mapFileStatus;
+    private TcpClient tcpClient;
     private Parameter parameter;
     private Parameters parameters;
     private List<Parameter> parameterList = new ArrayList<>();
@@ -123,9 +120,6 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     protected void initData() {
         isShow=true;
         tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
-        notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
-        notifyEnvInfo = NotifyEnvInfo.getInstance();
-        mapFileStatus = MapFileStatus.getInstance();
         parameters = Parameters.getInstance();
         getNaParmeter(1);
         setNaparmeter();

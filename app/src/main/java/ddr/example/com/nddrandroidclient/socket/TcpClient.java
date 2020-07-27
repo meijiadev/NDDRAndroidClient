@@ -254,6 +254,7 @@ public class TcpClient extends BaseSocketConnection {
                                 toast.cancel();
                                 disConnect();
                                 Intent intent=new Intent(activity,LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //关键的一句，将新的activity置为栈顶
                                 toast.startActivity(intent);
                             }
                         })
