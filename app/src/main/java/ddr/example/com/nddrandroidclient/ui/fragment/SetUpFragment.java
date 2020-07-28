@@ -83,7 +83,7 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
     protected void initView() {
         tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
-        mPagerAdapter.addFragment(NaParameterSetFragment.getInstance());
+        mPagerAdapter.addFragment(NaParameterSetFragment.newInstance());
         mPagerAdapter.addFragment(AutoChargingSetFragment.newInstance());
         mPagerAdapter.addFragment(SensorSetFragment.newInstance());
         mPagerAdapter.addFragment(RobotTestSetFragment.newInstance());
