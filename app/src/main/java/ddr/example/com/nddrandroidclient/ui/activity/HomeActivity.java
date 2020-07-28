@@ -275,6 +275,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         if (notifyBaseStatusEx.getMode()==2){
             postDelayed(()->{
                 tcpClient.getAllLidarMap();
+                Logger.e("查询本地数据库！");
                 EventBus.getDefault().postSticky(new MessageEvent(MessageEvent.Type.getRobotCoordinates));
                 Intent intent = new Intent(HomeActivity.this, CollectingActivity.class);
                 startActivity(intent);
@@ -529,7 +530,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 public void run() {
                     // 进行内存优化，销毁掉所有的界面
                     ActivityStackManager.getInstance().finishAllActivities();
-                    tcpClient.onDestroy();
+                    tcpClient.disConnect();
                     // 销毁进程（请注意：调用此 API 可能导致当前 Activity onDestroy 方法无法正常回调）
                     // System.exit(0);
                 }
@@ -548,7 +549,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         intent_login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //关键的一句，将新的activity置为栈顶
         startActivity(intent_login);
         finish();
-        tcpClient.onDestroy();
+        tcpClient.disConnect();
 
     }
 
@@ -564,7 +565,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     protected void onDestroy() {
         vpHomePager.removeOnPageChangeListener(this);
         vpHomePager.setAdapter(null);
-        tcpClient.onDestroy();
+        tcpClient.disConnect();
         tcpAiClient.disConnect();
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
@@ -608,6 +609,10 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     public UdpClient udpClient;
     private int aiPort=18888;

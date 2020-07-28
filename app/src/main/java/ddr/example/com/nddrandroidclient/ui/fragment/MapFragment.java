@@ -203,8 +203,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private PathAdapter pathAdapter, selectPathAdapter;                         //路径列表适配器 ;用于选择的路径列表
     private ActionAdapter actionAdapter;                     // 动作点列表
     private String mapName;                                  //点击查看的地图名
-
-
     private int mPosition = 0;                                   //当前显示的是哪个子项数据 （目标点列表、路径列表、任务列表）
     private String taskName;                                     //任务编辑框中的任务名
     private BaseDialog inputDialog;                              //地图命名窗口
@@ -1355,9 +1353,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**********************************end -********************************************/
 
 
-
-
-
     /**
      * 对比本地文件和服务的文件是否有区别,将服务端不存在的本地文件删除，保持一致性
      *
@@ -1401,23 +1396,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         }
     }
 
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Logger.e("---------------------------------------onRestart--------------------");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Logger.e("---------------------------------------onPause--------------------");
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        Logger.e("--------------------------------------onResume--------------------------");
         if (tv1m!=null){
             for (TargetPoint targetPoint:targetPoints){
                 targetPoint.setMultiple(false);
@@ -1549,17 +1530,17 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 zoomMap.setImageBitmap(bitmapPath);
                 break;
             case updateRevamp:
-
                 Logger.e("更新数据");
                 break;
             case updateMapList:
+                Logger.e("更新地图列表!");
                 if (waitDialog != null) {
                     if (waitDialog.isShowing()) {
                         waitDialog.dismiss();
                     }
                 }
                 getAttachActivity().postDelayed(() -> {
-                   mapInfos=mapFileStatus.getMapInfos();
+                    mapInfos=mapFileStatus.getMapInfos();
                     mapAdapter.setNewData(mapInfos);
                 }, 500);
                 break;
@@ -1583,6 +1564,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 break;
         }
     }
+
+
 
     /**
      * 添加充电点 一张地图只能有一个充电点

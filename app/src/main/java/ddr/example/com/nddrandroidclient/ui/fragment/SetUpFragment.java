@@ -212,17 +212,7 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
         Logger.e("------onRestart");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Logger.e("-----onResume");
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Logger.e("------onPause");
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

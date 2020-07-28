@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.meta.SubscriberInfoIndex;
 
 import androidx.collection.ArrayMap;
 import ddr.example.com.nddrandroidclient.MyEventBusIndex;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  *    time   : 2019/10/25
@@ -40,7 +41,8 @@ public final class EventBusManager {
      * 注册 EventBus
      */
     public static void register(Object subscriber) {
-        if (canSubscribeEvent(subscriber)) {
+        Logger.d("注册："+subscriber.getClass().getName());
+        if (canSubscribeEvent(subscriber)&&!EventBus.getDefault().isRegistered(subscriber)) {
             EventBus.getDefault().register(subscriber);
         }
     }

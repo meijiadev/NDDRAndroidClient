@@ -16,10 +16,12 @@ public class RspRunSpecificPoint  extends BaseProcessor{
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         DDRVLNMap.rspRunSpecificPoint rspRunSpecificPoint= (DDRVLNMap.rspRunSpecificPoint) msg;
+        String pointName=rspRunSpecificPoint.getClientdata().getTargetPt(0).getPtName().toStringUtf8();
+        Logger.e("AB点："+pointName);
         switch (rspRunSpecificPoint.getErrorCode()){
             case en_RunSpecificPtOk:
                 if (rspRunSpecificPoint.getClientdata().getOptType().getNumber()==1){
-                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint));
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint,pointName));
                     Logger.e("添加成功");
                 }else {
                     Logger.e("其它");
@@ -27,7 +29,7 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                 break;
             case en_RunSpecificPtAddTask:
                 if (rspRunSpecificPoint.getClientdata().getOptType().getNumber()==1){
-                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint1));
+                    EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint1,pointName));
                     Logger.e("添加成功到队列");
                 }else {
                     Logger.e("其它");
@@ -63,9 +65,8 @@ public class RspRunSpecificPoint  extends BaseProcessor{
                 break;
             case en_RunSpecificPtResume_GoNextPt:
                 Logger.e("开始下一个点");
-                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint11));
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.getSpecificPoint11,pointName));
                 break;
         }
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.responseAbPoint));
     }
 }

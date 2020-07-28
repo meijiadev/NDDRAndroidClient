@@ -451,17 +451,6 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
         submissionTask();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Logger.e("-----onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Logger.e("------onPause");
-    }
 
 
 

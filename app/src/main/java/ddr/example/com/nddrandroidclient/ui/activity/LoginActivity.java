@@ -4,6 +4,9 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,10 +17,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.io.IOException;
 
+import androidx.core.content.FileProvider;
 import butterknife.BindView;
 import butterknife.OnClick;
+import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
@@ -25,24 +31,28 @@ import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.other.UdpIp;
 import ddr.example.com.nddrandroidclient.helper.NetWorkUtil;
-import ddr.example.com.nddrandroidclient.http.HttpManage;
-import ddr.example.com.nddrandroidclient.http.UpdateState;
-import ddr.example.com.nddrandroidclient.http.VersionInformation;
+import ddr.example.com.nddrandroidclient.http.AppVersion;
+import ddr.example.com.nddrandroidclient.http.HttpManager;
+import ddr.example.com.nddrandroidclient.http.serverupdate.UpdateState;
+import ddr.example.com.nddrandroidclient.http.serverupdate.VersionInformation;
 import ddr.example.com.nddrandroidclient.helper.SpUtil;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
+import ddr.example.com.nddrandroidclient.server.DownloadServer;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
 import ddr.example.com.nddrandroidclient.socket.UdpClient;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.ProgressDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.LimitInputTextWatcher;
-import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
+
+import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
 
 
 /**
@@ -74,7 +84,6 @@ public  class LoginActivity extends DDRActivity {
     private BaseDialog waitDialog;
     private String LAN_IP="192.168.0.95";    //局域网IP        1.83
     private int port=28888;
-    //private boolean hasReceiveBroadcast=false;            //是否接收到广播
     private boolean isLan=true;                                //是否是局域网  默认局域网登录
     private UdpIp udpIp=new UdpIp();
     private String localIP;         //本机IP
@@ -103,7 +112,8 @@ public  class LoginActivity extends DDRActivity {
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
                 SpUtil.getInstance(context).putString(SpUtil.LOGIN_PASSWORD,passwordName);
                 Logger.e("登录成功");
-                HttpManage.setBaseUrl(LAN_IP);
+                String url ="http://"+LAN_IP+":8081/";
+                RetrofitUrlManager.getInstance().putDomain(SERVER_UPDATE_DOMAIN_NAME,url);
                 toast(R.string.login_succeed);
                 postDelayed(()->{
                     if (waitDialog!=null&&waitDialog.isShowing()){
@@ -134,6 +144,25 @@ public  class LoginActivity extends DDRActivity {
                     tcpClient.sendData(null,CmdSchedule.remoteLogin(accountName,passwordName));
                 }
                 break;
+            case apkDownloadSucceed:
+                File file= (File) messageEvent.getData();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+                    Uri uri=Uri.fromFile(file);
+                    intent.setDataAndType(uri,"application/vnd.android.package-archive");
+                    startActivity(intent);
+                }else {
+                    Logger.e("---------"+getPackageName());
+                    Uri uriFile= FileProvider.getUriForFile(context,"ddr.example.com.nddrandroidclient.fileprovider",file);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setDataAndType(uriFile,"application/vnd.android.package-archive");
+                    startActivity(intent);
+                }
+                break;
+            case apkDownloadFailed:
+                toast("下载失败!");
+                break;
         }
     }
 
@@ -156,7 +185,6 @@ public  class LoginActivity extends DDRActivity {
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int memorySize = activityManager.getMemoryClass();
-        Logger.e("分配的内存上限："+memorySize+";"+activityManager.getLargeMemoryClass());
     }
 
     /**
@@ -171,7 +199,7 @@ public  class LoginActivity extends DDRActivity {
         return localIP;
     }
 
-    @OnClick({R.id.login_in,R.id.tv_lan,R.id.tv_wan,R.id.login_log})
+    @OnClick({R.id.login_in,R.id.tv_lan,R.id.tv_wan,R.id.login_log,R.id.ivUpdateApk})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_in:
@@ -221,10 +249,65 @@ public  class LoginActivity extends DDRActivity {
                 isLan=false;
                 break;
             case R.id.login_log:
-                getVersions();
+                break;
+            case R.id.ivUpdateApk:
+                if (NetWorkUtil.checkEnable(context)){
+                    HttpManager.getInstance().getHttpServer().queryAppVersion().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<AppVersion>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+                        @Override
+                        public void onNext(AppVersion appVersion) {
+                            if (appVersion!=null){
+                                String versionName = BuildConfig.VERSION_NAME;
+                                if (appVersion.getLatestVersion().equals(versionName)){
+                                    toast("当前为最新版本"+versionName);
+                                }else {
+                                }
+                                isDownloadApk(versionName);
+                            }else {
+                                toast("查询版本信息失败");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            toast("网络不可用!");
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Logger.e("onComplete");
+                        }
+                    });
+                }else {
+                    toast("网络不可用!");
+                }
                 break;
 
         }
+    }
+
+    private void isDownloadApk(String versionName){
+        new InputDialog.Builder(this)
+                .setEditVisibility(View.GONE)
+                .setTitle("是否更新到最新版本")
+                .setListener(new InputDialog.OnListener() {
+                    @Override
+                    public void onConfirm(BaseDialog dialog, String content) {
+                        new ProgressDialog.Builder(getActivity())
+                                .setTitle("下载进度：")
+                                .show();
+                        Intent intent=new Intent(LoginActivity.this, DownloadServer.class);
+                        intent.putExtra("version",versionName);
+                        startService(intent);
+                    }
+
+                    @Override
+                    public void onCancel(BaseDialog dialog) {
+
+                    }
+                }).show();
     }
 
 
@@ -275,8 +358,8 @@ public  class LoginActivity extends DDRActivity {
      */
     private void getVersions(){
         //tcpClient.reqCmdIpcMethod(BaseCmd.eCmdIPCMode.eExitModuleService);
-        Logger.e("--------:"+HttpManage.getBaseUrl());
-        HttpManage.getServer().getVersion()
+        Logger.e("--------:"+ RetrofitUrlManager.getInstance().fetchDomain(SERVER_UPDATE_DOMAIN_NAME));
+        HttpManager.getInstance().getHttpServer().getVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<VersionInformation>() {            // Observable(被观察者) 通过subscribe(订阅)方法发送给所有的订阅者（Observer）
@@ -323,9 +406,6 @@ public  class LoginActivity extends DDRActivity {
                     @Override
                     public void onConfirm(BaseDialog dialog, String content) {
                         updateServer();
-                        new ProgressDialog.Builder(getActivity())
-                                .setTitle("下载进度：")
-                                .show();
                     }
 
                     @Override
@@ -339,7 +419,7 @@ public  class LoginActivity extends DDRActivity {
      * 请求更新
      */
     private void updateServer(){
-        HttpManage.getServer().updateServer()
+        HttpManager.getInstance().getHttpServer().updateServer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UpdateState>() {

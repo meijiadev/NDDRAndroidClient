@@ -31,7 +31,7 @@ public class InputFilterMinMax implements InputFilter {
      */
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-        Logger.e("--------"+dest.toString()+";"+source.toString()+";"+start+";"+end+";"+dstart+";"+dend);
+        //Logger.e("--------"+dest.toString()+";"+source.toString()+";"+start+";"+end+";"+dstart+";"+dend);
         try {
             if(source.toString().equals("-")){
                 if (dest.toString().equals("")){

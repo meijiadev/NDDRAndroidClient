@@ -74,7 +74,6 @@ public class ControlPopupWindow {
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateBaseStatus:
-                DecimalFormat df = new DecimalFormat("0");
                 DecimalFormat format = new DecimalFormat("0.00");
                 xsu=String.valueOf(format.format(notifyBaseStatusEx.getPosLinespeed()));
                 jsu=String.valueOf(format.format(notifyBaseStatusEx.getPosAngulauspeed()));

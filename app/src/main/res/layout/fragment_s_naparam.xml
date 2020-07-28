@@ -48,7 +48,7 @@
                 android:id="@+id/view5"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
             <TextView
                 android:id="@+id/tv_title4"
@@ -60,7 +60,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="24.5dp"
                 android:layout_below="@id/view5"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
             <TextView
                 android:id="@+id/tv_task_origin"
@@ -74,7 +74,7 @@
                 android:drawablePadding="10dp"
                 android:layout_below="@id/tv_title4"
                 android:layout_marginTop="14dp"
-                android:visibility="gone"
+                android:visibility="visible"
 
                />
             <TextView
@@ -87,7 +87,7 @@
                 android:layout_below="@id/tv_task_origin"
                 android:layout_marginTop="14dp"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
 
             <TextView
@@ -104,7 +104,7 @@
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
                 android:layout_marginRight="200dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -117,7 +117,7 @@
                 android:layout_alignStart="@id/tv_task_nearby"
                 android:layout_marginTop="14dp"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
             <View
                 android:id="@+id/view6"

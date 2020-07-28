@@ -3,12 +3,18 @@ package ddr.example.com.nddrandroidclient.ui.dialog;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import androidx.fragment.app.FragmentActivity;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.MyDialogFragment;
-import ddr.example.com.nddrandroidclient.http.DownloadProgress;
-import ddr.example.com.nddrandroidclient.http.HttpManage;
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.helper.EventBusManager;
+import ddr.example.com.nddrandroidclient.http.serverupdate.DownloadProgress;
+import ddr.example.com.nddrandroidclient.http.HttpManager;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -32,8 +38,12 @@ public final class ProgressDialog {
             tvProgress=findViewById(R.id.tv_progress);
             progressBar=findViewById(R.id.process_bar);
             progressBar.setMax(100);
-
+            EventBus.getDefault().register(this);
         }
+
+        /**
+         * 获取服务下载进度
+         */
         private void getUpdateProgress(){
             new Thread(()->{
                 while (isUpdating){
@@ -42,7 +52,7 @@ public final class ProgressDialog {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    HttpManage.getServer().getProgress()
+                    HttpManager.getInstance().getHttpServer().getProgress()
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
                             .subscribe(new Observer<DownloadProgress>() {
@@ -89,8 +99,39 @@ public final class ProgressDialog {
 
         public Builder setTitle(String title){
             this.title=title;
+            return this;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public Builder setUpdateServer(){
             getUpdateProgress();
             return this;
         }
+
+        @Override
+        protected void dismiss() {
+            super.dismiss();
+            EventBus.getDefault().unregister(this);
+        }
+
+        @Subscribe(threadMode = ThreadMode.MAIN)
+        public void setProgress(MessageEvent messageEvent){
+            switch (messageEvent.getType()){
+                case updateProgress:
+                    int progress= (int) messageEvent.getData();
+                    tvProgress.setText(title+progress+"%");
+                    progressBar.setProgress(progress);
+                    break;
+                case apkDownloadSucceed:
+                case apkDownloadFailed:
+                    dismiss();
+                    break;
+            }
+        }
     }
+
+
 }

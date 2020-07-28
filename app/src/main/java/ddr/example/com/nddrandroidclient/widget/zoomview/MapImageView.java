@@ -115,8 +115,10 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
                 Mat mat1=new Mat();
                 //先将BRGMat转成RGB格式，再转换成图片
                 Imgproc.cvtColor(mat,mat1,Imgproc.COLOR_BGR2RGB);
+                mat.release();
                 sourceBitmap=Bitmap.createBitmap(mat1.width(),mat1.height(),Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(mat1,sourceBitmap);
+                mat1.release();
                 Logger.e("图片的宽高：" + sourceBitmap.getWidth() + "；" + sourceBitmap.getHeight());
             } catch (UnsatisfiedLinkError e) {
                 e.printStackTrace();
@@ -155,6 +157,12 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
         if (!taskName.equals("PathError")){
             data=mapFileStatus.getCurrentMapEx();
             taskModes=mapFileStatus.getcTaskModes();
+            List<PathLine> pathLineList;
+            if (isRunAbPointLine){
+                pathLineList=mapFileStatus.getABPaths();
+            }else {
+                pathLineList=mapFileStatus.getcPathLines();
+            }
             try {
                 for (TaskMode taskMode1:taskModes){
                     if (taskName.equals(taskMode1.getName())){
@@ -168,7 +176,6 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
                         if (baseMode.getType()==1){
                             PathLine pathLine= (PathLine) baseMode;
                             String lineName=pathLine.getName();
-                            List<PathLine> pathLineList=mapFileStatus.getcPathLines();
                             List<PathLine.PathPoint> pathPoints=new ArrayList<>();
                             for (PathLine pathLine1:pathLineList){
                                 if (lineName.equals(pathLine1.getName())){
@@ -198,6 +205,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
             }
         }
     }
+
+    private void setABTask(){
+
+    }
+
 
     /**
      * 是否显示ab点路径

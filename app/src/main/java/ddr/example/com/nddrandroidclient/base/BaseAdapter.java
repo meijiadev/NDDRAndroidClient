@@ -27,8 +27,6 @@ public abstract class BaseAdapter<T> extends BaseQuickAdapter< T,BaseViewHolder>
         this.viewType=layoutResId;
     }
 
-
-
     public BaseAdapter(int layoutResId, @Nullable List<T> data) {
         super(layoutResId, data);
         this.viewType=layoutResId;

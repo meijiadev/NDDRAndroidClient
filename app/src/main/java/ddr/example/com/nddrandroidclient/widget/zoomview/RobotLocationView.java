@@ -167,16 +167,17 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * @return
      */
     public XyEntity toXorY(float x, float y){
-        float x1=(float)( r00*x+r01*y+t0)*touchEvenHandler.getInitRatio();
-        float y1=(float) (r10*x+r11*y+t1)*touchEvenHandler.getInitRatio();
+        float x1=(float)( r00*x+r01*y+t0);
+        float y1=(float) (r10*x+r11*y+t1);
         return new XyEntity(x1,y1);
     }
+
     /*
      * 从世界坐标直接得到相对于画布的坐标
      * @param x
      * @param y
-     * @return*/
-
+     * @return
+     * */
     public XyEntity toCanvas(float x,float y){
         //世界坐标转成相对于图片位置的像素坐标
         XyEntity xyEntity=toXorY(x,y);
@@ -231,8 +232,8 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     public XyEntity getRobotLocationInWindow(){
         XyEntity xyEntity=toXorY(0,0);
         //Logger.e("---------x"+touchEvenHandler.getOriginalX()+";"+touchEvenHandler.getOriginalY());
-        float x=xyEntity.getX()+touchEvenHandler.getOriginalX();
-        float y=xyEntity.getY()+touchEvenHandler.getOriginalY();
+        float x=xyEntity.getX()*touchEvenHandler.getInitRatio()+touchEvenHandler.getOriginalX();
+        float y=xyEntity.getY()*touchEvenHandler.getInitRatio()+touchEvenHandler.getOriginalY();
         xyEntity.setX(x);
         xyEntity.setY(y);
         return xyEntity;
@@ -438,7 +439,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                     .setView(this)
                     .setBitmap(sourceBitmap)
                     .build();
-
             Logger.e("布局大小发生改变:"+width+";"+height);
         }
     }
@@ -452,6 +452,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                         .setView(this)
                         .setBitmap(sourceBitmap)
                         .build();
+                Logger.e("---------onTouchEvent");
 
             }
         }
