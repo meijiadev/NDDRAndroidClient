@@ -92,6 +92,7 @@ public class TcpClient extends BaseSocketConnection {
      * @param port
      */
     public void createConnect(String ip, int port){
+        Logger.e("连接tcp:"+ip+";"+port);
         info=new ConnectionInfo(ip,port);
         manager=OkSocket.open(info);
         OkSocketOptions.Builder clientOptions=new OkSocketOptions.Builder();

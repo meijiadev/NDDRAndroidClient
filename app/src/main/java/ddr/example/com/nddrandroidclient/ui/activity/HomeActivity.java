@@ -473,7 +473,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             //重定位中
             if (notifyBaseStatusEx.getSonMode()==15){
                 Logger.e("进入重定位...");
-                if (relocationDialog==null){
+                if (relocationDialog==null||!relocationDialog.isShowing()){
                     relocationDialog = new RelocationDialog.Builder(this)
                             .setAutoDismiss(true)
                             .setListener(new RelocationDialog.OnListener() {
