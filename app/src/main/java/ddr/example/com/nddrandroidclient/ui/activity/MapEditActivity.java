@@ -445,9 +445,7 @@ public class MapEditActivity extends DDRActivity {
                                                 List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
                                                 try {
                                                     pathPoints1=ListTool.deepCopy(pathPoints);
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } catch (ClassNotFoundException e) {
+                                                } catch (IOException | ClassNotFoundException e) {
                                                     e.printStackTrace();
                                                 }
                                                 pathLine.setPathPoints(pathPoints1);
@@ -532,7 +530,7 @@ public class MapEditActivity extends DDRActivity {
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
                     XyEntity xyEntity1=zmap.toXorY(firstPoint.getX(),firstPoint.getY());
                     XyEntity xyEntity2=zmap.toXorY(secondPoint.getX(),secondPoint.getY());
-                    Logger.e("----startrow:"+ (int)xyEntity1.getY()+"endRows"+(int)xyEntity2.getY()+"startCol:"+(int) xyEntity1.getX()+"endCol:"+(int) xyEntity2.getX());
+                    Logger.e("----startRow:"+ (int)xyEntity1.getY()+"endRows"+(int)xyEntity2.getY()+"startCol:"+(int) xyEntity1.getX()+"endCol:"+(int) xyEntity2.getX());
                     srcMat=mats.get(mats.size()-1);
                     Mat dtsMat=new Mat();
                     srcMat.copyTo(dtsMat);
@@ -541,14 +539,14 @@ public class MapEditActivity extends DDRActivity {
                     int startCol=(int) xyEntity1.getX();
                     int endCol=(int) xyEntity2.getX();
                     //保证去噪的区域不超过图片的宽高,修复超过0-rows,0-cols 导致崩溃的问题
-                    startRow=startRow<0?0:startRow;
-                    startRow=startRow>dtsMat.rows()?dtsMat.rows():startRow;
-                    endRow=endRow<0?0:endRow;
-                    endRow=endRow>dtsMat.rows()?dtsMat.rows():endRow;
-                    startCol=startCol<0?0:startCol;
-                    startCol=startCol>dtsMat.cols()?dtsMat.cols():startCol;
-                    endCol=endCol<0?0:endCol;
-                    endCol=endCol>dtsMat.cols()?dtsMat.cols():endCol;
+                    startRow= Math.max(startRow, 0);
+                    startRow= Math.min(startRow, dtsMat.rows());
+                    endRow= Math.max(endRow, 0);
+                    endRow= Math.min(endRow, dtsMat.rows());
+                    startCol= Math.max(startCol, 0);
+                    startCol= Math.min(startCol, dtsMat.cols());
+                    endCol= Math.max(endCol, 0);
+                    endCol= Math.min(endCol, dtsMat.cols());
                     if (startRow>endRow){
                         int row=startRow;
                         startRow=endRow;

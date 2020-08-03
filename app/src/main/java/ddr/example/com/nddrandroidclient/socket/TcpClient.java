@@ -539,6 +539,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
                     .setPtName(ByteString.copyFromUtf8(targetPoint.getName()))
+                    .setTargetPtTypeValue(targetPoint.getPointType().getTypeValue())
                     .setPtData(space_pointEx).build();
             targetPtItems.add(targetPtItem);
         }
@@ -584,10 +585,13 @@ public class TcpClient extends BaseSocketConnection {
             DDRVLNMap.path_line_itemEx path_line_itemEx=DDRVLNMap.path_line_itemEx.newBuilder()
                     .setName(ByteString.copyFromUtf8(pathLine.getName()))
                     .setModeValue(pathLine.getPathModel())
+                    .setTypeValue(pathLine.getPathType())
                     .setVelocity(pathLine.getVelocity())
                     .setConfig(path_line_config)
                     .setVelocity(pathLine.getVelocity())
                     .addAllPointSet(pathLintPtItems)
+                    .setBStartFromSeg0(pathLine.isbStartFromSeg0())
+                    .setBNoCornerSmoothing(pathLine.isbNoCornerSmoothing())
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }
