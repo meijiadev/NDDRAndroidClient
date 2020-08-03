@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.common;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import ddr.example.com.nddrandroidclient.widget.view.FloatView;
  *  time    ：2019/10/25
  *  describe: Activity 基类
  */
+@SuppressLint("Registered")
 public class DDRActivity extends BaseActivity implements OnTitleBarListener {
     /** 标题栏对象 */
     private TitleBar mTitleBar;
@@ -115,12 +117,8 @@ public class DDRActivity extends BaseActivity implements OnTitleBarListener {
     private BaseLoaderCallback mLoaderCallback=new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
-            switch (status){
-                case LoaderCallbackInterface.SUCCESS:
-                    Logger.d("OpenCVLoader加载成功");
-                    break;
-                default:
-                    break;
+            if (status == LoaderCallbackInterface.SUCCESS) {
+                Logger.d("OpenCVLoader加载成功");
             }
             super.onManagerConnected(status);
         }

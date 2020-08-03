@@ -37,16 +37,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Runnable mRunnable;
     /**
      * 此方法先于 onCreate()方法执行
-     * @param newBase
+     * @param newBase 参数
      */
     @Override
     protected void attachBaseContext(Context newBase) {
         //获取我们存储的语言环境 比如 "en","zh",等等
         String language = SpUtil.getInstance(BaseApplication.getContext()).getString(SpUtil.LANGUAGE);
         Logger.e("BaseActivity:"+language);
-        /**
-         * attach对应语言环境下的context
-         */
         super.attachBaseContext(LanguageUtil.attachBaseContext(newBase, language));
     }
     @Override
@@ -80,6 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
     }
 
@@ -97,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 获取布局Id
-     * @return
+     * @return 返回布局ID
      */
     protected abstract int getLayoutId();
 
@@ -127,8 +125,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 延迟一段时间执行
-     * @param r
-     * @param delayMillis
+     * @param r 线程
+     * @param delayMillis 延迟执行的时间
      * @return
      */
      public final boolean postDelayed(Runnable r,long delayMillis){
@@ -142,8 +140,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 在指定时间执行
      * @param r
-     * @param uptimeMillis
-     * @return
+     * @param uptimeMillis 指定时间
+     * @return 是否成功
      */
     public final boolean postAtTime(Runnable r,long uptimeMillis){
         return HANDLER.postAtTime(r,mHandlerToken,uptimeMillis);
@@ -152,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 取消延迟任务
      */
-    public final void cancleDelay(){
+    public final void cancelDelay(){
         if (mRunnable!=null){
             HANDLER.removeCallbacks(mRunnable,mHandlerToken);
         }
@@ -162,7 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 取消延迟任务
      * @param runnable
      */
-    public final void cancleDelay(Runnable runnable){
+    public final void cancelDelay(Runnable runnable){
         if (runnable!=null){
             HANDLER.removeCallbacks(runnable);
         }
