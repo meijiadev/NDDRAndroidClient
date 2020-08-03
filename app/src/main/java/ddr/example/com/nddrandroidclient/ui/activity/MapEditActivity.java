@@ -201,6 +201,7 @@ public class MapEditActivity extends DDRActivity {
         GridLayerView.getInstance(zmap).onDestroy();
     }
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void initData() {
         super.initData();
@@ -219,12 +220,10 @@ public class MapEditActivity extends DDRActivity {
             targetPoints = ListTool.deepCopy((List<TargetPoint>)intent.getSerializableExtra("targetList"));
             pathLines = ListTool.deepCopy((List<PathLine>)intent.getSerializableExtra("pathList"));
             selectPoints=ListTool.deepCopy(targetPoints);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-       // selectPointAdapter.setNewData(selectPoints);
+        // selectPointAdapter.setNewData(selectPoints);
         editTypes.add(getString(R.string.common_virtual_wall));
         editTypes.add(getString(R.string.common_denoising));
         graphTypes.add(getString(R.string.common_line));
@@ -467,7 +466,7 @@ public class MapEditActivity extends DDRActivity {
                                     }
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
-                                        pathPoints.clear();
+                                        //pathPoints.clear();
                                         toast(R.string.cancel_add);
                                         inputDialog.dismiss();
                                     }

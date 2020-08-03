@@ -579,6 +579,7 @@ public class TcpClient extends BaseSocketConnection {
                         .setPt(spacePointEx)
                         .setRotationangle(pathPoints.get(j).getRotationAngle())
                         .setTypeValue(pathPoints.get(j).getPointType())
+                        .setPtName(ByteString.copyFromUtf8(pathPoints.get(j).getName()))
                         .build();
                 pathLintPtItems.add(path_lint_pt_item);
             }
@@ -595,6 +596,7 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }
+        Logger.e("----------路径size:"+pathLineItemExes.size());
         DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
                 .addAllPathLineData(pathLineItemExes)
                 .build();
