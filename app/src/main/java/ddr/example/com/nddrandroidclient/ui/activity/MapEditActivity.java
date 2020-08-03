@@ -44,6 +44,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
@@ -448,8 +449,7 @@ public class MapEditActivity extends DDRActivity {
                                                     e.printStackTrace();
                                                 }
                                                 pathLine.setPathPoints(pathPoints1);
-                                                pathLine.setVelocity(0.2f);
-                                                pathLine.setPathModel(64);
+                                                initPathParameter(pathLine);
                                                 newPaths.add(pathLine);
                                                 pathLines.add(pathLine);
                                                 pathPoints.clear();
@@ -610,6 +610,32 @@ public class MapEditActivity extends DDRActivity {
                             }
                         })
                 .show();
+                break;
+        }
+    }
+
+    /**
+     * 根据不同类型的底盘给新建的路径设置不同的速度和运行模式
+     * @param pathLine 新建的路径
+     */
+    private void initPathParameter(PathLine pathLine){
+        switch (ComputerEditions.getInstance().getRobotType()){
+            //自研一二代
+            case 1:
+            case 2:
+                pathLine.setPathModel(64);
+                pathLine.setVelocity(0.4f);
+                break;
+            case 3:           //消杀机器人底盘
+            case 6:          // SMT
+            case 7:         // E巡
+                pathLine.setPathModel(65);
+                pathLine.setVelocity(0.4f);
+                break;
+            case 4:         //广告机器人底盘
+            case 5:        // 新零售机器人
+                pathLine.setPathModel(65);
+                pathLine.setVelocity(0.2f);
                 break;
         }
     }
