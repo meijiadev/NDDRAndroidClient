@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,7 +65,8 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     @BindView(R.id.et_stop_distance)
     EditText etStopDistance;                 //避障停止距离
 
-    public static NaParameterSetFragment naParameterSetFragment;
+    @SuppressLint("StaticFieldLeak")
+    private static NaParameterSetFragment naParameterSetFragment;
     private Naparam naparam;
     private List<Naparam> naparamList;
 
@@ -99,10 +101,8 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
-        switch (messageEvent.getType()) {
-            case updateParameter:
-                setNaparmeter();
-                break;
+        if (messageEvent.getType() == MessageEvent.Type.updateParameter) {
+            setNaparmeter();
         }
     }
 
@@ -124,7 +124,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
         getNaParmeter(1);
         setNaparmeter();
     }
-    float decelerationDistance,stopDistance;
+    private float decelerationDistance,stopDistance;
     @OnClick({R.id.tv_restartDefault, R.id.tv_save_param,R.id.tv_task_origin, R.id.tv_task_nearby, R.id.tv_navigation_loop, R.id.tv_return_to_loop, R.id.tv_target_corner, R.id.tv_smart_smooth_turn})
     public void onViewClicked(View view) {
         switch (view.getId()) {

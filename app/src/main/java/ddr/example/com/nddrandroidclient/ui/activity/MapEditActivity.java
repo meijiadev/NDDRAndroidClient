@@ -451,17 +451,16 @@ public class MapEditActivity extends DDRActivity {
                                                     e.printStackTrace();
                                                 }
                                                 pathLine.setPathPoints(pathPoints1);
-                                                pathLine.setVelocity(0.4f);
+                                                pathLine.setVelocity(0.2f);
                                                 pathLine.setPathModel(64);
                                                 newPaths.add(pathLine);
                                                 pathLines.add(pathLine);
                                                 pathPoints.clear();
+                                                tcpClient.savePathData(mapFileStatus.getReqDDRVLNMapEx(),pathLines);
                                                 for (TargetPoint targetPoint:selectPoints){
                                                     targetPoint.setMultiple(false);
                                                 }
                                                 //selectPointAdapter.setNewData(selectPoints);
-                                                tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                                                toast(R.string.save_succeed);
                                                 inputDialog.dismiss();
                                             }
                                         }else {
@@ -700,6 +699,7 @@ public class MapEditActivity extends DDRActivity {
                                 e.printStackTrace();
                             }
                             targetPoints.add(targetPoint);
+                            tcpClient.savePointData(mapFileStatus.getReqDDRVLNMapEx(),targetPoints);
                             tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
                             inputDialog.dismiss();
                         }
@@ -1306,6 +1306,9 @@ public class MapEditActivity extends DDRActivity {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
+            case updateDDRVLNMap:
+                toast(R.string.save_succeed);
+                break;
             case updateBaseStatus:
                 if (isRuning){
                     Logger.e("-------刷新ZoomImageView");

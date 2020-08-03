@@ -91,7 +91,7 @@ public class TcpClient extends BaseSocketConnection {
      * @param ip
      * @param port
      */
-    public void createConnect(String ip, int port){
+    public synchronized void createConnect(String ip, int port){
         Logger.e("连接tcp:"+ip+";"+port);
         info=new ConnectionInfo(ip,port);
         manager=OkSocket.open(info);
@@ -542,6 +542,18 @@ public class TcpClient extends BaseSocketConnection {
                     .setPtData(space_pointEx).build();
             targetPtItems.add(targetPtItem);
         }
+        DDRVLNMap.DDRMapTargetPointData targetPointData=DDRVLNMap.DDRMapTargetPointData.newBuilder()
+                .addAllTargetPt(targetPtItems)
+                .build();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(reqDDRVLNMapEx.getBasedata())
+                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setTargetPtdata(targetPointData)
+                .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
+                .setPathSet(reqDDRVLNMapEx.getPathSet())
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+
     }
 
     /**
@@ -579,6 +591,18 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }
+        DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
+                .addAllPathLineData(pathLineItemExes)
+                .build();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(reqDDRVLNMapEx.getBasedata())
+                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setTargetPtdata(reqDDRVLNMapEx.getTargetPtdata())
+                .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
+                .setPathSet(ddrMapPathDataEx)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+
     }
 
     /**
@@ -702,7 +726,6 @@ public class TcpClient extends BaseSocketConnection {
         Logger.e("----------路径size:"+pathLineItemExes.size());
         DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
                 .addAllPathLineData(pathLineItemExes)
-
                 .build();
         /**********************************************保存到服务的任务数据***************************************/
         List<DDRVLNMap.task_itemEx> taskItemExes=new ArrayList<>();

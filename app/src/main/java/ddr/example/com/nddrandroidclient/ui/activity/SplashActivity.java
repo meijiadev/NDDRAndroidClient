@@ -42,6 +42,8 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
     private int port=28888;
 
     private String [] permission=new String[]{ Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE,Permission.SYSTEM_ALERT_WINDOW};
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_splash;

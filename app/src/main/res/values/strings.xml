@@ -413,14 +413,10 @@
     <string name="enter_task_name">输入任务名</string>
     <string name="name_is_exist">名称已存在，请重新命名。</string>
     <string name="cancel_create_task">取消新建任务</string>
-
-
-
-
-
-
-
-
+    <string name="task_title_one">任务启动方式</string>
+    <string name="task_title_two">任务起点启动</string>
+    <string name="task_suggest_one">机器人先前往任务起点，然后再执行</string>
+    <string name="task_suggest_two">就近启动</string>
 
 
 </resources>

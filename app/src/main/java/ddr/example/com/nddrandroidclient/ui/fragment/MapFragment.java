@@ -1500,7 +1500,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 targetPointAdapter.setNewData(targetPoints);
                 tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
-                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                //tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case setChargePoint:
                 TargetPoint chargePoint= (TargetPoint) messageEvent.getData();
@@ -1520,7 +1520,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 pathAdapter.setNewData(pathLines);
                 tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                //tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case updateVirtualWall:
                 zoomMap.setImageBitmap(bitmapPath);

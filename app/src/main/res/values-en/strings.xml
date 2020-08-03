@@ -402,5 +402,9 @@
     <string name="enter_task_name">Enter the task name</string>
     <string name="name_is_exist">The name already exists, please rename it.</string>
     <string name="cancel_create_task">Cancel new task</string>
+    <string name="task_title_one">任务启动方式</string>
+    <string name="task_title_two">任务起点启动</string>
+    <string name="task_suggest_one">机器人先前往任务起点，然后再执行</string>
+    <string name="task_suggest_two">就近启动</string>
 
 </resources>
