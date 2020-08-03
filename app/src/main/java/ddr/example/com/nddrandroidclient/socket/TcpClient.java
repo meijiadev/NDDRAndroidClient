@@ -523,7 +523,14 @@ public class TcpClient extends BaseSocketConnection {
         sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqEditorLidarMap);
     }
 
-
+    /**
+     * 获取上位机版本信息
+     */
+    public void getHostComputerEdition() {
+        BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
+                .build();
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
+    }
 
     /**
      * 只保存已修改的目标点到服务器

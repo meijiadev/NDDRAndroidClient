@@ -15,7 +15,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class StreamBuffer {
       public ConcurrentLinkedDeque<Byte> arrayDeque=new ConcurrentLinkedDeque<>();
-      static StreamBuffer streamBuffer;
+      private static StreamBuffer streamBuffer;
 
       /**
      *双重否定单例模式,保证线程安全
@@ -42,7 +42,7 @@ public class StreamBuffer {
      * @param buf
      * @param len
      */
-    public void onDataReceived(byte[]buf,int len){
+    void onDataReceived(byte[] buf, int len){
           for (int i=0;i<len;i++){
               arrayDeque.add(buf[i]);
           }

@@ -245,7 +245,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onPathItemClick();
         onActionItemClick();
 
-        /*************************路径设置***************************/
+        /************************路径设置***************************/
         map = tv_Spinner.getMap();
         actionList = new ArrayList<>();
         actionList.add(map.get(7));
@@ -357,23 +357,19 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                     }
                                 }
                                 Logger.e("-----要删除的文件数：" + optItems.size());
-                                if (optItems != null) {
-                                    for (MapInfo mapInfo : mapInfos) {
-                                        mapInfo.setSelected(false);
-                                    }
-                                    btBatch.setBackgroundResource(R.drawable.bt_bg__map);
-                                    tvDeleteAll.setVisibility(View.GONE);
-                                    tvBackBatch.setVisibility(View.GONE);
-                                    isShowSelected = false;
-                                    mapAdapter.showSelected(false);
-                                    Logger.e("-----要删除的文件数：" + optItems.size());
-                                    tcpClient.reqMapOperational(optItems);
-                                    waitDialog = new WaitDialog.Builder(getAttachActivity())
-                                            .setMessage(R.string.common_deleting)
-                                            .show();
-                                } else {
-                                    toast(R.string.please_delete_selected);
+                                for (MapInfo mapInfo : mapInfos) {
+                                    mapInfo.setSelected(false);
                                 }
+                                btBatch.setBackgroundResource(R.drawable.bt_bg__map);
+                                tvDeleteAll.setVisibility(View.GONE);
+                                tvBackBatch.setVisibility(View.GONE);
+                                isShowSelected = false;
+                                mapAdapter.showSelected(false);
+                                Logger.e("-----要删除的文件数：" + optItems.size());
+                                tcpClient.reqMapOperational(optItems);
+                                waitDialog = new WaitDialog.Builder(getAttachActivity())
+                                        .setMessage(R.string.common_deleting)
+                                        .show();
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
