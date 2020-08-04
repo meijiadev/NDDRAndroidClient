@@ -12,7 +12,7 @@ public class MessageEvent {
         updatePort,           // 更新端口号
         updateAiPort,          //更新AI端口号
         tcpConnected,         //tcp已连接
-        tcpAiConnected,        //AItcp已连接
+        tcpAiConnected,        //AITcp已连接
         receiveServerList,        //获取到地区服务信息
         LoginSuccess,        //登陆成功
         LoginAiSuccess,      //登陆AI成功
@@ -24,13 +24,13 @@ public class MessageEvent {
         realTimeDraw,     //实时绘制 机器人当前位置
         addPoiPoint,   //采集过程中添加点
         updateVersion, //获取版本信息
-        receiveLidarMap,       //接收雷达栅格图
+        receiveLiarMap,       //接收雷达栅格图
         receivePointCloud,    //接收点云
         receiveVisionPoints,   //接收视觉点云
         switchTaskSuccess,   //
         updateParameter,//获取参数
-        updataHardState,//获取自检参数
-        updataSenesor,//获取传感器参数
+        updateHardState,//获取自检参数
+        updateSensor,//获取传感器参数
 
         addNewPoint,    //添加目标点
         addNewPath,     //添加路径

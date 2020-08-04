@@ -9,8 +9,6 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
-import java.util.List;
-
 import DDRCommProto.BaseCmd;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.GridItem;
@@ -55,7 +53,7 @@ public class NotifyLidarCurSubMapProcessor extends BaseProcessor {
         }catch (Exception e){
             e.printStackTrace();
         }
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.receiveLidarMap));
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.receiveLiarMap));
         //Logger.e("------总共："+OpenCVUtility.getInstance().getMatMap().size()+"块");
     }
 }

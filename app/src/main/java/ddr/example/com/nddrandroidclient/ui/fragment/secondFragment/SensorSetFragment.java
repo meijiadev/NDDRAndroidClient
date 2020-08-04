@@ -6,11 +6,9 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
@@ -38,7 +36,6 @@ import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
-import ddr.example.com.nddrandroidclient.ui.adapter.RobotTestAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.UltrasonicAdapter;
 
 /**
@@ -74,7 +71,7 @@ public class SensorSetFragment extends DDRLazyFragment {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
-            case updataSenesor:
+            case updateSensor:
                 setSensorParam();
                 break;
             case updateParameter:
