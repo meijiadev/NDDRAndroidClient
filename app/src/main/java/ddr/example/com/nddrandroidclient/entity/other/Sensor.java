@@ -6,7 +6,6 @@ public class Sensor {
     private String staticdistance;
 
 
-
     public String getKey() {
         return key;
     }
@@ -30,4 +29,6 @@ public class Sensor {
     public void setStaticdistance(String staticdistance) {
         this.staticdistance = staticdistance;
     }
+
+
 }

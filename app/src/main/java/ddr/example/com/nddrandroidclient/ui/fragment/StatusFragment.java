@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
+import com.yhao.floatwindow.FloatWindow;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -518,6 +519,11 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             case R.id.bt_exit_charge:
                 tcpClient.exitModel();
                 toast(R.string.exit_charging);
+                try {
+                    FloatWindow.get().show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             case R.id.circle:
                 tcpClient.getAllLidarMap();
