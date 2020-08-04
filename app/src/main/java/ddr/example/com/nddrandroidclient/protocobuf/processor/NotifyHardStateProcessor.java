@@ -18,7 +18,7 @@ public class NotifyHardStateProcessor extends BaseProcessor{
         BaseCmd.notifyHardwareStat notifyHardwareStat= (BaseCmd.notifyHardwareStat) msg;
         NotifyHardState notifyHardState=NotifyHardState.getInstance();
         notifyHardState.setHardwareStatItemList(notifyHardwareStat.getDataList());
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataHardState));
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateHardState));
         Logger.e("请求自检----------");
     }
 }

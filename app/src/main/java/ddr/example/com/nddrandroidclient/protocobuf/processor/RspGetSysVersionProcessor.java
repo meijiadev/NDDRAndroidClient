@@ -18,15 +18,13 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 
 public class RspGetSysVersionProcessor extends BaseProcessor {
 
-    private ComputerEditions computerEditions;
-    private List<ComputerEdition> computerEditionList;
     @Override
     public void process(Context context, BaseCmd.CommonHeader commonHeader, GeneratedMessageLite msg) {
         super.process(context, commonHeader, msg);
         BaseCmd.rspGetSysVersion rspGetSysVersion=(BaseCmd.rspGetSysVersion)msg;
         List<BaseCmd.rspGetSysVersion.ComponentVerItem> sysInfoList =rspGetSysVersion.getSysInfoList();
-        computerEditions = ComputerEditions.getInstance();
-        computerEditionList =new ArrayList<>();
+        ComputerEditions computerEditions = ComputerEditions.getInstance();
+        List<ComputerEdition> computerEditionList = new ArrayList<>();
         for (int i=0;i<sysInfoList.size();i++){
             Logger.e("日期"+sysInfoList.get(i).getDate().toStringUtf8());
             ComputerEdition computerEdition =new ComputerEdition();

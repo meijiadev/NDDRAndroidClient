@@ -3,7 +3,6 @@ package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -52,7 +51,7 @@ public class RobotTestSetFragment extends DDRLazyFragment {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
-            case updataHardState:
+            case updateHardState:
                 setData();
                 break;
         }

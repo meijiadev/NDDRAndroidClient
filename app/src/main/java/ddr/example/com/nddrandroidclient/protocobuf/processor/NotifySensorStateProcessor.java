@@ -49,6 +49,6 @@ public class NotifySensorStateProcessor extends BaseProcessor{
         }
         Logger.e("数量"+sensorSeaList.size());
 //        Logger.e("动态"+sensorSeaList.get(1).getValue());
-        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updataSenesorSea));
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.updateSenesorSea));
     }
 }
