@@ -1,8 +1,10 @@
 package ddr.example.com.nddrandroidclient.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import butterknife.BindView;
@@ -124,14 +124,10 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
 
     private static String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";//特殊字符
     private TcpClient tcpClient;
-    private int batteryNum;
     private String mapName;//地图名
     private String taskName;//任务名
     public static String robotID;//机器人ID
     private String workStatus; //工作状态
-    private int taskNum;//运行次数
-    private int workTimes; //工作时间
-    private double taskSpeed; //工作速度
     private int lsNum=1; //临时任务次数
     private List<String> groupList=new ArrayList<>();
     private List<TargetPoint> targetPoints= new ArrayList<>();
@@ -139,11 +135,9 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     private MapFileStatus mapFileStatus;
     private StringAdapter taskCheckAdapter;
     private CustomPopuWindow customPopWindow;
-    private RecyclerView  recycler_task_check;
-    private int modeType;
-    public String sPoint="未知点";
-    private boolean isRunabPoint;               //是否在跑ab点
-    private String pointName;
+    private String sPoint="未知点";
+    private boolean isRabPoint;               //是否在跑ab点
+
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
@@ -157,15 +151,15 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 toast(R.string.add_task_faild);
                 break;
             case getSpecificPoint:
-                pointName= (String) messageEvent.getData();
+                String pointName = (String) messageEvent.getData();
                 if (sPoint.equals(pointName))
-                toast(getString(R.string.start_goto)+pointName);
+                toast(getString(R.string.start_goto)+ pointName);
                 break;
             case getSpecificPoint1:
                 Logger.e("------添加任务成功，等待前往"+sPoint);
-                pointName= (String) messageEvent.getData();
+                pointName = (String) messageEvent.getData();
                 if (sPoint.equals(pointName)){
-                    toast(getString(R.string.add_s_d_goto)+pointName);
+                    toast(getString(R.string.add_s_d_goto)+ pointName);
                 }
                 break;
             case getSpecificPoint2:
@@ -176,7 +170,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case getSpecificPoint4:
                 toast(R.string.build_task_faild);
-                isRunabPoint=false;
+                isRabPoint =false;
                 break;
             case getSpecificPoint5:
                 toast(R.string.now_Self_calibration);
@@ -186,13 +180,13 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case getSpecificPoint9:
                 toast(R.string.s_now_task);
-                isRunabPoint=false;
+                isRabPoint =false;
                 break;
             case getSpecificPoint10:
                 toast(R.string.no_task_yd);
                 break;
             case getSpecificPoint11:
-                pointName= (String) messageEvent.getData();
+                pointName = (String) messageEvent.getData();
                 if (sPoint.equals(pointName))
                 toast(getString(R.string.about_to_start)+sPoint);
                 break;
@@ -223,7 +217,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                     taskCheckAdapter.setNewData(groupList);
                     targetPoints=mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
-                    mapImageView.setABPointLine(isRunabPoint);
+                    mapImageView.setABPointLine(isRabPoint);
                 }
                 break;
         }
@@ -277,14 +271,16 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     /**
      * 获取机器人状态信息
      */
+    @SuppressLint("SetTextI18n")
     private void initStatusBar() {
         DecimalFormat df = new DecimalFormat("0");
         DecimalFormat format = new DecimalFormat("0.00");
         int h=60;
         int times=notifyBaseStatusEx.getTaskDuration();
-        batteryNum=Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
+        int batteryNum = Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
         mapName = notifyBaseStatusEx.getCurroute();
-        taskNum=notifyBaseStatusEx.getTaskCount();
+        //运行次数
+        int taskNum = notifyBaseStatusEx.getTaskCount();
         taskName = notifyBaseStatusEx.getCurrpath();
         lsNum=notifyBaseStatusEx.getTemopTaskNum();
         if (taskName!=null && !taskName.equals("PathError") && !taskName.equals("DDRTask_temporary.task")){
@@ -294,8 +290,10 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
         }else {
             tv_now_task.setText(R.string.no_task);
         }
-        workTimes=Integer.parseInt(df.format( times/h));
-        taskSpeed=Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
+        //工作时间
+        int workTimes = Integer.parseInt(df.format(times / h));
+        //工作速度
+        double taskSpeed = Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
         String showName=mapName.replaceAll("OneRoute_","");
         tv_now_map.setText(showName);
         if (mapName!=null){
@@ -308,21 +306,21 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             tv_set_go.setText(R.string.create_task_steps);
         }
         tv_now_device.setText(robotID);
-        tv_work_time.setText(workTimes+getString(R.string.common_minute));
-        tv_task_speed.setText(taskSpeed+" m/s");
+        tv_work_time.setText(workTimes +getString(R.string.common_minute));
+        tv_task_speed.setText(taskSpeed +" m/s");
        // Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
         switch (notifyBaseStatusEx.geteTaskMode()){
             case 1:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+getString(R.string.common_times));
-                if (mapImageView !=null&&isRunabPoint){
-                    isRunabPoint=false;
+                if (mapImageView !=null&& isRabPoint){
+                    isRabPoint =false;
                     mapImageView.setABPointLine(false);
                 }
                 break;
             case 2:
                 tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+getString(R.string.common_times));
-                if (mapImageView !=null&&isRunabPoint){
-                    isRunabPoint=false;
+                if (mapImageView !=null&& isRabPoint){
+                    isRabPoint =false;
                     mapImageView.setABPointLine(false);
                 }
                 break;
@@ -331,8 +329,8 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             case 4:
             case 5:
                 tv_task_num.setText(" ");
-                if (mapImageView !=null&&!isRunabPoint){
-                    isRunabPoint=true;
+                if (mapImageView !=null&&!isRabPoint){
+                    isRabPoint =true;
                     mapImageView.setABPointLine(true);
                 }
                 break;
@@ -382,7 +380,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 btExitCharge.setVisibility(View.VISIBLE);
                 break;
         }
-        Logger.d("------------是否在充电："+notifyBaseStatusEx.isChargingStatus()+"电量："+batteryNum);
+        Logger.d("------------是否在充电："+notifyBaseStatusEx.isChargingStatus()+"电量："+ batteryNum);
         if(!notifyBaseStatusEx.isChargingStatus()) {
             if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式
                 chargingLayout.setVisibility(View.GONE);
@@ -430,7 +428,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 }
                 break;
         }
-        tvElectricQuantity.setText(batteryNum+"%");
+        tvElectricQuantity.setText(batteryNum +"%");
         circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
         Logger.d("当前充电状态："+notifyBaseStatusEx.getChargingSubStatus());
     }
@@ -442,14 +440,14 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     private void showTaskPopupWindow(View view) {
         Logger.e("---------showTaskPopupWindow");
         View contentView = null;
-        contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.recycle_task, null);
+        contentView = LayoutInflater.from(getAttachActivity()).inflate(R.layout.recycle_task, null);
         customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
                 .enableOutsideTouchableDissmiss(false)
                 .setClippingEnable(false)
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
-        recycler_task_check =contentView.findViewById(R.id.recycler_task_check);
+        RecyclerView recycler_task_check = contentView.findViewById(R.id.recycler_task_check);
         NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
         recycler_task_check.setLayoutManager(layoutManager);
         recycler_task_check.setAdapter(taskCheckAdapter);
@@ -588,7 +586,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
 
 
 
-    public void onItemClick(int type){
+    private void onItemClick(int type){
         switch (type){
             case 1:
                 //任务列表点击事件
@@ -618,7 +616,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                                         lsNum=1;
                                     }
                                     tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
-                                    isRunabPoint=false;
+                                    isRabPoint =false;
                                     Logger.e("当前临时任务状态"+BaseCmd.eCmdRspType.values().length);
                                 }
                                 @Override
@@ -653,7 +651,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                                             }
                                             targetPoints.get(position).setSelected(true);
                                             targetPointAdapter.setNewData(targetPoints);
-                                            isRunabPoint=true;
+                                            isRabPoint =true;
                                         }
                                         @Override
                                         public void onCancel(BaseDialog dialog) {
@@ -668,12 +666,12 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
         }
     }
-    private BaseDialog locationDialog;
+
     /**
      * 选择一种重定位的方式
      */
     private void showRelocationDialog(){
-        locationDialog=new InputDialog.Builder(getAttachActivity())
+        new InputDialog.Builder(getAttachActivity())
                 .setTitle(R.string.current_not_location)
                 .setCancel(R.string.hand_location)
                 .setConfirm(R.string.auto_location)
@@ -702,27 +700,22 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
         if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
             toast(R.string.can_not_relocation);
         }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
-            switch (notifyBaseStatusEx.getMode()) {
-                case 3:
-                    switch (notifyBaseStatusEx.getSonMode()){
-                        case 15:
-                            toast(R.string.in_relocation);
-                            break;
-                    }
-                    break;
-                default:
-                    reqCmdRelocation1();
-                    break;
+            if (notifyBaseStatusEx.getMode() == 3) {
+                if (notifyBaseStatusEx.getSonMode() == 15) {
+                    toast(R.string.in_relocation);
+                }
+            } else {
+                reqCmdRelocation1();
             }
         }else{
             reqCmdRelocation1();
         }
     }
     private void reqCmdRelocation1(){
-        BaseCmd.reqCmdReloc reqCmdReloc=BaseCmd.reqCmdReloc.newBuilder()
+        BaseCmd.reqCmdReloc reqCmdRelocation=BaseCmd.reqCmdReloc.newBuilder()
                 .setTypeValue(0)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdReloc);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdRelocation);
     }
 
 
@@ -865,7 +858,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 tv_work_statue.setText(R.string.common_Disconnect);
             }
         }else {
-            // 相当于onpause()方法---失去焦点
+            // 相当于onPause()方法---失去焦点
             Logger.e("不可见");
             if (mapImageView !=null&& mapImageView.drawThread.isAlive()){
                 mapImageView.onStop();

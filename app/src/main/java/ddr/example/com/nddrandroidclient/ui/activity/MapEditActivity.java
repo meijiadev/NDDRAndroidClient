@@ -44,6 +44,7 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.SpaceItem;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
@@ -201,6 +202,7 @@ public class MapEditActivity extends DDRActivity {
         GridLayerView.getInstance(zmap).onDestroy();
     }
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void initData() {
         super.initData();
@@ -219,12 +221,10 @@ public class MapEditActivity extends DDRActivity {
             targetPoints = ListTool.deepCopy((List<TargetPoint>)intent.getSerializableExtra("targetList"));
             pathLines = ListTool.deepCopy((List<PathLine>)intent.getSerializableExtra("pathList"));
             selectPoints=ListTool.deepCopy(targetPoints);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-       // selectPointAdapter.setNewData(selectPoints);
+        // selectPointAdapter.setNewData(selectPoints);
         editTypes.add(getString(R.string.common_virtual_wall));
         editTypes.add(getString(R.string.common_denoising));
         graphTypes.add(getString(R.string.common_line));
@@ -445,23 +445,19 @@ public class MapEditActivity extends DDRActivity {
                                                 List<PathLine.PathPoint> pathPoints1=new ArrayList<>();
                                                 try {
                                                     pathPoints1=ListTool.deepCopy(pathPoints);
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } catch (ClassNotFoundException e) {
+                                                } catch (IOException | ClassNotFoundException e) {
                                                     e.printStackTrace();
                                                 }
                                                 pathLine.setPathPoints(pathPoints1);
-                                                pathLine.setVelocity(0.4f);
-                                                pathLine.setPathModel(64);
+                                                initPathParameter(pathLine);
                                                 newPaths.add(pathLine);
                                                 pathLines.add(pathLine);
                                                 pathPoints.clear();
+                                                tcpClient.savePathData(mapFileStatus.getReqDDRVLNMapEx(),pathLines);
                                                 for (TargetPoint targetPoint:selectPoints){
                                                     targetPoint.setMultiple(false);
                                                 }
                                                 //selectPointAdapter.setNewData(selectPoints);
-                                                tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                                                toast(R.string.save_succeed);
                                                 inputDialog.dismiss();
                                             }
                                         }else {
@@ -470,7 +466,7 @@ public class MapEditActivity extends DDRActivity {
                                     }
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
-                                        pathPoints.clear();
+                                        //pathPoints.clear();
                                         toast(R.string.cancel_add);
                                         inputDialog.dismiss();
                                     }
@@ -533,7 +529,7 @@ public class MapEditActivity extends DDRActivity {
                     tvAddDe.setBackgroundResource(R.mipmap.iv_denoising_add);
                     XyEntity xyEntity1=zmap.toXorY(firstPoint.getX(),firstPoint.getY());
                     XyEntity xyEntity2=zmap.toXorY(secondPoint.getX(),secondPoint.getY());
-                    Logger.e("----startrow:"+ (int)xyEntity1.getY()+"endRows"+(int)xyEntity2.getY()+"startCol:"+(int) xyEntity1.getX()+"endCol:"+(int) xyEntity2.getX());
+                    Logger.e("----startRow:"+ (int)xyEntity1.getY()+"endRows"+(int)xyEntity2.getY()+"startCol:"+(int) xyEntity1.getX()+"endCol:"+(int) xyEntity2.getX());
                     srcMat=mats.get(mats.size()-1);
                     Mat dtsMat=new Mat();
                     srcMat.copyTo(dtsMat);
@@ -542,14 +538,14 @@ public class MapEditActivity extends DDRActivity {
                     int startCol=(int) xyEntity1.getX();
                     int endCol=(int) xyEntity2.getX();
                     //保证去噪的区域不超过图片的宽高,修复超过0-rows,0-cols 导致崩溃的问题
-                    startRow=startRow<0?0:startRow;
-                    startRow=startRow>dtsMat.rows()?dtsMat.rows():startRow;
-                    endRow=endRow<0?0:endRow;
-                    endRow=endRow>dtsMat.rows()?dtsMat.rows():endRow;
-                    startCol=startCol<0?0:startCol;
-                    startCol=startCol>dtsMat.cols()?dtsMat.cols():startCol;
-                    endCol=endCol<0?0:endCol;
-                    endCol=endCol>dtsMat.cols()?dtsMat.cols():endCol;
+                    startRow= Math.max(startRow, 0);
+                    startRow= Math.min(startRow, dtsMat.rows());
+                    endRow= Math.max(endRow, 0);
+                    endRow= Math.min(endRow, dtsMat.rows());
+                    startCol= Math.max(startCol, 0);
+                    startCol= Math.min(startCol, dtsMat.cols());
+                    endCol= Math.max(endCol, 0);
+                    endCol= Math.min(endCol, dtsMat.cols());
                     if (startRow>endRow){
                         int row=startRow;
                         startRow=endRow;
@@ -614,6 +610,32 @@ public class MapEditActivity extends DDRActivity {
                             }
                         })
                 .show();
+                break;
+        }
+    }
+
+    /**
+     * 根据不同类型的底盘给新建的路径设置不同的速度和运行模式
+     * @param pathLine 新建的路径
+     */
+    private void initPathParameter(PathLine pathLine){
+        switch (ComputerEditions.getInstance().getRobotType()){
+            //自研一二代
+            case 1:
+            case 2:
+                pathLine.setPathModel(64);
+                pathLine.setVelocity(0.4f);
+                break;
+            case 3:           //消杀机器人底盘
+            case 6:          // SMT
+            case 7:         // E巡
+                pathLine.setPathModel(65);
+                pathLine.setVelocity(0.4f);
+                break;
+            case 4:         //广告机器人底盘
+            case 5:        // 新零售机器人
+                pathLine.setPathModel(65);
+                pathLine.setVelocity(0.2f);
                 break;
         }
     }
@@ -700,6 +722,7 @@ public class MapEditActivity extends DDRActivity {
                                 e.printStackTrace();
                             }
                             targetPoints.add(targetPoint);
+                            tcpClient.savePointData(mapFileStatus.getReqDDRVLNMapEx(),targetPoints);
                             tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
                             inputDialog.dismiss();
                         }
@@ -1306,6 +1329,9 @@ public class MapEditActivity extends DDRActivity {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent){
         switch (messageEvent.getType()){
+            case updateDDRVLNMap:
+                toast(R.string.save_succeed);
+                break;
             case updateBaseStatus:
                 if (isRuning){
                     Logger.e("-------刷新ZoomImageView");

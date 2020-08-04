@@ -4,10 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,13 +25,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -60,7 +55,6 @@ import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapSettingActivity;
-import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.ActionAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.MapAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.NGridLayoutManager;
@@ -69,7 +63,6 @@ import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.RelocationDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
@@ -90,7 +83,7 @@ import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
  */
 public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @BindView(R.id.bt_create_map)
-    TextView btCreatMap;
+    TextView btCreateMap;
     @BindView(R.id.bt_batch_delete)
     TextView btBatch;   //批量管理
     @BindView(R.id.tv_delete_all)
@@ -195,12 +188,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private MapFileStatus mapFileStatus;
     private MapAdapter mapAdapter;        //地图列表适配器
     private List<MapInfo> mapInfos = new ArrayList<>(); //地图列表
-    private List<String> downloadMapNames = new ArrayList<>();
     private TcpClient tcpClient;
     private boolean isShowSelected;   //是否进入批量管理的状态
 
-    private TargetPointAdapter targetPointAdapter, selectPointAdapter;            //目标点列表适配器 ;用于选择的目标点列表
-    private PathAdapter pathAdapter, selectPathAdapter;                         //路径列表适配器 ;用于选择的路径列表
+    private TargetPointAdapter targetPointAdapter;            //目标点列表适配器 ;用于选择的目标点列表
+    private PathAdapter pathAdapter;                         //路径列表适配器 ;用于选择的路径列表
     private ActionAdapter actionAdapter;                     // 动作点列表
     private String mapName;                                  //点击查看的地图名
     private int mPosition = 0;                                   //当前显示的是哪个子项数据 （目标点列表、路径列表、任务列表）
@@ -235,8 +227,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         NLinearLayoutManager linearLayoutManager1 = new NLinearLayoutManager(getAttachActivity());
         actionRecycler.setLayoutManager(linearLayoutManager1);
         actionRecycler.setAdapter(actionAdapter);     //给动作Recycler设置适配器
-        selectPointAdapter = new TargetPointAdapter(R.layout.item_task_select);
-        selectPathAdapter = new PathAdapter(R.layout.item_task_select);
+
 
     }
 
@@ -244,7 +235,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     protected void initData() {
         tcpClient = TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         mapFileStatus = MapFileStatus.getInstance();
-        downloadMapNames = mapFileStatus.getMapNames();
+        List<String> downloadMapNames = mapFileStatus.getMapNames();
         checkFilesAllName(downloadMapNames);
         mapInfos=mapFileStatus.getMapInfos();
         mapAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
@@ -254,7 +245,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         onPathItemClick();
         onActionItemClick();
 
-        /*************************路径设置***************************/
+        /************************路径设置***************************/
         map = tv_Spinner.getMap();
         actionList = new ArrayList<>();
         actionList.add(map.get(7));
@@ -312,7 +303,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                             toast(R.string.please_anter_name);
                                         }
                                     }
-
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
                                         inputDialog.dismiss();
@@ -367,23 +357,19 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                     }
                                 }
                                 Logger.e("-----要删除的文件数：" + optItems.size());
-                                if (optItems != null) {
-                                    for (MapInfo mapInfo : mapInfos) {
-                                        mapInfo.setSelected(false);
-                                    }
-                                    btBatch.setBackgroundResource(R.drawable.bt_bg__map);
-                                    tvDeleteAll.setVisibility(View.GONE);
-                                    tvBackBatch.setVisibility(View.GONE);
-                                    isShowSelected = false;
-                                    mapAdapter.showSelected(false);
-                                    Logger.e("-----要删除的文件数：" + optItems.size());
-                                    tcpClient.reqMapOperational(optItems);
-                                    waitDialog = new WaitDialog.Builder(getAttachActivity())
-                                            .setMessage(R.string.common_deleting)
-                                            .show();
-                                } else {
-                                    toast(R.string.please_delete_selected);
+                                for (MapInfo mapInfo : mapInfos) {
+                                    mapInfo.setSelected(false);
                                 }
+                                btBatch.setBackgroundResource(R.drawable.bt_bg__map);
+                                tvDeleteAll.setVisibility(View.GONE);
+                                tvBackBatch.setVisibility(View.GONE);
+                                isShowSelected = false;
+                                mapAdapter.showSelected(false);
+                                Logger.e("-----要删除的文件数：" + optItems.size());
+                                tcpClient.reqMapOperational(optItems);
+                                waitDialog = new WaitDialog.Builder(getAttachActivity())
+                                        .setMessage(R.string.common_deleting)
+                                        .show();
                             }
                             @Override
                             public void onCancel(BaseDialog dialog) {
@@ -784,6 +770,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 进入地图详情页面
      */
+    @SuppressLint("SetTextI18n")
     private void intoMapDetail(int position) {
         bitmapPath = mapInfos.get(position).getBitmap();
         mapName = mapInfos.get(position).getMapName();
@@ -824,7 +811,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
      */
     private void showMapSettingWindow(View view, int position) {
         mapIsUsing = mapInfos.get(position).isUsing();
-        View contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.map_management_window, null);
+        View contentView = LayoutInflater.from(getAttachActivity()).inflate(R.layout.map_management_window, null);
         CustomPopuWindow customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
                 .create()
@@ -901,17 +888,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
             toast(R.string.can_not_relocation);
         }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
-            switch (notifyBaseStatusEx.getMode()) {
-                case 3:
-                    switch (notifyBaseStatusEx.getSonMode()){
-                        case 15:
-                            toast(R.string.in_relocation);
-                            break;
-                    }
-                    break;
-                    default:
-                        reqCmdRelocation1();
-                        break;
+            if (notifyBaseStatusEx.getMode() == 3) {
+                if (notifyBaseStatusEx.getSonMode() == 15) {
+                    toast(R.string.in_relocation);
+                }
+            } else {
+                reqCmdRelocation1();
             }
         }else{
             reqCmdRelocation1();
@@ -944,7 +926,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 目标点Recycler的点击事件
      */
-    public void onTargetItemClick() {
+    private void onTargetItemClick() {
         targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
             etPointName.setText(targetPoints.get(position).getName());
             etX.setText(targetPoints.get(position).getX());
@@ -979,7 +961,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 路径Recycler的点击事件
      */
-    public void onPathItemClick() {
+    private void onPathItemClick() {
         pathAdapter.setOnItemClickListener((adapter, view, position) -> {
             mPosition = position;
             for (PathLine pathLine : pathLines) {
@@ -1020,7 +1002,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 动作Recycler的点击事件
      */
-    public void onActionItemClick() {
+    private void onActionItemClick() {
         actionAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Logger.e("------点击：" + position);
             int position1 = position;
@@ -1048,7 +1030,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private Map<Integer, String> map;
 
     private void showPathModePopupWindow(View view) {
-        View contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.window_path_mode, null);
+        View contentView = LayoutInflater.from(getAttachActivity()).inflate(R.layout.window_path_mode, null);
         customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
                 .create()
@@ -1080,7 +1062,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private boolean allShowPoint,allShowPath;               // 是否全部显示
     private int gridStatus;                                // 0 默认 1:0.25m ,2: 0.5m, 3: 1m ,4: 2m
     private void showPopupWindowReference(View view){
-        View contentView=getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.popupwindow_reference,null);
+        View contentView= LayoutInflater.from(getAttachActivity()).inflate(R.layout.popupwindow_reference,null);
         customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
                 .create()
@@ -1427,21 +1409,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     private NotifyBaseStatusEx notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
                 if (dialog != null) {
                     if (dialog.isShowing()) {
-                        getAttachActivity().cancleDelay(waitRunnable);
+                        getAttachActivity().cancelDelay(waitRunnable);
                         getAttachActivity().postDelayed(() -> {
                             try {
                                 targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
                                 pathLines = ListTool.deepCopy(mapFileStatus.getPathLines());
                                 taskModes = ListTool.deepCopy(mapFileStatus.getTaskModes());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
+                            } catch (IOException | ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
                             Logger.e("----------:" + taskModes.size());
@@ -1500,7 +1481,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 targetPointAdapter.setNewData(targetPoints);
                 tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
-                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                //tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case setChargePoint:
                 TargetPoint chargePoint= (TargetPoint) messageEvent.getData();
@@ -1520,7 +1501,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
                 pathAdapter.setNewData(pathLines);
                 tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
+                //tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case updateVirtualWall:
                 zoomMap.setImageBitmap(bitmapPath);

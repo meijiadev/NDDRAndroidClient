@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.activity;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -106,14 +107,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private String currentMap;          //当前运行的地图名
     private String currentBitmapPath;   //当前使用的图片存储地址
-    private String currentTask;   //当前运行的任务
     private CustomPopuWindow customPopuWindow;
-    private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    private double maxSpeed = 0.4;       //设置的最大速度
-    private String LAN_IP_AI="192.168.0.95";
-    private ComputerEditions computerEditions;
     private String language;
     private MapFileStatus mapFileStatus;
     private BaseDialog relocationDialog;
@@ -121,17 +117,17 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
      * ViewPage 适配器
      */
     private BaseFragmentAdapter<DDRLazyFragment> mPagerAdapter;
-    private int relocationStatus;
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent messageEvent) {
+        String LAN_IP_AI = "192.168.0.95";
         switch (messageEvent.getType()) {
             case updateBaseStatus:
                 initStatusBar();
                 break;
             case updateRelocationStatus:
-                relocationStatus= (int) messageEvent.getData();
+                int relocationStatus = (int) messageEvent.getData();
                 switch (relocationStatus){
                     case 0:
                         if (relocationDialog!=null&&relocationDialog.isShowing()){
@@ -167,7 +163,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                         }
                         break;
                 }
-                if (relocationStatus==1&&vpHomePager!=null){
+                if (relocationStatus ==1&&vpHomePager!=null){
                     vpHomePager.setCurrentItem(0);
                 }
                 break;
@@ -181,9 +177,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 Logger.e("---------" + currentMap);
                 break;
             case switchMapSucceed:
-                postDelayed(()->{
-                    getMapInfo();
-                },800);
+                postDelayed(this::getMapInfo,800);
                 break;
             case touchFloatWindow:
                 if (notifyBaseStatusEx.isChargingStatus()){
@@ -205,9 +199,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
                 break;
             case updateAiPort:
-                udpIp1= (UdpIp) messageEvent.getData();
-                Logger.e("AIip"+udpIp1.getIp()+"端口"+udpIp1.getPort());
-                tcpAiClient.createConnect(LAN_IP_AI,udpIp1.getPort());
+                UdpIp udpIp1 = (UdpIp) messageEvent.getData();
+                Logger.e("AIip"+ udpIp1.getIp()+"端口"+ udpIp1.getPort());
+                tcpAiClient.createConnect(LAN_IP_AI, udpIp1.getPort());
                 break;
             case tcpAiConnected:
                 Logger.e("TcpAI服务开始连接");
@@ -218,8 +212,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 UdpClient.getInstance(context,ClientMessageDispatcher.getInstance()).close();
                 break;
             case updateVersion:
-                computerEditions= ComputerEditions.getInstance();
-                Logger.e("机器类型"+computerEditions.getRobotType());
+                ComputerEditions computerEditions = ComputerEditions.getInstance();
+                Logger.e("机器类型"+ computerEditions.getRobotType());
                 if (computerEditions.getRobotType()==3){
 
                 }else {
@@ -273,17 +267,18 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void initData() {
         tcpClient = TcpClient.getInstance(context, ClientMessageDispatcher.getInstance());
         mapFileStatus=MapFileStatus.getInstance();
-        getHostComputerEdition();
+        tcpClient.getHostComputerEdition();
         receiveAiBroadcast();
         tcpAiClient=TcpAiClient.getInstance(context,ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         ImageLoader.clear(this); //清除图片缓存
         tcpClient.requestFile();     //请求所有地图
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
         //如果是采集模式直接进入采集页面
         if (notifyBaseStatusEx.getMode()==2){
@@ -453,7 +448,6 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         if (notifyBaseStatusEx != null) {
             currentMap = notifyBaseStatusEx.getCurroute();
             currentBitmapPath = GlobalParameter.ROBOT_FOLDER + currentMap + "/" + "bkPic.png";
-            currentTask = notifyBaseStatusEx.getCurrpath();
             switch (notifyBaseStatusEx.getStopStat()) {
                 case 4:
                     iv_jt_def.setVisibility(View.VISIBLE);
@@ -487,7 +481,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
             //重定位中
             if (notifyBaseStatusEx.getSonMode()==15){
                 Logger.e("进入重定位...");
-                if (relocationDialog==null){
+                if (relocationDialog==null||!relocationDialog.isShowing()){
                     relocationDialog = new RelocationDialog.Builder(this)
                             .setAutoDismiss(true)
                             .setListener(new RelocationDialog.OnListener() {
@@ -581,6 +575,8 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         vpHomePager.setAdapter(null);
         tcpClient.disConnect();
         tcpAiClient.disConnect();
+        //设置的最大速度
+        double maxSpeed = 0.4;
         editor.putFloat("speed", (float) maxSpeed);
         editor.commit();
         super.onDestroy();
@@ -629,9 +625,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
     public UdpClient udpClient;
-    private int aiPort=18888;
     public TcpAiClient tcpAiClient;
-    private UdpIp udpIp1=new UdpIp();
     /**
      * 接收AIServer广播
      */
@@ -639,20 +633,13 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
         Logger.e("接受AI广播");
         udpClient= UdpClient.getInstance(this,ClientMessageDispatcher.getInstance());
         try {
+            int aiPort = 18888;
             udpClient.connect(aiPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * 获取上位机版本信息
-     */
-    private void getHostComputerEdition() {
-        BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
-                .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
-    }
 
 
 }

@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,20 +58,13 @@ public class EditManagerSetFragment extends DDRLazyFragment {
     TextView tvUpdateServer;
 
     private TcpClient tcpClient;
-    private NotifyBaseStatusEx notifyBaseStatusEx;
-    private NotifyEnvInfo notifyEnvInfo;
-    private MapFileStatus mapFileStatus;
     private VersionAdapter versionAdapter;
-    private List<ComputerEdition> computerEditionList= new ArrayList<>();
     private ComputerEditions computerEditions;
-    private ComputerEdition computerEdition;
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
-        switch (messageEvent.getType()) {
-            case updateVersion:
-                inBasegetVersion();
-                break;
+        if (messageEvent.getType() == MessageEvent.Type.updateVersion) {
+            inBaseGetVersion();
         }
     }
     public static EditManagerSetFragment newInstance(){return new EditManagerSetFragment();}
@@ -90,14 +84,9 @@ public class EditManagerSetFragment extends DDRLazyFragment {
     @Override
     protected void initData() {
         tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
-        notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
-        notifyEnvInfo = NotifyEnvInfo.getInstance();
-        mapFileStatus = MapFileStatus.getInstance();
         computerEditions = ComputerEditions.getInstance();
-        getHostComputerEdition();
+        tcpClient.getHostComputerEdition();
         getAndroidEdition();
-
-
 
     }
     @Override
@@ -105,33 +94,27 @@ public class EditManagerSetFragment extends DDRLazyFragment {
         super.onRestart();
     }
 
-    private void inBasegetVersion(){
-        computerEditionList=new ArrayList<>();
+    private void inBaseGetVersion(){
+        List<ComputerEdition> computerEditionList = new ArrayList<>();
         Logger.e("版本信息"+computerEditions.getComputerEditionList().size());
         for (int i=0;i<computerEditions.getComputerEditionList().size();i++){
-            computerEdition=new ComputerEdition();
+            ComputerEdition computerEdition = new ComputerEdition();
             computerEdition.setVersion(computerEditions.getComputerEditionList().get(i).getVersion());
             computerEdition.setData(computerEditions.getComputerEditionList().get(i).getData());
             computerEdition.setType(computerEditions.getComputerEditionList().get(i).getType());
             computerEditionList.add(computerEdition);
-            Logger.e("信息内容"+computerEditionList.get(i).getVersion());
+            Logger.e("信息内容"+ computerEditionList.get(i).getVersion());
         }
         versionAdapter.setNewData(computerEditionList);
 
     }
 
-    /**
-     * 获取上位机版本信息
-     */
-    private void getHostComputerEdition() {
-        BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
-                .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
-    }
+
 
     /**
      * 获取安卓版本信息
      */
+    @SuppressLint("SetTextI18n")
     private void getAndroidEdition() {
         String buildTime = BuildConfig.BUILD_TIME;
         String versionName = BuildConfig.VERSION_NAME;
@@ -198,7 +181,7 @@ public class EditManagerSetFragment extends DDRLazyFragment {
      * 是否更新
      * @param versionTitle
      */
-    public void showVersionDialog(String versionTitle){
+    private void showVersionDialog(String versionTitle){
         new InputDialog.Builder(getAttachActivity())
                 .setEditVisibility(View.GONE)
                 .setTitle(versionTitle)

@@ -345,51 +345,36 @@ public class MessageRoute {
         byte[] bHead=headData.toByteArray();//头部信息
         int bHeadLength=bHead.length;
         int totalLen=8+bHeadLength+bBodyLength;
-          byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
+        byte[]bytes=new byte[totalLen+4+10];    //要发送出去的数组总信息
         System.arraycopy(bsHead,0,bytes,0,4);
-        boolean needEncrypt=true;
-        if (needEncrypt)
+        System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
+        System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
+        byte[]bHeadE=new byte[bHeadLength+5];
+        if (Encrypt.Txt_Encrypt(bHead,bHeadLength,bHeadE,bHeadE.length)){
+            bHeadE=Encrypt.getTxt_Encrypt();
+            try {
+                System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
+            }catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+                return null;
+            }
+        }else {
+            Logger.e("Txt_Encrypt Error");
+            return null;
+        }
+        if (bBodyLength>0)
         {
-            System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
-            System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
-            byte[]bHeadE=new byte[bHeadLength+5];
-            if (Encrypt.Txt_Encrypt(bHead,bHeadLength,bHeadE,bHeadE.length)){
-                bHeadE=Encrypt.getTxt_Encrypt();
+            byte[]bBodyE=new byte[bBodyLength+5];
+            if (Encrypt.Txt_Encrypt(bBody,bBodyLength,bBodyE,bBodyE.length)){
                 try {
-                    System.arraycopy(bHeadE,0,bytes,12,bHeadE.length);
-                }catch (ArrayIndexOutOfBoundsException e){
-                    e.printStackTrace();
+                    System.arraycopy(bBodyE,0,bytes,12+bHeadE.length,bBodyE.length);
+                }catch (ArrayIndexOutOfBoundsException a){
+                    a.printStackTrace();
+                    Logger.e("----------数组越界");
                     return null;
                 }
             }else {
                 Logger.e("Txt_Encrypt Error");
-                return null;
-            }
-            if (bBodyLength>0)
-            {
-                byte[]bBodyE=new byte[bBodyLength+5];
-                if (Encrypt.Txt_Encrypt(bBody,bBodyLength,bBodyE,bBodyE.length)){
-                    try {
-                        System.arraycopy(bBodyE,0,bytes,12+bHeadE.length,bBodyE.length);
-                    }catch (ArrayIndexOutOfBoundsException a){
-                        a.printStackTrace();
-                        Logger.e("----------数组越界");
-                        return null;
-                    }
-                }else {
-                    Logger.e("Txt_Encrypt Error");
-                    return null;
-                }
-            }
-        }else {
-            try {
-                System.arraycopy(intToBytesLittle(totalLen+10),0,bytes,4,4);
-                System.arraycopy(intToBytesLittle(bHeadLength+5),0,bytes,8,4);
-                System.arraycopy(bHead,0,bytes,12,bHeadLength);
-                System.arraycopy(bBody,0,bytes,12+bHeadLength,bBody.length);
-                return bytes;
-            }catch (ArrayIndexOutOfBoundsException e){
-                e.printStackTrace();
                 return null;
             }
         }
@@ -415,14 +400,11 @@ public class MessageRoute {
                 return method.invoke(null,bytes);
             }else {
                 Method method=clazz.getMethod("getDefaultInstance",
+
                         null);
                 return method.invoke(null,null);
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
@@ -451,7 +433,7 @@ public class MessageRoute {
      * @return
      * '
      */
-    public static byte[] intToBytesLittle(int value) {
+    private static byte[] intToBytesLittle(int value) {
         byte[] src = new byte[4];
         src[3] = (byte) ((value >> 24) & 0xFF);
         src[2] = (byte) ((value >> 16) & 0xFF);
@@ -475,7 +457,7 @@ public class MessageRoute {
     /**
      * 以小端模式将byte[]转成int
      */
-    public static int bytesToIntLittle(byte[] src, int offset) {
+    private static int bytesToIntLittle(byte[] src, int offset) {
         int value;
         value = (int) ((src[offset] & 0xFF)
                 | ((src[offset + 1] & 0xFF) << 8)

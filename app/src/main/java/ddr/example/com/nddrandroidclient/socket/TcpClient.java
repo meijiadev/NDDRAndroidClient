@@ -91,7 +91,8 @@ public class TcpClient extends BaseSocketConnection {
      * @param ip
      * @param port
      */
-    public void createConnect(String ip, int port){
+    public synchronized void createConnect(String ip, int port){
+        Logger.e("连接tcp:"+ip+";"+port);
         info=new ConnectionInfo(ip,port);
         manager=OkSocket.open(info);
         OkSocketOptions.Builder clientOptions=new OkSocketOptions.Builder();
@@ -522,7 +523,14 @@ public class TcpClient extends BaseSocketConnection {
         sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqEditorLidarMap);
     }
 
-
+    /**
+     * 获取上位机版本信息
+     */
+    public void getHostComputerEdition() {
+        BaseCmd.reqGetSysVersion reqGetSysVersion = BaseCmd.reqGetSysVersion.newBuilder()
+                .build();
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
+    }
 
     /**
      * 只保存已修改的目标点到服务器
@@ -538,9 +546,22 @@ public class TcpClient extends BaseSocketConnection {
                     .build();
             DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
                     .setPtName(ByteString.copyFromUtf8(targetPoint.getName()))
+                    .setTargetPtTypeValue(targetPoint.getPointType().getTypeValue())
                     .setPtData(space_pointEx).build();
             targetPtItems.add(targetPtItem);
         }
+        DDRVLNMap.DDRMapTargetPointData targetPointData=DDRVLNMap.DDRMapTargetPointData.newBuilder()
+                .addAllTargetPt(targetPtItems)
+                .build();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(reqDDRVLNMapEx.getBasedata())
+                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setTargetPtdata(targetPointData)
+                .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
+                .setPathSet(reqDDRVLNMapEx.getPathSet())
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+
     }
 
     /**
@@ -565,19 +586,36 @@ public class TcpClient extends BaseSocketConnection {
                         .setPt(spacePointEx)
                         .setRotationangle(pathPoints.get(j).getRotationAngle())
                         .setTypeValue(pathPoints.get(j).getPointType())
+                        .setPtName(ByteString.copyFromUtf8(pathPoints.get(j).getName()))
                         .build();
                 pathLintPtItems.add(path_lint_pt_item);
             }
             DDRVLNMap.path_line_itemEx path_line_itemEx=DDRVLNMap.path_line_itemEx.newBuilder()
                     .setName(ByteString.copyFromUtf8(pathLine.getName()))
                     .setModeValue(pathLine.getPathModel())
+                    .setTypeValue(pathLine.getPathType())
                     .setVelocity(pathLine.getVelocity())
                     .setConfig(path_line_config)
                     .setVelocity(pathLine.getVelocity())
                     .addAllPointSet(pathLintPtItems)
+                    .setBStartFromSeg0(pathLine.isbStartFromSeg0())
+                    .setBNoCornerSmoothing(pathLine.isbNoCornerSmoothing())
                     .build();
             pathLineItemExes.add(path_line_itemEx);
         }
+        Logger.e("----------路径size:"+pathLineItemExes.size());
+        DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
+                .addAllPathLineData(pathLineItemExes)
+                .build();
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx1=DDRVLNMap.reqDDRVLNMapEx.newBuilder()
+                .setBasedata(reqDDRVLNMapEx.getBasedata())
+                .setSpacedata(reqDDRVLNMapEx.getSpacedata())
+                .setTargetPtdata(reqDDRVLNMapEx.getTargetPtdata())
+                .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
+                .setPathSet(ddrMapPathDataEx)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+
     }
 
     /**
@@ -701,7 +739,6 @@ public class TcpClient extends BaseSocketConnection {
         Logger.e("----------路径size:"+pathLineItemExes.size());
         DDRVLNMap.DDRMapPathDataEx ddrMapPathDataEx=DDRVLNMap.DDRMapPathDataEx.newBuilder()
                 .addAllPathLineData(pathLineItemExes)
-
                 .build();
         /**********************************************保存到服务的任务数据***************************************/
         List<DDRVLNMap.task_itemEx> taskItemExes=new ArrayList<>();
