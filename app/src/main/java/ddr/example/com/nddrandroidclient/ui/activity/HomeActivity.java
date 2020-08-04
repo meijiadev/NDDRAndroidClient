@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.protobuf.ByteString;
 import com.jaygoo.widget.VerticalRangeSeekBar;
+import com.yhao.floatwindow.FloatWindow;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -179,10 +180,23 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 postDelayed(this::getMapInfo,800);
                 break;
             case touchFloatWindow:
-                String className=ActivityStackManager.getInstance().getTopActivity().getClass().toString();
-                Logger.e("--------当前栈顶的活动:"+className+";"+HomeActivity.class.toString());
-                if (className.equals(HomeActivity.class.toString()))
-                new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.taskmanager));
+                if (notifyBaseStatusEx.isChargingStatus()){
+                    toast("正在充电，底盘已关闭运动");
+                }else {
+                    switch (notifyBaseStatusEx.getChargingSubStatus()){
+                        case 1:
+                        case 2:
+                        case 4:
+                            toast("正在充电，底盘已关闭运动");
+                            break;
+                        default:
+                            String className=ActivityStackManager.getInstance().getTopActivity().getClass().toString();
+                            Logger.e("--------当前栈顶的活动:"+className+";"+HomeActivity.class.toString());
+                            if (className.equals(HomeActivity.class.toString()))
+                                new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.taskmanager));
+                            break;
+                    }
+                }
                 break;
             case updateAiPort:
                 UdpIp udpIp1 = (UdpIp) messageEvent.getData();

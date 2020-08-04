@@ -31,6 +31,7 @@ public class MessageEvent {
         updateParameter,//获取参数
         updateHardState,//获取自检参数
         updateSensor,//获取传感器参数
+        updateSenesorSea,//查看超声状态
 
         addNewPoint,    //添加目标点
         addNewPath,     //添加路径

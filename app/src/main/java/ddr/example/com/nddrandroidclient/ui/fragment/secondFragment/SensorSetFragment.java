@@ -4,21 +4,20 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.protobuf.ByteString;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import DDRCommProto.BaseCmd;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,6 +27,8 @@ import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.other.Parameter;
 import ddr.example.com.nddrandroidclient.entity.other.Parameters;
 import ddr.example.com.nddrandroidclient.entity.other.Sensor;
+import ddr.example.com.nddrandroidclient.entity.other.SensorSea;
+import ddr.example.com.nddrandroidclient.entity.other.SensorSeas;
 import ddr.example.com.nddrandroidclient.entity.other.Sensors;
 import ddr.example.com.nddrandroidclient.entity.other.Ultrasonic;
 import ddr.example.com.nddrandroidclient.other.InputFilterMinMax;
@@ -36,7 +37,10 @@ import ddr.example.com.nddrandroidclient.other.SlideButton;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.ui.adapter.SensorAdapter;
+
 import ddr.example.com.nddrandroidclient.ui.adapter.UltrasonicAdapter;
+import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 
 /**
  * time: 2020/03/24
@@ -51,6 +55,8 @@ public class SensorSetFragment extends DDRLazyFragment {
     TextView tv_save_sensor;
     @BindView(R.id.rl_ul_cs)
     RecyclerView rl_ul_cs;
+    @BindView(R.id.tv_sea_sensor)
+    TextView tv_sea_senesor;
 
 
 
@@ -67,6 +73,9 @@ public class SensorSetFragment extends DDRLazyFragment {
     private Ultrasonic ultrasonic;
     private List<Ultrasonic> ultrasonicList;
 
+    private CustomPopuWindow customPopWindow;
+    private SensorAdapter sensorAdapter;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void update(MessageEvent messageEvent) {
@@ -77,9 +86,13 @@ public class SensorSetFragment extends DDRLazyFragment {
             case updateParameter:
                 setNaparmeter();
                 break;
+            case updateSenesorSea:
+                sensorSeaList= sensorSeas.getSensorSeaList();
+                sensorAdapter.setNewData(sensorSeaList);
+                break;
         }
     }
-    @OnClick({R.id.slideButton,R.id.tv_save_sensor})
+    @OnClick({R.id.slideButton,R.id.tv_save_sensor,R.id.tv_sea_sensor})
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.slideButton:
@@ -88,6 +101,9 @@ public class SensorSetFragment extends DDRLazyFragment {
             case R.id.tv_save_sensor:
                 postAndGet();
                 toast(R.string.save_succeed);
+                break;
+            case R.id.tv_sea_sensor:
+                showControlPopupWindow(tv_sea_senesor);
                 break;
         }
     }
@@ -116,11 +132,50 @@ public class SensorSetFragment extends DDRLazyFragment {
         tcpClient= TcpClient.getInstance(getContext(), ClientMessageDispatcher.getInstance());
         parameters=Parameters.getInstance();
         sensors=Sensors.getInstance();
+        sensorSeas=SensorSeas.getInstance();
+        sensorSeaList=sensorSeas.getSensorSeaList();
         getSensorParam();
         getChosseStatus();
         getNaparmeter();
         setNaparmeter();
         setSensorParam();
+
+    }
+
+    /**
+     * 超声弹窗
+     */
+
+    private ImageView iv_quit_c;
+    private RecyclerView recyclerView_c_sensor;
+    private SensorSeas sensorSeas;
+    private List<SensorSea> sensorSeaList;
+    public void showControlPopupWindow(View view) {
+        View contentView = null;
+        contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.dialog_sea_sensor, null);
+        customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+                .setView(contentView)
+                .size(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                .enableOutsideTouchableDissmiss(true)// 设置点击PopupWindow之外的地方，popWindow不关闭，如果不设置这个属性或者为true，则关闭
+                .setOutsideTouchable(false)//是否PopupWindow 以外触摸dissmiss
+                .create()
+                .showAsDropDown(view, 0, -10);
+        iv_quit_c=contentView.findViewById(R.id.iv_quit_sensor);
+        recyclerView_c_sensor =contentView.findViewById(R.id.recycle_c_status);
+
+        sensorAdapter = new SensorAdapter(R.layout.item_recycle_sensor);
+        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),1);
+        recyclerView_c_sensor.setLayoutManager(gridLayoutManager);
+        recyclerView_c_sensor.setAdapter(sensorAdapter);
+        sensorAdapter.setNewData(sensorSeaList);
+
+        iv_quit_c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customPopWindow.dissmiss();
+                toast("关闭");
+            }
+        });
 
     }
     //获取传感器参数

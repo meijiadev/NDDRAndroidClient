@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#e0000000">
+
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@mipmap/yk_quit"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/iv_quit_sensor"/>
+    <RelativeLayout
+        android:layout_width="600dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            >
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:textSize="16sp"
+                android:text="超声序号"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:id="@+id/tv_c_list"/>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:textSize="16sp"
+                android:text="感应距离"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_toRightOf="@id/tv_c_list"
+                android:layout_marginLeft="150dp"
+                android:id="@+id/tv_c_distance"/>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:textSize="16sp"
+                android:text="触发状态"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_toRightOf="@id/tv_c_distance"
+                android:layout_marginLeft="150dp"
+                android:id="@+id/tv_c_status"/>
+
+        </RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="38dp"
+            android:id="@+id/recycle_c_status"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

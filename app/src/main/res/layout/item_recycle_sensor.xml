@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="28dp"
+            android:textSize="16sp"
+            android:text="超声序号"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_c_id"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="28dp"
+            android:textSize="16sp"
+            android:text="感应距离"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_toRightOf="@id/tv_c_id"
+            android:layout_marginLeft="150dp"
+            android:id="@+id/tv_cs_distance"/>
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="28dp"
+            android:layout_toRightOf="@id/tv_cs_distance"
+            android:layout_marginLeft="150dp"
+            android:id="@+id/iv_cs_status"/>
+
+    </RelativeLayout>

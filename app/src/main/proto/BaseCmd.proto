@@ -646,6 +646,7 @@ message notifyBaseStatusEx{
 	eChargingType chargingType = 23; // 充电类型
 	int32 temporaryTaskCount = 24; // 记录临时任务总次数
 	int64 timestamp = 25;
+	bool bShutdown = 26; // true - 通知客户端需要关机。 来源主要有两个：1）客户端请求关机  2）嵌入式上报的关机
 }
 
 // Environmental sensor info
@@ -1488,5 +1489,15 @@ message notifyExceptCode{
 	bytes description = 3;
 }
 
+// 通知超声状态
+message notifySensorState{
+	message sensorStateItem
+	{
+		int32 sensorID = 1; // 传感器ID 
+		float dist = 2; // 距离，单位是厘米
+		int32 triggerStat = 3; // 触发状态  // 0-未触发，1-触发，-1无效
+	}
+	repeated sensorStateItem data = 1;
+}
 
 // +++++++++++++++++++ Common message bodies +++++++++++++++++++ //

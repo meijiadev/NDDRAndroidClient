@@ -15,6 +15,7 @@ import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarCurSubM
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyLidarPtsProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyMapGenStatProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifyRelocaStatusProcessor;
+import ddr.example.com.nddrandroidclient.protocobuf.processor.NotifySensorStateProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspClientGetMapInfoProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdMoveProcessor;
 import ddr.example.com.nddrandroidclient.protocobuf.processor.RspCmdRelocProcessor;
@@ -158,5 +159,8 @@ public class ClientMessageDispatcher extends BaseMessageDispatcher {
 
         BaseCmd.notifyExceptCode notifyExceptCode= BaseCmd.notifyExceptCode.newBuilder().build();
         m_ProcessorMap.put(notifyExceptCode.getClass().toString(),new NotifyExceptCodeProcessor());
+
+        BaseCmd.notifySensorState notifySensorState = BaseCmd.notifySensorState.newBuilder().build();
+        m_ProcessorMap.put(notifySensorState.getClass().toString(),new NotifySensorStateProcessor());
     }
 }

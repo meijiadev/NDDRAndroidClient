@@ -61,6 +61,19 @@
         android:layout_marginTop="25dp"
         android:layout_marginLeft="640dp"/>
     <TextView
+        android:layout_width="55.5dp"
+        android:layout_height="33dp"
+        android:text="查看"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_alignTop="@id/tv_firstBack"
+        android:layout_alignRight="@id/slideButton"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/textview_button_top"
+        android:id="@+id/tv_sea_sensor"/>
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:text="@string/ultrasonic_set_tip"

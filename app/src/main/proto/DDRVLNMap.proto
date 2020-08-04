@@ -619,6 +619,20 @@ message rspSetMapBkpicData
 	DDRCommProto.eCmdRspType type = 1;
 }
 
+message CowShedSet
+{
+	bytes runMode = 1; // 指定模式: leftcircle rightcircle leftstraight rightstraight
+	int32 runCount = 2; // 0 是无限循环 否则为运行次数
+	float speed = 3; // 行走速度
+	float waittime = 4; // 前后两次间隔时间 单位是s
+	int32 startDist = 5;  // 开始延边距离 单位CM
+	int32 gradientDist = 6; // 延边距离调整值 单位CM
+	
+	bool autoCharging = 7; // true:开启自动充电
+	float enterChargingBatt = 8; // 低于此电量时将开始充电。 0-100
+	float quitChargingBatt = 9; // 高于于此电量时将退出充电。 0-100
+}
+
 // 0.4版任务调度协议
 message reqRunControlEx
 {
@@ -630,6 +644,8 @@ message reqRunControlEx
 	float speed = 4; // 行走速度
 	float distance = 5; // 距离
 	float waittime = 6; // 前后两次间隔时间 单位是s
+	
+	CowShedSet cowSet = 7; // 永牧项目的设置，以上几个字段将不会用到了。
 }
 
 message rspRunControlEx
