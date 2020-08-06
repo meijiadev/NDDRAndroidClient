@@ -25,6 +25,7 @@ import org.litepal.LitePal;
 import cat.ereza.customactivityoncrash.config.CaocConfig;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 
+import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.glide.ImageLoader;
 import ddr.example.com.nddrandroidclient.helper.EventBusManager;
 import ddr.example.com.nddrandroidclient.language.LanguageUtil;
@@ -48,6 +49,7 @@ import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NA
  */
 public class BaseApplication extends Application implements FloatView.OnFloatViewListener {
     private static Context context;
+    private NotifyBaseStatusEx notifyBaseStatusEx;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,6 +64,7 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
         initSDK(this);
         RetrofitUrlManager.getInstance().putDomain(SERVER_UPDATE_DOMAIN_NAME,APP_DEFAULT_DOMAIN);
         RetrofitUrlManager.getInstance().putDomain(APP_QUERY_DOMAIN_NAME,APP_UPDATE_DOMAIN);
+        notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
     }
 
     public  void initSDK(Application application) {
@@ -132,10 +135,24 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
     @Override
     public void onClickBottom() {
         EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchFloatWindow));
-        try {
-            FloatWindow.get().hide();
-        }catch (Exception e){
-            e.printStackTrace();
+        if (notifyBaseStatusEx.isChargingStatus()){
+
+        }else {
+            switch (notifyBaseStatusEx.getChargingSubStatus()){
+                case 1:
+                case 2:
+                case 4:
+
+                    break;
+                    default:
+                        try {
+                            FloatWindow.get().hide();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        break;
+
+            }
         }
     }
 
