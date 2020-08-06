@@ -443,6 +443,11 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         }
     }
 
+    /**
+     * 点击事件
+     * @param event
+     * @return
+     */
     public boolean onTouchEvent(MotionEvent event) {
         if (sourceBitmap!=null){
             if (touchEvenHandler!=null){
@@ -453,7 +458,6 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                         .setBitmap(sourceBitmap)
                         .build();
                 Logger.e("---------onTouchEvent");
-
             }
         }
         return true;

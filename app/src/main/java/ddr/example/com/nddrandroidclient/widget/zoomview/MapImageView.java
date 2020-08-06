@@ -1,5 +1,6 @@
 package ddr.example.com.nddrandroidclient.widget.zoomview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -180,7 +181,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
                             for (PathLine pathLine1:pathLineList){
                                 if (lineName.equals(pathLine1.getName())){
                                     pathPoints=pathLine1.getPathPoints();
-                                    Logger.d("当前选择的路径名称："+lineName);
+                                    //Logger.d("当前选择的路径名称："+lineName);
                                 }
                             }
                             taskPoints.addAll(pathPoints);
@@ -206,9 +207,6 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
-    private void setABTask(){
-
-    }
 
 
     /**
@@ -509,6 +507,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
         if (sourceBitmap!=null){
             if (touchEvenHandler!=null){

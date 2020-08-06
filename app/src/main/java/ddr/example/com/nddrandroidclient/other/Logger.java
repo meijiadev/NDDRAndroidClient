@@ -2,61 +2,65 @@ package ddr.example.com.nddrandroidclient.other;
 
 import android.util.Log;
 
+import ddr.example.com.nddrandroidclient.BuildConfig;
+
 /**
  * 日志工具
  */
 public class Logger {
 
     public static void v(String msg){
-        StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
-        StringBuffer toStringBuffer = new StringBuffer("[").append(
-                traceElement.getFileName()).append(" | ").append(
-                traceElement.getLineNumber()).append(" | ").append(
-                traceElement.getMethodName()).append("()").append("]");
-        String TAG = toStringBuffer.toString();
-        Log.v(TAG,msg);
-
+        if (BuildConfig.LOG_DEBUG){
+            StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
+            String TAG = "[" +
+                    traceElement.getFileName() + " | " +
+                    traceElement.getLineNumber() + " | " +
+                    traceElement.getMethodName() + "()" + "]";
+            Log.v(TAG,msg);
+        }
     }
 
     public static void d(String msg){
-        StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
-        StringBuffer toStringBuffer = new StringBuffer("[").append(
-                traceElement.getFileName()).append(" | ").append(
-                traceElement.getLineNumber()).append(" | ").append(
-                traceElement.getMethodName()).append("()").append("]");
-        String TAG = toStringBuffer.toString();
-        Log.d(TAG,msg);
-
+        if (BuildConfig.LOG_DEBUG){
+            StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
+            String TAG = "[" +
+                    traceElement.getFileName() + " | " +
+                    traceElement.getLineNumber() + " | " +
+                    traceElement.getMethodName() + "()" + "]";
+            Log.d(TAG,msg);
+        }
     }
     public static void w(String msg){
-        StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
-        StringBuffer toStringBuffer = new StringBuffer("[").append(
-                traceElement.getFileName()).append(" | ").append(
-                traceElement.getLineNumber()).append(" | ").append(
-                traceElement.getMethodName()).append("()").append("]");
-        String TAG = toStringBuffer.toString();
-        Log.w(TAG,msg);
-
+        if (BuildConfig.LOG_DEBUG){
+            StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
+            String TAG = "[" +
+                    traceElement.getFileName() + " | " +
+                    traceElement.getLineNumber() + " | " +
+                    traceElement.getMethodName() + "()" + "]";
+            Log.w(TAG,msg);
+        }
     }
 
     public static void e(String msg){
-        StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
-        StringBuffer toStringBuffer = new StringBuffer("[").append(
-                traceElement.getFileName()).append(" | ").append(
-                traceElement.getLineNumber()).append(" | ").append(
-                traceElement.getMethodName()).append("()").append("]");
-        String TAG = toStringBuffer.toString();
-        Log.e(TAG,msg);
+        if (BuildConfig.LOG_DEBUG){
+            StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
+            String TAG = "[" +
+                    traceElement.getFileName() + " | " +
+                    traceElement.getLineNumber() + " | " +
+                    traceElement.getMethodName() + "()" + "]";
+            Log.e(TAG,msg);
+        }
     }
 
     public static void i(String msg) {
-        StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
-        StringBuffer toStringBuffer = new StringBuffer("[").append(
-                traceElement.getFileName()).append(" | ").append(
-                traceElement.getLineNumber()).append(" | ").append(
-                traceElement.getMethodName()).append("()").append("]");
-        String TAG = toStringBuffer.toString();
-        Log.i( TAG,msg);
+        if (BuildConfig.LOG_DEBUG){
+            StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
+            String TAG = "[" +
+                    traceElement.getFileName() + " | " +
+                    traceElement.getLineNumber() + " | " +
+                    traceElement.getMethodName() + "()" + "]";
+            Log.i( TAG,msg);
+        }
     }
 
 

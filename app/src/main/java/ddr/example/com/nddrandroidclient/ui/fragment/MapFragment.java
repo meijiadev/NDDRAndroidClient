@@ -857,7 +857,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     break;
                 case R.id.tv_setting:                     //进入地图管理界面
                     mapName = mapInfos.get(position).getMapName();
-                    tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
                     Intent intent=new Intent(getAttachActivity(),MapSettingActivity.class);
                     intent.putExtra("mapName",mapName);
                     startActivity(intent);

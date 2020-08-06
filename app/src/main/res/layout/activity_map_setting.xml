@@ -188,7 +188,7 @@
         android:textColor="#99ffffff"
         android:textSize="12sp"
         android:gravity="left|center_vertical"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginRight="332dp"
         android:layout_marginTop="109dp"
         android:layout_below="@id/layout_title"
