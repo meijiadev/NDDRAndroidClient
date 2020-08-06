@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -236,7 +237,7 @@ public class RelocationActivity extends DDRActivity {
     private boolean allShowPoint,allShowPath;               // 是否全部显示
     private int gridStatus;                                // 0 默认 1:0.25m ,2: 0.5m, 3: 1m ,4: 2m
     private void showPopupWindowReference(View view){
-        View contentView=getLayoutInflater().from(this).inflate(R.layout.popupwindow_reference,null);
+        View contentView= LayoutInflater.from(this).inflate(R.layout.popupwindow_reference,null);
         customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(context)
                 .setView(contentView)
                 .create()

@@ -1,6 +1,7 @@
 package ddr.example.com.nddrandroidclient.ui.dialog;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentActivity;
@@ -16,7 +17,6 @@ public final class WaitDialog {
     public static String message;
     public static final class Builder
             extends MyDialogFragment.Builder<Builder> {
-
         public final TextView mMessageView;
 
         public Builder(FragmentActivity activity) {
