@@ -230,8 +230,7 @@ public class TcpClient extends BaseSocketConnection {
                 return 0;
             }
             System.arraycopy(header,4,bodyLenths,0,4);
-            int bodyLength=bytesToIntLittle(bodyLenths,0)-8;
-            return bodyLength;
+            return bytesToIntLittle(bodyLenths,0)-8;
         }
     }
 

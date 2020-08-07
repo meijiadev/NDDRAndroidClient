@@ -106,7 +106,6 @@ protobuf {
             }
         }
     }
-
 }
 
 dependencies {

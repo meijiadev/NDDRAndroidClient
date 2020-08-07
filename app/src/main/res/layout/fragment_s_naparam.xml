@@ -93,9 +93,8 @@
 
             <TextView
                 android:id="@+id/tv_task_nearby"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_below="@id/tv_title4"
                 android:layout_marginTop="14dp"
                 android:drawableStart="@mipmap/nocheckedwg"
@@ -104,7 +103,7 @@
                 android:textSize="12sp"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginStart="500dp"
                 android:visibility="visible"
                 />
             <TextView
@@ -176,7 +175,6 @@
                 android:id="@+id/tv_return_to_loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_title5"
                 android:layout_marginTop="14dp"
                 android:drawableLeft="@mipmap/nocheckedwg"
@@ -185,7 +183,7 @@
                 android:textSize="12sp"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginStart="500dp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="9sp"
                 android:autoSizeMaxTextSize="12sp"
@@ -262,16 +260,15 @@
                 android:id="@+id/tv_smart_smooth_turn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_title6"
                 android:layout_marginTop="14dp"
-                android:drawableLeft="@mipmap/nocheckedwg"
+                android:drawableStart="@mipmap/nocheckedwg"
                 android:text="@string/n_arc_turn"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginStart="500dp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="9sp"
                 android:autoSizeMaxTextSize="12sp"
@@ -283,7 +280,6 @@
                 android:textColor="#99ffffff"
                 android:textSize="12sp"
                 android:layout_below="@id/tv_smart_smooth_turn"
-                android:layout_alignParentRight="true"
                 android:layout_alignStart="@id/tv_smart_smooth_turn"
                 android:layout_marginTop="14dp"
                 android:textStyle="bold"
@@ -298,7 +294,6 @@
                 android:background="#262728"
                 android:layout_below="@id/tv_suggest6"
                 android:layout_marginTop="24dp"/>
-
 
             <View
                 android:id="@+id/view1"

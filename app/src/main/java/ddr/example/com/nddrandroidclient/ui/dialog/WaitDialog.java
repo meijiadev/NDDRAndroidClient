@@ -38,7 +38,4 @@ public final class WaitDialog {
             return this;
         }
     }
-
-
-
 }

@@ -18,7 +18,7 @@
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="9sp"
         android:autoSizeMaxTextSize="12sp"
-        tools:ignore="RelativeOverlap" />
+        tools:ignore="UnusedAttribute" />
     <TextView
         android:layout_width="48dp"
         android:layout_height="24dp"
@@ -27,8 +27,8 @@
         android:textColor="#ffffff"
         android:gravity="center"
         android:background="@drawable/textview_button_top"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="24dp"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="9sp"
@@ -55,7 +55,7 @@
                 android:id="@+id/tv_title4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="任务启动方式"
+                android:text="@string/task_title_one"
                 android:textSize="@dimen/text_size_12sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -67,8 +67,8 @@
                 android:id="@+id/tv_task_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/checkedwg"
-                android:text="任务起点启动"
+                android:drawableStart="@mipmap/checkedwg"
+                android:text="@string/task_title_two"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:gravity="center_vertical"
@@ -77,12 +77,12 @@
                 android:layout_marginTop="14dp"
                 android:visibility="visible"
 
-               />
+                />
             <TextView
                 android:id="@+id/tv_suggest4"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:text="机器人先前往任务起点，然后再执行"
+                android:text="@string/task_suggest_one"
                 android:textColor="#99ffffff"
                 android:textSize="12sp"
                 android:layout_below="@id/tv_task_origin"
@@ -93,18 +93,17 @@
 
             <TextView
                 android:id="@+id/tv_task_nearby"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_title4"
                 android:layout_marginTop="14dp"
-                android:drawableLeft="@mipmap/nocheckedwg"
-                android:text="就近启动"
+                android:drawableStart="@mipmap/nocheckedwg"
+                android:text="@string/task_suggest_two"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginStart="500dp"
                 android:visibility="visible"
                 />
             <TextView
@@ -176,7 +175,6 @@
                 android:id="@+id/tv_return_to_loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_title5"
                 android:layout_marginTop="14dp"
                 android:drawableLeft="@mipmap/nocheckedwg"
@@ -185,7 +183,7 @@
                 android:textSize="12sp"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginStart="500dp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="9sp"
                 android:autoSizeMaxTextSize="12sp"
@@ -262,16 +260,15 @@
                 android:id="@+id/tv_smart_smooth_turn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_title6"
                 android:layout_marginTop="14dp"
-                android:drawableLeft="@mipmap/nocheckedwg"
+                android:drawableStart="@mipmap/nocheckedwg"
                 android:text="@string/n_arc_turn"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginStart="500dp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="9sp"
                 android:autoSizeMaxTextSize="12sp"
@@ -283,7 +280,6 @@
                 android:textColor="#99ffffff"
                 android:textSize="12sp"
                 android:layout_below="@id/tv_smart_smooth_turn"
-                android:layout_alignParentRight="true"
                 android:layout_alignStart="@id/tv_smart_smooth_turn"
                 android:layout_marginTop="14dp"
                 android:textStyle="bold"
@@ -298,7 +294,6 @@
                 android:background="#262728"
                 android:layout_below="@id/tv_suggest6"
                 android:layout_marginTop="24dp"/>
-
 
             <View
                 android:id="@+id/view1"
@@ -472,8 +467,8 @@
                 android:textSize="12sp"
                 android:textColor="#ffffff"
                 android:layout_marginTop="24.5dp"
-                android:layout_toLeftOf="@id/tv_de_distance_cm"
-                android:layout_marginRight="6dp"
+                android:layout_toStartOf="@id/tv_de_distance_cm"
+                android:layout_marginEnd="6dp"
                 android:layout_below="@id/view3"
                 android:digits="1234567890"
                 android:maxLength="3"
@@ -490,8 +485,8 @@
                 android:textSize="12sp"
                 android:layout_marginTop="29.5dp"
                 android:gravity="center"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="70dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="70dp"
                 android:layout_below="@id/view3"
                 />
 
