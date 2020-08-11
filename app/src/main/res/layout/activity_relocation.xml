@@ -45,7 +45,7 @@
     </RelativeLayout>
     <TextView
         android:id="@+id/text"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:text="@string/location_notify"
         android:layout_below="@id/title_layout"
@@ -104,6 +104,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/tv_reference"

@@ -120,6 +120,25 @@
             android:autoSizeMinTextSize="9sp"
             android:autoSizeMaxTextSize="11sp"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/bz_infomation"
+            android:textSize="11sp"
+            android:textColor="@color/white"
+            android:drawableTop="@mipmap/no_obstacle"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5.5dp"
+            android:gravity="center_horizontal"
+            android:drawablePadding="5dp"
+            android:visibility="visible"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="11sp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="140dp"
+            android:id="@+id/iv_see_obstacle"
+            />
         <View
             android:id="@+id/view1"
             android:layout_width="0dp"

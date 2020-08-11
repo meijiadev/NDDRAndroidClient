@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,6 +67,7 @@ public class RelocationActivity extends DDRActivity {
     private TcpClient tcpClient;
     private NotifyBaseStatusEx notifyBaseStatusEx;
 
+    private boolean isTounch;//是否触摸移动地图
 
     @Override
     protected int getLayoutId() {
@@ -118,10 +120,14 @@ public class RelocationActivity extends DDRActivity {
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.tv_finish:
-                XyEntity xyEntity=robotLocationView.getRobotLocationInWindow();
-                XyEntity xyEntity1=robotLocationView.toWorld(xyEntity.getX(),xyEntity.getY());
-                float rotation=robotLocationView.getRadians();
-                reqCmdReloc(xyEntity1.getX(),xyEntity1.getY(),rotation);
+                if (isTounch){
+                    XyEntity xyEntity=robotLocationView.getRobotLocationInWindow();
+                    XyEntity xyEntity1=robotLocationView.toWorld(xyEntity.getX(),xyEntity.getY());
+                    float rotation=robotLocationView.getRadians();
+                    reqCmdReloc(xyEntity1.getX(),xyEntity1.getY(),rotation);
+                }else {
+                    toast("请先移动地图");
+                }
                 break;
             case R.id.iv_back:
                 onBackPressed();
@@ -177,6 +183,7 @@ public class RelocationActivity extends DDRActivity {
     protected void onDestroy() {
         super.onDestroy();
         isRunning=false;
+        isTounch=false;
     }
 
     @Override
@@ -211,12 +218,22 @@ public class RelocationActivity extends DDRActivity {
                     case 2:
                         waitDialog=new WaitDialog.Builder(this)
                                 .setMessage(R.string.the_relocation)
+                                .setVisibility()
+                                .setListener(new WaitDialog.OnListener() {
+                                    @Override
+                                    public void onCancel(BaseDialog dialog) {
+                                        waitDialog.dismiss();
+                                    }
+                                })
                                 .show();
                         break;
                 }
                 break;
             case touchFloatWindow:
                 new ControlPopupWindow(this).showControlPopupWindow(findViewById(R.id.iv_back));
+                break;
+            case touchMapWindow:
+                isTounch=true;
                 break;
         }
     }
