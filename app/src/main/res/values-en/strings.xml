@@ -406,5 +406,6 @@
     <string name="task_title_two">任务起点启动</string>
     <string name="task_suggest_one">机器人先前往任务起点，然后再执行</string>
     <string name="task_suggest_two">就近启动</string>
+    <string name="progress_loading">加载中</string>
 
 </resources>

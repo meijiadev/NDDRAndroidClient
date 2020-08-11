@@ -230,8 +230,7 @@ public class TcpClient extends BaseSocketConnection {
                 return 0;
             }
             System.arraycopy(header,4,bodyLenths,0,4);
-            int bodyLength=bytesToIntLittle(bodyLenths,0)-8;
-            return bodyLength;
+            return bytesToIntLittle(bodyLenths,0)-8;
         }
     }
 
@@ -380,7 +379,7 @@ public class TcpClient extends BaseSocketConnection {
         //final ByteString currentFile = ByteString.copyFromUtf8("OneRoute_*" + "/bkPic.png");
         BaseCmd.reqClientGetMapInfo reqClientGetMapInfo=BaseCmd.reqClientGetMapInfo.newBuilder()
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqClientGetMapInfo);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqClientGetMapInfo);
         Logger.e("请求文件中....");
     }
 
@@ -400,7 +399,7 @@ public class TcpClient extends BaseSocketConnection {
                 .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
-        tcpClient.sendData(commonHeader, reqCmdMove);
+        sendData(commonHeader, reqCmdMove);
 
     }
 
@@ -437,7 +436,7 @@ public class TcpClient extends BaseSocketConnection {
                 .setToCltType(BaseCmd.eCltType.eModuleServer)
                 .addFlowDirection(BaseCmd.CommonHeader.eFlowDir.Forward)
                 .build();
-        tcpClient.sendData(commonHeader, reqCmdEndActionMode);
+        sendData(commonHeader, reqCmdEndActionMode);
     }
 
     /**
@@ -560,7 +559,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
 
     }
 
@@ -614,7 +613,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
                 .setPathSet(ddrMapPathDataEx)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
 
     }
 
@@ -672,7 +671,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(taskItemExes)
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
 
     }
 
@@ -822,7 +821,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(taskItemExes)
                 .setPathSet(ddrMapPathDataEx)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
     }
 
     /**
@@ -853,7 +852,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
         Logger.e("----modeType:"+modeType+"----name:"+reqDDRVLNMapEx.getBasedata().getName().toStringUtf8()+"ab点速度："+abSpeed);
     }
 
@@ -895,7 +894,7 @@ public class TcpClient extends BaseSocketConnection {
                 .addAllTaskSet(reqDDRVLNMapEx.getTaskSetList())
                 .setPathSet(reqDDRVLNMapEx.getPathSet())
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqDDRVLNMapEx1);
     }
 
 
@@ -906,7 +905,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.reqMapOperational reqMapOperational=DDRVLNMap.reqMapOperational.newBuilder()
                 .addAllOptSet(optItems)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqMapOperational);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqMapOperational);
     }
 
     /**
@@ -917,7 +916,7 @@ public class TcpClient extends BaseSocketConnection {
         DDRVLNMap.reqRunControlEx reqRunControlEx=DDRVLNMap.reqRunControlEx.newBuilder()
                 .setOnerouteName(ByteString.copyFromUtf8(mapName))
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqRunControlEx);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqRunControlEx);
     }
 
 
@@ -929,7 +928,7 @@ public class TcpClient extends BaseSocketConnection {
         BaseCmd.reqCmdIPC reqCmdIPC=BaseCmd.reqCmdIPC.newBuilder()
                 .setMode(eCmdIPCMode)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdIPC);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdIPC);
     }
 
     /**
@@ -939,12 +938,6 @@ public class TcpClient extends BaseSocketConnection {
         BaseCmd.reqCmdStartActionMode reqCmdStartActionMode= BaseCmd.reqCmdStartActionMode.newBuilder()
                 .setMode(BaseCmd.eCmdActionMode.eReCharging)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdStartActionMode);
+        sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdStartActionMode);
     }
-
-
-
-
-
-
 }

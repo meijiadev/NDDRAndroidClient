@@ -19,7 +19,6 @@ public final class WaitDialog {
     public static String message;
     public static final class Builder
             extends MyDialogFragment.Builder<Builder> implements View.OnClickListener{
-
         public final TextView mMessageView;
         private final ImageView ivquit;
         private OnListener mListener;
@@ -82,6 +81,4 @@ public final class WaitDialog {
          */
         void onCancel(BaseDialog dialog);
     }
-
-
 }

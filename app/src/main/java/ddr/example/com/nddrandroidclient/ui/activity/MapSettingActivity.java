@@ -3,6 +3,7 @@ package ddr.example.com.nddrandroidclient.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,7 +42,6 @@ import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
 
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
-
 /**
  * time： 2020/2/18
  * desc: 地图设置界面
@@ -85,18 +85,20 @@ public class MapSettingActivity extends DDRActivity {
     @Override
     protected void initView() {
         super.initView();
+        Intent intent=getIntent();
+        mapName=intent.getStringExtra("mapName");
         mapFileStatus=MapFileStatus.getInstance();
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
+        tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
         etABSpeed.setFilters(new InputFilter[]{new InputFilterMinMax("0", "1.0")});
     }
 
     @Override
     protected void initData() {
         super.initData();
-        Intent intent=getIntent();
-        mapName=intent.getStringExtra("mapName");
         String name = mapName.replaceAll("OneRoute_", "");
         etMapName.setText(name);
+        initParameter();
     }
 
 
@@ -231,20 +233,18 @@ public class MapSettingActivity extends DDRActivity {
     }
 
     private CustomPopuWindow customPopuWindow;
-    private  RecyclerView showRecycler;
-    private TargetPointAdapter targetPointAdapter;
     private List<TargetPoint> targetPoints=new ArrayList<>();
     private  void showListPopupWindow(View view){
-        View contentView = getActivity().getLayoutInflater().from(this).inflate(R.layout.recycle_task, null);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.recycle_task, null);
         customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(this)
                 .setView(contentView)
                 .enableOutsideTouchableDissmiss(false)
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(this, 0), 5);
-        showRecycler =contentView.findViewById(R.id.recycler_task_check);
+        RecyclerView showRecycler = contentView.findViewById(R.id.recycler_task_check);
         NLinearLayoutManager layoutManager=new NLinearLayoutManager(this);
         showRecycler.setLayoutManager(layoutManager);
-        targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_task_check);
+        TargetPointAdapter targetPointAdapter = new TargetPointAdapter(R.layout.item_recycle_task_check);
         targetPointAdapter.setNewData(targetPoints);
         showRecycler.setAdapter(targetPointAdapter);
 
@@ -257,56 +257,16 @@ public class MapSettingActivity extends DDRActivity {
 
     }
 
-
-    private DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx;     //获取指定某一地图的相关信息
-    private DDRVLNMap.DDRMapBaseData ddrMapBaseData;
     private String mapName="";
     private String newMapName;
     private int modeType;
     private float abSpeed;           //ab点速度
     private int abMode;              //ab点模式
-
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
-                mapFileStatus=MapFileStatus.getInstance();
-                reqDDRVLNMapEx=mapFileStatus.getReqDDRVLNMapEx();
-                ddrMapBaseData=reqDDRVLNMapEx.getBasedata();
-                modeType=ddrMapBaseData.getAbNaviTypeValue();
-                try {
-                    targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
-                    TargetPoint targetPoint=new TargetPoint();
-                    targetPoint.setName(getString(R.string.stay_put));
-                    targetPoints.add(0,targetPoint);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                String pointName=ddrMapBaseData.getTargetPtName().toStringUtf8();
-                if (pointName.equals("")){
-                    pointName=getString(R.string.stay_put);
-                }
-                tvSwitchPoint.setText(pointName);
-                abSpeed=ddrMapBaseData.getAbPathSpeed();
-                Logger.e("ab点速度："+abSpeed);
-                abMode=ddrMapBaseData.getAbPathModeValue();
-                if (modeType==1){
-                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                }else if (modeType==2){
-                    tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
-                    tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
-                }
-                etABSpeed.setText(String.valueOf(abSpeed));
-                if (abMode==64){
-                    tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
-                    tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
-                }else if (abMode==65){
-                    tvStaticMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
-                    tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
-                }
+                initParameter();
                 postDelayed(()->{
                     if (waitDialog1!=null){
                         if (waitDialog1.isShowing()){
@@ -321,8 +281,10 @@ public class MapSettingActivity extends DDRActivity {
                             tcpClient.requestFile();
                             finish();
                         }
+                    }else {
+                        toast("Receive map information");
                     }
-                },1000);
+                },500);
                 break;
             case mapOperationalSucceed:
                 if (waitDialog!=null){
@@ -336,6 +298,48 @@ public class MapSettingActivity extends DDRActivity {
                 }
                 break;
 
+        }
+    }
+
+    /**
+     * 初始化设置参数
+     */
+    private void initParameter(){
+        mapFileStatus=MapFileStatus.getInstance();
+        //获取指定某一地图的相关信息
+        DDRVLNMap.reqDDRVLNMapEx reqDDRVLNMapEx = mapFileStatus.getReqDDRVLNMapEx();
+        DDRVLNMap.DDRMapBaseData ddrMapBaseData = reqDDRVLNMapEx.getBasedata();
+        modeType= ddrMapBaseData.getAbNaviTypeValue();
+        try {
+            targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
+            TargetPoint targetPoint=new TargetPoint();
+            targetPoint.setName(getString(R.string.stay_put));
+            targetPoints.add(0,targetPoint);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        String pointName= ddrMapBaseData.getTargetPtName().toStringUtf8();
+        if (pointName.equals("")){
+            pointName=getString(R.string.stay_put);
+        }
+        tvSwitchPoint.setText(pointName);
+        abSpeed= ddrMapBaseData.getAbPathSpeed();
+        Logger.e("ab点速度："+abSpeed);
+        abMode= ddrMapBaseData.getAbPathModeValue();
+        if (modeType==1){
+            tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+            tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+        }else if (modeType==2){
+            tvNavigation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.checkedwg),null,null,null);
+            tvLinePatrol.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.nocheckedwg),null,null,null);
+        }
+        etABSpeed.setText(String.valueOf(abSpeed));
+        if (abMode==64){
+            tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
+            tvStaticMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
+        }else if (abMode==65){
+            tvStaticMode.setBackgroundResource(R.drawable.tv_mode_selected_bg);
+            tvDynamicMode.setBackgroundResource(R.drawable.tv_mode_default_bg);
         }
     }
 

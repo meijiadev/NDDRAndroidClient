@@ -2,6 +2,7 @@ package ddr.example.com.nddrandroidclient.protocobuf;
 
 import DDRCommProto.BaseCmd;
 import DDRCommProto.RemoteCmd;
+import ddr.example.com.nddrandroidclient.other.Logger;
 
 /**
  * 所有命令集合
@@ -29,6 +30,7 @@ public class CmdSchedule {
      * @return
      */
     public static BaseCmd.reqLogin localLogin(String account, String password){
+        Logger.e("登录账户："+account+";"+password);
         BaseCmd.reqLogin mreqLogin=BaseCmd.reqLogin.newBuilder()
                 .setUsername(account)
                 .setUserpwd(password)
