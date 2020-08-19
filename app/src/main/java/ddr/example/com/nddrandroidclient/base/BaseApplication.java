@@ -142,7 +142,6 @@ public class BaseApplication extends Application implements FloatView.OnFloatVie
                 case 1:
                 case 2:
                 case 4:
-
                     break;
                     default:
                         try {

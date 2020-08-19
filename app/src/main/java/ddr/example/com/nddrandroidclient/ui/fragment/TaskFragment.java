@@ -74,6 +74,7 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
 
     public final static int CREATE_NEW_TASK=0;      //创建新的任务
     public final static int REVAMP_TASK=1;          //修改任务
+    public boolean isRevamp;                        //是否修改需要保存
 
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
@@ -89,6 +90,10 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                     e.printStackTrace();
                 }
                 taskAdapter.setNewData(taskModeList);
+                if (isRevamp){
+                    toast(R.string.task_revamp_succeed);
+                    isRevamp=false;
+                }
                 break;
         }
     }
@@ -311,8 +316,8 @@ public class TaskFragment extends DDRLazyFragment<HomeActivity>  {
                 for (int i=0;i<taskModeList.size();i++){
                     Logger.e("队列"+taskModeList.get(i).getType());
                 }
+                isRevamp=true;
                 submissionTask();
-                toast(R.string.save_succeed);
 //                new InputDialog.Builder(getAttachActivity()).setTitle(R.string.submit_task)
 //                        .setEditVisibility(View.GONE)
 //                        .setListener(new InputDialog.OnListener() {

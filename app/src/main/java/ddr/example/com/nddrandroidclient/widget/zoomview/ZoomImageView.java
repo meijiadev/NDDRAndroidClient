@@ -50,7 +50,7 @@ public class ZoomImageView extends View {
     public double t1=410.973;
     private TouchEvenHandler touchEvenHandler;
     private float scale=1f;   //当前地图的缩放值
-    private Mat sourceMat=new Mat();
+    private Mat sourceMat;
 
     public ZoomImageView(Context context) {
         super(context);
@@ -64,6 +64,7 @@ public class ZoomImageView extends View {
 
     private void init(Context context){
         this.context=context;
+        sourceMat=new Mat();
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
         pointPaint=new Paint();
         pointPaint.setColor(Color.RED);

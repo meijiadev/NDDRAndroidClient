@@ -139,6 +139,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                                 .setTitle(R.string.relocation_failed_1)
                                 .setConfirm(R.string.common_yes)
                                 .setCancel(R.string.common_no)
+
                                 .setCanceledOnTouchOutside(false)    // 是否可以点击外部取消弹窗
                                 .setListener(new InputDialog.OnListener() {
                                     @Override
@@ -504,6 +505,13 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
             }
 
+            if (notifyBaseStatusEx.getMode()==1){
+                if (relocationDialog!=null){
+                    relocationDialog.dismiss();
+                    relocationDialog=null;
+                }
+            }
+
         }
     }
 
@@ -523,6 +531,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     }
 
     @Override
+
     protected void onRestart() {
         super.onRestart();
     }

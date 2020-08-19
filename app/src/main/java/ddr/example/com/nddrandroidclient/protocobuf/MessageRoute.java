@@ -103,7 +103,7 @@ public class MessageRoute {
     public int where=0x00;   //标志位
     /**
      * 解析数据
-     * @param （闲置）
+     * @param  （用于解析广播）
      * @return
      * @throws IOException
      */
