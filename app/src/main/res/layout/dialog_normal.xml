@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:background="#838B8B">
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="请将机器人移至空旷处或清理机器人周围障碍物"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_10"/>
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:textSize="16sp"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#0000EE"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/tv_cancel_normal"
+        />
+
+
+
+</RelativeLayout>

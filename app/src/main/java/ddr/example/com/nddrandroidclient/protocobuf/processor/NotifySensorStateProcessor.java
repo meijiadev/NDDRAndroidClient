@@ -41,7 +41,7 @@ public class NotifySensorStateProcessor extends BaseProcessor{
             if (i< sensorList.size()){
                 sensorSeaList.add(sensorSea);
             }else {
-                Logger.d("超声无效数据");
+//                Logger.d("超声无效数据");
             }
             sensorSeas.setSensorSeaList(sensorSeaList);
         }
