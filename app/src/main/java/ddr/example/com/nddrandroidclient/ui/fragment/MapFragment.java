@@ -788,18 +788,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             public void run() {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
+                    if (dialog!=null){
+                        dialog=null;
+                    }
                     toast(R.string.load_failed);
-                    mapLayout.setVisibility(View.GONE);
+                    /*mapLayout.setVisibility(View.GONE);
                     mapDetailLayout.setVisibility(View.VISIBLE);
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.VISIBLE);
                     pathDetailLayout.setVisibility(View.GONE);
-                    zoomMap.setImageBitmap(bitmapPath);
+                    zoomMap.setImageBitmap(bitmapPath);*/
                 }
             }
         };
-        getAttachActivity().postDelayed(waitRunnable,7000);
-
+        getAttachActivity().postDelayed(waitRunnable,6000);
     }
 
 
