@@ -184,7 +184,6 @@ public class TcpClient extends BaseSocketConnection {
          */
         @Override
         public void onSocketReadResponse(ConnectionInfo info, String action, OriginalData data) {
-            isConnected=true;
             byte[] headBytes=data.getHeadBytes();
             System.arraycopy(headBytes,8,heads,0,4);
             int headLength=bytesToIntLittle(heads,0);
@@ -200,8 +199,6 @@ public class TcpClient extends BaseSocketConnection {
         public void onSocketWriteResponse(ConnectionInfo info, String action, ISendable data) {
             Logger.d("---------"+action);
         }
-
-
     }
 
     /**

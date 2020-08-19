@@ -35,7 +35,7 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 public final class CrashActivity extends DDRActivity {
     
     private CaocConfig mConfig;
-    private DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"); //用于格式化日期，作为日志文件名的一部分
+    private DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");   //用于格式化日期，作为日志文件名的一部分
 
     @Override
     protected int getLayoutId() {

@@ -156,6 +156,7 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
      */
     public void setTaskName(String taskName){
         if (!taskName.equals("PathError")){
+            targetPoint=null;
             data=mapFileStatus.getCurrentMapEx();
             taskModes=mapFileStatus.getcTaskModes();
             List<PathLine> pathLineList;

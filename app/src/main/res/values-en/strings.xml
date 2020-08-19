@@ -298,6 +298,7 @@
     <string name="name_repetition">Exist same name, please rename!</string>
     <string name="save_succeed">Saved</string>
     <string name="save_failed">Save failed！</string>
+    <string name="task_revamp_succeed">Task synchronization successful！</string>
     <string name="cancel_add">Cancel adding</string>
     <string name="select_two_point">Please select at least two points</string>
     <string name="please_select_virtual">Please select the virtual wall you wanna delete first</string>
