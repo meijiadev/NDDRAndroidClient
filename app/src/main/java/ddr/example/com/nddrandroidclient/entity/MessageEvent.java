@@ -83,6 +83,7 @@ public class MessageEvent {
         updateProgress,
         apkDownloadSucceed,
         apkDownloadFailed,
+        touchMapWindow,//定位界面触摸屏幕
 
     }
 

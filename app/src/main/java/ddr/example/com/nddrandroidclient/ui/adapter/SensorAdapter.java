@@ -30,17 +30,32 @@ public class SensorAdapter extends BaseAdapter<SensorSea> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, SensorSea item) {
         super.convert(helper, item);
-        tv_id=helper.getView(R.id.tv_c_id);
-        tv_tra=helper.getView(R.id.iv_cs_status);
-        tv_value=helper.getView(R.id.tv_cs_distance);
-        helper.setText(R.id.tv_cs_distance,String.valueOf(item.getValue()))
-                .setText(R.id.tv_c_id,String.valueOf(item.getID()));
-        switch (item.getTriggerStat()){
-            case 0:
-                helper.setImageResource(R.id.iv_cs_status,R.mipmap.nocheckedwg);
+        switch (viewType){
+            case R.layout.item_recycle_sensor:
+                tv_id=helper.getView(R.id.tv_c_id);
+                tv_tra=helper.getView(R.id.iv_cs_status);
+                tv_value=helper.getView(R.id.tv_cs_distance);
+                helper.setText(R.id.tv_cs_distance,String.valueOf(item.getValue()))
+                        .setText(R.id.tv_c_id,String.valueOf(item.getID()));
+                switch (item.getTriggerStat()){
+                    case 0:
+                        helper.setImageResource(R.id.iv_cs_status,R.mipmap.nocheckedwg);
+                        break;
+                    case 1:
+                        helper.setImageResource(R.id.iv_cs_status,R.mipmap.checkedwg);
+                        break;
+                }
                 break;
-            case 1:
-                helper.setImageResource(R.id.iv_cs_status,R.mipmap.checkedwg);
+            case R.layout.item_recycle_seeob:
+                helper.setText(R.id.tv_cs_see,String.valueOf(item.getID()));
+                switch (item.getTriggerStat()){
+                    case 0:
+                        helper.setImageResource(R.id.iv_cs_see_s,R.mipmap.nocheckedwg);
+                        break;
+                    case 1:
+                        helper.setImageResource(R.id.iv_cs_see_s,R.mipmap.checkedwg);
+                        break;
+                }
                 break;
         }
     }

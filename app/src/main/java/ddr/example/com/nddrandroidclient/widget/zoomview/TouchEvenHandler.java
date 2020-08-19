@@ -6,10 +6,12 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 
@@ -280,6 +282,7 @@ public class TouchEvenHandler {
                 x_down = event.getX();
                 y_down = event.getY();
                 savedMatrix.set(matrix);
+                Logger.d("平移——————1");
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 currentStatus = SCALE_BITMAP;
@@ -287,6 +290,7 @@ public class TouchEvenHandler {
                 oldRotation = rotation(event);
                 savedMatrix.set(matrix);
                 midPoint(mid, event);
+                Logger.d("平移——————2");
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (currentStatus == SCALE_BITMAP) {
@@ -311,6 +315,7 @@ public class TouchEvenHandler {
                         if (!isAutoRefresh)
                         view.invalidate();
                     }
+                    Logger.d("平移——————3");
                 } else if (currentStatus == TRANSLATE_BITMAP) {
                     matrix1.set(savedMatrix);
                     matrix1.postTranslate(event.getX() - x_down, event.getY()
@@ -323,12 +328,15 @@ public class TouchEvenHandler {
                         if (!isAutoRefresh)
                         view.invalidate();
                     }
+                    Logger.d("平移——————4");
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 currentStatus = NONE_BITMAP;
                 view.invalidate();
+                EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.touchMapWindow));
+                Logger.d("平移——————5");
                 break;
         }
 

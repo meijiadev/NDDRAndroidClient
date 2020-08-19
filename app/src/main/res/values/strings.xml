@@ -59,6 +59,7 @@
     <string name="auto_charge_notify_2">当前地图未设置充电点，是否前往设置</string>
     <string name="auto_charge_notify_3">即将准备前往充电点</string>
     <string name="exit_charging">正在退出充电模式</string>
+    <string name="bz_infomation">避障</string>
 
     <!--地图管理-->
     <string name="new_create_map">新建地图</string>
@@ -282,7 +283,7 @@
     
     <!--重定位页面-->
     <string name="manually_locate">手动定位</string>
-    <string name="location_notify">提示：请通过平移旋转地图匹配雷达扫描形状确定机器人当前位置</string>
+    <string name="location_notify">提示:请通过平移、旋转地图，匹配激光雷达扫面形状，确定机器人当前位置</string>
     <string name="look_location_data">点击查看机器人位姿</string>
     <string name="relocation_failed">重新定位失败，请重新设置机器人位姿</string>
     <string name="relocation_succeed">定位成功!</string>
