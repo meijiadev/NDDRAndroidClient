@@ -1414,62 +1414,62 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
                 if (dialog != null) {
-                    if (dialog.isShowing()) {
-                        getAttachActivity().cancelDelay(waitRunnable);
-                        getAttachActivity().postDelayed(() -> {
-                            try {
-                                targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
-                                pathLines = ListTool.deepCopy(mapFileStatus.getPathLines());
-                                taskModes = ListTool.deepCopy(mapFileStatus.getTaskModes());
-                            } catch (IOException | ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            Logger.e("----------:" + taskModes.size());
-                            if (targetPoints.size() > 0) {
-                                etPointName.setText(targetPoints.get(0).getName());
-                                etX.setText(targetPoints.get(0).getX());
-                                etY.setText(targetPoints.get(0).getY());
-                                etToward.setText(targetPoints.get(0).getTheta());
-                                targetPoints.get(0).setSelected(true);
-                                PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
-                                if (targetPoints.get(0).getName().equals(getString(R.string.initial_point))) {
-                                    layoutEdit.setVisibility(View.GONE);
-                                    tvRevampCharge.setVisibility(View.GONE);
-                                } else if (targetPoints.get(0).getPointType().equals(PointType.eMarkingTypeCharging)) {
-                                    layoutEdit.setVisibility(View.GONE);
-                                    tvRevampCharge.setVisibility(View.VISIBLE);
-                                }else {
-                                    layoutEdit.setVisibility(View.VISIBLE);
-                                    tvRevampCharge.setVisibility(View.GONE);
-                                }
-                            } else {
-                                etPointName.setText(R.string.no_point);
-                                etX.setText(0);
-                                etY.setText(0);
-                                etToward.setText(0);
-                            }
-                            tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
-                            tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                            dialog.dismiss();
-                            mapLayout.setVisibility(View.GONE);
-                            mapDetailLayout.setVisibility(View.VISIBLE);
-                            leftDetailLayout.setVisibility(View.VISIBLE);
-                            pointDetailLayout.setVisibility(View.VISIBLE);
-                            pathDetailLayout.setVisibility(View.GONE);
-                            if (haveChargePoint()){
-                                tvSetCharge.setVisibility(View.GONE);
+                    getAttachActivity().cancelDelay(waitRunnable);
+                    getAttachActivity().postDelayed(() -> {
+                        try {
+                            targetPoints = ListTool.deepCopy(mapFileStatus.getTargetPoints());
+                            pathLines = ListTool.deepCopy(mapFileStatus.getPathLines());
+                            taskModes = ListTool.deepCopy(mapFileStatus.getTaskModes());
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Logger.e("----------:" + taskModes.size());
+                        if (targetPoints.size() > 0) {
+                            etPointName.setText(targetPoints.get(0).getName());
+                            etX.setText(targetPoints.get(0).getX());
+                            etY.setText(targetPoints.get(0).getY());
+                            etToward.setText(targetPoints.get(0).getTheta());
+                            targetPoints.get(0).setSelected(true);
+                            PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(0));
+                            if (targetPoints.get(0).getName().equals(getString(R.string.initial_point))) {
+                                layoutEdit.setVisibility(View.GONE);
+                                tvRevampCharge.setVisibility(View.GONE);
+                            } else if (targetPoints.get(0).getPointType().equals(PointType.eMarkingTypeCharging)) {
+                                layoutEdit.setVisibility(View.GONE);
+                                tvRevampCharge.setVisibility(View.VISIBLE);
                             }else {
-                                tvSetCharge.setVisibility(View.VISIBLE);
+                                layoutEdit.setVisibility(View.VISIBLE);
+                                tvRevampCharge.setVisibility(View.GONE);
                             }
-                            targetPointAdapter.setNewData(targetPoints);
-                            recyclerDetail.setAdapter(targetPointAdapter);
-                            setIconDefault();
-                            tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue), null, null, null);
-                            tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
-                            LineView.getInstance(getAttachActivity()).setSpaceItems(mapFileStatus.getSpaceItems());
-                            zoomMap.setImageBitmap(bitmapPath);
-                        }, 800);
-                    }
+                        } else {
+                            etPointName.setText(R.string.no_point);
+                            etX.setText(0);
+                            etY.setText(0);
+                            etToward.setText(0);
+                        }
+                        tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
+                        tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
+                        dialog.dismiss();
+                        dialog=null;
+                        mapLayout.setVisibility(View.GONE);
+                        mapDetailLayout.setVisibility(View.VISIBLE);
+                        leftDetailLayout.setVisibility(View.VISIBLE);
+                        pointDetailLayout.setVisibility(View.VISIBLE);
+                        pathDetailLayout.setVisibility(View.GONE);
+                        if (haveChargePoint()){
+                            tvSetCharge.setVisibility(View.GONE);
+                        }else {
+                            tvSetCharge.setVisibility(View.VISIBLE);
+                        }
+                        targetPointAdapter.setNewData(targetPoints);
+                        recyclerDetail.setAdapter(targetPointAdapter);
+                        setIconDefault();
+                        tvTargetPoint.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.mipmap.iv_target_blue), null, null, null);
+                        tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
+                        LineView.getInstance(getAttachActivity()).setSpaceItems(mapFileStatus.getSpaceItems());
+                        zoomMap.setImageBitmap(bitmapPath);
+                    }, 800);
+
                 }
                 break;
             case updatePoints:
