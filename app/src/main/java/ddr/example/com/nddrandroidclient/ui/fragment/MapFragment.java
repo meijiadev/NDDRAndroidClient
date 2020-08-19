@@ -1449,7 +1449,9 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         }
                         tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
                         tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                        dialog.dismiss();
+                        if (dialog!=null){
+                            dialog.dismiss();
+                        }
                         dialog=null;
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
