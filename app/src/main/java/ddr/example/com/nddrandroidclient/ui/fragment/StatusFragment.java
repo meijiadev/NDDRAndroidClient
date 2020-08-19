@@ -50,6 +50,8 @@ import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.NormalDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
@@ -267,7 +269,10 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
         targetPointAdapter.setNewData(targetPoints);
         mapImageView.startThread();
     }
-
+    private long timeSart;
+    private long timeStop;
+    private boolean isStartOne;
+    private BaseDialog normalDialog;
     /**
      * 获取机器人状态信息
      */
@@ -352,6 +357,8 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                         }else {
                             tv_work_statue.setText(R.string.common_runing);
                         }
+                        //获取当前时间戳
+                        timeStop = System.currentTimeMillis();
                         break;
                     case 2:
                         tv_work_statue.setText(R.string.common_collecting);
@@ -369,10 +376,32 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                                 tv_work_statue.setText(R.string.common_relocationing);
                                 break;
                         }
+                         timeSart = System.currentTimeMillis();
                         break;
                 }
                 break;
         }
+//        if (timeSart-timeStop<10000 && !isStartOne && 0<timeSart-timeStop){
+//            isStartOne=true;
+//            toast("第一次进入自动模式"+notifyBaseStatusEx.getSonMode());
+//            switch (notifyBaseStatusEx.getSonMode()){
+//                case 17:
+//                    toast("前方有障碍物");
+//                    normalDialog =new NormalDialog.Builder(getAttachActivity())
+//                            .setOnListener(new NormalDialog.OnListener() {
+//                                @Override
+//                                public void onCancel(BaseDialog dialog) {
+//                                    normalDialog.dismiss();
+//                                }
+//                            }).show();
+//
+//                    break;
+//            }
+//        }else{
+//            isStartOne=false;
+//        }
+//        long result=timeSart-timeStop;
+//        toast("结果"+result+"开始"+timeSart+"待命"+timeStop);
         switch (notifyBaseStatusEx.getChargingType()){
             case 1:
                // btExitCharge.setVisibility(View.VISIBLE);

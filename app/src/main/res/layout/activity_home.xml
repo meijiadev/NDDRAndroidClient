@@ -131,7 +131,7 @@
             android:layout_marginTop="5.5dp"
             android:gravity="center_horizontal"
             android:drawablePadding="5dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="9sp"
             android:autoSizeMaxTextSize="11sp"

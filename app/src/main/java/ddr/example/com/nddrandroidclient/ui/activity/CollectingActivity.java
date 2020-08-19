@@ -302,12 +302,14 @@ public class CollectingActivity extends DDRActivity {
                     clicks++;
                     if (clicks>=6){
                         layoutCollect.setVisibility(View.VISIBLE);
+                        tvDetection.setVisibility(View.VISIBLE);
                         clicks=0;
                     }
                 }else {
                     clicks++;
                     if (clicks>=6){
                         layoutCollect.setVisibility(View.GONE);
+                        tvDetection.setVisibility(View.GONE);
                         clicks=0;
                     }
                 }

@@ -239,7 +239,9 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 break;
             case updateSenesorSea:
                 sensorSeaList= sensorSeas.getSensorSeaList();
-                sensorAdapter.setNewData(sensorSeaList);
+                if (sensorAdapter!=null){
+                    sensorAdapter.setNewData(sensorSeaList);
+                }
                 for (int i =0;i<sensorSeaList.size();i++){
                     if (sensorSeaList.get(i).getTriggerStat()==1){
                         isstart=true;
@@ -390,7 +392,7 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                 }
                 break;
             case R.id.iv_see_obstacle:
-                showControlPopupWindow(ivSeeObstacle);
+//                showControlPopupWindow(ivSeeObstacle);
                 break;
         }
         isChecked();
@@ -536,13 +538,22 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
                             .show();
                 }
             }
-            if (notifyBaseStatusEx.getSonMode()==17){
-                tv_ld.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
-                ivSeeObstacle.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.obstacle_check),null,null);
-            }else{
-                ivSeeObstacle.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.no_obstacle),null,null);
-                tv_ld.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+            try {
+                if (notifyBaseStatusEx.getSonMode()==17){
+                    if (tv_ld!=null){
+                        tv_ld.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.checkedwg),null);
+                    }
+                    ivSeeObstacle.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.obstacle_check),null,null);
+                }else{
+                    if (tv_ld!=null){
+                        tv_ld.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.nocheckedwg),null);
+                    }
+                    ivSeeObstacle.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.no_obstacle),null,null);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
+
 
         }
     }
