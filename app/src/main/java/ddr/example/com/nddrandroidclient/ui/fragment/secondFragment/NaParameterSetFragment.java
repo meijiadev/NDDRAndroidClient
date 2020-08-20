@@ -74,7 +74,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
     private Parameter parameter;
     private Parameters parameters;
     private List<Parameter> parameterList = new ArrayList<>();
-    private String bzRadiusKey = "PPOAC_Params.OA_OBS_RADIUS";         // 避障半径
+    public String bzRadiusKey = "PPOAC_Params.OA_OBS_RADIUS";         // 避障半径
     private String bzDistanceKey = "PPOAC_Params.OA_DETECT_DISTANCE";  // 避障开始减速距离
     private String bzStopKey = "PPOAC_Params.OA_MIN_DETECTDIST";       // 避障停止距离
     private String isFormOneKey = "Common_Params.AUTO_START_FROM_SEG0";    // 是否从第一段开始 --》任务启动方式 1-表示会从第一段开始
@@ -101,8 +101,14 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
-        if (messageEvent.getType() == MessageEvent.Type.updateParameter) {
-            setNaparmeter();
+        switch (messageEvent.getType()){
+            case refreshhightset:
+                getNaParmeter(1);
+                setNaparmeter();
+                break;
+            case updateParameter:
+                setNaparmeter();
+                break;
         }
     }
 
@@ -264,6 +270,7 @@ public class NaParameterSetFragment extends DDRLazyFragment  {
      */
     public void setNaparmeter() {
         try {
+            parameters = Parameters.getInstance();
             parameterList = parameters.getParameterList();
             Logger.e("数量" + parameterList.size());
             for (int i = 0; i < parameterList.size(); i++) {
