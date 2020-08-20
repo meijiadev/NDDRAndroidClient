@@ -786,13 +786,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         waitRunnable=new Runnable() {
             @Override
             public void run() {
-                if (dialog.isShowing()) {
+                if (dialog!=null){
                     dialog.dismiss();
-                    if (dialog!=null){
-                        dialog=null;
-                    }
+                    dialog=null;
                     toast(R.string.load_failed);
-                    /*mapLayout.setVisibility(View.GONE);
+                       /*mapLayout.setVisibility(View.GONE);
                     mapDetailLayout.setVisibility(View.VISIBLE);
                     leftDetailLayout.setVisibility(View.VISIBLE);
                     pointDetailLayout.setVisibility(View.VISIBLE);
@@ -1416,6 +1414,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         switch (messageEvent.getType()) {
             case updateDDRVLNMap:
                 if (dialog != null) {
+                    dialog.dismiss();
+                    dialog=null;
                     getAttachActivity().cancelDelay(waitRunnable);
                     getAttachActivity().postDelayed(() -> {
                         try {
@@ -1451,10 +1451,6 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         }
                         tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
                         tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
-                        if (dialog!=null){
-                            dialog.dismiss();
-                        }
-                        dialog=null;
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
                         leftDetailLayout.setVisibility(View.VISIBLE);
@@ -1472,8 +1468,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         tvTargetPoint.setTextColor(Color.parseColor("#0399ff"));
                         LineView.getInstance(getAttachActivity()).setSpaceItems(mapFileStatus.getSpaceItems());
                         zoomMap.setImageBitmap(bitmapPath);
-                    }, 800);
-
+                    }, 500);
                 }
                 break;
             case updatePoints:
