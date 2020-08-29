@@ -10,12 +10,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 /**
  *    time   : 2018/10/18
  *    desc   : FragmentPagerAdapter 基类
  */
-public class BaseFragmentAdapter<F extends Fragment> extends FragmentPagerAdapter {
+public class BaseFragmentAdapter<F extends Fragment> extends FragmentStatePagerAdapter {
 
     /** Fragment集合 */
     private final List<F> mFragmentSet = new ArrayList<>();

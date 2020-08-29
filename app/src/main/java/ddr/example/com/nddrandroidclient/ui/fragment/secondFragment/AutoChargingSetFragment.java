@@ -104,13 +104,17 @@ public class AutoChargingSetFragment extends DDRLazyFragment implements SlideBut
                 break;
             case R.id.tv_save_auto_char:
                 SpUtil.getInstance(getContext()).putBoolean(SpUtil.CHARGE_STATUS,slideButton.isChecked());
-                int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
-                int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
-                postNaparmeter(ByteString.copyFromUtf8(switchAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
-                postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
-                postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
-                getNaparmeter(1);
-                toast(R.string.save_succeed);
+                try {
+                    int tr_auto = (int)(Float.parseFloat(ed_trigger_auto.getText().toString())*100);
+                    int out_auto=(int)(Float.parseFloat(ed_out_auto.getText().toString())*100);
+                    postNaparmeter(ByteString.copyFromUtf8(switchAutoKey),ByteString.copyFromUtf8(autoValue),2,3);
+                    postNaparmeter(ByteString.copyFromUtf8(triggerAutoKey),ByteString.copyFromUtf8(String.valueOf(tr_auto)),2,3);
+                    postNaparmeter(ByteString.copyFromUtf8(outAutoKey),ByteString.copyFromUtf8(String.valueOf(out_auto)),2,3);
+                    getNaparmeter(1);
+                    toast(R.string.save_succeed);
+                }catch (Exception e){
+                    toast("请设置自动充电电量值！");
+                }
                 break;
         }
     }
