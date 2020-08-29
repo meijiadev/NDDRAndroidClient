@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.viewpager.widget.ViewPager;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -201,14 +202,11 @@ public class SetUpFragment extends DDRLazyFragment<HomeActivity> implements View
         tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqGetSysVersion);
     }
 
-    private NaParameterSetFragment naParameterSetFragment;
     @Override
     protected void onRestart() {
         super.onRestart();
         viewPager.setCurrentItem(0);
-        naParameterSetFragment= NaParameterSetFragment.getInstance();
-        naParameterSetFragment.getNaParmeter(1);
-        naParameterSetFragment.setNaparmeter();
+        EventBus.getDefault().post(new MessageEvent(MessageEvent.Type.refreshhightset));
         Logger.e("------onRestart");
     }
 

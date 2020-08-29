@@ -84,6 +84,7 @@ public class MessageEvent {
         apkDownloadSucceed,
         apkDownloadFailed,
         touchMapWindow,//定位界面触摸屏幕
+        refreshhightset;//刷新高级设置
 
     }
 
