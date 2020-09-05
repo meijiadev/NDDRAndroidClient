@@ -6,7 +6,7 @@ import java.util.List;
 public class ComputerEditions {
     public static ComputerEditions computerEditions;
     private List<ComputerEdition> computerEditionList =new ArrayList<>();
-    private int robotType;
+    private int robotType;             //地盘类型
     public static ComputerEditions getInstance(){
         if (computerEditions ==null){
             synchronized (ComputerEditions.class){
