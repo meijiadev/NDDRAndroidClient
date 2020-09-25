@@ -351,7 +351,7 @@ public class CollectingActivity extends DDRActivity {
     private void initRobotType(){
         int robotType= ComputerEditions.getInstance().getRobotType();
         if (robotType==4|robotType==5){
-            maxSpeed=0.25;           //当地盘为广告机或者新零售机器人时 速度为0.25m/s
+            maxSpeed=0.3;           //当地盘为广告机或者新零售机器人时 速度为0.3m/s
         }
     }
 

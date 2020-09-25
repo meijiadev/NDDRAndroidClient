@@ -116,9 +116,10 @@ public class ControlPopupWindow {
         setFixedSpeed();
         int robotType= ComputerEditions.getInstance().getRobotType();
         if (robotType==4|robotType==5){
-            maxSpeed=0.25;
+            maxSpeed=0.3;
             speedLayout.setVisibility(View.GONE);
         }else {
+            maxSpeed=0.4;
             speedLayout.setVisibility(View.VISIBLE);
         }
         seekBar.setProgress((float) maxSpeed);

@@ -52,6 +52,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
+import static ddr.example.com.nddrandroidclient.helper.SpUtil.TCP_IP;
+import static ddr.example.com.nddrandroidclient.helper.SpUtil.TCP_PORT;
 import static ddr.example.com.nddrandroidclient.http.Api.SERVER_UPDATE_DOMAIN_NAME;
 
 
@@ -135,6 +137,8 @@ public  class LoginActivity extends DDRActivity {
                 break;
             case tcpConnected:
                 if (isLan){
+                    SpUtil.getInstance(context).putString(TCP_IP,LAN_IP);
+                    SpUtil.getInstance(context).putInt(TCP_PORT,tcpPort);
                     toast("服务器连接成功!");
                     tcpClient.sendData(null, CmdSchedule.localLogin(accountName,passwordName));
                     GlobalParameter.setAccount(accountName);
@@ -180,11 +184,13 @@ public  class LoginActivity extends DDRActivity {
 
     @Override
     protected void initData() {
-        receiveBroadcast();
+        //receiveBroadcast();
         password.setText(SpUtil.getInstance(context).getString(SpUtil.LOGIN_PASSWORD));
         tcpClient=TcpClient.getInstance(context,ClientMessageDispatcher.getInstance());
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         int memorySize = activityManager.getMemoryClass();
+        LAN_IP=SpUtil.getInstance(context).getString(TCP_IP);
+        tcpPort=SpUtil.getInstance(context).getInt(TCP_PORT);
     }
 
     /**
@@ -314,7 +320,7 @@ public  class LoginActivity extends DDRActivity {
     /**
      * 接收广播
      */
-    private void receiveBroadcast(){
+    private void  receiveBroadcast(){
         udpClient= UdpClient.getInstance(this,ClientMessageDispatcher.getInstance());
         try {
             udpClient.connect(port);
@@ -328,7 +334,7 @@ public  class LoginActivity extends DDRActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        receiveBroadcast();
+
     }
 
     @Override

@@ -14,7 +14,6 @@
         android:id="@+id/layout_progress"
         android:layout_width="308dp"
         android:layout_height="150dp"
-        android:layout_below="@id/title_layout"
         android:layout_centerHorizontal="true"
         android:background="@drawable/dialog_add_action_bg"
         android:visibility="visible"

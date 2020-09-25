@@ -899,15 +899,12 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     public void onDestroy() {
         super.onDestroy();
         try {
+            if (statusSwitchButton!=null&&mapImageView!=null)
             statusSwitchButton.onDestroy();
             mapImageView.onStop();
         }catch (NullPointerException e){
             e.printStackTrace();
         }
 
-    } 
-
-
-
-
+    }
 }
