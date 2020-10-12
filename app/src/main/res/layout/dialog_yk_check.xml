@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/layout_bg"
             android:id="@+id/speed_ku"
-            android:visibility="gone"
+            android:visibility="visible"
             >
 
             <TextView

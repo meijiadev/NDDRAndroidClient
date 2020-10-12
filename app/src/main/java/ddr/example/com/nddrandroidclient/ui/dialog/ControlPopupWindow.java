@@ -115,13 +115,16 @@ public class ControlPopupWindow {
         initTimer();
         setFixedSpeed();
         int robotType= ComputerEditions.getInstance().getRobotType();
+        // 调速模块的最大值
+        float maxNumber;
         if (robotType==4|robotType==5){
             maxSpeed=0.3;
-            speedLayout.setVisibility(View.GONE);
+            maxNumber =0.4f;
         }else {
             maxSpeed=0.4;
-            speedLayout.setVisibility(View.VISIBLE);
+            maxNumber =1.0f;
         }
+        seekBar.setRange(0, maxNumber);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(showSpeed(maxSpeed));
         iv_quit_yk.setOnClickListener(new View.OnClickListener() {
