@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NDDRAndroidClient</string>
+
     <!-- 主页 -->
     <string name="home_exit_hint">Press again to exit</string>
 

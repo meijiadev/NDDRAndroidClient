@@ -73,7 +73,7 @@
             android:value="600"/>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="ddr.example.com.nddrandroidclient.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
         <meta-data

@@ -147,6 +147,25 @@ android {
             path (project.projectDir.toString() + '/libcxx_helper/CMakeLists.txt')
         }
     }
+   /* //差异化打包
+    publishNonDefault true//子Module里必须配置
+    productFlavors{
+        //模组项目
+        *//* DaDao{
+             applicationId "ddr.example.com.nddrandroidclient"
+             versionName "0.6.3"
+         }*//*
+        //北大项目
+        beida{
+            applicationId "ddr.example.com.beida"
+        }
+        //华为项目
+        huawei{
+            applicationId "ddr.example.com.huawei"
+        }
+
+    }*/
+
 }
 
 dependencies {
