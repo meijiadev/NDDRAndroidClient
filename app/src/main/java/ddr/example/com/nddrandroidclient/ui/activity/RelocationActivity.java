@@ -121,7 +121,7 @@ public class RelocationActivity extends DDRActivity {
         switch (view.getId()){
             case R.id.tv_finish:
                 if (isTounch){
-                    XyEntity xyEntity=robotLocationView.getRobotLocationInWindow();
+                    XyEntity xyEntity=robotLocationView.getRobotLocationInWindow(0,0);
                     XyEntity xyEntity1=robotLocationView.toWorld(xyEntity.getX(),xyEntity.getY());
                     float rotation=robotLocationView.getRadians();
                     reqCmdReloc(xyEntity1.getX(),xyEntity1.getY(),rotation);
@@ -133,7 +133,7 @@ public class RelocationActivity extends DDRActivity {
                 onBackPressed();
                 break;
             case R.id.tv_look:
-                XyEntity original=robotLocationView.getRobotLocationInWindow();
+                XyEntity original=robotLocationView.getRobotLocationInWindow(0,0);
                 XyEntity worldXY=robotLocationView.toWorld(original.getX(),original.getY());
                 float rotation1=robotLocationView.getRadians();
                 toast("X:"+worldXY.getX()+",Y:"+worldXY.getY()+",弧度："+rotation1);
@@ -145,7 +145,8 @@ public class RelocationActivity extends DDRActivity {
     }
 
 
-    /**
+
+    /** 
      * 发送重定位
      * @param x
      * @param y
@@ -238,12 +239,12 @@ public class RelocationActivity extends DDRActivity {
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
     }
-    /********************************** start- 显示参考层弹窗******************************/
-    private CustomPopuWindow customPopuWindow;
+
     private TextView tvGrid,tvTargetPointRe,tvAllPoint,tvPathRe,tvAllPath;
     private LinearLayout layoutGrid,layoutTarget,layoutPath;
     private GridTextView tv025m,tv05m,tv1m,tv2m;
@@ -254,10 +255,11 @@ public class RelocationActivity extends DDRActivity {
     private int gridStatus;                                // 0 默认 1:0.25m ,2: 0.5m, 3: 1m ,4: 2m
     private void showPopupWindowReference(View view){
         View contentView= LayoutInflater.from(this).inflate(R.layout.popupwindow_reference,null);
-        customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(context)
+        /********************************** start- 显示参考层弹窗******************************/
+        new CustomPopuWindow.PopupWindowBuilder(context)
                 .setView(contentView)
                 .create()
-                .showAsDropDown(view,0,5);
+                .showAsDropDown(view, 0, 5);
         tvGrid=contentView.findViewById(R.id.tv_grid);
         tvTargetPointRe=contentView.findViewById(R.id.tv_target_point);
         tvPathRe=contentView.findViewById(R.id.tv_path);

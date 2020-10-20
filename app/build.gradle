@@ -24,7 +24,7 @@ android {
     flavorDimensions 'dadao'
     productFlavors{
         //模组项目
-        DaDao{
+        dadao{
             applicationId "ddr.example.com.nddrandroidclient"
             versionName "0.6.3"
             // 自动生成@string/app_name为 app1的名称
@@ -147,13 +147,7 @@ protobuf {
         }
     }
 }
-//这里自定义关键字来获取指定渠道来编译
-/*configurations {
-    beidaDebugApi
-    huaweiDebugApi
-    beidaReleaseApi
-    huaweiReleaseApi
-}*/
+
 
 dependencies {
 
@@ -225,11 +219,7 @@ dependencies {
     // LitePal数据库 https://github.com/guolindev/LitePal
     implementation 'org.litepal.guolindev:core:3.1.1'
     implementation project(path: ':OpenCVLibrary430')
-/*
-     beidaDebugApi project(path: ':OpenCVLibrary430',configuration:'beidaDebug')
-     huaweiDebugApi project(path: ':OpenCVLibrary430',configuration:'huaweiDebug')
-     beidaReleaseApi project(path: ':OpenCVLibrary430',configuration:'beidaRelease')
-     huaweiReleaseApi project(path: ':OpenCVLibrary430',configuration:'huaweiRelease')*/
+
 
 
 }

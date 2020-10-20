@@ -223,6 +223,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 }
                 break;
         }
+
     }
 
     public static StatusFragment newInstance(){

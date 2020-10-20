@@ -104,7 +104,7 @@ public class MapFileStatus {
         space_items=reqDDRVLNMapEx.getSpacedata().getSpaceSetList();
         if (mapName.equals(NotifyBaseStatusEx.getInstance().getCurroute())){
            currentMapEx=reqDDRVLNMapEx;
-           // Logger.e("返回信息为当前地图"+mapName+";"+taskItemExes.size());
+            Logger.e("返回信息为当前地图"+mapName+";"+pathLineItemExes.size());
             cTargetPoints.clear();
             cPathLines.clear();
             cTaskModes.clear();

@@ -52,7 +52,6 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
     private int mBackColor = Color.TRANSPARENT;       //背景色透明
     //承载点云数据的基类，并保存最新一帧的数据
     private NotifyLidarPtsEntity notifyLidarPtsEntity;
-    private List<BaseCmd.notifyLidarPts.Position> positionList=new ArrayList<>();    //雷达当前扫到的点云
     private Paint radarPaint,paint,linePaint1,textPaint;
     private Matrix mapMatrix;
     private Bitmap directionBitmap,directionBitmap1;
@@ -311,10 +310,11 @@ public class MapImageView extends SurfaceView implements SurfaceHolder.Callback 
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
             canvas.drawColor(Color.parseColor("#101112"));
             canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
-            positionList = notifyLidarPtsEntity.getPositionList();
+            //雷达当前扫到的点云
+            List<BaseCmd.notifyLidarPts.Position> positionList = notifyLidarPtsEntity.getPositionList();
             //Logger.d("-------点云数量：" + positionList.size());
             int size = positionList.size();
-            if (positionList != null && size > 0) {
+            if (size > 0) {
                 XyEntity xyEntity1 = toCanvas(notifyLidarPtsEntity.getPosX(), notifyLidarPtsEntity.getPosY());
                 for (int i = 0; i < size; i++) {
                     XyEntity xyEntity = toCanvas(positionList.get(i).getPtX(), positionList.get(i).getPtY());
