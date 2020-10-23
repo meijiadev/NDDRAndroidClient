@@ -94,7 +94,6 @@ public class ZoomImageView extends View {
                 e.printStackTrace();
             }
         }
-
     }
     /**
      * 判断文件是否存在
@@ -113,6 +112,7 @@ public class ZoomImageView extends View {
         }
         return true;
     }
+
     /**
      * 获取图片的Mat数据
      * @return

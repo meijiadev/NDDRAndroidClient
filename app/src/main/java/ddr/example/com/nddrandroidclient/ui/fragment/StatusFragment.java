@@ -128,7 +128,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     private TcpClient tcpClient;
     private String mapName;//地图名
     private String taskName;//任务名
-    public static String robotID;//机器人ID
+    private   String robotID;//机器人ID
     private String workStatus; //工作状态
     private int lsNum=1; //临时任务次数
     private List<String> groupList=new ArrayList<>();
@@ -311,6 +311,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             recyclerGoPoint.setVisibility(View.GONE);
             tv_set_go.setText(R.string.create_task_steps);
         }
+        robotID=notifyBaseStatusEx.getRobotId();
         tv_now_device.setText(robotID);
         tv_work_time.setText(workTimes +getString(R.string.common_minute));
         tv_task_speed.setText(taskSpeed +" m/s");

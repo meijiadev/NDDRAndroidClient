@@ -24,6 +24,7 @@ public class NotifyBaseStatusExProcessor extends BaseProcessor {
         NotifyBaseStatusEx notifyBaseStatusEx1=NotifyBaseStatusEx.getInstance();
         notifyBaseStatusEx1.setCurroute(notifyBaseStatusEx.getCurrroute().toStringUtf8());
         notifyBaseStatusEx1.setCurrpath(notifyBaseStatusEx.getCurrpath().toStringUtf8());
+        notifyBaseStatusEx1.setRobotId(notifyBaseStatusEx.getRobotid().toStringUtf8());
         notifyBaseStatusEx1.setMode(notifyBaseStatusEx.getModeValue());
         notifyBaseStatusEx1.setSonMode(notifyBaseStatusEx.getSonmodeValue());
         notifyBaseStatusEx1.seteDynamicOAStatus(notifyBaseStatusEx.getDynamicoaValue());
