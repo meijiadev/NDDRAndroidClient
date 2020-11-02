@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.protobuf.ByteString;
@@ -28,7 +32,6 @@ import java.util.Map;
 
 import DDRCommProto.BaseCmd;
 import DDRVLNMapProto.DDRVLNMap;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
@@ -41,6 +44,9 @@ import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.other.HwBuild;
+import ddr.example.com.nddrandroidclient.entity.other.HwFloor;
+import ddr.example.com.nddrandroidclient.entity.other.HwParkID;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
@@ -51,6 +57,8 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.socket.hwSocker.HttpUtilh;
+import ddr.example.com.nddrandroidclient.socket.hwSocker.Utilityhw;
 import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
@@ -62,20 +70,25 @@ import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.HwBuildNameDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.InputDialogHw;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
-import ddr.example.com.nddrandroidclient.widget.edit.LimitInputTextWatcher;
 import ddr.example.com.nddrandroidclient.widget.edit.MyEditTextChangeListener;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import ddr.example.com.nddrandroidclient.widget.textview.DDRTextView;
 import ddr.example.com.nddrandroidclient.widget.textview.GridTextView;
+import ddr.example.com.nddrandroidclient.widget.textview.SmartTextView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * time: 2019/10/26
@@ -180,6 +193,15 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     TextView savePoint;
     @BindView(R.id.save_path)
     TextView savePath;
+//    @BindView(R.id.tv_input_build)
+//    TextView tvInputBuild;
+//    @BindView(R.id.tv_input_flor)
+//    TextView tvInputFlor;
+//    @BindView(R.id.tv_input_cancel)
+//    SmartTextView tvInputCancel;
+//    @BindView(R.id.tv_input_confirm)
+//    AppCompatTextView tvInputConfirm;
+
 
 
     private List<TargetPoint> targetPoints = new ArrayList<>();                    // 解析后的目标点列表
@@ -197,7 +219,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private String mapName;                                  //点击查看的地图名
     private int mPosition = 0;                                   //当前显示的是哪个子项数据 （目标点列表、路径列表、任务列表）
     private String taskName;                                     //任务编辑框中的任务名
-    private BaseDialog inputDialog;                              //地图命名窗口
+    private BaseDialog inputDialog, inputDialogHw,inputDialogf;                              //地图命名窗口
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -227,6 +249,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         NLinearLayoutManager linearLayoutManager1 = new NLinearLayoutManager(getAttachActivity());
         actionRecycler.setLayoutManager(linearLayoutManager1);
         actionRecycler.setAdapter(actionAdapter);     //给动作Recycler设置适配器
+        BuildAdapter = new StringAdapter(R.layout.item_input_hw);
+        FloorAdapter = new StringAdapter(R.layout.item_input_hw);
 
 
     }
@@ -237,7 +261,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapFileStatus = MapFileStatus.getInstance();
         List<String> downloadMapNames = mapFileStatus.getMapNames();
         checkFilesAllName(downloadMapNames);
-        mapInfos=mapFileStatus.getMapInfos();
+        mapInfos = mapFileStatus.getMapInfos();
         mapAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         mapAdapter.setNewData(mapInfos);
         onItemClick();
@@ -267,56 +291,148 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     @SuppressLint("ResourceAsColor")
-    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete, R.id.bt_batch_delete, R.id.tv_delete_all,R.id.tv_back_batch, R.id.save_point,R.id.tv_revamp_charge, R.id.revamp_point, R.id.tv_path,
-            R.id.spinner_mode, R.id.bt_add_action, R.id.save_path, R.id.tv_edit_map,R.id.tv_reference,R.id.tv_set_charge})
+    @OnClick({R.id.bt_create_map, R.id.iv_back, R.id.tv_target_point, R.id.tv_add_new, R.id.tv_delete, R.id.bt_batch_delete, R.id.tv_delete_all, R.id.tv_back_batch, R.id.save_point, R.id.tv_revamp_charge, R.id.revamp_point, R.id.tv_path,
+            R.id.spinner_mode, R.id.bt_add_action, R.id.save_path, R.id.tv_edit_map, R.id.tv_reference, R.id.tv_set_charge})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_create_map:
-                if (!isShowSelected){
-                    if (notifyBaseStatusEx.getMode()==1){
-                        inputDialog=new InputDialog.Builder(getAttachActivity())
-                                .setTitle(R.string.collect_map)
+                if (!isShowSelected) {
+                    if (notifyBaseStatusEx.getMode() == 1) {
+//                        inputDialog=new InputDialog.Builder(getAttachActivity())
+//                                .setTitle(R.string.collect_map)
+//                                .setAutoDismiss(false)
+//                                .setHint(R.string.enter_map_name)
+//                                .addTextChangedListener(LimitInputTextWatcher.REGEX_NAME)
+//                                .setListener(new InputDialog.OnListener() {
+//                                    @Override
+//                                    public void onConfirm(BaseDialog dialog, String content) {
+//                                        if (!content.isEmpty()) {
+//                                            content = content.replaceAll(" ", "");
+//                                            String name = "OneRoute_" + content;
+//                                            if (!mapFileStatus.getMapNames().contains(name)) {
+//                                                LitePal.deleteDatabase("DDRDataBase");
+//                                                BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
+//                                                        .setMode(BaseCmd.eCmdActionMode.eRec)
+//                                                        .setRouteName(ByteString.copyFromUtf8(name))
+//                                                        .build();
+//                                                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
+//                                                Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
+//                                                intent.putExtra("CollectName", name);
+//                                                startActivity(intent);
+//                                                inputDialog.dismiss();
+//                                            } else {
+//                                                toast(R.string.name_repetition);
+//                                            }
+//                                        } else {
+//                                            toast(R.string.please_anter_name);
+//                                        }
+//                                    }
+//                                    @Override
+//                                    public void onCancel(BaseDialog dialog) {
+//                                        inputDialog.dismiss();
+//                                    }
+//                                }).show();
+                        queryFromServer();
+                        inputDialogHw = new InputDialogHw.Builder(getAttachActivity())
                                 .setAutoDismiss(false)
-                                .setHint(R.string.enter_map_name)
-                                .addTextChangedListener(LimitInputTextWatcher.REGEX_NAME)
-                                .setListener(new InputDialog.OnListener() {
+                                .setListener(new InputDialogHw.OnListener() {
                                     @Override
-                                    public void onConfirm(BaseDialog dialog, String content) {
-                                        if (!content.isEmpty()) {
-                                            content = content.replaceAll(" ", "");
-                                            String name = "OneRoute_" + content;
-                                            if (!mapFileStatus.getMapNames().contains(name)) {
-                                                LitePal.deleteDatabase("DDRDataBase");
-                                                BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
-                                                        .setMode(BaseCmd.eCmdActionMode.eRec)
-                                                        .setRouteName(ByteString.copyFromUtf8(name))
-                                                        .build();
-                                                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
-                                                Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
-                                                intent.putExtra("CollectName", name);
-                                                startActivity(intent);
-                                                inputDialog.dismiss();
+                                    public void onConfirm(BaseDialog dialog) {
+                                        editNum=inputDialogHw.getContentView().findViewById(R.id.edit_num);
+                                        try {
+                                            if (!textBuildView.getText().toString().isEmpty() && !textFloorView.getText().toString().isEmpty()) {
+                                                String content;
+                                                String num;
+                                                String name;
+                                                if (!TextUtils.isEmpty(editNum.getText()) ){
+                                                    num=editNum.getText().toString();
+                                                    if (hwParkID.getSectorID()!=null){
+                                                        content = hwParkID.getSectorID().replaceAll("-", "_");
+                                                    }else {
+                                                        content = GlobalParameter.hwParkID.replaceAll("-", "_");
+                                                    }
+                                                    if (buildID.equals("")){
+                                                        name = "__"+content+"_"+num;
+                                                    }else {
+                                                        name = num+"_"+buildID+"_"+FloorID+"_"+content;
+                                                    }
+                                                    Logger.e("华为地图名"+name);
+                                                    if (!mapFileStatus.getMapNames().contains(name)) {
+                                                        LitePal.deleteDatabase("DDRDataBase");
+                                                        BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
+                                                                .setMode(BaseCmd.eCmdActionMode.eRec)
+                                                                .setRouteName(ByteString.copyFromUtf8(name))
+                                                                .build();
+                                                        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
+                                                        Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
+                                                        intent.putExtra("CollectName", name);
+                                                        startActivity(intent);
+                                                        inputDialogHw.dismiss();
+                                                    } else {
+                                                        toast(R.string.name_repetition);
+                                                    }
+                                                }else {
+                                                    toast("请输入序号");
+                                                }
                                             } else {
-                                                toast(R.string.name_repetition);
+                                                toast(R.string.please_anter_name);
                                             }
-                                        } else {
-                                            toast(R.string.please_anter_name);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
                                         }
                                     }
+
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
-                                        inputDialog.dismiss();
+                                        inputDialogHw.dismiss();
+
+                                    }
+
+                                    @Override
+                                    public void onBuild(BaseDialog dialog) {
+                                        textBuildView = inputDialogHw.getContentView().findViewById(R.id.tv_input_build);
+//                                        showHWPopupWindow(inputDialogHw.getContentView().findViewById(R.id.tv_input_build), 1);
+                                        inputDialog=new HwBuildNameDialog.Builder(getAttachActivity())
+                                                .setAdapter(BuildAdapter)
+                                                .setAutoDismiss(false)
+                                                .setGravity(Gravity.CENTER)
+                                                .setListener(new HwBuildNameDialog.OnListener() {
+                                                }).show();
+                                        onItemClick(1);
+                                    }
+
+                                    @Override
+                                    public void onFloor(BaseDialog dialog) {
+                                        textFloorView = inputDialogHw.getContentView().findViewById(R.id.tv_input_flor);
+                                        if (buildID.equals("")){
+                                            textFloorView.setText("空");
+                                            FloorID="";
+                                        }else {
+                                            if (textBuildView.getText() != null && textBuildView.getText().length() > 0) {
+                                                inputDialogf=new HwBuildNameDialog.Builder(getAttachActivity())
+                                                        .setAdapter(FloorAdapter)
+                                                        .setAutoDismiss(false)
+                                                        .setGravity(Gravity.CENTER)
+                                                        .setListener(new HwBuildNameDialog.OnListener() {
+                                                        }).show();
+                                                onItemClick(2);
+//                                            showHWPopupWindow(inputDialogHw.getContentView().findViewById(R.id.tv_input_flor), 2);
+                                            } else {
+                                                toast("请先选择楼号");
+                                            }
+                                        }
                                     }
                                 }).show();
 
-                    }else if (NotifyBaseStatusEx.getInstance().getMode() == 2) {
+
+                    } else if (NotifyBaseStatusEx.getInstance().getMode() == 2) {
                         tcpClient.getAllLidarMap();
                         Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
                         startActivity(intent);
-                    }else {
+                    } else {
                         toast(R.string.not_wait_collect);
                     }
-                }else {
+                } else {
                     toast(R.string.batch_collect);
                 }
                 break;
@@ -326,7 +442,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     tvDeleteAll.setVisibility(View.GONE);
                     tvBackBatch.setVisibility(View.GONE);
                     isShowSelected = false;
-                    for (MapInfo mapInfo:mapInfos){
+                    for (MapInfo mapInfo : mapInfos) {
                         mapInfo.setSelected(false);
                     }
                     mapAdapter.showSelected(false);
@@ -345,7 +461,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                List<DDRVLNMap.reqMapOperational.OptItem> optItems = new ArrayList<>();;
+                                List<DDRVLNMap.reqMapOperational.OptItem> optItems = new ArrayList<>();
                                 for (int i = 0; i < mapInfos.size(); i++) {
                                     if (mapInfos.get(i).isSelected()) {
                                         DDRVLNMap.reqMapOperational.OptItem optItem = DDRVLNMap.reqMapOperational.OptItem.newBuilder()
@@ -371,6 +487,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                         .setMessage(R.string.common_deleting)
                                         .show();
                             }
+
                             @Override
                             public void onCancel(BaseDialog dialog) {
                             }
@@ -410,13 +527,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         } else if (targetPoints.get(mPosition).getPointType().equals(PointType.eMarkingTypeCharging)) {
                             layoutEdit.setVisibility(View.GONE);
                             tvRevampCharge.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             layoutEdit.setVisibility(View.VISIBLE);
                             tvRevampCharge.setVisibility(View.GONE);
                         }
-                        etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
-                        etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
-                        etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
+                        etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap, etX, etY, etToward));
+                        etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap, etX, etY, etToward));
+                        etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap, etX, etY, etToward));
                         PointView.getInstance(getAttachActivity()).setPoint(targetPoints.get(mPosition));
                         zoomMap.invalidate();
                     }
@@ -618,7 +735,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                 tvConfig.setText(pathLines.get(0).getConfig());
                                                 actionAdapter.setNewData(selectActionList(pathLines.get(0).getPathPoints()));
                                             }
-                                            tvPath.setText(getString(R.string.path_label)+ "(" + pathLines.size() + ")");
+                                            tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
                                             LineView.getInstance(getAttachActivity()).setPoints(null);
                                             zoomMap.invalidate();
                                         } else {
@@ -635,6 +752,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                                 zoomMap.invalidate();
                             }
+
                             @Override
                             public void onCancel(BaseDialog dialog) {
                             }
@@ -649,6 +767,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.tv_reference:
                 showPopupWindowReference(tvReference);
                 break;
+//            case R.id.tv_input_build:
+//                toast("请先选择楼号");
+//                showHWPopupWindow(tvInputBuild, 1);
+//                break;
+//            case R.id.tv_input_flor:
+//                toast("请先选择楼号");
+//                if (textBuildView.getText() != null && textBuildView.getText().length() > 0) {
+//                    showHWPopupWindow(tvInputFlor, 2);
+//                } else {
+//                    toast("请先选择楼号");
+//                }
+//                break;
+//            case R.id.tv_input_cancel:
+//                relHwCollect.setVisibility(View.GONE);
+//                break;
+//            case R.id.tv_input_confirm:
+//                relHwCollect.setVisibility(View.GONE);
+//                break;
 
         }
     }
@@ -668,20 +804,20 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 进入批量删除状态
      */
-    private void showBatchSelected(){
+    private void showBatchSelected() {
         if (isShowSelected) {              //是否显示批量选择
             btBatch.setBackgroundResource(R.drawable.bt_bg__map);
             tvDeleteAll.setVisibility(View.GONE);
             tvBackBatch.setVisibility(View.GONE);
             isShowSelected = false;
-            for (MapInfo mapInfo:mapInfos){
+            for (MapInfo mapInfo : mapInfos) {
                 mapInfo.setSelected(false);
             }
             mapAdapter.showSelected(false);
         } else {
             btBatch.setBackgroundResource(R.drawable.button_shape_blue);
             isShowSelected = true;
-            for (MapInfo mapInfo:mapInfos){
+            for (MapInfo mapInfo : mapInfos) {
                 mapInfo.setSelected(false);
             }
             mapAdapter.showSelected(true);
@@ -757,7 +893,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
         }));
         mapAdapter.setOnItemChildClickListener(((adapter, view, position) -> {
-            if (!isShowSelected){
+            if (!isShowSelected) {
                 showMapSettingWindow(view.findViewById(R.id.iv_more), position);
             }
         }));
@@ -776,19 +912,19 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         mapName = mapInfos.get(position).getMapName();
         tcpClient.getMapInfo(ByteString.copyFromUtf8(mapName));
         dialog = new WaitDialog.Builder(getAttachActivity())
-                .setMessage(getString(R.string.common_load) + mapName +getString(R.string.common_loading))
+                .setMessage(getString(R.string.common_load) + mapName + getString(R.string.common_loading))
                 .show();
         String name = mapInfos.get(position).getMapName();
         name = name.replaceAll("OneRoute_", "");
         tvMapName.setText(getString(R.string.map_name) + name);
         tvMapSize.setText(getString(R.string.map_size) + (int) mapInfos.get(position).getWidth() + "x" + (int) mapInfos.get(position).getHeight() + "m²");
         tvCreateTime.setText(getString(R.string.create_time) + mapInfos.get(position).getTime());
-        waitRunnable=new Runnable() {
+        waitRunnable = new Runnable() {
             @Override
             public void run() {
-                if (dialog!=null){
+                if (dialog != null) {
                     dialog.dismiss();
-                    dialog=null;
+                    dialog = null;
                     toast(R.string.load_failed);
                        /*mapLayout.setVisibility(View.GONE);
                     mapDetailLayout.setVisibility(View.VISIBLE);
@@ -799,9 +935,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                 }
             }
         };
-        getAttachActivity().postDelayed(waitRunnable,6000);
+        getAttachActivity().postDelayed(waitRunnable, 6000);
     }
-
 
 
     private String switchMapName, switchBitmapPath;
@@ -821,7 +956,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             switch (v.getId()) {
                 case R.id.tv_switch:
                     //地图是否使用
-                   String message=(mapIsUsing?getString(R.string.is_relocation):getString(R.string.is_switch_map));
+                    String message = (mapIsUsing ? getString(R.string.is_relocation) : getString(R.string.is_switch_map));
                     new InputDialog.Builder(getActivity())
                             .setTitle(message)
                             .setEditVisibility(View.GONE)
@@ -832,7 +967,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                     switchBitmapPath = mapInfos.get(position).getBitmap();
                                     Logger.e("-----把地图切换到：" + switchMapName);
                                     tcpClient.exitModel();
-                                    if (!mapIsUsing){
+                                    if (!mapIsUsing) {
                                         tcpClient.reqRunControlEx(switchMapName);
                                         waitDialog = new WaitDialog.Builder(getAttachActivity())
                                                 .setMessage(R.string.in_switch)
@@ -843,10 +978,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                                                 toast(R.string.switch_failed);
                                             }
                                         }, 5000);
-                                    }else {
+                                    } else {
                                         reqCmdRelocation();     //发送重定位命令
                                     }
                                 }
+
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
                                 }
@@ -857,8 +993,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     break;
                 case R.id.tv_setting:                     //进入地图管理界面
                     mapName = mapInfos.get(position).getMapName();
-                    Intent intent=new Intent(getAttachActivity(),MapSettingActivity.class);
-                    intent.putExtra("mapName",mapName);
+                    Intent intent = new Intent(getAttachActivity(), MapSettingActivity.class);
+                    intent.putExtra("mapName", mapName);
                     startActivity(intent);
                     break;
             }
@@ -883,10 +1019,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 发送重定位
      */
-    private void reqCmdRelocation(){
-        if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
+    private void reqCmdRelocation() {
+        if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
             toast(R.string.can_not_relocation);
-        }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
+        } else if (notifyBaseStatusEx.geteSelfCalibStatus() == 1) {
             if (notifyBaseStatusEx.getMode() == 3) {
                 if (notifyBaseStatusEx.getSonMode() == 15) {
                     toast(R.string.in_relocation);
@@ -894,15 +1030,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             } else {
                 reqCmdRelocation1();
             }
-        }else{
+        } else {
             reqCmdRelocation1();
         }
     }
-    private void reqCmdRelocation1(){
-        BaseCmd.reqCmdReloc reqCmdReloc=BaseCmd.reqCmdReloc.newBuilder()
+
+    private void reqCmdRelocation1() {
+        BaseCmd.reqCmdReloc reqCmdReloc = BaseCmd.reqCmdReloc.newBuilder()
                 .setTypeValue(0)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdReloc);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdReloc);
     }
 
     /**
@@ -938,13 +1075,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             } else if (targetPoints.get(mPosition).getPointType().equals(PointType.eMarkingTypeCharging)) {
                 layoutEdit.setVisibility(View.GONE);
                 tvRevampCharge.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 layoutEdit.setVisibility(View.VISIBLE);
                 tvRevampCharge.setVisibility(View.GONE);
             }
-            etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
-            etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
-            etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap,etX,etY,etToward));
+            etX.et_content.addTextChangedListener(new MyEditTextChangeListener(0, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap, etX, etY, etToward));
+            etY.et_content.addTextChangedListener(new MyEditTextChangeListener(1, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap, etX, etY, etToward));
+            etToward.et_content.addTextChangedListener(new MyEditTextChangeListener(2, PointView.getInstance(getAttachActivity()), targetPoints.get(mPosition), zoomMap, etX, etY, etToward));
             for (TargetPoint targetPoint : targetPoints) {
                 targetPoint.setSelected(false);
             }
@@ -984,14 +1121,14 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     /**
-     *隐藏建图路径时的动作点列表
+     * 隐藏建图路径时的动作点列表
      */
-    private void hideActionRecycler(int position){
-        if (pathLines.get(position).getName().equals("建图路径")){
+    private void hideActionRecycler(int position) {
+        if (pathLines.get(position).getName().equals("建图路径")) {
             tvActionRecycler.setVisibility(View.INVISIBLE);
             tvAddAction.setVisibility(View.INVISIBLE);
             actionRecycler.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             tvActionRecycler.setVisibility(View.VISIBLE);
             tvAddAction.setVisibility(View.VISIBLE);
             actionRecycler.setVisibility(View.VISIBLE);
@@ -1052,34 +1189,35 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     /********************************** start- 显示参考层弹窗******************************/
-    private TextView tvGrid,tvTargetPointRe,tvAllPoint,tvPathRe,tvAllPath;
-    private LinearLayout layoutGrid,layoutTarget,layoutPath;
-    private GridTextView tv025m,tv05m,tv1m,tv2m;
-    private RecyclerView recyclerPoints,recyclerPaths;
+    private TextView tvGrid, tvTargetPointRe, tvAllPoint, tvPathRe, tvAllPath;
+    private LinearLayout layoutGrid, layoutTarget, layoutPath;
+    private GridTextView tv025m, tv05m, tv1m, tv2m;
+    private RecyclerView recyclerPoints, recyclerPaths;
     private TargetPointAdapter targetReferenceAdapter;
     private PathAdapter pathReferenceAdapter;
-    private boolean allShowPoint,allShowPath;               // 是否全部显示
+    private boolean allShowPoint, allShowPath;               // 是否全部显示
     private int gridStatus;                                // 0 默认 1:0.25m ,2: 0.5m, 3: 1m ,4: 2m
-    private void showPopupWindowReference(View view){
-        View contentView= LayoutInflater.from(getAttachActivity()).inflate(R.layout.popupwindow_reference,null);
-        customPopuWindow=new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+
+    private void showPopupWindowReference(View view) {
+        View contentView = LayoutInflater.from(getAttachActivity()).inflate(R.layout.popupwindow_reference, null);
+        customPopuWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
                 .setView(contentView)
                 .create()
-                .showAsDropDown(view,0,5);
-        tvGrid=contentView.findViewById(R.id.tv_grid);
-        tvTargetPointRe=contentView.findViewById(R.id.tv_target_point);
-        tvPathRe=contentView.findViewById(R.id.tv_path);
-        layoutGrid=contentView.findViewById(R.id.layout_grid);
-        layoutTarget=contentView.findViewById(R.id.layout_target);
-        layoutPath=contentView.findViewById(R.id.layout_path);
-        tvAllPoint=contentView.findViewById(R.id.tv_all_point);
-        tvAllPath=contentView.findViewById(R.id.tv_all_path);
-        tv025m=contentView.findViewById(R.id.tv_025m);
-        tv05m=contentView.findViewById(R.id.tv_05m);
-        tv1m=contentView.findViewById(R.id.tv_1m);
-        tv2m=contentView.findViewById(R.id.tv_2m);
-        recyclerPoints=contentView.findViewById(R.id.recycler_target_point);
-        recyclerPaths=contentView.findViewById(R.id.recycler_paths);
+                .showAsDropDown(view, 0, 5);
+        tvGrid = contentView.findViewById(R.id.tv_grid);
+        tvTargetPointRe = contentView.findViewById(R.id.tv_target_point);
+        tvPathRe = contentView.findViewById(R.id.tv_path);
+        layoutGrid = contentView.findViewById(R.id.layout_grid);
+        layoutTarget = contentView.findViewById(R.id.layout_target);
+        layoutPath = contentView.findViewById(R.id.layout_path);
+        tvAllPoint = contentView.findViewById(R.id.tv_all_point);
+        tvAllPath = contentView.findViewById(R.id.tv_all_path);
+        tv025m = contentView.findViewById(R.id.tv_025m);
+        tv05m = contentView.findViewById(R.id.tv_05m);
+        tv1m = contentView.findViewById(R.id.tv_1m);
+        tv2m = contentView.findViewById(R.id.tv_2m);
+        recyclerPoints = contentView.findViewById(R.id.recycler_target_point);
+        recyclerPaths = contentView.findViewById(R.id.recycler_paths);
         handleRecycler();
         handleLogic();
 
@@ -1088,13 +1226,13 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 处理弹出显示内容的点击事件
      */
-    private void handleLogic(){
-        View.OnClickListener listener=v -> {
-            switch (v.getId()){
+    private void handleLogic() {
+        View.OnClickListener listener = v -> {
+            switch (v.getId()) {
                 case R.id.tv_grid:
-                    if (layoutGrid.getVisibility()==View.VISIBLE){
+                    if (layoutGrid.getVisibility() == View.VISIBLE) {
                         layoutGrid.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         layoutGrid.setVisibility(View.VISIBLE);
                     }
                     layoutTarget.setVisibility(View.GONE);
@@ -1108,7 +1246,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         tv025m.setTextColor(Color.parseColor("#FFFFFFFF"));
                         tv025m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
                         tv025m.setSelected(true);
-                        gridStatus=1;
+                        gridStatus = 1;
                     } else {
                         GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
                         zoomMap.invalidate();
@@ -1122,8 +1260,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         setIconDefault1();
                         tv05m.setSelected(true);
                         tv05m.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        tv05m.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
-                        gridStatus=2;
+                        tv05m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
+                        gridStatus = 2;
                     } else {
                         setIconDefault1();
                         GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
@@ -1137,8 +1275,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         setIconDefault1();
                         tv1m.setSelected(true);
                         tv1m.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        tv1m.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
-                        gridStatus=3;
+                        tv1m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
+                        gridStatus = 3;
                     } else {
                         setIconDefault1();
                         GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
@@ -1152,8 +1290,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                         setIconDefault1();
                         tv2m.setSelected(true);
                         tv2m.setTextColor(Color.parseColor("#FFFFFFFF"));
-                        tv2m.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
-                        gridStatus=4;
+                        tv2m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
+                        gridStatus = 4;
                     } else {
                         setIconDefault1();
                         GridLayerView.getInstance(zoomMap).setPrecision(0);        //取消网格
@@ -1161,27 +1299,27 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     }
                     break;
                 case R.id.tv_target_point:
-                    if (layoutTarget.getVisibility()==View.VISIBLE){
+                    if (layoutTarget.getVisibility() == View.VISIBLE) {
                         layoutTarget.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         layoutTarget.setVisibility(View.VISIBLE);
                     }
                     layoutGrid.setVisibility(View.GONE);
                     layoutPath.setVisibility(View.GONE);
                     break;
                 case R.id.tv_all_point:
-                    if (allShowPoint){
-                        allShowPoint=false;
-                        tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+                    if (allShowPoint) {
+                        allShowPoint = false;
+                        tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
                         tvAllPoint.setTextColor(getResources().getColor(R.color.text_gray));
-                        for (TargetPoint targetPoint:targetPoints){
+                        for (TargetPoint targetPoint : targetPoints) {
                             targetPoint.setMultiple(false);
                         }
-                    }else {
-                        allShowPoint=true;
-                        tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                    } else {
+                        allShowPoint = true;
+                        tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
                         tvAllPoint.setTextColor(getResources().getColor(R.color.white));
-                        for (TargetPoint targetPoint:targetPoints){
+                        for (TargetPoint targetPoint : targetPoints) {
                             targetPoint.setMultiple(true);
                         }
                     }
@@ -1190,27 +1328,27 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     targetReferenceAdapter.setNewData(targetPoints);
                     break;
                 case R.id.tv_path:
-                    if (layoutPath.getVisibility()==View.VISIBLE){
+                    if (layoutPath.getVisibility() == View.VISIBLE) {
                         layoutPath.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         layoutPath.setVisibility(View.VISIBLE);
                     }
                     layoutGrid.setVisibility(View.GONE);
                     layoutTarget.setVisibility(View.GONE);
                     break;
                 case R.id.tv_all_path:
-                    if (allShowPath){
-                        allShowPath=false;
-                        tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+                    if (allShowPath) {
+                        allShowPath = false;
+                        tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
                         tvAllPath.setTextColor(getResources().getColor(R.color.text_gray));
-                        for (PathLine pathLine:pathLines){
+                        for (PathLine pathLine : pathLines) {
                             pathLine.setMultiple(false);
                         }
-                    }else {
-                        allShowPath=true;
-                        tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                    } else {
+                        allShowPath = true;
+                        tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
                         tvAllPath.setTextColor(getResources().getColor(R.color.white));
-                        for (PathLine pathLine:pathLines){
+                        for (PathLine pathLine : pathLines) {
                             pathLine.setMultiple(true);
                         }
                     }
@@ -1229,21 +1367,21 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         tvPathRe.setOnClickListener(listener);
         tvAllPoint.setOnClickListener(listener);
         tvAllPath.setOnClickListener(listener);
-        if (allShowPoint){
-            tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+        if (allShowPoint) {
+            tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
             tvAllPoint.setTextColor(getResources().getColor(R.color.white));
-        }else {
-            tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+        } else {
+            tvAllPoint.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
             tvAllPoint.setTextColor(getResources().getColor(R.color.text_gray));
         }
-        if (allShowPath){
-            tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+        if (allShowPath) {
+            tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
             tvAllPath.setTextColor(getResources().getColor(R.color.white));
-        }else {
-            tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_hide),null);
+        } else {
+            tvAllPath.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
             tvAllPath.setTextColor(getResources().getColor(R.color.text_gray));
         }
-        switch (gridStatus){
+        switch (gridStatus) {
             case 0:
                 setIconDefault1();
                 break;
@@ -1255,17 +1393,17 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case 2:
                 tv05m.setSelected(true);
                 tv05m.setTextColor(Color.parseColor("#FFFFFFFF"));
-                tv05m.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                tv05m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
                 break;
             case 3:
                 tv1m.setSelected(true);
                 tv1m.setTextColor(Color.parseColor("#FFFFFFFF"));
-                tv1m.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                tv1m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
                 break;
             case 4:
                 tv2m.setSelected(true);
                 tv2m.setTextColor(Color.parseColor("#FFFFFFFF"));
-                tv2m.setCompoundDrawablesWithIntrinsicBounds(null,null,getResources().getDrawable(R.mipmap.item_show),null);
+                tv2m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_show), null);
                 break;
         }
     }
@@ -1273,24 +1411,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     /**
      * 处理RecyclerView和点击事件
      */
-    private void handleRecycler(){
-        targetReferenceAdapter=new TargetPointAdapter(R.layout.item_show_recycler);
+    private void handleRecycler() {
+        targetReferenceAdapter = new TargetPointAdapter(R.layout.item_show_recycler);
         NLinearLayoutManager layoutManager = new NLinearLayoutManager(getAttachActivity());
         recyclerPoints.setLayoutManager(layoutManager);
         recyclerPoints.setAdapter(targetReferenceAdapter);
-        pathReferenceAdapter=new PathAdapter(R.layout.item_show_recycler);
+        pathReferenceAdapter = new PathAdapter(R.layout.item_show_recycler);
         NLinearLayoutManager layoutManager1 = new NLinearLayoutManager(getAttachActivity());
         recyclerPaths.setLayoutManager(layoutManager1);
         recyclerPaths.setAdapter(pathReferenceAdapter);
         targetReferenceAdapter.setNewData(targetPoints);
         pathReferenceAdapter.setNewData(pathLines);
         targetReferenceAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (targetPoints.get(position).isMultiple()){
+            if (targetPoints.get(position).isMultiple()) {
                 targetPoints.get(position).setMultiple(false);
                 PointView.getInstance(getAttachActivity()).setTargetPoints(targetPoints);
                 zoomMap.invalidate();
                 targetReferenceAdapter.setNewData(targetPoints);
-            }else {
+            } else {
                 targetPoints.get(position).setMultiple(true);
                 PointView.getInstance(getAttachActivity()).setTargetPoints(targetPoints);
                 zoomMap.invalidate();
@@ -1299,12 +1437,12 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         });
 
         pathReferenceAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (pathLines.get(position).isMultiple()){
+            if (pathLines.get(position).isMultiple()) {
                 pathLines.get(position).setMultiple(false);
                 LineView.getInstance(getAttachActivity()).setPathLines(pathLines);
                 zoomMap.invalidate();
                 pathReferenceAdapter.setNewData(pathLines);
-            }else {
+            } else {
                 pathLines.get(position).setMultiple(true);
                 LineView.getInstance(getAttachActivity()).setPathLines(pathLines);
                 zoomMap.invalidate();
@@ -1312,10 +1450,11 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             }
         });
     }
+
     /**
      * 设置网格图标默认状态
      */
-    private void setIconDefault1(){
+    private void setIconDefault1() {
         tv025m.setSelected(false);
         tv05m.setSelected(false);
         tv1m.setSelected(false);
@@ -1328,7 +1467,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         tv1m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
         tv05m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
         tv2m.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.item_hide), null);
-        gridStatus=0;
+        gridStatus = 0;
     }
 
     /**********************************end -********************************************/
@@ -1367,10 +1506,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
+        if (isVisibleToUser) {
             // 相当于onResume()方法--获取焦点
             Logger.e("可见");
-        }else {
+        } else {
             // 相当于onpause()方法---失去焦点
             Logger.e("不可见");
             backToMapList();
@@ -1380,23 +1519,23 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     @Override
     public void onResume() {
         super.onResume();
-        if (tv1m!=null){
-            for (TargetPoint targetPoint:targetPoints){
+        if (tv1m != null) {
+            for (TargetPoint targetPoint : targetPoints) {
                 targetPoint.setMultiple(false);
             }
-            for (PathLine pathLine:pathLines){
+            for (PathLine pathLine : pathLines) {
                 pathLine.setMultiple(false);
             }
             setIconDefault1();
-            allShowPath=false;
+            allShowPath = false;
         }
     }
 
     /**
      * 返回到地图列表页面
      */
-    private void backToMapList(){
-        if (mapDetailLayout!=null){
+    private void backToMapList() {
+        if (mapDetailLayout != null) {
             mapDetailLayout.setVisibility(View.GONE);
             mapLayout.setVisibility(View.VISIBLE);
             mPosition = 0;
@@ -1408,6 +1547,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
     private NotifyBaseStatusEx notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
+
     @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void update(MessageEvent messageEvent) {
@@ -1415,7 +1555,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case updateDDRVLNMap:
                 if (dialog != null) {
                     dialog.dismiss();
-                    dialog=null;
+                    dialog = null;
                     getAttachActivity().cancelDelay(waitRunnable);
                     getAttachActivity().postDelayed(() -> {
                         try {
@@ -1439,7 +1579,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             } else if (targetPoints.get(0).getPointType().equals(PointType.eMarkingTypeCharging)) {
                                 layoutEdit.setVisibility(View.GONE);
                                 tvRevampCharge.setVisibility(View.VISIBLE);
-                            }else {
+                            } else {
                                 layoutEdit.setVisibility(View.VISIBLE);
                                 tvRevampCharge.setVisibility(View.GONE);
                             }
@@ -1449,16 +1589,16 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                             etY.setText(0);
                             etToward.setText(0);
                         }
-                        tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
+                        tvTargetPoint.setText(getString(R.string.target_point_label) + "(" + targetPoints.size() + ")");
                         tvPath.setText(getString(R.string.path_label) + "(" + pathLines.size() + ")");
                         mapLayout.setVisibility(View.GONE);
                         mapDetailLayout.setVisibility(View.VISIBLE);
                         leftDetailLayout.setVisibility(View.VISIBLE);
                         pointDetailLayout.setVisibility(View.VISIBLE);
                         pathDetailLayout.setVisibility(View.GONE);
-                        if (haveChargePoint()){
+                        if (haveChargePoint()) {
                             tvSetCharge.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             tvSetCharge.setVisibility(View.VISIBLE);
                         }
                         targetPointAdapter.setNewData(targetPoints);
@@ -1474,27 +1614,27 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case updatePoints:
                 List<TargetPoint> targetPoints1 = (List<TargetPoint>) messageEvent.getData();
                 targetPoints.addAll(targetPoints1);
-                for (TargetPoint targetPoint:targetPoints){
+                for (TargetPoint targetPoint : targetPoints) {
                     targetPoint.setMultiple(false);
                 }
                 targetPointAdapter.setNewData(targetPoints);
-                tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
+                tvTargetPoint.setText(getString(R.string.target_point_label) + "(" + targetPoints.size() + ")");
                 //tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
                 break;
             case setChargePoint:
-                TargetPoint chargePoint= (TargetPoint) messageEvent.getData();
+                TargetPoint chargePoint = (TargetPoint) messageEvent.getData();
                 addChargePoint(chargePoint);
                 targetPointAdapter.setNewData(targetPoints);
-                tvTargetPoint.setText(getString(R.string.target_point_label)+ "(" + targetPoints.size() + ")");
+                tvTargetPoint.setText(getString(R.string.target_point_label) + "(" + targetPoints.size() + ")");
                 tcpClient.saveDataToServer(mapFileStatus.getReqDDRVLNMapEx(), targetPoints, pathLines, taskModes);
-                if (haveChargePoint()){
+                if (haveChargePoint()) {
                     tvSetCharge.setVisibility(View.GONE);
                 }
                 break;
             case updatePaths:
                 List<PathLine> pathLines1 = (List<PathLine>) messageEvent.getData();
                 pathLines.addAll(pathLines1);
-                for (PathLine pathLine:pathLines){
+                for (PathLine pathLine : pathLines) {
                     pathLine.setMultiple(false);
                 }
                 pathAdapter.setNewData(pathLines);
@@ -1519,7 +1659,7 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
                     }
                 }
                 getAttachActivity().postDelayed(() -> {
-                    mapInfos=mapFileStatus.getMapInfos();
+                    mapInfos = mapFileStatus.getMapInfos();
                     mapAdapter.setNewData(mapInfos);
                 }, 500);
                 break;
@@ -1545,20 +1685,19 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     }
 
 
-
     /**
      * 添加充电点 一张地图只能有一个充电点
      */
-    private void addChargePoint(TargetPoint targetPoint){
-        if (targetPoint!=null){
-            for (int i=0;i<targetPoints.size();i++){
-                if (targetPoints.get(i).getPointType().equals(PointType.eMarkingTypeCharging)){
-                    targetPoints.set(i,targetPoint);
+    private void addChargePoint(TargetPoint targetPoint) {
+        if (targetPoint != null) {
+            for (int i = 0; i < targetPoints.size(); i++) {
+                if (targetPoints.get(i).getPointType().equals(PointType.eMarkingTypeCharging)) {
+                    targetPoints.set(i, targetPoint);
                     return;
                 }
             }
-            targetPoints.add(0,targetPoint);
-        }else {
+            targetPoints.add(0, targetPoint);
+        } else {
             Logger.e("接收的充電點不存在！");
         }
     }
@@ -1566,14 +1705,188 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
 
     /**
      * 是否存在充电点
+     *
      * @return
      */
-    private boolean haveChargePoint(){
-        for (TargetPoint targetPoint:targetPoints){
-            if (targetPoint.getPointType().equals(PointType.eMarkingTypeCharging)){
+    private boolean haveChargePoint() {
+        for (TargetPoint targetPoint : targetPoints) {
+            if (targetPoint.getPointType().equals(PointType.eMarkingTypeCharging)) {
                 return true;
             }
         }
         return false;
     }
+
+    private CustomPopuWindow customPopWindow;
+    private StringAdapter BuildAdapter, FloorAdapter;
+    private TextView textBuildView, textFloorView,editNum;
+    private String buildID, FloorID;
+
+//    /**
+//     * 路径命名弹窗
+//     *
+//     * @param view
+//     */
+//    private void showHWPopupWindow(View view, int type) {
+//        Logger.e("---------showTaskPopupWindow");
+//        switch (type) {
+//            case 1:
+//                View contentView = null;
+//                contentView = LayoutInflater.from(getAttachActivity()).inflate(R.layout.recycle_task, null);
+//                customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+//                        .setView(contentView)
+//                        .enableOutsideTouchableDissmiss(false)
+//                        .setClippingEnable(false)
+//                        .create()
+//                        .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
+//                RecyclerView recycler_task_check = contentView.findViewById(R.id.recycler_task_check);
+//                NLinearLayoutManager layoutManager = new NLinearLayoutManager(getAttachActivity());
+//                recycler_task_check.setLayoutManager(layoutManager);
+//                recycler_task_check.setAdapter(BuildAdapter);
+//                onItemClick(1);
+//                break;
+//            case 2:
+//                View contentView1 = null;
+//                contentView1 = LayoutInflater.from(getAttachActivity()).inflate(R.layout.recycle_task, null);
+//                customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+//                        .setView(contentView1)
+//                        .enableOutsideTouchableDissmiss(false)
+//                        .setClippingEnable(false)
+//                        .create()
+//                        .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
+//                RecyclerView recycler_task_check1 = contentView1.findViewById(R.id.recycler_task_check);
+//                NLinearLayoutManager layoutManager1 = new NLinearLayoutManager(getAttachActivity());
+//                recycler_task_check1.setLayoutManager(layoutManager1);
+//                recycler_task_check1.setAdapter(FloorAdapter);
+//                onItemClick(2);
+//                break;
+//        }
+//        customPopWindow.setOutsideTouchListener(() -> {
+//            Logger.e("点击外部已关闭");
+//            customPopWindow.dissmiss();
+//        });
+//    }
+
+    private void onItemClick(int type) {
+        Logger.e("子项点击事件");
+        switch (type) {
+            case 1:
+                BuildAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    textBuildView.setText(stringBuildList.get(position));
+                    if (stringBuildList.get(position).equals("空")){
+                        buildID="";
+                    }else {
+                        for (int i=0;i<hwBuildList.size();i++){
+                            if (hwBuildList.get(i).getName().equals(stringBuildList.get(position))){
+                                buildID = hwBuildList.get(i).getId();
+                            }
+                        }
+                        stringFloorList=new ArrayList<>();
+                        Logger.e("点击的ID" + buildID);
+                        for (int i = 0; i < hwFloorList.size(); i++) {
+                            if (buildID.equals(hwFloorList.get(i).getBuildId())) {
+                                String floor = hwFloorList.get(i).getName();
+                                stringFloorList.add(floor);
+                                Logger.e("楼号" + floor);
+                            }
+                        }
+                        FloorAdapter.setNewData(stringFloorList);
+                    }
+                    inputDialog.dismiss();
+                });
+                break;
+            case 2:
+                toast("build"+"----"+buildID);
+                    Logger.e("------进入控制");
+                    toast("build"+"++++"+buildID);
+                    FloorAdapter.setOnItemClickListener((adapter, view, position) -> {
+                        textFloorView.setText(stringFloorList.get(position));
+                        for (int i=0;i<hwFloorList.size();i++){
+                            if (hwFloorList.get(i).getName().equals(stringFloorList.get(position))){
+                                FloorID=hwFloorList.get(i).getId();
+                            }
+                        }
+                        inputDialogf.dismiss();
+                    });
+                break;
+        }
+    }
+
+    private HwBuild hwBuild = HwBuild.getInstance();
+    private HwFloor hwFloor = HwFloor.getInstance();
+    private HwParkID hwParkID=HwParkID.getInstance();
+    private List<HwBuild> hwBuildList = new ArrayList<>();
+    private List<HwFloor> hwFloorList = new ArrayList<>();
+    private List<HwParkID> hwParkIDList =new ArrayList<>();
+    private List<String> stringBuildList = new ArrayList<>();
+    private List<String> stringFloorList = new ArrayList<>();
+
+    /**
+     * 根据传入的地址和类型从服务器上获取数据
+     */
+    private void queryFromServer() {
+        HttpUtilh.sendOkHttpRequest(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast("获取楼层信息失败");
+                        inputDialogHw.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                Logger.e("截取信息" + responseText);
+                boolean result = false;
+                result = Utilityhw.handleProvinceResponse(responseText);
+                stringBuildList=new ArrayList<>();
+                stringFloorList=new ArrayList<>();
+                if (result) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            hwBuildList = hwBuild.getHwBuilds();
+                            hwFloorList = hwFloor.getHwFloors();
+                            hwParkIDList = hwParkID.getHwBuilds();
+                            if (hwParkID.getSectorID()!=null){
+                                stringBuildList=new ArrayList<>();
+                                Logger.e("点击的园区" + hwParkID.getSectorID());
+                                for (int j=0;j<hwBuildList.size();j++){
+                                    if (hwBuildList.get(j).getParkId().equals(hwParkID.getSectorID())){
+                                        String build =hwBuildList.get(j).getName();
+                                        stringBuildList.add(build);
+                                        Logger.e("楼号" + build);
+                                    }
+                                }
+                                stringBuildList.add("空");
+                                BuildAdapter.setNewData(stringBuildList);
+                            }else {
+                                stringBuildList=new ArrayList<>();
+                                for (int j=0;j<hwBuildList.size();j++){
+                                    if (hwBuildList.get(j).getParkId().equals("CN-44-003-J")){
+                                        String build =hwBuildList.get(j).getName();
+                                        stringBuildList.add(build);
+                                        Logger.e("楼号" + build);
+                                    }
+                                }
+                                stringBuildList.add("空");
+                                BuildAdapter.setNewData(stringBuildList);
+                            }
+                            for (int i = 0; i < hwFloorList.size(); i++) {
+                                String floor = hwFloorList.get(i).getName();
+                                stringFloorList.add(floor);
+                                Logger.e("层数" + floor);
+                            }
+                            FloorAdapter.setNewData(stringFloorList);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 }

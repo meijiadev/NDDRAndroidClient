@@ -24,4 +24,5 @@ public class Sensors {
     public void setSensorList(List<Sensor> sensorList) {
         this.sensorList = sensorList;
     }
+
 }

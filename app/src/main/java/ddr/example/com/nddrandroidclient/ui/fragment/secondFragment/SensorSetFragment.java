@@ -81,7 +81,7 @@ public class SensorSetFragment extends DDRLazyFragment {
     public void update(MessageEvent messageEvent) {
         switch (messageEvent.getType()) {
             case updateSensor:
-                setSensorParam();
+//                setSensorParam();
                 break;
             case updateParameter:
                 setNaparmeter();
@@ -116,10 +116,14 @@ public class SensorSetFragment extends DDRLazyFragment {
 
     @Override
     protected void initView() {
-        ultrasonicAdapter = new UltrasonicAdapter(R.layout.item_recycle_ulrcs);
+//        ultrasonicAdapter = new UltrasonicAdapter(R.layout.item_recycle_ulrcs);
+//        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),4);
+//        rl_ul_cs.setLayoutManager(gridLayoutManager);
+//        rl_ul_cs.setAdapter(ultrasonicAdapter);
+        sensorAdapter = new SensorAdapter(R.layout.item_recycle_sensor);
         GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),4);
         rl_ul_cs.setLayoutManager(gridLayoutManager);
-        rl_ul_cs.setAdapter(ultrasonicAdapter);
+        rl_ul_cs.setAdapter(sensorAdapter);
         slideButton.setSmallCircleModel(
                 Color.parseColor("#00FFFFFF"), Color.parseColor("#999999"),Color.parseColor("#49c265"),
                 Color.parseColor("#ffffff"), Color.parseColor("#ffffff"));
@@ -138,7 +142,7 @@ public class SensorSetFragment extends DDRLazyFragment {
         getChosseStatus();
         getNaparmeter();
         setNaparmeter();
-        setSensorParam();
+//        setSensorParam();
 
     }
 
@@ -162,12 +166,16 @@ public class SensorSetFragment extends DDRLazyFragment {
                 .showAsDropDown(view, 0, -10);
         iv_quit_c=contentView.findViewById(R.id.iv_quit_sensor);
         recyclerView_c_sensor =contentView.findViewById(R.id.recycle_c_status);
+        ultrasonicAdapter = new UltrasonicAdapter(R.layout.item_recycle_ulrcs);
+        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),4);
+        rl_ul_cs.setLayoutManager(gridLayoutManager);
+        rl_ul_cs.setAdapter(ultrasonicAdapter);
 
-        sensorAdapter = new SensorAdapter(R.layout.item_recycle_sensor);
-        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),1);
-        recyclerView_c_sensor.setLayoutManager(gridLayoutManager);
-        recyclerView_c_sensor.setAdapter(sensorAdapter);
-        sensorAdapter.setNewData(sensorSeaList);
+//        sensorAdapter = new SensorAdapter(R.layout.item_recycle_sensor);
+//        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),1);
+//        recyclerView_c_sensor.setLayoutManager(gridLayoutManager);
+//        recyclerView_c_sensor.setAdapter(sensorAdapter);
+//        sensorAdapter.setNewData(sensorSeaList);
 
         iv_quit_c.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -532,6 +540,6 @@ public class SensorSetFragment extends DDRLazyFragment {
         getChosseStatus();
         getNaparmeter();
         setNaparmeter();
-        setSensorParam();
+//        setSensorParam();
     }
 }
