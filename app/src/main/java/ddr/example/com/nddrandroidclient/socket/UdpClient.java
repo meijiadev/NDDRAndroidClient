@@ -60,6 +60,7 @@ public class UdpClient extends BaseSocketConnection {
                 udpLife=true;
                 readData();
                 m_MessageRoute.parse();
+                Logger.e("------------开启UDP广播接收！-------------");
             } catch (SocketException e) {
                 e.printStackTrace();
                 udpLife=false;

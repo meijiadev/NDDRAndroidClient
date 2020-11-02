@@ -64,7 +64,6 @@ public class ZoomImageView extends View {
 
     private void init(Context context){
         this.context=context;
-        sourceMat=new Mat();
         notifyBaseStatusEx=NotifyBaseStatusEx.getInstance();
         pointPaint=new Paint();
         pointPaint.setColor(Color.RED);
@@ -79,6 +78,7 @@ public class ZoomImageView extends View {
             try {
                 try {
                     Mat mat1;
+                    sourceMat=new Mat();
                     mat1= Imgcodecs.imread(path,Imgcodecs.IMREAD_UNCHANGED);
                     Imgproc.cvtColor(mat1,sourceMat,Imgproc.COLOR_BGR2RGB);
                     sourceBitmap=Bitmap.createBitmap(sourceMat.width(),sourceMat.height(),Bitmap.Config.ARGB_8888);
@@ -94,7 +94,6 @@ public class ZoomImageView extends View {
                 e.printStackTrace();
             }
         }
-
     }
     /**
      * 判断文件是否存在
@@ -113,6 +112,7 @@ public class ZoomImageView extends View {
         }
         return true;
     }
+
     /**
      * 获取图片的Mat数据
      * @return
@@ -285,7 +285,7 @@ public class ZoomImageView extends View {
         return xyEntity;
     }
 
-   /**
+    /**
      * 设置保留小数点位数的除法
      * @param a
      * @param b

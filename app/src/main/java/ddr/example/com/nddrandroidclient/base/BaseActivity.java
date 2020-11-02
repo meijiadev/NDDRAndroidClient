@@ -35,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public final Object mHandlerToken = hashCode();
     public Context context;
     public Runnable mRunnable;
+
     /**
      * 此方法先于 onCreate()方法执行
      * @param newBase 参数

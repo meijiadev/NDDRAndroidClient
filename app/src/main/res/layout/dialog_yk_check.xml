@@ -74,6 +74,7 @@
                 app:rsb_max="1"
                 app:rsb_thumb_drawable="@drawable/seekbar_thumb_bg"
                 android:layout_gravity="center_horizontal"
+
                 />
             <CheckBox
                 android:id="@+id/fixed_speed"

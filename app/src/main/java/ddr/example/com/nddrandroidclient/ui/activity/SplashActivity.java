@@ -24,6 +24,7 @@ import java.util.List;
 import androidx.appcompat.app.ActionBar;
 import butterknife.BindView;
 
+import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.other.Logger;
@@ -57,6 +58,7 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
         getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
                 .init();
         receiveBroadcast();
+        Logger.e("当前包名："+ BuildConfig.APPLICATION_ID);
     }
 
     /**

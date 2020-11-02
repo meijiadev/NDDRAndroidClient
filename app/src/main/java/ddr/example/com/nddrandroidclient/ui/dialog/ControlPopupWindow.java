@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hjq.toast.ToastUtils;
@@ -26,6 +27,7 @@ import java.util.TimerTask;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
@@ -49,6 +51,7 @@ public class ControlPopupWindow {
     private TextView tvSpeed;
     private TextView tv_xsu;//线速度
     private TextView tv_jsu;//角速度
+    private LinearLayout speedLayout;
     private String xsu;
     private String jsu;
     private ImageView iv_quit_yk;
@@ -106,10 +109,22 @@ public class ControlPopupWindow {
         iv_quit_yk=contentView.findViewById(R.id.iv_quit_yk);
         tv_xsu=contentView.findViewById(R.id.robot_xsu);//线速度
         tv_jsu=contentView.findViewById(R.id.robot_jsu);//角速度
+        speedLayout=contentView.findViewById(R.id.speed_ku);      //调速模块的布局
         initSeekBar();
         initRockerView();
         initTimer();
         setFixedSpeed();
+        int robotType= ComputerEditions.getInstance().getRobotType();
+        // 调速模块的最大值
+        float maxNumber;
+        if (robotType==4|robotType==5){
+            maxSpeed=0.3;
+            maxNumber =0.4f;
+        }else {
+            maxSpeed=0.4;
+            maxNumber =1.0f;
+        }
+        seekBar.setRange(0, maxNumber);
         seekBar.setProgress((float) maxSpeed);
         tvSpeed.setText(showSpeed(maxSpeed));
         iv_quit_yk.setOnClickListener(new View.OnClickListener() {

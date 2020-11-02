@@ -14,6 +14,8 @@ public class SpUtil {
     public static final String CHARGE_STATUS="chargeStatus";
     public static final String LOGIN_PASSWORD="password";  //登录密码
     public static final String LOGIN_ACCOUNT="account";    //登录账号
+    public static final String TCP_PORT="tcpPort";       //tcp 端口
+    public static final String TCP_IP="tcpIp";           //tcp IP
     private static SpUtil spUtil;
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
@@ -48,11 +50,21 @@ public class SpUtil {
         editor.commit();
     }
 
+    public void putInt(String key,int value){
+        editor.putInt(key,value);
+        editor.commit();
+    }
+
+
     public String getString(String key) {
         return sharedPreferences.getString(key,"");
     }
 
     public boolean getBoolean(String key){
         return sharedPreferences.getBoolean(key,true);
+    }
+
+    public int getInt(String key){
+        return sharedPreferences.getInt(key,88);
     }
 }

@@ -169,7 +169,7 @@ public class StatusFragment extends DDRLazyFragment<HomeActivity> implements Sta
     private TcpClient tcpClient;
     private String mapName;//地图名
     private String taskName;//任务名
-    public static String robotID;//机器人ID
+    private   String robotID;//机器人ID
     private String workStatus; //工作状态
     private int lsNum = 1; //临时任务次数
     private List<String> groupList = new ArrayList<>();
@@ -294,6 +294,7 @@ public class StatusFragment extends DDRLazyFragment<HomeActivity> implements Sta
                 setSensorParam();
                 break;
         }
+
     }
 
     public static StatusFragment newInstance() {
@@ -390,6 +391,7 @@ public class StatusFragment extends DDRLazyFragment<HomeActivity> implements Sta
             recyclerGoPoint.setVisibility(View.GONE);
             tv_set_go.setText(R.string.create_task_steps);
         }
+        robotID=notifyBaseStatusEx.getRobotId();
         tv_now_device.setText(robotID);
         tv_work_time.setText(workTimes + getString(R.string.common_minute));
         tv_task_speed.setText(taskSpeed + " m/s");
@@ -1303,6 +1305,7 @@ public class StatusFragment extends DDRLazyFragment<HomeActivity> implements Sta
     public void onDestroy() {
         super.onDestroy();
         try {
+            if (statusSwitchButton!=null&&mapImageView!=null)
             statusSwitchButton.onDestroy();
             mapImageView.onStop();
         } catch (NullPointerException e) {
@@ -1310,6 +1313,5 @@ public class StatusFragment extends DDRLazyFragment<HomeActivity> implements Sta
         }
 
     }
-
 
 }

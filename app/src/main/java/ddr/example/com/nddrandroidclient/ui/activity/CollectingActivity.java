@@ -35,6 +35,7 @@ import ddr.example.com.nddrandroidclient.common.DDRActivity;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
+import ddr.example.com.nddrandroidclient.entity.other.ComputerEditions;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
 import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
@@ -167,6 +168,7 @@ public class CollectingActivity extends DDRActivity {
         initRockerView();
         initTimer();
         setFixedSpeed();
+        initRobotType();
     }
 
     @Override
@@ -341,6 +343,16 @@ public class CollectingActivity extends DDRActivity {
 
             }
         }));
+    }
+
+    /**
+     * 初始化地盘类型
+     */
+    private void initRobotType(){
+        int robotType= ComputerEditions.getInstance().getRobotType();
+        if (robotType==4|robotType==5){
+            maxSpeed=0.3;           //当地盘为广告机或者新零售机器人时 速度为0.3m/s
+        }
     }
 
 

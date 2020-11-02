@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import DDRCommProto.BaseCmd;
 import DDRModuleProto.DDRModuleCmd;
 import DDRVLNMapProto.DDRVLNMap;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.common.GlobalParameter;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
+import ddr.example.com.nddrandroidclient.entity.info.NotifyLidarPtsEntity;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.XyEntity;
@@ -60,6 +62,8 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
     private Bitmap targetBitmap;
     private Matrix matrix=new Matrix();
     private Bitmap startBitmap,endBitmap;
+    //承载点云数据的基类，并保存最新一帧的数据
+    private NotifyLidarPtsEntity notifyLidarPtsEntity;
 
 
     public RobotLocationView(Context context) {
@@ -77,6 +81,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         holder.addCallback(this);
         holder.setFormat(PixelFormat.TRANSPARENT);//设置背景透明
         mapFileStatus=MapFileStatus.getInstance();
+        notifyLidarPtsEntity=NotifyLidarPtsEntity.getInstance();
         directionBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.direction);
         targetBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.target_point);
         startBitmap=BitmapFactory.decodeResource(getResources(), R.mipmap.start_default);
@@ -95,7 +100,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         directionH=directionBitmap.getHeight();
         bitmapW=startBitmap.getWidth();
         bitmapH=startBitmap.getHeight();
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     /**
@@ -229,13 +234,28 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
      * 获得当前机器人在窗口的位置
      * @return
      */
-    public XyEntity getRobotLocationInWindow(){
-        XyEntity xyEntity=toXorY(0,0);
+    public XyEntity getRobotLocationInWindow(float x,float y){
+        XyEntity xyEntity=toXorY(x,y);
         //Logger.e("---------x"+touchEvenHandler.getOriginalX()+";"+touchEvenHandler.getOriginalY());
-        float x=xyEntity.getX()*touchEvenHandler.getInitRatio()+touchEvenHandler.getOriginalX();
-        float y=xyEntity.getY()*touchEvenHandler.getInitRatio()+touchEvenHandler.getOriginalY();
-        xyEntity.setX(x);
-        xyEntity.setY(y);
+        float x1=xyEntity.getX()*touchEvenHandler.getInitRatio()+touchEvenHandler.getOriginalX();
+        float y1=xyEntity.getY()*touchEvenHandler.getInitRatio()+touchEvenHandler.getOriginalY();
+        xyEntity.setX(x1);
+        xyEntity.setY(y1);
+        return xyEntity;
+    }
+
+    /**
+     * 计算当前点云在窗口中的位置
+     * @param x
+     * @param y
+     * @return
+     */
+    public XyEntity getPointCloudInWindow(float x,float y){
+        XyEntity xyEntity=toXorY(x,y);
+        float x1=xyEntity.getX()*(float) touchEvenHandler.getZoomX()+touchEvenHandler.getOriginalX();
+        float y1=xyEntity.getY()*(float) touchEvenHandler.getZoomX()+touchEvenHandler.getOriginalY();
+        xyEntity.setX(x1);
+        xyEntity.setY(y1);
         return xyEntity;
     }
 
@@ -320,15 +340,21 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         canvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
         canvas.drawBitmap(sourceBitmap,touchEvenHandler.getMatrix(),paint);
         scale= (float) touchEvenHandler.getZoomX();
-        XyEntity xyEntity=getRobotLocationInWindow();
+        Logger.e("-----当前缩放比例："+scale);
+        XyEntity xyEntity=getRobotLocationInWindow(0,0);
         posX=xyEntity.getX();
         posY=xyEntity.getY();
-        if (obstacleInfos!=null){
-            int size =obstacleInfos.size();
+        //雷达当前扫到的点云
+        List<BaseCmd.notifyLidarPts.Position> positionList = notifyLidarPtsEntity.getPositionList();
+        if (positionList!=null){
+            int size =positionList.size();
             for (int i=0;i<size;i++){
-                double angle=Math.toRadians(obstacleInfos.get(i).getStartAngle());  //角度转弧度
+                XyEntity xyEntity1=getRobotLocationInWindow(positionList.get(i).getPtX(),positionList.get(i).getPtY());
+                canvas.drawLine(posX,posY,xyEntity1.getX(),xyEntity1.getY(),paint);
+             /*   double angle=Math.toRadians(obstacleInfos.get(i).getStartAngle());  //角度转弧度
                 float distance=obstacleInfos.get(i).getDist();
-                if (distance<1950&&distance>1){
+                //小于雷达量程
+                if (distance<4000&&distance>1){
                     distance=distance/100*scale;
                     float x=0,y=0;
                     x=(float)(distance*Math.cos(angle));
@@ -337,7 +363,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                     float originalX=touchEvenHandler.getOriginalX();
                     float originalY=touchEvenHandler.getOriginalY();
                     canvas.drawLine(posX,posY,xyEntity1.getX()+originalX,xyEntity1.getY()+originalY,paint);
-                }
+                }*/
             }
             canvas.drawBitmap(directionBitmap, posX-directionW/2, posY-directionH/2, paint);
         }
@@ -463,8 +489,8 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
         return true;
     }
 
-    private List<DDRModuleCmd.rspObstacleInfo.ObstacleInfo> obstacleInfos;    //雷达当前扫到的点云
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    //private List<DDRModuleCmd.rspObstacleInfo.ObstacleInfo> obstacleInfos;    //雷达当前扫到的点云
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
     public void upDate(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
             case receiveObstacleInfo:
@@ -472,7 +498,7 @@ public class RobotLocationView extends SurfaceView implements SurfaceHolder.Call
                 //Logger.e("--------接收雷达数据");
                 break;
         }
-    }
+    }*/
     private double pixIntervalX,prxIntervalY;
     private float precision=0;
     public void setPrecision(float precision){

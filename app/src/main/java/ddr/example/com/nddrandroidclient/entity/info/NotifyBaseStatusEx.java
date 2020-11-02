@@ -40,6 +40,7 @@ public class NotifyBaseStatusEx {
     private int chargingType;             //  1:自动充电 2：手动充电
     private int eTaskMode;
     private int temopTaskNum;
+    private String robotId;
 
     /**
      * 异常状态  1：内存错误 ， 2：试图采集的地图名已存在 ，3：采集模式下文件IO错误，4：自动模式选择的地图不存在，5：自动模式重定位失败，
@@ -136,6 +137,14 @@ public class NotifyBaseStatusEx {
 
     public String getCurroute() {
         return curroute;
+    }
+
+    public void setRobotId(String robotId) {
+        this.robotId = robotId;
+    }
+
+    public String getRobotId() {
+        return robotId;
     }
 
     public void setCurroute(String curroute) {

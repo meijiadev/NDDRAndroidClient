@@ -22,8 +22,6 @@ import static android.graphics.Color.*;
 
 /**
  *
- * @author ZJJ
- *
  */
 public class NumEdit extends LinearLayout
 {

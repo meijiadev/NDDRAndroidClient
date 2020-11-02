@@ -18,8 +18,48 @@ android {
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+    }
+
+    //差异化打包
+    flavorDimensions 'dadao'
+    productFlavors{
+        //模组项目
+        dadao{
+            applicationId "ddr.example.com.nddrandroidclient"
+            versionName "0.6.3"
+            // 自动生成@string/app_name为 app1的名称
+            // 注意，这里是添加，在 string.xml 不能有这个字段，会重名
+            resValue "string","app_name","NDDRAndroidClient"
+            manifestPlaceholders = [
+                    JPUSH_PKGNAME: applicationId,
+            ]
+        }
+        //北大项目
+        beida{
+            dimension='dadao'
+            applicationId "ddr.example.com.beida"
+            versionName "0.1.0"
+            resValue "string","app_name","BeiDaAndroidClient"
+            manifestPlaceholders = [
+                    JPUSH_PKGNAME: applicationId,
+            ]
+
+        }
+        //华为项目
+        huawei{
+            dimension='dadao'
+            applicationId "ddr.example.com.huawei"
+            versionName "0.1.0"
+            resValue "string","app_name","HuaWeiAndroidClient"
+            manifestPlaceholders = [
+                    JPUSH_PKGNAME: applicationId,
+            ]
+
+        }
 
     }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -59,7 +99,7 @@ android {
             // armeabi：已经淘汰（0%）
             // armeabi-v7a：曾经主流的架构平台（20%）
             // arm64-v8a：目前主流架构平台（80%）
-            abiFilters "armeabi-v7a", "arm64-v8a"
+            abiFilters "armeabi-v7a", "arm64-v8a","armeabi"
         }
         // 开启 Dex 分包
         multiDexEnabled true
@@ -107,6 +147,7 @@ protobuf {
         }
     }
 }
+
 
 dependencies {
 
@@ -175,10 +216,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.0.0-beta4' //ConverterFactory的Gson:
     implementation 'io.reactivex.rxjava2:rxjava:2.1.8' //rxjava
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1' //rxandroid 线程调度
-    implementation project(path: ':OpenCVLibrary430')
-
     // LitePal数据库 https://github.com/guolindev/LitePal
     implementation 'org.litepal.guolindev:core:3.1.1'
+    implementation project(path: ':OpenCVLibrary430')
+
 
 
 }

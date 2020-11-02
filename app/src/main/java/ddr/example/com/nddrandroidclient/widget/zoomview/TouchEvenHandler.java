@@ -242,7 +242,7 @@ public class TouchEvenHandler {
      * @return 画布坐标
      */
     public XyEntity coordinatesToCanvas(float x, float y){
-        Logger.e("");
+        // 图片旋转的弧度
         double radians= Math.atan2(values[Matrix.MSKEW_Y], values[Matrix.MSCALE_Y]);
         double cosA= Math.cos(radians);
         double sinA= Math.sin(radians);
