@@ -1,9 +1,10 @@
-package ddr.example.com.nddrandroidclient.ui.fragment;
+package ddr.example.com.nddrandroidclient.ui.fragment.secondFragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,9 @@ import ddr.example.com.nddrandroidclient.entity.PointType;
 import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.MapInfo;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
+import ddr.example.com.nddrandroidclient.entity.other.HwBuild;
+import ddr.example.com.nddrandroidclient.entity.other.HwFloor;
+import ddr.example.com.nddrandroidclient.entity.other.HwParkID;
 import ddr.example.com.nddrandroidclient.entity.point.PathLine;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
@@ -52,6 +56,8 @@ import ddr.example.com.nddrandroidclient.other.Logger;
 import ddr.example.com.nddrandroidclient.protocobuf.CmdSchedule;
 import ddr.example.com.nddrandroidclient.protocobuf.dispatcher.ClientMessageDispatcher;
 import ddr.example.com.nddrandroidclient.socket.TcpClient;
+import ddr.example.com.nddrandroidclient.socket.hwSocker.HttpUtilh;
+import ddr.example.com.nddrandroidclient.socket.hwSocker.Utilityhw;
 import ddr.example.com.nddrandroidclient.ui.activity.CollectingActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.MapEditActivity;
@@ -63,11 +69,12 @@ import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.PathAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
+import ddr.example.com.nddrandroidclient.ui.dialog.HwBuildNameDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
+import ddr.example.com.nddrandroidclient.ui.dialog.InputDialogHw;
 import ddr.example.com.nddrandroidclient.ui.dialog.SelectDialog;
 import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
 import ddr.example.com.nddrandroidclient.widget.edit.DDREditText;
-import ddr.example.com.nddrandroidclient.widget.edit.LimitInputTextWatcher;
 import ddr.example.com.nddrandroidclient.widget.edit.MyEditTextChangeListener;
 import ddr.example.com.nddrandroidclient.widget.edit.RegexEditText;
 import ddr.example.com.nddrandroidclient.widget.textview.DDRTextView;
@@ -77,12 +84,15 @@ import ddr.example.com.nddrandroidclient.widget.view.GridLayerView;
 import ddr.example.com.nddrandroidclient.widget.view.LineView;
 import ddr.example.com.nddrandroidclient.widget.view.PointView;
 import ddr.example.com.nddrandroidclient.widget.zoomview.ZoomImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * time: 2019/10/26
  * desc: 地图管理界面
  */
-public class MapFragment extends DDRLazyFragment<HomeActivity> {
+public class HwMapFragment extends DDRLazyFragment<HomeActivity> {
     @BindView(R.id.bt_create_map)
     TextView btCreateMap;
     @BindView(R.id.bt_batch_delete)
@@ -181,6 +191,14 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     TextView savePoint;
     @BindView(R.id.save_path)
     TextView savePath;
+//    @BindView(R.id.tv_input_build)
+//    TextView tvInputBuild;
+//    @BindView(R.id.tv_input_flor)
+//    TextView tvInputFlor;
+//    @BindView(R.id.tv_input_cancel)
+//    SmartTextView tvInputCancel;
+//    @BindView(R.id.tv_input_confirm)
+//    AppCompatTextView tvInputConfirm;
 
 
 
@@ -199,10 +217,10 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
     private String mapName;                                  //点击查看的地图名
     private int mPosition = 0;                                   //当前显示的是哪个子项数据 （目标点列表、路径列表、任务列表）
     private String taskName;                                     //任务编辑框中的任务名
-    private BaseDialog inputDialog;                              //地图命名窗口
+    private BaseDialog inputDialog, inputDialogHw,inputDialogf;                              //地图命名窗口
 
-    public static MapFragment newInstance() {
-        return new MapFragment();
+    public static HwMapFragment newInstance() {
+        return new HwMapFragment();
     }
 
     @Override
@@ -229,6 +247,8 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         NLinearLayoutManager linearLayoutManager1 = new NLinearLayoutManager(getAttachActivity());
         actionRecycler.setLayoutManager(linearLayoutManager1);
         actionRecycler.setAdapter(actionAdapter);     //给动作Recycler设置适配器
+        BuildAdapter = new StringAdapter(R.layout.item_input_hw);
+        FloorAdapter = new StringAdapter(R.layout.item_input_hw);
 
 
     }
@@ -276,38 +296,129 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.bt_create_map:
                 if (!isShowSelected) {
                     if (notifyBaseStatusEx.getMode() == 1) {
-                        inputDialog=new InputDialog.Builder(getAttachActivity())
-                                .setTitle(R.string.collect_map)
+//                        inputDialog=new InputDialog.Builder(getAttachActivity())
+//                                .setTitle(R.string.collect_map)
+//                                .setAutoDismiss(false)
+//                                .setHint(R.string.enter_map_name)
+//                                .addTextChangedListener(LimitInputTextWatcher.REGEX_NAME)
+//                                .setListener(new InputDialog.OnListener() {
+//                                    @Override
+//                                    public void onConfirm(BaseDialog dialog, String content) {
+//                                        if (!content.isEmpty()) {
+//                                            content = content.replaceAll(" ", "");
+//                                            String name = "OneRoute_" + content;
+//                                            if (!mapFileStatus.getMapNames().contains(name)) {
+//                                                LitePal.deleteDatabase("DDRDataBase");
+//                                                BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
+//                                                        .setMode(BaseCmd.eCmdActionMode.eRec)
+//                                                        .setRouteName(ByteString.copyFromUtf8(name))
+//                                                        .build();
+//                                                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
+//                                                Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
+//                                                intent.putExtra("CollectName", name);
+//                                                startActivity(intent);
+//                                                inputDialog.dismiss();
+//                                            } else {
+//                                                toast(R.string.name_repetition);
+//                                            }
+//                                        } else {
+//                                            toast(R.string.please_anter_name);
+//                                        }
+//                                    }
+//                                    @Override
+//                                    public void onCancel(BaseDialog dialog) {
+//                                        inputDialog.dismiss();
+//                                    }
+//                                }).show();
+                        queryFromServer();
+                        inputDialogHw = new InputDialogHw.Builder(getAttachActivity())
                                 .setAutoDismiss(false)
-                                .setHint(R.string.enter_map_name)
-                                .addTextChangedListener(LimitInputTextWatcher.REGEX_NAME)
-                                .setListener(new InputDialog.OnListener() {
+                                .setListener(new InputDialogHw.OnListener() {
                                     @Override
-                                    public void onConfirm(BaseDialog dialog, String content) {
-                                        if (!content.isEmpty()) {
-                                            content = content.replaceAll(" ", "");
-                                            String name = "OneRoute_" + content;
-                                            if (!mapFileStatus.getMapNames().contains(name)) {
-                                                LitePal.deleteDatabase("DDRDataBase");
-                                                BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
-                                                        .setMode(BaseCmd.eCmdActionMode.eRec)
-                                                        .setRouteName(ByteString.copyFromUtf8(name))
-                                                        .build();
-                                                tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
-                                                Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
-                                                intent.putExtra("CollectName", name);
-                                                startActivity(intent);
-                                                inputDialog.dismiss();
+                                    public void onConfirm(BaseDialog dialog) {
+                                        editNum=inputDialogHw.getContentView().findViewById(R.id.edit_num);
+                                        try {
+                                            if (!textBuildView.getText().toString().isEmpty() && !textFloorView.getText().toString().isEmpty()) {
+                                                String content;
+                                                String num;
+                                                String name;
+                                                if (!TextUtils.isEmpty(editNum.getText()) ){
+                                                    num=editNum.getText().toString();
+                                                    if (hwParkID.getSectorID()!=null){
+                                                        content = hwParkID.getSectorID().replaceAll("-", "_");
+                                                    }else {
+                                                        content = GlobalParameter.hwParkID.replaceAll("-", "_");
+                                                    }
+                                                    if (buildID.equals("")){
+                                                        name = "__"+content+"_"+num;
+                                                    }else {
+                                                        name = num+"_"+buildID+"_"+FloorID+"_"+content;
+                                                    }
+                                                    Logger.e("华为地图名"+name);
+                                                    if (!mapFileStatus.getMapNames().contains(name)) {
+                                                        LitePal.deleteDatabase("DDRDataBase");
+                                                        BaseCmd.reqCmdStartActionMode reqCmdStartActionMode = BaseCmd.reqCmdStartActionMode.newBuilder()
+                                                                .setMode(BaseCmd.eCmdActionMode.eRec)
+                                                                .setRouteName(ByteString.copyFromUtf8(name))
+                                                                .build();
+                                                        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdStartActionMode);
+                                                        Intent intent = new Intent(getAttachActivity(), CollectingActivity.class);
+                                                        intent.putExtra("CollectName", name);
+                                                        startActivity(intent);
+                                                        inputDialogHw.dismiss();
+                                                    } else {
+                                                        toast(R.string.name_repetition);
+                                                    }
+                                                }else {
+                                                    toast("请输入序号");
+                                                }
                                             } else {
-                                                toast(R.string.name_repetition);
+                                                toast(R.string.please_anter_name);
                                             }
-                                        } else {
-                                            toast(R.string.please_anter_name);
+                                        }catch (Exception e){
+                                            e.printStackTrace();
                                         }
                                     }
+
                                     @Override
                                     public void onCancel(BaseDialog dialog) {
-                                        inputDialog.dismiss();
+                                        inputDialogHw.dismiss();
+
+                                    }
+
+                                    @Override
+                                    public void onBuild(BaseDialog dialog) {
+                                        textBuildView = inputDialogHw.getContentView().findViewById(R.id.tv_input_build);
+//                                        showHWPopupWindow(inputDialogHw.getContentView().findViewById(R.id.tv_input_build), 1);
+                                        inputDialog=new HwBuildNameDialog.Builder(getAttachActivity())
+                                                .setAdapter(BuildAdapter)
+                                                .setAutoDismiss(false)
+                                                .setGravity(Gravity.CENTER)
+                                                .setListener(new HwBuildNameDialog.OnListener() {
+                                                }).show();
+                                        onItemClick(1);
+                                    }
+
+                                    @Override
+                                    public void onFloor(BaseDialog dialog) {
+                                        textFloorView = inputDialogHw.getContentView().findViewById(R.id.tv_input_flor);
+                                        if (buildID.equals("")){
+                                            textFloorView.setText("空");
+                                            FloorID="";
+                                        }else {
+                                            if (textBuildView.getText() != null && textBuildView.getText().length() > 0) {
+                                                inputDialogf=new HwBuildNameDialog.Builder(getAttachActivity())
+                                                        .setAdapter(FloorAdapter)
+                                                        .setAutoDismiss(false)
+                                                        .setGravity(Gravity.CENTER)
+                                                        .setListener(new HwBuildNameDialog.OnListener() {
+                                                        }).show();
+                                                onItemClick(2);
+//                                            showHWPopupWindow(inputDialogHw.getContentView().findViewById(R.id.tv_input_flor), 2);
+                                            } else {
+                                                toast("请先选择楼号");
+                                            }
+                                        }
                                     }
                                 }).show();
 
@@ -654,6 +765,24 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
             case R.id.tv_reference:
                 showPopupWindowReference(tvReference);
                 break;
+//            case R.id.tv_input_build:
+//                toast("请先选择楼号");
+//                showHWPopupWindow(tvInputBuild, 1);
+//                break;
+//            case R.id.tv_input_flor:
+//                toast("请先选择楼号");
+//                if (textBuildView.getText() != null && textBuildView.getText().length() > 0) {
+//                    showHWPopupWindow(tvInputFlor, 2);
+//                } else {
+//                    toast("请先选择楼号");
+//                }
+//                break;
+//            case R.id.tv_input_cancel:
+//                relHwCollect.setVisibility(View.GONE);
+//                break;
+//            case R.id.tv_input_confirm:
+//                relHwCollect.setVisibility(View.GONE);
+//                break;
 
         }
     }
@@ -1585,4 +1714,177 @@ public class MapFragment extends DDRLazyFragment<HomeActivity> {
         }
         return false;
     }
+
+    private CustomPopuWindow customPopWindow;
+    private StringAdapter BuildAdapter, FloorAdapter;
+    private TextView textBuildView, textFloorView,editNum;
+    private String buildID, FloorID;
+
+//    /**
+//     * 路径命名弹窗
+//     *
+//     * @param view
+//     */
+//    private void showHWPopupWindow(View view, int type) {
+//        Logger.e("---------showTaskPopupWindow");
+//        switch (type) {
+//            case 1:
+//                View contentView = null;
+//                contentView = LayoutInflater.from(getAttachActivity()).inflate(R.layout.recycle_task, null);
+//                customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+//                        .setView(contentView)
+//                        .enableOutsideTouchableDissmiss(false)
+//                        .setClippingEnable(false)
+//                        .create()
+//                        .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
+//                RecyclerView recycler_task_check = contentView.findViewById(R.id.recycler_task_check);
+//                NLinearLayoutManager layoutManager = new NLinearLayoutManager(getAttachActivity());
+//                recycler_task_check.setLayoutManager(layoutManager);
+//                recycler_task_check.setAdapter(BuildAdapter);
+//                onItemClick(1);
+//                break;
+//            case 2:
+//                View contentView1 = null;
+//                contentView1 = LayoutInflater.from(getAttachActivity()).inflate(R.layout.recycle_task, null);
+//                customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+//                        .setView(contentView1)
+//                        .enableOutsideTouchableDissmiss(false)
+//                        .setClippingEnable(false)
+//                        .create()
+//                        .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
+//                RecyclerView recycler_task_check1 = contentView1.findViewById(R.id.recycler_task_check);
+//                NLinearLayoutManager layoutManager1 = new NLinearLayoutManager(getAttachActivity());
+//                recycler_task_check1.setLayoutManager(layoutManager1);
+//                recycler_task_check1.setAdapter(FloorAdapter);
+//                onItemClick(2);
+//                break;
+//        }
+//        customPopWindow.setOutsideTouchListener(() -> {
+//            Logger.e("点击外部已关闭");
+//            customPopWindow.dissmiss();
+//        });
+//    }
+
+    private void onItemClick(int type) {
+        Logger.e("子项点击事件");
+        switch (type) {
+            case 1:
+                BuildAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    textBuildView.setText(stringBuildList.get(position));
+                    if (stringBuildList.get(position).equals("空")){
+                        buildID="";
+                    }else {
+                        for (int i=0;i<hwBuildList.size();i++){
+                            if (hwBuildList.get(i).getName().equals(stringBuildList.get(position))){
+                                buildID = hwBuildList.get(i).getId();
+                            }
+                        }
+                        stringFloorList=new ArrayList<>();
+                        Logger.e("点击的ID" + buildID);
+                        for (int i = 0; i < hwFloorList.size(); i++) {
+                            if (buildID.equals(hwFloorList.get(i).getBuildId())) {
+                                String floor = hwFloorList.get(i).getName();
+                                stringFloorList.add(floor);
+                                Logger.e("楼号" + floor);
+                            }
+                        }
+                        FloorAdapter.setNewData(stringFloorList);
+                    }
+                    inputDialog.dismiss();
+                });
+                break;
+            case 2:
+                toast("build"+"----"+buildID);
+                    Logger.e("------进入控制");
+                    toast("build"+"++++"+buildID);
+                    FloorAdapter.setOnItemClickListener((adapter, view, position) -> {
+                        textFloorView.setText(stringFloorList.get(position));
+                        for (int i=0;i<hwFloorList.size();i++){
+                            if (hwFloorList.get(i).getName().equals(stringFloorList.get(position))){
+                                FloorID=hwFloorList.get(i).getId();
+                            }
+                        }
+                        inputDialogf.dismiss();
+                    });
+                break;
+        }
+    }
+
+    private HwBuild hwBuild = HwBuild.getInstance();
+    private HwFloor hwFloor = HwFloor.getInstance();
+    private HwParkID hwParkID=HwParkID.getInstance();
+    private List<HwBuild> hwBuildList = new ArrayList<>();
+    private List<HwFloor> hwFloorList = new ArrayList<>();
+    private List<HwParkID> hwParkIDList =new ArrayList<>();
+    private List<String> stringBuildList = new ArrayList<>();
+    private List<String> stringFloorList = new ArrayList<>();
+
+    /**
+     * 根据传入的地址和类型从服务器上获取数据
+     */
+    private void queryFromServer() {
+        HttpUtilh.sendOkHttpRequest(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast("获取楼层信息失败");
+                        inputDialogHw.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                Logger.e("截取信息" + responseText);
+                boolean result = false;
+                result = Utilityhw.handleProvinceResponse(responseText);
+                stringBuildList=new ArrayList<>();
+                stringFloorList=new ArrayList<>();
+                if (result) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            hwBuildList = hwBuild.getHwBuilds();
+                            hwFloorList = hwFloor.getHwFloors();
+                            hwParkIDList = hwParkID.getHwBuilds();
+                            if (hwParkID.getSectorID()!=null){
+                                stringBuildList=new ArrayList<>();
+                                Logger.e("点击的园区" + hwParkID.getSectorID());
+                                for (int j=0;j<hwBuildList.size();j++){
+                                    if (hwBuildList.get(j).getParkId().equals(hwParkID.getSectorID())){
+                                        String build =hwBuildList.get(j).getName();
+                                        stringBuildList.add(build);
+                                        Logger.e("楼号" + build);
+                                    }
+                                }
+                                stringBuildList.add("空");
+                                BuildAdapter.setNewData(stringBuildList);
+                            }else {
+                                stringBuildList=new ArrayList<>();
+                                for (int j=0;j<hwBuildList.size();j++){
+                                    if (hwBuildList.get(j).getParkId().equals("CN-44-003-J")){
+                                        String build =hwBuildList.get(j).getName();
+                                        stringBuildList.add(build);
+                                        Logger.e("楼号" + build);
+                                    }
+                                }
+                                stringBuildList.add("空");
+                                BuildAdapter.setNewData(stringBuildList);
+                            }
+                            for (int i = 0; i < hwFloorList.size(); i++) {
+                                String floor = hwFloorList.get(i).getName();
+                                stringFloorList.add(floor);
+                                Logger.e("层数" + floor);
+                            }
+                            FloorAdapter.setNewData(stringFloorList);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 }
