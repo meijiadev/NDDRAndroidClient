@@ -58,7 +58,7 @@ public class SplashActivity extends DDRActivity implements OnPermission,Animatio
         getStatusBarConfig().hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
                 .init();
         receiveBroadcast();
-        Logger.e("当前包名："+ BuildConfig.APPLICATION_ID);
+        Logger.e("当前包名："+ BuildConfig.FLAVOR);
     }
 
     /**

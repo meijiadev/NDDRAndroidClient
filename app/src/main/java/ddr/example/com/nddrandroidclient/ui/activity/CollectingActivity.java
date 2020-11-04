@@ -55,10 +55,6 @@ import static ddr.example.com.nddrandroidclient.widget.view.RockerView.Direction
  * modify time: 2020/3/23
  */
 public class CollectingActivity extends DDRActivity {
- /*   @BindView(R.id.collect4)
-    CollectingView4 collectingView4;
-    @BindView(R.id.collect3)
-    CollectingView3 collectingView3;*/
     @BindView(R.id.generateMapView)
     GenerateMapView generateMapView;
     @BindView(R.id.process_bar)
@@ -100,17 +96,12 @@ public class CollectingActivity extends DDRActivity {
     private boolean isforward, isGoRight; //左右摇杆当前的方向
     private NotifyBaseStatusEx notifyBaseStatusEx;
     private TcpClient tcpClient;
-    private String collectName;                  //采集的地图名
-    private BaseDialog waitDialog,waitDialog1;
-    private NotifyLidarPtsEntity notifyLidarPtsEntity;
-    private NotifyLidarPtsEntity notifyLidarPtsEntity1;
-    private List<NotifyLidarPtsEntity> ptsEntityList=new ArrayList<>();  //存储雷达扫到的点云
-    private List<XyEntity>poiPoints=new ArrayList<>();                   //兴趣点列表 采集中生成
-    private float posX,posY;        //机器人当前位置
+    private BaseDialog waitDialog;
     private boolean isStartDraw=false;        //是否开始绘制
     private int clicks;                       //点击次数
-    private static final int FLAG_HOMEKEY_DISPATCHED = 0x80000000;
 
+
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(MessageEvent mainUpDate) {
         switch (mainUpDate.getType()) {
@@ -123,9 +114,7 @@ public class CollectingActivity extends DDRActivity {
                 tvProgress.setText((int) (progress*100)+"%");
                 if (progress==1.0f){
                     tvTitle.setText(R.string.conmon_collect_success);
-                    postDelayed(()->{
-                        finish();
-                    },1000);
+                    postDelayed(this::finish,1000);
                 }
                 break;
             case updateDetectionLoopStatus:
@@ -174,8 +163,6 @@ public class CollectingActivity extends DDRActivity {
     @Override
     protected void initData() {
         super.initData();
-        collectName=getIntent().getStringExtra("CollectName");
-        Logger.e("-----采集的地图名");
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         processBar.setMax(100);
         seekBar.setProgress((float) maxSpeed);

@@ -25,6 +25,7 @@ android {
     productFlavors{
         //模组项目
         dadao{
+            dimension='dadao'
             applicationId "ddr.example.com.nddrandroidclient"
             versionName "0.6.3"
             // 自动生成@string/app_name为 app1的名称
@@ -34,6 +35,7 @@ android {
                     JPUSH_PKGNAME: applicationId,
             ]
         }
+
         //北大项目
         beida{
             dimension='dadao'

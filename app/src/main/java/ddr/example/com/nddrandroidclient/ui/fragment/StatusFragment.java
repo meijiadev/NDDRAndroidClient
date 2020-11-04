@@ -270,6 +270,8 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
         targetPointAdapter.setNewData(targetPoints);
         mapImageView.startThread();
     }
+
+
     private long timeSart;
     private long timeStop;
     private boolean isStartOne;

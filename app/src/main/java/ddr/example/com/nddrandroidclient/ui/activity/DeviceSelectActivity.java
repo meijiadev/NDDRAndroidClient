@@ -66,7 +66,6 @@ public class DeviceSelectActivity extends DDRActivity {
         if (devices.size()==0){
             toast("当前无设备连接");
         }
-
     }
 
     @Override
@@ -77,10 +76,8 @@ public class DeviceSelectActivity extends DDRActivity {
 
     @OnClick({R.id.tv_back})
     public void onViewClicked(View view){
-        switch (view.getId()){
-            case R.id.tv_back:
-                finish();
-                break;
+        if (view.getId() == R.id.tv_back) {
+            finish();
         }
     }
 
