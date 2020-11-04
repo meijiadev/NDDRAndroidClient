@@ -33,6 +33,7 @@ import DDRCommProto.BaseCmd;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ddr.example.com.nddrandroidclient.BuildConfig;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseApplication;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
@@ -72,6 +73,7 @@ import ddr.example.com.nddrandroidclient.ui.fragment.MapFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.SetUpFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.StatusFragment;
 import ddr.example.com.nddrandroidclient.ui.fragment.TaskFragment;
+import ddr.example.com.nddrandroidclient.ui.fragment.secondFragment.HwMapFragment;
 import ddr.example.com.nddrandroidclient.widget.textview.LineTextView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
 import ddr.example.com.nddrandroidclient.widget.view.DDRViewPager;
@@ -268,9 +270,14 @@ public class HomeActivity extends DDRActivity implements ViewPager.OnPageChangeL
     @Override
     protected void initView() {
         KeyboardWatcher.with(this).setListener(this);
+
         mPagerAdapter = new BaseFragmentAdapter<DDRLazyFragment>(this);
         mPagerAdapter.addFragment(StatusFragment.newInstance());
-        mPagerAdapter.addFragment(MapFragment.newInstance());
+        if (BuildConfig.FLAVOR.equals("huawei")){
+            mPagerAdapter.addFragment(HwMapFragment.newInstance());
+        }else {
+            mPagerAdapter.addFragment(MapFragment.newInstance());
+        }
         mPagerAdapter.addFragment(TaskFragment.newInstance());
         mPagerAdapter.addFragment(SetUpFragment.newInstance());
         vpHomePager.setAdapter(mPagerAdapter);

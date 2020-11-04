@@ -53,6 +53,7 @@
             android:autoSizeMinTextSize="9sp"
             android:autoSizeMaxTextSize="12sp"
             android:id="@+id/tv_sensorSet"
+            android:visibility="gone"
             />
         <ddr.example.com.nddrandroidclient.widget.textview.LineTextView
             android:layout_width="match_parent"
@@ -63,7 +64,7 @@
             android:layout_marginTop="55dp"
             android:textColor="#99ffffff"
             android:gravity="center"
-            android:layout_alignTop="@id/tv_sensorSet"
+            android:layout_alignTop="@id/tv_autoCharging"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="9sp"
             android:autoSizeMaxTextSize="12sp"

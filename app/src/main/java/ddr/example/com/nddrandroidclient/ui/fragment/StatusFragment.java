@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -13,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.ByteString;
@@ -21,6 +22,7 @@ import com.yhao.floatwindow.FloatWindow;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +34,15 @@ import butterknife.OnClick;
 import ddr.example.com.nddrandroidclient.R;
 import ddr.example.com.nddrandroidclient.base.BaseDialog;
 import ddr.example.com.nddrandroidclient.common.DDRLazyFragment;
-import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.MessageEvent;
+import ddr.example.com.nddrandroidclient.entity.info.MapFileStatus;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyBaseStatusEx;
 import ddr.example.com.nddrandroidclient.entity.info.NotifyEnvInfo;
+import ddr.example.com.nddrandroidclient.entity.other.Sensor;
+import ddr.example.com.nddrandroidclient.entity.other.SensorSea;
+import ddr.example.com.nddrandroidclient.entity.other.SensorSeas;
+import ddr.example.com.nddrandroidclient.entity.other.Sensors;
+import ddr.example.com.nddrandroidclient.entity.other.Ultrasonic;
 import ddr.example.com.nddrandroidclient.entity.point.TargetPoint;
 import ddr.example.com.nddrandroidclient.entity.point.TaskMode;
 import ddr.example.com.nddrandroidclient.other.DpOrPxUtils;
@@ -47,21 +54,21 @@ import ddr.example.com.nddrandroidclient.ui.activity.HomeActivity;
 import ddr.example.com.nddrandroidclient.ui.activity.RelocationActivity;
 import ddr.example.com.nddrandroidclient.ui.adapter.NGridLayoutManager;
 import ddr.example.com.nddrandroidclient.ui.adapter.NLinearLayoutManager;
+import ddr.example.com.nddrandroidclient.ui.adapter.SensorAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.StringAdapter;
 import ddr.example.com.nddrandroidclient.ui.adapter.TargetPointAdapter;
+import ddr.example.com.nddrandroidclient.ui.adapter.UltrasonicAdapter;
 import ddr.example.com.nddrandroidclient.ui.dialog.InputDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.NormalDialog;
-import ddr.example.com.nddrandroidclient.ui.dialog.WaitDialog;
+import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 import ddr.example.com.nddrandroidclient.widget.view.CircleBarView;
 import ddr.example.com.nddrandroidclient.widget.view.CustomPopuWindow;
-import ddr.example.com.nddrandroidclient.widget.StatusSwitchButton;
 import ddr.example.com.nddrandroidclient.widget.zoomview.MapImageView;
 
 /**
  * time: 2019/10/26
  * desc: 基础状态界面
  */
-public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements StatusSwitchButton.OnStatusSwitchListener,Animation.AnimationListener{
+public class StatusFragment extends DDRLazyFragment<HomeActivity> implements StatusSwitchButton.OnStatusSwitchListener, Animation.AnimationListener {
 
     @BindView(R.id.status_switch_bt)
     StatusSwitchButton statusSwitchButton;
@@ -116,6 +123,40 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     Button btExitCharge;                      //退出充电模式
     @BindView(R.id.tv_charge_notify)
     TextView tvChargeNotify;
+    @BindView(R.id.tv_device_status)
+    TextView tvDeviceStatus;
+    @BindView(R.id.tv_ob_status)
+    TextView tvObStatus;
+    @BindView(R.id.tv_jg_s)
+    TextView tvJgS;
+    @BindView(R.id.tv_rgb_s)
+    TextView tvRgbS;
+    @BindView(R.id.tv_pz_1)
+    TextView tvPz1;
+    @BindView(R.id.tv_pz_2)
+    TextView tvPz2;
+    @BindView(R.id.tv_pz_3)
+    TextView tvPz3;
+    @BindView(R.id.tv_pz_4)
+    TextView tvPz4;
+    @BindView(R.id.tv_dl_1)
+    TextView tvDl1;
+    @BindView(R.id.tv_dl_2)
+    TextView tvDl2;
+    @BindView(R.id.tv_dl_3)
+    TextView tvDl3;
+    @BindView(R.id.tv_dl_4)
+    TextView tvDl4;
+    @BindView(R.id.tv_cs_b)
+    TextView tvCsB;
+    @BindView(R.id.tv_modify)
+    TextView tvModify;
+    @BindView(R.id.tv_click_six)
+    TextView tvClickSix;
+    @BindView(R.id.left_ob_layout)
+    RelativeLayout leftObLayout;
+    @BindView(R.id.re_cs_status)
+    RecyclerView re_cs_status;
 
     private Animation hideAnimation;  //布局隐藏时的动画
     private Animation showAnimation;  // 布局显示时的动画效果
@@ -124,25 +165,31 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     private NotifyEnvInfo notifyEnvInfo;
     private NotifyBaseStatusEx notifyBaseStatusEx;
 
-    private static String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";//特殊字符
+    private static String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";//特殊字符
     private TcpClient tcpClient;
     private String mapName;//地图名
     private String taskName;//任务名
     private   String robotID;//机器人ID
     private String workStatus; //工作状态
-    private int lsNum=1; //临时任务次数
-    private List<String> groupList=new ArrayList<>();
-    private List<TargetPoint> targetPoints= new ArrayList<>();
+    private int lsNum = 1; //临时任务次数
+    private List<String> groupList = new ArrayList<>();
+    private List<TargetPoint> targetPoints = new ArrayList<>();
     private TargetPointAdapter targetPointAdapter;
     private MapFileStatus mapFileStatus;
     private StringAdapter taskCheckAdapter;
     private CustomPopuWindow customPopWindow;
-    private String sPoint="未知点";
+    private String sPoint = "未知点";
     private boolean isRabPoint;               //是否在跑ab点
+    private SensorAdapter sensorAdapter;
+    private SensorSeas sensorSeas;
+    private List<SensorSea> sensorSeaList;
+    private List<SensorSea> sensorSeaListP;
+    private List<SensorSea> sensorSeaListD;
+    private int clicks;                       //点击次数
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void update(MessageEvent messageEvent){
-        switch (messageEvent.getType()){
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void update(MessageEvent messageEvent) {
+        switch (messageEvent.getType()) {
             case updateBaseStatus:
                 initStatusBar();
                 break;
@@ -155,13 +202,13 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             case getSpecificPoint:
                 String pointName = (String) messageEvent.getData();
                 if (sPoint.equals(pointName))
-                toast(getString(R.string.start_goto)+ pointName);
+                    toast(getString(R.string.start_goto) + pointName);
                 break;
             case getSpecificPoint1:
-                Logger.e("------添加任务成功，等待前往"+sPoint);
+                Logger.e("------添加任务成功，等待前往" + sPoint);
                 pointName = (String) messageEvent.getData();
-                if (sPoint.equals(pointName)){
-                    toast(getString(R.string.add_s_d_goto)+ pointName);
+                if (sPoint.equals(pointName)) {
+                    toast(getString(R.string.add_s_d_goto) + pointName);
                 }
                 break;
             case getSpecificPoint2:
@@ -172,7 +219,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case getSpecificPoint4:
                 toast(R.string.build_task_faild);
-                isRabPoint =false;
+                isRabPoint = false;
                 break;
             case getSpecificPoint5:
                 toast(R.string.now_Self_calibration);
@@ -182,7 +229,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case getSpecificPoint9:
                 toast(R.string.s_now_task);
-                isRabPoint =false;
+                isRabPoint = false;
                 break;
             case getSpecificPoint10:
                 toast(R.string.no_task_yd);
@@ -190,7 +237,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             case getSpecificPoint11:
                 pointName = (String) messageEvent.getData();
                 if (sPoint.equals(pointName))
-                toast(getString(R.string.about_to_start)+sPoint);
+                    toast(getString(R.string.about_to_start) + sPoint);
                 break;
             case switchMapSucceed:
                 for (int i = 0; i < targetPoints.size(); i++) {
@@ -198,35 +245,59 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 }
                 break;
             case GoToChargingPoint:
-                BaseCmd.eCmdRspType eCmdRspType= (BaseCmd.eCmdRspType) messageEvent.getData();
-                if (eCmdRspType.equals(BaseCmd.eCmdRspType.eSuccess)){
+                BaseCmd.eCmdRspType eCmdRspType = (BaseCmd.eCmdRspType) messageEvent.getData();
+                if (eCmdRspType.equals(BaseCmd.eCmdRspType.eSuccess)) {
                     mapImageView.setTargetPoint(null);
-                }else if (eCmdRspType.equals(BaseCmd.eCmdRspType.eCmdFailed)){
+                } else if (eCmdRspType.equals(BaseCmd.eCmdRspType.eCmdFailed)) {
                     toast(R.string.commonFailedToCharge);
                 }
                 break;
             case updateDDRVLNMap:
-                Logger.e("------地图名："+mapFileStatus.getMapName()+"当前"+mapName);
-                if (mapFileStatus.getMapName().equals(mapName)){
+                Logger.e("------地图名：" + mapFileStatus.getMapName() + "当前" + mapName);
+                if (mapFileStatus.getMapName().equals(mapName)) {
                     tvWarn.setVisibility(View.GONE);
                     //Logger.e("group列数"+groupList.size()+"列数1"+mapFileStatus.getTaskModes().size()+" -- "+mapFileStatus.getcTaskModes().size());
                     mapImageView.setImageBitmap(mapName);
                     groupList = new ArrayList<>();
-                    targetPoints=new ArrayList<>();
-                    for (TaskMode taskMode:mapFileStatus.getcTaskModes()){
+                    targetPoints = new ArrayList<>();
+                    for (TaskMode taskMode : mapFileStatus.getcTaskModes()) {
                         groupList.add(taskMode.getName());
                     }
                     taskCheckAdapter.setNewData(groupList);
-                    targetPoints=mapFileStatus.getcTargetPoints();
+                    targetPoints = mapFileStatus.getcTargetPoints();
                     targetPointAdapter.setNewData(targetPoints);
                     mapImageView.setABPointLine(isRabPoint);
                 }
+                break;
+            case updateSenesorSea:
+                sensorSeaList= sensorSeas.getSensorSeaList();
+                sensorSeaListP= sensorSeas.getSensorListP();
+                sensorSeaListD=sensorSeas.getSensorListD();
+                sensorAdapter.setNewData(sensorSeaList);
+                for (int i=0;i<sensorSeaListP.size();i++){
+                    if (sensorSeaListP.get(i).getTriggerStat()==1){
+//                        toast("触发防碰撞"+sensorSeaListP.get(i).getID());
+                    }else {
+//                        toast("idid"+sensorSeaListP.get(i).getID()+"----"+sensorSeaListP.get(i).getTriggerStat()+"---"+i);
+                    }
+                }
+
+                for (int i=0;i<sensorSeaListD.size();i++){
+                    if (sensorSeaListD.get(i).getTriggerStat()==1){
+//                        toast("触发防跌落"+sensorSeaListD.get(i).getID());
+                    }else {
+//                        toast("idid"+sensorSeaListD.get(i).getID()+"----"+sensorSeaListD.get(i).getTriggerStat()+"---"+i);
+                    }
+                }
+                break;
+            case updateSensor:
+                setSensorParam();
                 break;
         }
 
     }
 
-    public static StatusFragment newInstance(){
+    public static StatusFragment newInstance() {
         return new StatusFragment();
     }
 
@@ -238,11 +309,11 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     @Override
     protected void initView() {
         statusSwitchButton.setOnStatusListener(this);
-        hideAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_hide);
-        showAnimation=AnimationUtils.loadAnimation(getAttachActivity(),R.anim.view_show);
-        chargeAnimation= (AnimationDrawable) ivCharge.getBackground();
-        taskCheckAdapter=new StringAdapter(R.layout.item_recycle_task_check);
-        targetPointAdapter=new TargetPointAdapter(R.layout.item_recycle_gopoint);
+        hideAnimation = AnimationUtils.loadAnimation(getAttachActivity(), R.anim.view_hide);
+        showAnimation = AnimationUtils.loadAnimation(getAttachActivity(), R.anim.view_show);
+        chargeAnimation = (AnimationDrawable) ivCharge.getBackground();
+        taskCheckAdapter = new StringAdapter(R.layout.item_recycle_task_check);
+        targetPointAdapter = new TargetPointAdapter(R.layout.item_recycle_gopoint);
         NGridLayoutManager gridLayoutManager = new NGridLayoutManager(getAttachActivity(), 4);
         recyclerGoPoint.setLayoutManager(gridLayoutManager);
         recyclerGoPoint.setAdapter(targetPointAdapter);
@@ -252,30 +323,37 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
 
     @Override
     protected void initData() {
-        tcpClient= TcpClient.getInstance(getAttachActivity(), ClientMessageDispatcher.getInstance());
+        tcpClient = TcpClient.getInstance(getAttachActivity(), ClientMessageDispatcher.getInstance());
         notifyBaseStatusEx = NotifyBaseStatusEx.getInstance();
         notifyEnvInfo = NotifyEnvInfo.getInstance();
         mapFileStatus = MapFileStatus.getInstance();
-        if (taskName!=null && !taskName.equals("PathError")){
-            String showName=taskName.replaceAll("DDRTask_","");
-            showName=showName.replaceAll(".task","");
+        if (taskName != null && !taskName.equals("PathError")) {
+            String showName = taskName.replaceAll("DDRTask_", "");
+            showName = showName.replaceAll(".task", "");
             tv_now_task.setText(showName);
-        }else {
+        } else {
             tv_now_task.setText(R.string.no_task);
         }
-        for (int i=0;i<mapFileStatus.getcTaskModes().size();i++){
+        for (int i = 0; i < mapFileStatus.getcTaskModes().size(); i++) {
             groupList.add(mapFileStatus.getcTaskModes().get(i).getName());
         }
         taskCheckAdapter.setNewData(groupList);
         targetPointAdapter.setNewData(targetPoints);
+        sensors=Sensors.getInstance();
+        sensorSeas=SensorSeas.getInstance();
+        sensorSeaList=sensorSeas.getSensorSeaList();
+        sensorAdapter = new SensorAdapter(R.layout.item_recycle_sensor);
+        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),4);
+        re_cs_status.setLayoutManager(gridLayoutManager);
+        re_cs_status.setAdapter(sensorAdapter);
         mapImageView.startThread();
     }
-
 
     private long timeSart;
     private long timeStop;
     private boolean isStartOne;
     private BaseDialog normalDialog;
+
     /**
      * 获取机器人状态信息
      */
@@ -283,53 +361,53 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     private void initStatusBar() {
         DecimalFormat df = new DecimalFormat("0");
         DecimalFormat format = new DecimalFormat("0.00");
-        int h=60;
-        int times=notifyBaseStatusEx.getTaskDuration();
+        int h = 60;
+        int times = notifyBaseStatusEx.getTaskDuration();
         int batteryNum = Integer.parseInt(df.format(notifyEnvInfo.getBatt()));
         mapName = notifyBaseStatusEx.getCurroute();
         //运行次数
         int taskNum = notifyBaseStatusEx.getTaskCount();
         taskName = notifyBaseStatusEx.getCurrpath();
-        lsNum=notifyBaseStatusEx.getTemopTaskNum();
-        if (taskName!=null && !taskName.equals("PathError") && !taskName.equals("DDRTask_temporary.task")){
-            String showName=taskName.replaceAll("DDRTask_","");
-            showName=showName.replaceAll(".task","");
+        lsNum = notifyBaseStatusEx.getTemopTaskNum();
+        if (taskName != null && !taskName.equals("PathError") && !taskName.equals("DDRTask_temporary.task")) {
+            String showName = taskName.replaceAll("DDRTask_", "");
+            showName = showName.replaceAll(".task", "");
             tv_now_task.setText(showName);
-        }else {
+        } else {
             tv_now_task.setText(R.string.no_task);
         }
         //工作时间
         int workTimes = Integer.parseInt(df.format(times / h));
         //工作速度
         double taskSpeed = Double.parseDouble(format.format(notifyBaseStatusEx.getPosLinespeed()));
-        String showName=mapName.replaceAll("OneRoute_","");
+        String showName = mapName.replaceAll("OneRoute_", "");
         tv_now_map.setText(showName);
-        if (mapName!=null){
+        if (mapName != null) {
             rel_step_description.setVisibility(View.GONE);
             recyclerGoPoint.setVisibility(View.VISIBLE);
             tv_set_go.setText(R.string.go_target_point);
-        }else {
+        } else {
             rel_step_description.setVisibility(View.VISIBLE);
             recyclerGoPoint.setVisibility(View.GONE);
             tv_set_go.setText(R.string.create_task_steps);
         }
         robotID=notifyBaseStatusEx.getRobotId();
         tv_now_device.setText(robotID);
-        tv_work_time.setText(workTimes +getString(R.string.common_minute));
-        tv_task_speed.setText(taskSpeed +" m/s");
-       // Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
-        switch (notifyBaseStatusEx.geteTaskMode()){
+        tv_work_time.setText(workTimes + getString(R.string.common_minute));
+        tv_task_speed.setText(taskSpeed + " m/s");
+        // Logger.d("-------"+notifyBaseStatusEx.geteTaskMode());
+        switch (notifyBaseStatusEx.geteTaskMode()) {
             case 1:
-                tv_task_num.setText(String.valueOf(taskNum)+"/"+lsNum+getString(R.string.common_times));
-                if (mapImageView !=null&& isRabPoint){
-                    isRabPoint =false;
+                tv_task_num.setText(String.valueOf(taskNum) + "/" + lsNum + getString(R.string.common_times));
+                if (mapImageView != null && isRabPoint) {
+                    isRabPoint = false;
                     mapImageView.setABPointLine(false);
                 }
                 break;
             case 2:
-                tv_task_num.setText(String.valueOf(taskNum)+"/"+mapFileStatus.AllCount+getString(R.string.common_times));
-                if (mapImageView !=null&& isRabPoint){
-                    isRabPoint =false;
+                tv_task_num.setText(String.valueOf(taskNum) + "/" + mapFileStatus.AllCount + getString(R.string.common_times));
+                if (mapImageView != null && isRabPoint) {
+                    isRabPoint = false;
                     mapImageView.setABPointLine(false);
                 }
                 break;
@@ -338,8 +416,8 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             case 4:
             case 5:
                 tv_task_num.setText(" ");
-                if (mapImageView !=null&&!isRabPoint){
-                    isRabPoint =true;
+                if (mapImageView != null && !isRabPoint) {
+                    isRabPoint = true;
                     mapImageView.setABPointLine(true);
                 }
                 break;
@@ -353,12 +431,12 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
                         //Logger.e("待命模式" + modeView.getText());
-                        if (taskName.equals("PathError")){
+                        if (taskName.equals("PathError")) {
                             tv_work_statue.setText(R.string.common_waiting);
                             tv_now_task.setClickable(true);
                             tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
                             iv_task_xl.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             tv_work_statue.setText(R.string.common_runing);
                         }
                         //获取当前时间戳
@@ -372,7 +450,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                         tv_now_task.setClickable(false);
                         tv_now_task.setBackgroundResource(0);
                         iv_task_xl.setVisibility(View.GONE);
-                        switch (notifyBaseStatusEx.getSonMode()){
+                        switch (notifyBaseStatusEx.getSonMode()) {
                             case 3:
                                 tv_work_statue.setText(R.string.common_error);
                                 break;
@@ -380,7 +458,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                                 tv_work_statue.setText(R.string.common_relocationing);
                                 break;
                         }
-                         timeSart = System.currentTimeMillis();
+                        timeSart = System.currentTimeMillis();
                         break;
                 }
                 break;
@@ -406,38 +484,38 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
 //        }
 //        long result=timeSart-timeStop;
 //        toast("结果"+result+"开始"+timeSart+"待命"+timeStop);
-        switch (notifyBaseStatusEx.getChargingType()){
+        switch (notifyBaseStatusEx.getChargingType()) {
             case 1:
-               // btExitCharge.setVisibility(View.VISIBLE);
+                // btExitCharge.setVisibility(View.VISIBLE);
             case 2:
                 btExitCharge.setVisibility(View.VISIBLE);
                 break;
         }
-        Logger.d("------------是否在充电："+notifyBaseStatusEx.isChargingStatus()+"电量："+ batteryNum);
-        if(!notifyBaseStatusEx.isChargingStatus()) {
-            if (leftLayout.getVisibility()!=View.VISIBLE){            //如果当前处于非充电模式
+        Logger.d("------------是否在充电：" + notifyBaseStatusEx.isChargingStatus() + "电量：" + batteryNum);
+        if (!notifyBaseStatusEx.isChargingStatus()) {
+            if (leftLayout.getVisibility() != View.VISIBLE) {            //如果当前处于非充电模式
                 chargingLayout.setVisibility(View.GONE);
                 leftLayout.setVisibility(View.VISIBLE);
-                if (chargeAnimation.isRunning()){
+                if (chargeAnimation.isRunning()) {
                     chargeAnimation.stop();                           // 如果动画正在运行 则停止
                 }
                 Logger.d("-----d-关闭充电界面");
             }
             iv_cd_xs.setImageResource(R.mipmap.sd_def);
-        }else {
-            if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
+        } else {
+            if (chargingLayout.getVisibility() != View.VISIBLE) {         // 如果当前处于充电模式，但充电布局不可见
                 chargingLayout.setVisibility(View.VISIBLE);
                 leftLayout.setVisibility(View.GONE);
             }
-            if (!chargeAnimation.isRunning()){
+            if (!chargeAnimation.isRunning()) {
                 chargeAnimation.start();
             }
         }
 
         //只有在自动充电时才生效
-        switch (notifyBaseStatusEx.getChargingSubStatus()){
+        switch (notifyBaseStatusEx.getChargingSubStatus()) {
             case 1:
-                if (chargingLayout.getVisibility()!=View.VISIBLE){
+                if (chargingLayout.getVisibility() != View.VISIBLE) {
                     chargingLayout.setVisibility(View.VISIBLE);
                     leftLayout.setVisibility(View.GONE);
                 }
@@ -445,29 +523,36 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case 2:
                 tvChargeNotify.setText(R.string.common_charging);
-                if (chargingLayout.getVisibility()!=View.VISIBLE){         // 如果当前处于充电模式，但充电布局不可见
+                if (chargingLayout.getVisibility() != View.VISIBLE) {         // 如果当前处于充电模式，但充电布局不可见
                     chargingLayout.setVisibility(View.VISIBLE);
                     leftLayout.setVisibility(View.GONE);
                 }
-                if (!chargeAnimation.isRunning()){
+                if (!chargeAnimation.isRunning()) {
                     chargeAnimation.start();
                 }
                 break;
             case 4:
                 tvChargeNotify.setText(R.string.common_charging_2);
-                if (chargingLayout.getVisibility()!=View.VISIBLE){
+                if (chargingLayout.getVisibility() != View.VISIBLE) {
                     chargingLayout.setVisibility(View.VISIBLE);
                     leftLayout.setVisibility(View.GONE);
                 }
                 break;
         }
-        tvElectricQuantity.setText(batteryNum +"%");
-        circleBarView.setProgress(batteryNum,0,Color.parseColor("#0399FF"));
-        Logger.d("当前充电状态："+notifyBaseStatusEx.getChargingSubStatus());
+        tvElectricQuantity.setText(batteryNum + "%");
+        circleBarView.setProgress(batteryNum, 0, Color.parseColor("#0399FF"));
+        Logger.d("当前充电状态：" + notifyBaseStatusEx.getChargingSubStatus());
+
+        if (notifyBaseStatusEx.getSonMode()==17){
+            tvJgS.setBackgroundResource(R.drawable.task_check_bg);
+        }else {
+            tvJgS.setBackgroundResource(R.drawable.bt_bg__map);
+        }
     }
 
     /**
      * 路径选择弹窗
+     *
      * @param view
      */
     private void showTaskPopupWindow(View view) {
@@ -481,11 +566,11 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 .create()
                 .showAsDropDown(view, DpOrPxUtils.dip2px(getAttachActivity(), 0), 5);
         RecyclerView recycler_task_check = contentView.findViewById(R.id.recycler_task_check);
-        NLinearLayoutManager layoutManager=new NLinearLayoutManager(getAttachActivity());
+        NLinearLayoutManager layoutManager = new NLinearLayoutManager(getAttachActivity());
         recycler_task_check.setLayoutManager(layoutManager);
         recycler_task_check.setAdapter(taskCheckAdapter);
         onItemClick(1);
-        customPopWindow.setOutsideTouchListener(()->{
+        customPopWindow.setOutsideTouchListener(() -> {
             Logger.e("点击外部已关闭");
             customPopWindow.dissmiss();
             tv_now_task.setBackgroundResource(R.drawable.bt_bg__map);
@@ -494,15 +579,16 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     }
 
 
-    @OnClick({R.id.iv_shrink,R.id.tv_now_task,R.id.tv_restart_point,R.id.tv_warn,R.id.bt_exit_charge,R.id.circle})
+    @OnClick({R.id.iv_shrink, R.id.tv_now_task, R.id.tv_restart_point, R.id.tv_warn, R.id.bt_exit_charge, R.id.circle, R.id.tv_ob_status,
+            R.id.tv_device_status,R.id.tv_click_six,R.id.tv_modify})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_shrink:
-                if (shrinkTailLayout.getVisibility()==View.VISIBLE){
+                if (shrinkTailLayout.getVisibility() == View.VISIBLE) {
                     shrinkLayout.startAnimation(hideAnimation);
                     hideAnimation.setAnimationListener(this);
                     ivShrink.setImageResource(R.mipmap.iv_shrink);
-                }else if (shrinkTailLayout.getVisibility()==View.GONE){
+                } else if (shrinkTailLayout.getVisibility() == View.GONE) {
                     shrinkTailLayout.setVisibility(View.VISIBLE);
                     shrinkLayout.startAnimation(showAnimation);
                     ivShrink.setImageResource(R.mipmap.iv_back);
@@ -510,33 +596,33 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case R.id.tv_warn:
                 Logger.e("点击");
-                if (!notifyBaseStatusEx.getCurroute().equals("")){
+                if (!notifyBaseStatusEx.getCurroute().equals("")) {
                     tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
                     toast(R.string.in_load_map);
-                }else {
+                } else {
                     toast(R.string.not_map_using);
                 }
                 break;
             case R.id.tv_now_task:
-                if (notifyBaseStatusEx.isLocationed()){
+                if (notifyBaseStatusEx.isLocationed()) {
                     showTaskPopupWindow(tv_now_task);
                     tv_now_task.setBackgroundResource(R.drawable.task_check_bg);
                     iv_task_xl.setImageResource(R.mipmap.xl_5);
-                }else {
+                } else {
                     showRelocationDialog();
                 }
                 break;
             case R.id.tv_restart_point:
-                float theat= (float) 1.0;
-                float x= (float) 1.0;
-                float y= (float) 1.0;
+                float theat = (float) 1.0;
+                float x = (float) 1.0;
+                float y = (float) 1.0;
                 new InputDialog.Builder(getAttachActivity())
                         .setEditVisibility(View.GONE)
                         .setTitle("确认本次送料完成")
                         .setListener(new InputDialog.OnListener() {
                             @Override
                             public void onConfirm(BaseDialog dialog, String content) {
-                                goPointLet(x,y,theat,ByteString.copyFromUtf8("one"),ByteString.copyFromUtf8(mapName),2);
+                                goPointLet(x, y, theat, ByteString.copyFromUtf8("one"), ByteString.copyFromUtf8(mapName), 2);
 //                                tv_restart_point.setVisibility(View.GONE);
                             }
 
@@ -552,80 +638,107 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 toast(R.string.exit_charging);
                 try {
                     FloatWindow.get().show();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.circle:
                 tcpClient.getAllLidarMap();
                 break;
+            case R.id.tv_ob_status:
+                leftLayout.setVisibility(View.GONE);
+                leftObLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.tv_device_status:
+                leftLayout.setVisibility(View.VISIBLE);
+                leftObLayout.setVisibility(View.GONE);
+                break;
+            case R.id.tv_click_six:
+                if (tvModify.getVisibility()==View.GONE){
+                    clicks++;
+                    if (clicks>=6){
+                        tvModify.setVisibility(View.VISIBLE);
+                        clicks=0;
+                    }
+                }else {
+                    clicks++;
+                    if (clicks>=6){
+                        tvModify.setVisibility(View.GONE);
+                        clicks=0;
+                    }
+                }
+                break;
+            case R.id.tv_modify:
+                showControlPopupWindow(tvModify);
+                break;
+
         }
     }
 
     /**
      * 机器人暂停/重新运动
+     *
      * @param value
      */
-    private void pauseOrResume(String value){
-        BaseCmd.reqCmdPauseResume reqCmdPauseResume=BaseCmd.reqCmdPauseResume.newBuilder()
+    private void pauseOrResume(String value) {
+        BaseCmd.reqCmdPauseResume reqCmdPauseResume = BaseCmd.reqCmdPauseResume.newBuilder()
                 .setError(value)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdPauseResume);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdPauseResume);
         Logger.e("机器人暂停/重新运动");
     }
 
 
-
     /**
      * 导航去目标点或者恢复
+     *
      * @param x
      * @param y
      * @param theta
      * @param pname
      * @param routeName
      */
-    private void goPointLet(float x,float y,float theta,ByteString pname, ByteString routeName,int type){
+    private void goPointLet(float x, float y, float theta, ByteString pname, ByteString routeName, int type) {
         DDRVLNMap.eRunSpecificPointType eRunSpecificPointTyp;
-        switch (type){
+        switch (type) {
             case 1:
-                eRunSpecificPointTyp=DDRVLNMap.eRunSpecificPointType.eRunSpecificPointTypeAdd;
+                eRunSpecificPointTyp = DDRVLNMap.eRunSpecificPointType.eRunSpecificPointTypeAdd;
                 break;
             case 2:
-                eRunSpecificPointTyp=DDRVLNMap.eRunSpecificPointType.eRunSpecificPointTypeResume;
+                eRunSpecificPointTyp = DDRVLNMap.eRunSpecificPointType.eRunSpecificPointTypeResume;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
         }
-        DDRVLNMap.space_pointEx space_pointEx=DDRVLNMap.space_pointEx.newBuilder()
+        DDRVLNMap.space_pointEx space_pointEx = DDRVLNMap.space_pointEx.newBuilder()
                 .setX(x)
                 .setY(y)
                 .setTheta(theta)
                 .build();
-        DDRVLNMap.targetPtItem targetPtItem=DDRVLNMap.targetPtItem.newBuilder()
+        DDRVLNMap.targetPtItem targetPtItem = DDRVLNMap.targetPtItem.newBuilder()
                 .setPtName(pname)
                 .setPtData(space_pointEx)
                 .build();
-        List<DDRVLNMap.targetPtItem> targetPtItemList=new ArrayList<>();
+        List<DDRVLNMap.targetPtItem> targetPtItemList = new ArrayList<>();
         targetPtItemList.add(targetPtItem);
-        DDRVLNMap.reqRunSpecificPoint reqRunSpecificPoint=DDRVLNMap.reqRunSpecificPoint.newBuilder()
+        DDRVLNMap.reqRunSpecificPoint reqRunSpecificPoint = DDRVLNMap.reqRunSpecificPoint.newBuilder()
                 .setOnerouteName(routeName)
                 .addAllTargetPt(targetPtItemList)
                 .setBIsDynamicOA(true)
                 .setOptType(eRunSpecificPointTyp)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqRunSpecificPoint);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqRunSpecificPoint);
 
     }
 
 
-
-    private void onItemClick(int type){
-        switch (type){
+    private void onItemClick(int type) {
+        switch (type) {
             case 1:
                 //任务列表点击事件
-                Logger.e("task列表"+groupList.size());
+                Logger.e("task列表" + groupList.size());
                 // Java 8 新特性 Lambda表达式，原来写法即下方注释
-                taskCheckAdapter.setOnItemClickListener((adapter, view, position) ->  {
+                taskCheckAdapter.setOnItemClickListener((adapter, view, position) -> {
                     new InputDialog.Builder(getAttachActivity())
                             .setTitle(R.string.enter_run_times)
                             .setHint("1")
@@ -634,24 +747,25 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                             .setListener(new InputDialog.OnListener() {
                                 @Override
                                 public void onConfirm(BaseDialog dialog, String content) {
-                                    taskName=groupList.get(position);
+                                    taskName = groupList.get(position);
                                     mapImageView.setTaskName(taskName);
-                                    String showName=taskName.replaceAll("DDRTask_","");
-                                    showName=showName.replaceAll(".task","");
+                                    String showName = taskName.replaceAll("DDRTask_", "");
+                                    showName = showName.replaceAll(".task", "");
                                     tv_now_task.setText(showName);
-                                    if (!content.isEmpty() && Integer.parseInt(content)>0 && Integer.parseInt(content)<1000 ){
+                                    if (!content.isEmpty() && Integer.parseInt(content) > 0 && Integer.parseInt(content) < 1000) {
                                         try {
-                                            lsNum=Integer.parseInt(content);
-                                        }catch (Exception e){
+                                            lsNum = Integer.parseInt(content);
+                                        } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                    }else {
-                                        lsNum=1;
+                                    } else {
+                                        lsNum = 1;
                                     }
-                                    tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
-                                    isRabPoint =false;
-                                    Logger.e("当前临时任务状态"+BaseCmd.eCmdRspType.values().length);
+                                    tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName), ByteString.copyFromUtf8(taskName), lsNum, 2);
+                                    isRabPoint = false;
+                                    Logger.e("当前临时任务状态" + BaseCmd.eCmdRspType.values().length);
                                 }
+
                                 @Override
                                 public void onCancel(BaseDialog dialog) {
                                     toast(R.string.cancel_add);
@@ -664,37 +778,38 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
             case 2:
                 //标记点列表点击事件
-                    targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
-                        if (notifyBaseStatusEx.isLocationed()){
-                            float x=targetPoints.get(position).getX();
-                            float y=targetPoints.get(position).getY();
-                            float theta=targetPoints.get(position).getTheta();
-                            mapImageView.setTargetPoint(targetPoints.get(position));
-                            new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
-                                    .setTitle(getString(R.string.is_go) + targetPoints.get(position).getName())
-                                    .setListener(new InputDialog.OnListener() {
-                                        @Override
-                                        public void onConfirm(BaseDialog dialog, String content) {
-                                            sPoint = targetPoints.get(position).getName();
-                                            Logger.e("-----需要前往的点："+sPoint);
-                                            goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
-                                            tv_restart_point.setVisibility(View.VISIBLE);
-                                            for (int i = 0; i < targetPoints.size(); i++) {
-                                                targetPoints.get(i).setSelected(false);
-                                            }
-                                            targetPoints.get(position).setSelected(true);
-                                            targetPointAdapter.setNewData(targetPoints);
-                                            isRabPoint =true;
+                targetPointAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    if (notifyBaseStatusEx.isLocationed()) {
+                        float x = targetPoints.get(position).getX();
+                        float y = targetPoints.get(position).getY();
+                        float theta = targetPoints.get(position).getTheta();
+                        mapImageView.setTargetPoint(targetPoints.get(position));
+                        new InputDialog.Builder(getAttachActivity()).setEditVisibility(View.GONE)
+                                .setTitle(getString(R.string.is_go) + targetPoints.get(position).getName())
+                                .setListener(new InputDialog.OnListener() {
+                                    @Override
+                                    public void onConfirm(BaseDialog dialog, String content) {
+                                        sPoint = targetPoints.get(position).getName();
+                                        Logger.e("-----需要前往的点：" + sPoint);
+                                        goPointLet(x, y, theta, ByteString.copyFromUtf8(targetPoints.get(position).getName()), ByteString.copyFromUtf8(mapName), 1);
+                                        tv_restart_point.setVisibility(View.VISIBLE);
+                                        for (int i = 0; i < targetPoints.size(); i++) {
+                                            targetPoints.get(i).setSelected(false);
                                         }
-                                        @Override
-                                        public void onCancel(BaseDialog dialog) {
-                                            toast(R.string.cancel_go_point);
-                                        }
-                                    })
-                                    .show();
-                        }else {
-                            showRelocationDialog();
-                        }
+                                        targetPoints.get(position).setSelected(true);
+                                        targetPointAdapter.setNewData(targetPoints);
+                                        isRabPoint = true;
+                                    }
+
+                                    @Override
+                                    public void onCancel(BaseDialog dialog) {
+                                        toast(R.string.cancel_go_point);
+                                    }
+                                })
+                                .show();
+                    } else {
+                        showRelocationDialog();
+                    }
                 });
                 break;
         }
@@ -703,7 +818,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     /**
      * 选择一种重定位的方式
      */
-    private void showRelocationDialog(){
+    private void showRelocationDialog() {
         new InputDialog.Builder(getAttachActivity())
                 .setTitle(R.string.current_not_location)
                 .setCancel(R.string.hand_location)
@@ -726,13 +841,14 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 })
                 .show();
     }
+
     /**
      * 发送重定位
      */
-    private void reqCmdRelocation(){
-        if (notifyBaseStatusEx.geteSelfCalibStatus()==0){
+    private void reqCmdRelocation() {
+        if (notifyBaseStatusEx.geteSelfCalibStatus() == 0) {
             toast(R.string.can_not_relocation);
-        }else if (notifyBaseStatusEx.geteSelfCalibStatus()==1){
+        } else if (notifyBaseStatusEx.geteSelfCalibStatus() == 1) {
             if (notifyBaseStatusEx.getMode() == 3) {
                 if (notifyBaseStatusEx.getSonMode() == 15) {
                     toast(R.string.in_relocation);
@@ -740,17 +856,17 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             } else {
                 reqCmdRelocation1();
             }
-        }else{
+        } else {
             reqCmdRelocation1();
         }
     }
-    private void reqCmdRelocation1(){
-        BaseCmd.reqCmdReloc reqCmdRelocation=BaseCmd.reqCmdReloc.newBuilder()
+
+    private void reqCmdRelocation1() {
+        BaseCmd.reqCmdReloc reqCmdRelocation = BaseCmd.reqCmdReloc.newBuilder()
                 .setTypeValue(0)
                 .build();
-        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqCmdRelocation);
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqCmdRelocation);
     }
-
 
 
     @Override
@@ -763,16 +879,16 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             case 1:
                 switch (notifyBaseStatusEx.getMode()) {
                     case 1:
-                        Logger.e("----mapName:"+mapName+"taskName:"+taskName);
-                        if (mapName!=null && taskName!=null && !taskName.equals("PathError")){
+                        Logger.e("----mapName:" + mapName + "taskName:" + taskName);
+                        if (mapName != null && taskName != null && !taskName.equals("PathError")) {
                             toast(R.string.please_wait_in);
-                            tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,2);
-                        }else {
+                            tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName), ByteString.copyFromUtf8(taskName), lsNum, 2);
+                        } else {
                             toast(R.string.please_create_task);
                         }
                         break;
                     case 3:
-                        switch (notifyBaseStatusEx.getSonMode()){
+                        switch (notifyBaseStatusEx.getSonMode()) {
                             case 16:
                                 toast(R.string.under_way);
                                 break;
@@ -803,7 +919,7 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                         toast(R.string.in_wait_please);
                         break;
                     case 3:
-                        switch (notifyBaseStatusEx.getSonMode()){
+                        switch (notifyBaseStatusEx.getSonMode()) {
                             case 16:
                                 toast(R.string.common_pause);
                                 pauseOrResume("Pause");
@@ -835,11 +951,11 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                     case 3:
                         try {
                             toast(R.string.please_wait_back);
-                            tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName),ByteString.copyFromUtf8(taskName),lsNum,1);
+                            tcpClient.addOrDetTemporary(ByteString.copyFromUtf8(mapName), ByteString.copyFromUtf8(taskName), lsNum, 1);
                             for (int i = 0; i < targetPoints.size(); i++) {
                                 targetPoints.get(i).setSelected(false);
                             }
-                        }catch (NullPointerException e){
+                        } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
                         break;
@@ -847,6 +963,292 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
                 break;
         }
 
+    }
+
+
+    private ImageView iv_quit_c;
+    private RecyclerView recyclerView_c_sensor;
+    private TextView tv_cancel;
+    private TextView tv_save;
+    private UltrasonicAdapter ultrasonicAdapter;
+    private Ultrasonic ultrasonic;
+    private List<Ultrasonic> ultrasonicList;
+    private List<Sensor> sensorList=new ArrayList<>();
+    private Sensors sensors;
+    public void showControlPopupWindow(View view) {
+        View contentView = null;
+        contentView = getAttachActivity().getLayoutInflater().from(getAttachActivity()).inflate(R.layout.dialog_cs_status, null);
+        customPopWindow = new CustomPopuWindow.PopupWindowBuilder(getAttachActivity())
+                .setView(contentView)
+                .size(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                .enableOutsideTouchableDissmiss(true)// 设置点击PopupWindow之外的地方，popWindow不关闭，如果不设置这个属性或者为true，则关闭
+                .setOutsideTouchable(false)//是否PopupWindow 以外触摸dissmiss
+                .create()
+                .showAsDropDown(view, 0, -10);
+        getSensorParam();
+        iv_quit_c=contentView.findViewById(R.id.iv_quit_cs);
+        recyclerView_c_sensor =contentView.findViewById(R.id.rl_ul_cs);
+        tv_cancel = contentView.findViewById(R.id.tv_cs_cancel);
+        tv_save = contentView.findViewById(R.id.tv_cs_save);
+        ultrasonicAdapter = new UltrasonicAdapter(R.layout.item_recycle_ulrcs);
+        GridLayoutManager gridLayoutManager =new GridLayoutManager(getAttachActivity(),4);
+        recyclerView_c_sensor.setLayoutManager(gridLayoutManager);
+        recyclerView_c_sensor.setAdapter(ultrasonicAdapter);
+        ultrasonicAdapter.setNewData(ultrasonicList);
+
+        iv_quit_c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customPopWindow.dissmiss();
+                toast("关闭");
+            }
+        });
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customPopWindow.dissmiss();
+                toast("返回");
+            }
+        });
+
+        tv_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postAndGet();
+            }
+        });
+
+    }
+
+    //设置传感器参数
+    private void setSensorParam(){
+        sensorList=sensors.getSensorList();
+        ultrasonicList=new ArrayList<>();
+        for (int i=0;i<sensorList.size();i++){
+            int cs=(int)Float.parseFloat(sensorList.get(i).getStaticdistance());
+            switch (Integer.parseInt(sensorList.get(i).getKey())){
+                case 1:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("1");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 2:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("2");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 3:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("3");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 4:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("4");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 5:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("5");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 6:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("6");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 7:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("7");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 8:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("8");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 9:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("9");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 10:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("10");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 11:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("11");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+                case 12:
+                    ultrasonic=new Ultrasonic();
+                    ultrasonic.setTextNum("12");
+                    ultrasonic.setTextContant(String.valueOf(cs));
+                    break;
+            }
+            ultrasonicList.add(ultrasonic);
+
+        }
+        ultrasonicAdapter.setNewData(ultrasonicList);
+    }
+    //发送传感器参数
+    private void postSensorParam(List<BaseCmd.sensorConfigItem> sensorConfigItems,int type){
+        BaseCmd.eSensorConfigItemOptType eSensorConfigItemOptType;
+        switch (type){
+            case 0:
+                eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeError;//
+                break;
+            case  1:
+                eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeGetData;//获取数据
+                break;
+            case 2:
+                eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeResumeData;//恢复
+                break;
+            case 3:
+                eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeSetData;//设置
+                break;
+            case 4:
+                eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeDisableAll;//失能
+                break;
+            case 5:
+                eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeEnableAll;//使能
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
+        BaseCmd.reqSensorConfigOperational reqSensorConfigOperational=BaseCmd.reqSensorConfigOperational.newBuilder()
+                .setType(eSensorConfigItemOptType)
+                .addAllData(sensorConfigItems)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer),reqSensorConfigOperational);
+    }
+
+    //获取传感器参数
+    private void getSensorParam(){
+        BaseCmd.eSensorConfigItemOptType eSensorConfigItemOptType;
+        eSensorConfigItemOptType=BaseCmd.eSensorConfigItemOptType.eSensorConfigOptTypeGetData;
+        BaseCmd.reqSensorConfigOperational reqSensorConfigOperational = BaseCmd.reqSensorConfigOperational.newBuilder()
+                .setType(eSensorConfigItemOptType)
+                .build();
+        tcpClient.sendData(CmdSchedule.commonHeader(BaseCmd.eCltType.eModuleServer), reqSensorConfigOperational);
+    }
+
+
+    /**
+     * 提交时解析
+     */
+    private void postAndGet(){
+        List<Sensor> sensorList1=new ArrayList<>();
+        for (int i=0;i<sensorList.size();i++){
+            Sensor sensor1=new Sensor();
+            String tcontant=ultrasonicList.get(i).getTextContant();
+            switch (i){
+                case 0:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(1));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 1:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(2));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 2:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(3));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 3:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(4));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 4:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(5));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 5:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(6));
+                        Logger.e("上传数值"+tcontant);
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 6:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(7));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 7:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(8));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+
+                    break;
+                case 8:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(9));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 9:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(10));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 10:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(11));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+                    break;
+                case 11:
+                    if (tcontant!=null){
+                        sensor1.setKey(String.valueOf(12));
+                        sensor1.setStaticdistance(tcontant);
+                        sensor1.setDydistance(sensorList.get(i).getDydistance());
+                    }
+
+                    break;
+            }
+            sensorList1.add(sensor1);
+        }
+        Logger.e("提交数量"+sensorList1.size());
+        List<BaseCmd.sensorConfigItem> sensorConfigItemList=new ArrayList<>();
+        for (int i=0;i<sensorList1.size();i++){
+            BaseCmd.sensorConfigItem sensorConfigItem=BaseCmd.sensorConfigItem.newBuilder()
+                    .setKey(ByteString.copyFromUtf8(sensorList1.get(i).getKey()))
+                    .setStaticOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getStaticdistance()))
+                    .setDynamicOATriggerDist(ByteString.copyFromUtf8(sensorList1.get(i).getDydistance()))
+                    .build();
+
+            sensorConfigItemList.add(sensorConfigItem);
+        }
+        postSensorParam(sensorConfigItemList,3);
+        getSensorParam();
     }
 
 
@@ -875,25 +1277,25 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
+        if (isVisibleToUser) {
             // 相当于onResume()方法--获取焦点
             Logger.e("可见");
-            if (notifyBaseStatusEx!=null){
+            if (notifyBaseStatusEx != null) {
                 tcpClient.getMapInfo(ByteString.copyFromUtf8(notifyBaseStatusEx.getCurroute()));
             }
-            if (mapImageView !=null&&!mapImageView.drawThread.isAlive()){
+            if (mapImageView != null && !mapImageView.drawThread.isAlive()) {
                 mapImageView.startThread();
                 mapImageView.setImageBitmap(notifyBaseStatusEx.getCurroute());
                 tvWarn.setVisibility(View.GONE);
             }
             //当服务断开时
-            if (tcpClient!=null&&!tcpClient.isConnected()){
+            if (tcpClient != null && !tcpClient.isConnected()) {
                 tv_work_statue.setText(R.string.common_Disconnect);
             }
-        }else {
+        } else {
             // 相当于onPause()方法---失去焦点
             Logger.e("不可见");
-            if (mapImageView !=null&& mapImageView.drawThread.isAlive()){
+            if (mapImageView != null && mapImageView.drawThread.isAlive()) {
                 mapImageView.onStop();
             }
         }
@@ -906,9 +1308,10 @@ public  class StatusFragment extends DDRLazyFragment<HomeActivity>implements Sta
             if (statusSwitchButton!=null&&mapImageView!=null)
             statusSwitchButton.onDestroy();
             mapImageView.onStop();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
     }
+
 }

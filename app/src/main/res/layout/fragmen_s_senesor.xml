@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="48dp"
         android:layout_height="24dp"
-        android:text="@string/height_set_save"
+        android:text="修改"
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:gravity="center"
@@ -52,6 +52,7 @@
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="9sp"
         android:autoSizeMaxTextSize="12sp"
+        android:visibility="gone"
         />
     <ddr.example.com.nddrandroidclient.other.SlideButton
         android:layout_width="55.5dp"
@@ -59,7 +60,8 @@
         android:id="@+id/slideButton"
         android:layout_alignTop="@id/tv_firstBack"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="640dp"/>
+        android:layout_marginLeft="640dp"
+        android:visibility="gone"/>
     <TextView
         android:layout_width="55.5dp"
         android:layout_height="33dp"
@@ -72,7 +74,8 @@
         android:layout_marginTop="25dp"
         android:layout_marginRight="100dp"
         android:background="@drawable/textview_button_top"
-        android:id="@+id/tv_sea_sensor"/>
+        android:id="@+id/tv_sea_sensor"
+        android:visibility="gone"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="24dp"
@@ -85,21 +88,135 @@
         android:gravity="center"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="9sp"
-        android:autoSizeMaxTextSize="12sp"/>
+        android:autoSizeMaxTextSize="12sp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/tv_secondBack"
         android:layout_width="748dp"
         android:layout_height="1dp"
         android:layout_marginLeft="48dp"
         android:layout_marginTop="182dp"
-        android:background="#262728" />
+        android:background="#262728"
+        android:visibility="gone"/>
+    <RelativeLayout
+        android:layout_width="748dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/tv_firstBack"
+        android:layout_marginLeft="48dp">
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="序号"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_1"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="距离"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_2"
+            android:layout_toRightOf="@id/tv_xh_1"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="状态"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_3"
+            android:layout_toRightOf="@id/tv_xh_2"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="序号"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_4"
+            android:layout_toRightOf="@id/tv_xh_3"
+            android:layout_marginLeft="45dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="距离"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_5"
+            android:layout_toRightOf="@id/tv_xh_4"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="状态"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_6"
+            android:layout_toRightOf="@id/tv_xh_5"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="序号"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_7"
+            android:layout_toRightOf="@id/tv_xh_6"
+            android:layout_marginLeft="45dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="距离"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_8"
+            android:layout_toRightOf="@id/tv_xh_7"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="状态"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_9"
+            android:layout_toRightOf="@id/tv_xh_8"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="序号"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_10"
+            android:layout_toRightOf="@id/tv_xh_9"
+            android:layout_marginLeft="45dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="距离"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_11"
+            android:layout_toRightOf="@id/tv_xh_10"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="状态"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_xh_12"
+            android:layout_toRightOf="@id/tv_xh_11"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="748dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_secondBack"
+        android:layout_below="@id/tv_firstBack"
         android:layout_marginLeft="48dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="40dp"
         android:id="@+id/rl_ul_cs"
         />
     <TextView
@@ -124,6 +241,7 @@
         android:layout_marginTop="40dp"
         android:layout_below="@id/rl_ul_cs"
         android:id="@+id/tv_thirdBack"
+        android:visibility="gone"
         />
     <TextView
         android:layout_width="76dp"
@@ -138,6 +256,7 @@
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="9sp"
         android:autoSizeMaxTextSize="12sp"
+        android:visibility="gone"
         />
 
     <EditText
@@ -154,7 +273,8 @@
         android:inputType="numberSigned|numberDecimal|text"
         android:imeOptions="actionDone"
         android:textColor="#ffffff"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="13dp"
@@ -166,6 +286,7 @@
         android:layout_marginLeft="682dp"
         android:layout_marginTop="29.5dp"
         android:gravity="center"
+        android:visibility="gone"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -179,6 +300,15 @@
         android:gravity="center"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="9sp"
-        android:autoSizeMaxTextSize="12sp"/>
+        android:autoSizeMaxTextSize="12sp"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/tv_trigger_six"/>
 
 </RelativeLayout>

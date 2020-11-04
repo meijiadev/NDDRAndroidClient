@@ -24,4 +24,13 @@ public class GlobalParameter {
     public static String getPassword() {
         return password;
     }
+    public static String hwParkID="CN-44-003-J";
+
+    public static String getHwParkID() {
+        return hwParkID;
+    }
+
+    public static void setHwParkID(String hwParkID) {
+        GlobalParameter.hwParkID = hwParkID;
+    }
 }

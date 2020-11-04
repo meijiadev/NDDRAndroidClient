@@ -33,16 +33,16 @@ public class SensorAdapter extends BaseAdapter<SensorSea> {
         switch (viewType){
             case R.layout.item_recycle_sensor:
                 tv_id=helper.getView(R.id.tv_c_id);
-                tv_tra=helper.getView(R.id.iv_cs_status);
+//                tv_tra=helper.getView(R.id.iv_cs_status);
                 tv_value=helper.getView(R.id.tv_cs_distance);
                 helper.setText(R.id.tv_cs_distance,String.valueOf(item.getValue()))
                         .setText(R.id.tv_c_id,String.valueOf(item.getID()));
                 switch (item.getTriggerStat()){
                     case 0:
-                        helper.setImageResource(R.id.iv_cs_status,R.mipmap.nocheckedwg);
+                        tv_id.setBackgroundResource(R.drawable.bt_bg__map);
                         break;
                     case 1:
-                        helper.setImageResource(R.id.iv_cs_status,R.mipmap.checkedwg);
+                        tv_id.setBackgroundResource(R.drawable.task_check_bg);
                         break;
                 }
                 break;

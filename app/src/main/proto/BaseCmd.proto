@@ -95,6 +95,7 @@ enum eCltType {
 	eLocalAIClient = 0x30001;
 	eAllServer = 0xff0000;
 	eSellV2AndroidClient = 0x60000;
+	eAdClient = 0x70000;
 }
 // flowDirection = UNKNOWN2RS or UNKNOWN2LS
 // eSrcCondition = NoCond; forwardType = NoForwarding; eSrcRecType = NoRec;

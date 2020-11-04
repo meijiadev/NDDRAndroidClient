@@ -161,10 +161,10 @@
     <string name="navigation_para">导航参数</string>
     <string name="navigation_para_set">导航参数设置</string>
     <string name="height_set_save">保存</string>
-    <string name="navigation_loop">导航循环</string>
+    <string name="navigation_loop">导航循环方式</string>
     <string name="n_return_auto">自主返回循环</string>
     <string name="n_return_along">原路返回循环</string>
-    <string name="n_return_auto_tip">当任务终点和起点非同一目标点时，机器人自动规划路径完成循环</string>
+    <string name="n_return_auto_tip">任务终点和起点不一致时，自主规划路径从终点运行至起点，形成循环</string>
     <string name="n_return_along_tip">按设定任务，起点至终点往返循环，往返一次视为一次循环结束，适合较小场景使用</string>
     <string name="n_way_turn">路径转弯方式</string>
     <string name="n_point_turn">目标点转弯</string>
@@ -188,7 +188,7 @@
     <string name="height_set_close">关</string>
     
     <!-- 高级设置-传感器配置 -->
-    <string name="sensor_set">传感器配置</string>
+    <string name="sensor_set">超声波数据</string>
     <string name="ultrasonic_set">超声波配置</string>
     <string name="ultrasonic_set_tip">（静态模式下触发超声波，机器人会停止运动）</string>
     <string name="ultrasonic_set_title">（设置前务必知晓安装位置，超声波数值为0表示功能关闭）</string>

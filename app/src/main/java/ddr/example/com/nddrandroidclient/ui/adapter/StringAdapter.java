@@ -73,6 +73,9 @@ public class StringAdapter extends BaseAdapter<String> {
 
                 }
                 break;
+            case R.layout.item_input_hw:
+                helper.setText(R.id.item_recycle_t_chenck,item);
+                break;
         }
 
     }

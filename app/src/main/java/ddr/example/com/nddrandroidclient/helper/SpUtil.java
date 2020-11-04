@@ -19,6 +19,8 @@ public class SpUtil {
     private static SpUtil spUtil;
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
+    public static final String HW_ID="io.device.dadao.robot";//华为ID
+    public static final String HW_APP_KEY="rnjiKsIkJOh/wVj17AItCw==";//华为APPKEY
 
     private SpUtil(Context context) {
         context=context.getApplicationContext();
